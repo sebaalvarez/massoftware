@@ -1,7 +1,7 @@
 package com.massoftware.frontend.ui;
 
-import org.cendra.commons.model.EntityId;
-import org.cendra.commons.model.EntityMetaData;
+import org.cendra.common.model.EntityId;
+import org.cendra.common.model.EntityMetaData;
 
 import com.massoftware.backend.bo.ICentroDeCostoContableBO;
 import com.massoftware.backend.bo.IEjercicioContableBO;

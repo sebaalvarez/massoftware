@@ -1,6 +1,6 @@
 package com.massoftware.frontend.ui;
 
-import org.cendra.commons.model.EntityId;
+import org.cendra.common.model.EntityId;
 
 import com.massoftware.backend.bo.IEjercicioContableBO;
 import com.massoftware.backend.bo.IPuntoDeEquilibrioBO;

@@ -69,8 +69,6 @@
 		</dependency>
 
 
-
-
 		<!-- https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-core-asl -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
@@ -84,6 +82,7 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
+
 
 		<dependency>
 			<groupId>com.opencsv</groupId>
@@ -110,6 +109,61 @@
 			<version>6.1.6.jre8-preview</version>
 		</dependency>
 
+		<dependency>
+			<groupId>cendra_log</groupId>
+			<artifactId>cendralog</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>D:\dev\source\cendralog\target\cendralog-0.0.1-SNAPSHOT.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>cendra_jdbc</groupId>
+			<artifactId>cendrajdbc</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>D:\dev\source\cendrajdbc\target\cendrajdbc-0.0.1-SNAPSHOT.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>cendra_common_model</groupId>
+			<artifactId>cendracommonmodel</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>D:\dev\source\cendracommonmodel\target\cendracommonmodel-0.0.1-SNAPSHOT.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>cendra_environment</groupId>
+			<artifactId>cendraenvironment</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>D:\dev\source\cendraenvironment\target\cendraenvironment-0.0.1-SNAPSHOT.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>cendra_exdao</groupId>
+			<artifactId>cendraexdao</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>D:\dev\source\cendraexdao\target\cendraexdao-0.0.1-SNAPSHOT.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>cendra_cx</groupId>
+			<artifactId>cendracx</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>D:\dev\source\cendracx\target\cendracx-0.0.1-SNAPSHOT.jar</systemPath>
+		</dependency>
+		
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.massoftware.model</groupId> -->
+<!-- 			<artifactId>massoftwaremodel</artifactId> -->
+<!-- 			<version>0.0.1-SNAPSHOT</version> -->
+<!-- 			<scope>system</scope> -->
+<!-- 			<systemPath>D:\dev\ambientes\mas_software\workspace\massoftwaremodel\target\massoftwaremodel-0.0.1-SNAPSHOT.jar</systemPath> -->
+<!-- 		</dependency> -->
 
 	</dependencies>
 

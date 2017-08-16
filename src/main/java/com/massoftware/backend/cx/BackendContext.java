@@ -1,6 +1,5 @@
 package com.massoftware.backend.cx;
 
-import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,15 +8,11 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.cendra.commons.AbstractContext;
-import org.cendra.commons.model.EntityMetaData;
-import org.cendra.commons.util.dao.jdbc.DataSourceProperties;
-import org.cendra.commons.util.dao.jdbc.DataSourceWrapper;
-import org.cendra.commons.util.dao.jdbc.SQLExceptionWrapper;
-import org.cendra.commons.util.error.LogPrinter;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
+import org.cendra.common.model.EntityMetaData;
+import org.cendra.cx.AbstractContext;
+import org.cendra.jdbc.DataSourceProperties;
+import org.cendra.jdbc.DataSourceWrapper;
+import org.cendra.log.LogPrinter;
 
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
@@ -32,7 +27,6 @@ import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 public class BackendContext extends AbstractContext {
 
@@ -52,7 +46,6 @@ public class BackendContext extends AbstractContext {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),
 					LogPrinter.LEVEL_FATAL, e);
-
 		}
 	}
 
@@ -88,10 +81,9 @@ public class BackendContext extends AbstractContext {
 		centroDeCostoContableMD.addAtt("abreviatura", "Abreviatura");
 		entityMetaDataMap.put(centroDeCostoContableMD.getName(),
 				centroDeCostoContableMD);
-		
+
 		EntityMetaData puntoDeEquilibrioMD = new EntityMetaData();
-		puntoDeEquilibrioMD.setName(PuntoDeEquilibrio.class
-				.getCanonicalName());
+		puntoDeEquilibrioMD.setName(PuntoDeEquilibrio.class.getCanonicalName());
 		puntoDeEquilibrioMD.setLabel("Punto de equilibrio");
 		puntoDeEquilibrioMD.setLabelPlural("Puntos de equilibrio");
 		puntoDeEquilibrioMD.addAtt("ejercicioContable",
@@ -106,9 +98,7 @@ public class BackendContext extends AbstractContext {
 
 	}
 
-	private void init(String dbType) throws JsonGenerationException,
-			JsonMappingException, SQLExceptionWrapper, IOException,
-			SQLServerException {
+	private void init(String dbType) throws Exception {
 
 		if (dbType.equals("Postgresql")) {
 			initContextDbPostgreSql(new LogPrinter());
@@ -124,8 +114,7 @@ public class BackendContext extends AbstractContext {
 	}
 
 	private void initContextDbMsSqlServer(LogPrinter errorPrinter)
-			throws SQLExceptionWrapper, JsonGenerationException,
-			JsonMappingException, IOException, SQLServerException {
+			throws Exception {
 
 		SQLServerDataSource ds = new SQLServerDataSource();
 		// ds.setIntegratedSecurity(true);
@@ -170,13 +159,10 @@ public class BackendContext extends AbstractContext {
 		dataSourceProperties.setVerbose((new Boolean(properties
 				.getProperty(path + "verbose"))));
 
-		ObjectMapper mapper = new ObjectMapper();
-		String msg = "\n\n[..] Conectandose a \n\n"
-				+ mapper.writerWithDefaultPrettyPrinter().writeValueAsString(
-						dataSourceProperties);
+		LogPrinter logPrinter = new LogPrinter();
 
-		errorPrinter.print(this.getClass().getName(), LogPrinter.LEVEL_INFO,
-				msg);
+		logPrinter.printJson(this.getClass().getName(), LogPrinter.LEVEL_INFO,
+				"", dataSourceProperties, "");
 
 		// BasicDataSource basicDataSource = new BasicDataSource();
 		// basicDataSource.setDriverClassName(dataSourceProperties
@@ -198,8 +184,7 @@ public class BackendContext extends AbstractContext {
 	}
 
 	private void initContextDbPostgreSql(LogPrinter errorPrinter)
-			throws SQLExceptionWrapper, JsonGenerationException,
-			JsonMappingException, IOException {
+			throws Exception {
 
 		Properties properties = new Properties();
 
@@ -237,13 +222,10 @@ public class BackendContext extends AbstractContext {
 		dataSourceProperties.setVerbose((new Boolean(properties
 				.getProperty(path + "verbose"))));
 
-		ObjectMapper mapper = new ObjectMapper();
-		String msg = "\n\n[..] Conectandose a \n\n"
-				+ mapper.writerWithDefaultPrettyPrinter().writeValueAsString(
-						dataSourceProperties);
+		LogPrinter logPrinter = new LogPrinter();
 
-		errorPrinter.print(this.getClass().getName(), LogPrinter.LEVEL_INFO,
-				msg);
+		logPrinter.printJson(this.getClass().getName(), LogPrinter.LEVEL_INFO,
+				"", dataSourceProperties, "");
 
 		BasicDataSource basicDataSource = new BasicDataSource();
 		basicDataSource.setDriverClassName(dataSourceProperties

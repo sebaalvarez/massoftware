@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import org.cendra.commons.model.EntityId;
+import org.cendra.common.model.EntityId;
 
 public class EjercicioContable extends EntityId implements Serializable,
 		Cloneable, Comparable<EjercicioContable> {
@@ -180,6 +180,11 @@ public class EjercicioContable extends EntityId implements Serializable,
 
 		return 0;
 
+	}
+	
+	
+	public void xxx(){
+		
 	}
 
 }

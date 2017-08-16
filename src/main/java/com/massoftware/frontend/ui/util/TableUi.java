@@ -3,8 +3,8 @@ package com.massoftware.frontend.ui.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cendra.commons.model.EntityId;
-import org.cendra.commons.model.EntityMetaData;
+import org.cendra.common.model.EntityId;
+import org.cendra.common.model.EntityMetaData;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.vaadin.data.util.BeanItemContainer;

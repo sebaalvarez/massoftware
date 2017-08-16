@@ -3,7 +3,7 @@ package com.massoftware.model;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.cendra.commons.model.EntityId;
+import org.cendra.common.model.EntityId;
 
 public class CentroDeCostoContable extends EntityId implements Serializable,
 		Cloneable, Comparable<CentroDeCostoContable> {
@@ -131,7 +131,6 @@ public class CentroDeCostoContable extends EntityId implements Serializable,
 		return other;
 	}
 
-	@Override
 	public int compareTo(CentroDeCostoContable o) {
 
 		if (this.centroDeCostoContable < o.centroDeCostoContable) {

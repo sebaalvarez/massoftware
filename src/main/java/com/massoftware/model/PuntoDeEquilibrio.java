@@ -3,7 +3,7 @@ package com.massoftware.model;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.cendra.commons.model.EntityId;
+import org.cendra.common.model.EntityId;
 
 public class PuntoDeEquilibrio extends EntityId implements Serializable,
 		Cloneable {

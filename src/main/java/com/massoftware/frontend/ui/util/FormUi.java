@@ -1,8 +1,8 @@
 package com.massoftware.frontend.ui.util;
 
-import org.cendra.commons.model.EntityId;
-import org.cendra.commons.model.EntityMetaData;
-import org.cendra.commons.util.dao.ex.InsertDuplicateException;
+import org.cendra.common.model.EntityId;
+import org.cendra.common.model.EntityMetaData;
+import org.cendra.ex.dao.InsertDuplicateException;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.vaadin.data.Validator.InvalidValueException;

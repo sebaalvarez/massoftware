@@ -2,7 +2,7 @@ package com.massoftware.backend.bo;
 
 import java.util.List;
 
-import org.cendra.commons.model.EntityId;
+import org.cendra.common.model.EntityId;
 
 import com.massoftware.model.PuntoDeEquilibrio;
 

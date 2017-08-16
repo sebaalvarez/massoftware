@@ -3,10 +3,10 @@ package com.massoftware.backend.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cendra.commons.model.EntityId;
-import org.cendra.commons.util.dao.ex.InsertDuplicateException;
-import org.cendra.commons.util.dao.jdbc.ConnectionWrapper;
-import org.cendra.commons.util.dao.jdbc.DataSourceWrapper;
+import org.cendra.common.model.EntityId;
+import org.cendra.ex.dao.InsertDuplicateException;
+import org.cendra.jdbc.ConnectionWrapper;
+import org.cendra.jdbc.DataSourceWrapper;
 
 import com.massoftware.model.PuntoDeEquilibrio;
 
