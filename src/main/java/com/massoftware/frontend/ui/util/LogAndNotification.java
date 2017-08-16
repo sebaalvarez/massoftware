@@ -1,6 +1,6 @@
 package com.massoftware.frontend.ui.util;
 
-import org.cendra.ex.dao.InsertDuplicateException;
+import org.cendra.ex.crud.InsertDuplicateException;
 
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.server.Page;
