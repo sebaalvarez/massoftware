@@ -1,23 +1,24 @@
-package com.massoftware.frontend.ui;
+package com.massoftware.frontend.ui.windows.form;
 
 import org.cendra.common.model.EntityId;
+import org.cendra.common.model.EntityMetaData;
 
+import com.massoftware.backend.bo.ICentroDeCostoContableBO;
 import com.massoftware.backend.bo.IEjercicioContableBO;
-import com.massoftware.backend.bo.IPuntoDeEquilibrioBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.FormUi;
 import com.massoftware.frontend.ui.util.StringToIntegerConverterUnspecifiedLocale;
 import com.massoftware.frontend.ui.util.StringToShortConverterUnspecifiedLocale;
 import com.massoftware.frontend.ui.util.TableUi;
+import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
-import com.massoftware.model.PuntoDeEquilibrio;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class PuntoDeEquilibrioFormUi extends FormUi {
+public class CentroDeCostoContableFormUi extends FormUi {
 
 	/**
 	 * 
@@ -25,17 +26,18 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 	private static final long serialVersionUID = -1215098492704552373L;
 
 	private TextField ejercicioTXT;
-	private TextField puntoDeEquilibrioTXT;
+	private TextField centroTXT;
 	private TextField nombreTXT;
+	private TextField abreviaturaTXT;
 
 	// -------------------------------------------------------------------
 
-	private IPuntoDeEquilibrioBO puntoDeEquilibrioBO;
+	private ICentroDeCostoContableBO centroDeCostoContableBO;
 	private IEjercicioContableBO ejercicioContableBO;
 
 	// -------------------------------------------------------------------
 
-	public PuntoDeEquilibrioFormUi(EntityId item, BackendContext cx,
+	public CentroDeCostoContableFormUi(EntityId item, BackendContext cx,
 			Window window, TableUi tableUi) {
 		super(item, cx, window, tableUi);
 		init();
@@ -44,13 +46,21 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 	// ==============================================================
 
 	protected void initObjectBO() {
-		this.puntoDeEquilibrioBO = cx.buildPuntoDeEquilibrioBO();
+		this.centroDeCostoContableBO = cx.buildCentroDeCostoContableBO();
 		this.ejercicioContableBO = cx.buildEjercicioContableBO();
 	}
 
 	@SuppressWarnings("rawtypes")
 	protected Class getClassForm() {
-		return PuntoDeEquilibrio.class;
+		return CentroDeCostoContable.class;
+	}
+
+	protected EntityMetaData getEntityAttMetaDataForm() {
+		return cx.getEntityMetaData(getClassForm().getCanonicalName());
+	}
+
+	protected Object[] getColumnNames() {
+		return getEntityAttMetaDataForm().getAttNames();
 	}
 
 	protected void buildFormBody() throws Exception {
@@ -63,36 +73,38 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 
 		String ejercicioTXTMsgError1 = "El campo " + attsName[0]
 				+ " es requerido.";
-		String puntoDeEquilibrioTXTMsgError1 = "El campo " + attsName[1]
+		String centroTXTMsgError1 = "El campo " + attsName[1]
 				+ " es requerido.";
 		String centroTXTMsgError2 = "El centro debe ser un número entero y positivo, mayor o igual a 1 y menor o igual a "
 				+ Short.MAX_VALUE
 				+ ". Usted cargo el valor \"{0}\" y es inválido.";
 		String nombreTXTMsgError1 = "El campo " + attsName[2]
 				+ " es requerido.";
+		String abreviaturaTXTMsgError1 = "El campo " + attsName[3]
+				+ " es requerido.";
 
 		if (item != null) {
 			item = item.clone();
 		} else {
-			item = new PuntoDeEquilibrio();
-			((PuntoDeEquilibrio) item).setEjercicioContable(ejercicioContableBO
-					.findMaxEjercicio());
+			item = new CentroDeCostoContable();
+			((CentroDeCostoContable) item)
+					.setEjercicioContable(ejercicioContableBO
+							.findMaxEjercicio());
 
-			Short t = puntoDeEquilibrioBO
-					.findMaxPuntoDeEquilibrio(((PuntoDeEquilibrio) item)
-							.getEjercicioContable().getEjercicio());
+			Short t = centroDeCostoContableBO.findMaxCentroDeCostoContable(((CentroDeCostoContable) item)
+					.getEjercicioContable().getEjercicio());
 			if (t == null || t < 1) {
 				t = 1;
 			}
 
-			((PuntoDeEquilibrio) item).setPuntoDeEquilibrio(t);
+			((CentroDeCostoContable) item).setCentroDeCostoContable(t);
 		}
 
-		BeanItem<PuntoDeEquilibrio> beanItem = new BeanItem<PuntoDeEquilibrio>(
-				(PuntoDeEquilibrio) item);
+		BeanItem<CentroDeCostoContable> beanItem = new BeanItem<CentroDeCostoContable>(
+				(CentroDeCostoContable) item);
 
 		BeanItem<EjercicioContable> beanItem2 = new BeanItem<EjercicioContable>(
-				((PuntoDeEquilibrio) item).getEjercicioContable());
+				((CentroDeCostoContable) item).getEjercicioContable());
 
 		// --------------------------------------------------------------------
 
@@ -109,17 +121,16 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 
 		// --------------------------------------------------------------------
 
-		puntoDeEquilibrioTXT = new TextField(attsLabelShort[1],
+		centroTXT = new TextField(attsLabelShort[1],
 				beanItem.getItemProperty(attsName[1]));
-		puntoDeEquilibrioTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-		puntoDeEquilibrioTXT.setRequired(true);
-		puntoDeEquilibrioTXT.setRequiredError(puntoDeEquilibrioTXTMsgError1);
-		puntoDeEquilibrioTXT
-				.setConverter(new StringToShortConverterUnspecifiedLocale());
-		puntoDeEquilibrioTXT.setNullRepresentation("");
-		puntoDeEquilibrioTXT.addValidator(new IntegerRangeValidator(
-				centroTXTMsgError2, 1, Short.MAX_VALUE + 0));
-		formLayout.addComponent(puntoDeEquilibrioTXT);
+		centroTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+		centroTXT.setRequired(true);
+		centroTXT.setRequiredError(centroTXTMsgError1);
+		centroTXT.setConverter(new StringToShortConverterUnspecifiedLocale());
+		centroTXT.setNullRepresentation("");
+		centroTXT.addValidator(new IntegerRangeValidator(centroTXTMsgError2, 1,
+				Short.MAX_VALUE + 0));
+		formLayout.addComponent(centroTXT);
 
 		// --------------------------------------------------------------------
 
@@ -133,21 +144,30 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 
 		// --------------------------------------------------------------------
 
+		abreviaturaTXT = new TextField(attsLabelShort[3],
+				beanItem.getItemProperty(attsName[3]));
+		abreviaturaTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+		abreviaturaTXT.setRequired(true);
+		abreviaturaTXT.setRequiredError(abreviaturaTXTMsgError1);
+		abreviaturaTXT.setNullRepresentation("");
+		formLayout.addComponent(abreviaturaTXT);
+
 		// --------------------------------------------------------------------
 	}
 
 	protected void validateControls() {
 		ejercicioTXT.validate();
-		puntoDeEquilibrioTXT.validate();
+		centroTXT.validate();
 		nombreTXT.validate();
+		abreviaturaTXT.validate();
 	}
 
 	protected void insert() throws Exception {
-		puntoDeEquilibrioBO.insert((PuntoDeEquilibrio) item);
+		centroDeCostoContableBO.insert((CentroDeCostoContable) item);
 	}
 
 	protected void update() throws Exception {
-		puntoDeEquilibrioBO.update((PuntoDeEquilibrio) item);
+		centroDeCostoContableBO.update((CentroDeCostoContable) item);
 	}
 
 }

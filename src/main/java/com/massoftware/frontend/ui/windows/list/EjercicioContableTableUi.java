@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui;
+package com.massoftware.frontend.ui.windows.list;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.cendra.common.model.EntityId;
 import com.massoftware.backend.bo.IEjercicioContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.TableUi;
+import com.massoftware.frontend.ui.windows.form.EjercicioContableFormUi;
 import com.massoftware.model.EjercicioContable;
 import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.server.FontAwesome;

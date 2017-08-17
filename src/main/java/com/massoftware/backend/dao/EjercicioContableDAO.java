@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cendra.common.model.EntityId;
+import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
+import org.cendra.jdbc.SQLExceptionWrapper;
 
 import com.massoftware.model.EjercicioContable;
 
@@ -24,7 +26,7 @@ public class EjercicioContableDAO implements IEjercicioContableDAO {
 	private final String SQL_PG_6 = "";
 	private final String SQL_PG_7 = "";
 
-	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.EjerciciosContables ORDER BY ejercicio DESCxx;";
+	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.EjerciciosContables ORDER BY ejercicio DESC;";
 	private final String SQL_MS_2 = "SELECT * FROM VetaroRep.dbo.EjerciciosContables WHERE CAST(ejercicio AS VARCHAR)  LIKE CONCAT('%', CAST(? AS VARCHAR)) ORDER BY ejercicio DESC;";
 	private final String SQL_MS_3 = "SELECT MAX(ejercicio) FROM VetaroRep.dbo.EjerciciosContables;";
 	private final String SQL_MS_4 = "SELECT * FROM VetaroRep.dbo.EjerciciosContables WHERE ejercicio = ?;";
@@ -117,14 +119,8 @@ public class EjercicioContableDAO implements IEjercicioContableDAO {
 			}
 
 			for (Object[] row : table) {
-
 				ejercicioContables.add(new EjercicioContable(row));
-				
-//				new EjercicioContable(row).x
-
 			}
-			
-			
 
 		} catch (Exception e) {
 			throw e;
@@ -421,6 +417,21 @@ public class EjercicioContableDAO implements IEjercicioContableDAO {
 			connectionWrapper.commit();
 
 			return item;
+
+		} catch (SQLExceptionWrapper e) {
+
+			connectionWrapper.rollBack();
+
+			if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()
+					&& e.getsQLException().getErrorCode() == 547) {
+
+				throw new DeleteForeingObjectConflictException(
+						sql + "\nargs:[" + item.getEjercicio() + "]");
+				// } else if (dataSourceWrapper.isDatabasePostgreSql() &&
+				// e.getsQLException().getErrorCode() == ###) {
+			} else {
+				throw e;
+			}
 
 		} catch (Exception e) {
 			connectionWrapper.rollBack();

@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui;
+package com.massoftware.frontend.ui.windows.list;
 
 import java.util.List;
 
@@ -6,6 +6,7 @@ import org.cendra.common.model.EntityId;
 
 import com.massoftware.backend.bo.IPuntoDeEquilibrioBO;
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.ui.windows.form.PuntoDeEquilibrioFormUi;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.PuntoDeEquilibrioTipo;

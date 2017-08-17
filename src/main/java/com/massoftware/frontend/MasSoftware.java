@@ -6,9 +6,10 @@ import java.util.logging.Logger;
 import javax.servlet.annotation.WebServlet;
 
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.ui.CentroDeCostoContableTableUi;
-import com.massoftware.frontend.ui.EjercicioContableTableUi;
-import com.massoftware.frontend.ui.PuntoDeEquilibrioTableUi;
+import com.massoftware.frontend.ui.menu.ContabilidadGeneralMenu;
+import com.massoftware.frontend.ui.windows.list.CentroDeCostoContableTableUi;
+import com.massoftware.frontend.ui.windows.list.EjercicioContableTableUi;
+import com.massoftware.frontend.ui.windows.list.PuntoDeEquilibrioTableUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
@@ -80,7 +81,7 @@ public class MasSoftware extends UI {
 						}
 					});
 			ejercicioContableTableBTN.addStyleName(ValoTheme.BUTTON_PRIMARY);
-			layout.addComponent(ejercicioContableTableBTN);
+//			layout.addComponent(ejercicioContableTableBTN);
 
 			String title2 = cx.getEntityMetaData(
 					CentroDeCostoContable.class.getCanonicalName()).getLabel();
@@ -114,7 +115,7 @@ public class MasSoftware extends UI {
 						}
 					});
 			centroDeCostoContableBTN.addStyleName(ValoTheme.BUTTON_PRIMARY);
-			layout.addComponent(centroDeCostoContableBTN);
+//			layout.addComponent(centroDeCostoContableBTN);
 
 			String title3 = cx.getEntityMetaData(
 					PuntoDeEquilibrio.class.getCanonicalName()).getLabel();
@@ -145,7 +146,10 @@ public class MasSoftware extends UI {
 						}
 					});
 			puntoDeEquilibrioBTN.addStyleName(ValoTheme.BUTTON_PRIMARY);
-			layout.addComponent(puntoDeEquilibrioBTN);
+//			layout.addComponent(puntoDeEquilibrioBTN);
+			
+			
+			layout.addComponent(new ContabilidadGeneralMenu());
 
 			setContent(layout);
 

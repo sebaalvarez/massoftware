@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.cendra.common.model.EntityId;
 import org.cendra.common.model.EntityMetaData;
+import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.vaadin.data.util.BeanItemContainer;
@@ -271,8 +272,13 @@ public abstract class TableUi extends CustomComponent {
 			if (grid.getSelectedRow() != null) {
 
 				EntityId item = (EntityId) grid.getSelectedRow();
-
-				deleteBO(item);
+				try {
+					deleteBO(item);
+				} catch (DeleteForeingObjectConflictException e) {
+					LogAndNotification.print(e, getEntityAttMetaDataGrid()
+							.getLabel().toLowerCase() + " " + item.getId());
+					return;
+				}
 
 				String msg = "Se eliminó con éxito el "
 						+ getEntityAttMetaDataGrid().getLabel().toLowerCase()
@@ -283,6 +289,9 @@ public abstract class TableUi extends CustomComponent {
 				updateGrid();
 			}
 
+		} catch (DeleteForeingObjectConflictException e) {
+			LogAndNotification.print(e, getEntityAttMetaDataGrid().getLabel()
+					.toLowerCase());
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -310,22 +319,23 @@ public abstract class TableUi extends CustomComponent {
 	// ====================================================================================
 
 	protected abstract void initObjectBO();
-	
+
 	@SuppressWarnings("rawtypes")
 	protected abstract Class getClassGrid();
-	
+
 	protected abstract Object[] getColumnNames();
-	
+
 	protected abstract void configGrid();
-	
+
 	protected abstract Component[] buildHeaderToolbar();
 
 	public abstract void updateGrid();
-	
+
 	@SuppressWarnings("rawtypes")
 	protected abstract List updateGridBO(Object... args) throws Exception;
 
 	protected abstract void deleteBO(EntityId item) throws Exception;
-	
-	protected abstract CustomComponent getWindowsContent(Window win, EntityId item);
+
+	protected abstract CustomComponent getWindowsContent(Window win,
+			EntityId item);
 }

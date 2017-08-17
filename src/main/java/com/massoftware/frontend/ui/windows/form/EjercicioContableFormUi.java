@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui;
+package com.massoftware.frontend.ui.windows.form;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

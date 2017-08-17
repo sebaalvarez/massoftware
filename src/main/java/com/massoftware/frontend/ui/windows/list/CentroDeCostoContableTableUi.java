@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui;
+package com.massoftware.frontend.ui.windows.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import com.massoftware.backend.bo.IEjercicioContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.TableUi;
+import com.massoftware.frontend.ui.windows.form.CentroDeCostoContableFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.vaadin.data.Property.ValueChangeEvent;

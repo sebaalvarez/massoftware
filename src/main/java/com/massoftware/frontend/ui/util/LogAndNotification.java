@@ -1,5 +1,6 @@
 package com.massoftware.frontend.ui.util;
 
+import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 import org.cendra.ex.crud.InsertDuplicateException;
 
 import com.vaadin.data.Validator.InvalidValueException;
@@ -31,6 +32,18 @@ public class LogAndNotification {
 		notification.show(Page.getCurrent());
 
 		e.printStackTrace();
+	}
+	
+	public static void print(DeleteForeingObjectConflictException e, String humanObject) {
+		Notification notification = new Notification("Objeto no borrable",
+				e.getHumanMsg(humanObject), Type.WARNING_MESSAGE);
+		// notification.setStyleName("warning failure");
+		notification.setStyleName("tray failure");
+		notification.setPosition(Position.BOTTOM_LEFT);
+		// notification.setDelayMsec(10000);
+		notification.show(Page.getCurrent());
+		
+//		e.printStackTrace();
 	}
 
 	public static void print(InvalidValueException e) {
