@@ -24,7 +24,7 @@ public class EjercicioContableDAO implements IEjercicioContableDAO {
 	private final String SQL_PG_6 = "";
 	private final String SQL_PG_7 = "";
 
-	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.EjerciciosContables ORDER BY ejercicio DESC;";
+	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.EjerciciosContables ORDER BY ejercicio DESCxx;";
 	private final String SQL_MS_2 = "SELECT * FROM VetaroRep.dbo.EjerciciosContables WHERE CAST(ejercicio AS VARCHAR)  LIKE CONCAT('%', CAST(? AS VARCHAR)) ORDER BY ejercicio DESC;";
 	private final String SQL_MS_3 = "SELECT MAX(ejercicio) FROM VetaroRep.dbo.EjerciciosContables;";
 	private final String SQL_MS_4 = "SELECT * FROM VetaroRep.dbo.EjerciciosContables WHERE ejercicio = ?;";

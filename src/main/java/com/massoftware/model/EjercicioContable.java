@@ -181,10 +181,5 @@ public class EjercicioContable extends EntityId implements Serializable,
 		return 0;
 
 	}
-	
-	
-	public void xxx(){
-		
-	}
 
 }
