@@ -19,10 +19,13 @@ import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.ICentroDeCostoContableBO;
 import com.massoftware.backend.bo.IEjercicioContableBO;
 import com.massoftware.backend.bo.IPuntoDeEquilibrioBO;
+import com.massoftware.backend.bo.IUsuarioBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
+import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.backend.dao.CentroDeCostoContableDAO;
 import com.massoftware.backend.dao.EjercicioContableDAO;
 import com.massoftware.backend.dao.PuntoDeEquilibrioDAO;
+import com.massoftware.backend.dao.UsuarioDAO;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
@@ -287,6 +290,20 @@ public class BackendContext extends AbstractContext {
 		try {
 			return new PuntoDeEquilibrioBO(new PuntoDeEquilibrioDAO(
 					dataSourceWrapper));
+		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+
+	public IUsuarioBO buildUsuariioBO() {
+
+		try {
+			return new UsuarioBO(new UsuarioDAO(dataSourceWrapper));
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),

@@ -29,18 +29,12 @@ public class EjercicioContable extends EntityId implements Serializable,
 		setterByArray(row);
 	}
 
-	public String getId() {
-		if (this.ejercicio != null) {
-			return this.ejercicio.toString();
-		}
-		return null;
-	}
-
 	public void setId(String id) {
-		if (id != null && id.isEmpty() == false) {
-			this.ejercicio = new Integer(id.trim());
+		id = formatValue(id);
+		if (id != null) {
+			this.setEjercicio(new Integer(id));
 		} else {
-			this.ejercicio = null;
+			this.setEjercicio(null);
 		}
 	}
 
@@ -50,6 +44,11 @@ public class EjercicioContable extends EntityId implements Serializable,
 
 	public void setEjercicio(Integer ejercicio) {
 		this.ejercicio = ejercicio;
+		if (this.ejercicio != null) {
+			super.setId(this.ejercicio.toString());
+		} else {
+			super.setId(null);
+		}
 	}
 
 	public Date getFechaApertura() {
