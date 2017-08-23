@@ -32,7 +32,7 @@ public abstract class FormUi extends CustomComponent {
 	protected Button guardarBTN;
 	private Button cancelarBTN;
 
-	private boolean insert = false;
+	protected boolean insert = false;
 	private Window window;
 	private TableUi tableUi;
 

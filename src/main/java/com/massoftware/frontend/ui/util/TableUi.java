@@ -34,7 +34,7 @@ public abstract class TableUi extends CustomComponent {
 
 	protected BackendContext cx;
 
-	private VerticalLayout rootVH;
+	protected VerticalLayout rootVH;
 	protected HorizontalLayout toolbarHL;
 	protected Grid grid;
 
@@ -206,17 +206,29 @@ public abstract class TableUi extends CustomComponent {
 		openForm(null);
 	}
 
-	private void openForm(Object item) {
+	protected void openForm(Object item) {
+		openForm(item, null);
+	}
+
+	protected void openForm(Object item, String titlePrefix) {
+
 		try {
 
 			String title = null;
 
-			if (item != null) {
-				title = "Modificar "
+			if (titlePrefix != null) {
+				title = titlePrefix + " "
 						+ getEntityAttMetaDataGrid().getLabel().toLowerCase();
 			} else {
-				title = "Agregar "
-						+ getEntityAttMetaDataGrid().getLabel().toLowerCase();
+				if (item != null) {
+					title = "Modificar "
+							+ getEntityAttMetaDataGrid().getLabel()
+									.toLowerCase();
+				} else {
+					title = "Agregar "
+							+ getEntityAttMetaDataGrid().getLabel()
+									.toLowerCase();
+				}
 			}
 
 			Window win = new Window(title);

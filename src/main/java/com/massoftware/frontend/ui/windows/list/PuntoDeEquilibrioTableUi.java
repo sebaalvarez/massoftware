@@ -6,14 +6,19 @@ import org.cendra.common.model.EntityId;
 
 import com.massoftware.backend.bo.IPuntoDeEquilibrioBO;
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.frontend.ui.windows.form.PuntoDeEquilibrioFormUi;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
@@ -30,6 +35,8 @@ public class PuntoDeEquilibrioTableUi extends TableUi {
 	private String optionGroupItem1Caption = "Ordenar por punto de equlirio";
 	private String optionGroupItem2Caption = "Ordenar por nombre";
 
+	private String copiarBtnCaption = "Copiar";
+
 	private IPuntoDeEquilibrioBO puntoDeEquilibrioBO;
 
 	// --------------------------------------------------------------
@@ -37,6 +44,7 @@ public class PuntoDeEquilibrioTableUi extends TableUi {
 	public PuntoDeEquilibrioTableUi(BackendContext cx, Usuario usuario) {
 		super(cx, usuario);
 		init();
+		buildFooterToolbar();
 	}
 
 	protected void initObjectBO() {
@@ -118,5 +126,45 @@ public class PuntoDeEquilibrioTableUi extends TableUi {
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////////
+
+	private void buildFooterToolbar() {
+
+		HorizontalLayout footerHL = new HorizontalLayout();
+		footerHL.setWidth("100%");
+		footerHL.setSpacing(true);
+		// footerHL.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
+
+		rootVH.addComponent(footerHL);
+
+		Button agregarBtn = new Button(copiarBtnCaption);
+		agregarBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+		agregarBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+		agregarBtn.setIcon(FontAwesome.PLUS);
+		agregarBtn.addClickListener(e -> {
+			if (grid.getSelectedRow() != null) {
+
+				openFormCopiar();
+			}
+		});
+
+		footerHL.addComponents(agregarBtn);
+	}
+
+	private void openFormCopiar() {
+
+		try {
+			PuntoDeEquilibrio item = (PuntoDeEquilibrio) grid.getSelectedRow();
+
+			item = item.clone();
+
+			item.setPuntoDeEquilibrio(null);
+
+			openForm(item, "Copiar y agregar");
+			
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+
+	}
 
 }

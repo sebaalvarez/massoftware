@@ -73,10 +73,24 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 				+ ". Usted cargo el valor \"{0}\" y es inválido.";
 		String nombreTXTMsgError1 = "El campo " + attsLabelShort[1]
 				+ " es requerido.";
-		String tipoCBXMsgError1 = "El campo " + attsLabelShort[2] + " es requerido.";
+		String tipoCBXMsgError1 = "El campo " + attsLabelShort[2]
+				+ " es requerido.";
 
 		if (item != null) {
 			item = item.clone();
+
+			if (((PuntoDeEquilibrio) item).getPuntoDeEquilibrio() == null) {
+				Short t = puntoDeEquilibrioBO.findMaxPuntoDeEquilibrio();
+				if (t == null || t < 1) {
+					t = 1;
+				}
+
+				((PuntoDeEquilibrio) item).setPuntoDeEquilibrio(t);
+
+				insert = true;
+
+			}
+
 			itemClone = item.clone();
 
 		} else {

@@ -20,7 +20,7 @@ public class PuntoDeEquilibrioDAO implements IPuntoDeEquilibrioDAO {
 			+ ", [dbo].[PuntoDeEquilibrio].[EJERCICIO]"
 			+ "FROM	[dbo].[PuntoDeEquilibrio] ";
 
-	private final String SQL_MS_2 = "INSERTxx INTO [dbo].[PuntoDeEquilibrio] ([PUNTODEEQUILIBRIO],[NOMBRE] ,[TIPO] ,[EJERCICIO]) VALUES (?, ?, ?, ?)";
+	private final String SQL_MS_2 = "INSERT INTO [dbo].[PuntoDeEquilibrio] ([PUNTODEEQUILIBRIO],[NOMBRE] ,[TIPO] ,[EJERCICIO]) VALUES (?, ?, ?, ?)";
 	private final String SQL_MS_3 = "UPDATE [dbo].[PuntoDeEquilibrio] SET [PUNTODEEQUILIBRIO] = ?, [NOMBRE] = ?, [TIPO] = ?, [EJERCICIO] = ?  WHERE [PUNTODEEQUILIBRIO] = ? AND [EJERCICIO] = ?;";
 	private final String SQL_MS_4 = "DELETE FROM [dbo].[PuntoDeEquilibrio] WHERE [PUNTODEEQUILIBRIO] = ? AND [EJERCICIO] = ?;";
 	private final String SQL_MS_5 = "SELECT	MAX([dbo].[PuntoDeEquilibrio].[PUNTODEEQUILIBRIO]) FROM [dbo].[PuntoDeEquilibrio];";
