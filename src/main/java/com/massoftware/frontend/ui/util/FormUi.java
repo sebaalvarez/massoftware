@@ -5,6 +5,7 @@ import org.cendra.common.model.EntityMetaData;
 import org.cendra.ex.crud.InsertDuplicateException;
 
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.model.Usuario;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
@@ -28,7 +29,7 @@ public abstract class FormUi extends CustomComponent {
 	protected VerticalLayout rootVH;
 	protected FormLayout formLayout;
 	private HorizontalLayout footerHL;
-	private Button guardarBTN;
+	protected Button guardarBTN;
 	private Button cancelarBTN;
 
 	private boolean insert = false;
@@ -36,7 +37,7 @@ public abstract class FormUi extends CustomComponent {
 	private TableUi tableUi;
 
 	protected BackendContext cx;
-
+	protected Usuario usuario;
 	protected EntityId item;
 
 	private String guardarBTNCaptionInsert = "Agregar";
@@ -44,11 +45,12 @@ public abstract class FormUi extends CustomComponent {
 	private String cancelarBTNCaption = "Cancelar";
 
 	public FormUi(EntityId item, BackendContext cx, Window window,
-			TableUi tableUi) {
+			TableUi tableUi, Usuario usuario) {
 		this.item = item;
 		this.cx = cx;
 		this.window = window;
 		this.tableUi = tableUi;
+		this.usuario = usuario;
 	}
 
 	protected void init() {
@@ -209,7 +211,7 @@ public abstract class FormUi extends CustomComponent {
 	@SuppressWarnings("rawtypes")
 	protected abstract Class getClassForm();
 
-	protected EntityMetaData getEntityAttMetaDataForm(){
+	protected EntityMetaData getEntityAttMetaDataForm() {
 		return cx.getEntityMetaData(getClassForm().getCanonicalName());
 	}
 

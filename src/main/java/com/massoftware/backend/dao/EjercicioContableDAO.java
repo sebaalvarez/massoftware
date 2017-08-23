@@ -293,7 +293,7 @@ public class EjercicioContableDAO implements IEjercicioContableDAO {
 
 			int rows = connectionWrapper.insert(sql, args);
 
-			if (rows > 1) {
+			if (rows != 1) {
 				throw new Exception(
 						"La sentencia debería afectar un solo registro, la sentencia afecto "
 								+ rows + " registros.");
@@ -365,7 +365,7 @@ public class EjercicioContableDAO implements IEjercicioContableDAO {
 
 			int rows = connectionWrapper.update(sql, args);
 
-			if (rows > 1) {
+			if (rows != 1) {
 				throw new Exception(
 						"La sentencia debería afectar un solo registro, la sentencia afecto "
 								+ rows + " registros.");
@@ -408,7 +408,7 @@ public class EjercicioContableDAO implements IEjercicioContableDAO {
 
 			int rows = connectionWrapper.delete(sql, item.getEjercicio());
 
-			if (rows > 1) {
+			if (rows != 1) {
 				throw new Exception(
 						"La sentencia debería afectar un solo registro, la sentencia afecto "
 								+ rows + " registros.");

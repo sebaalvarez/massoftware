@@ -239,7 +239,7 @@ public class CentroDeCostoContableDAO implements ICentroDeCostoContableDAO {
 
 			int rows = connectionWrapper.insert(sql, args);
 
-			if (rows > 1) {
+			if (rows != 1) {
 				throw new Exception(
 						"La sentencia debería afectar un solo registro, la sentencia afecto "
 								+ rows + " registros.");
@@ -307,7 +307,7 @@ public class CentroDeCostoContableDAO implements ICentroDeCostoContableDAO {
 
 			int rows = connectionWrapper.update(sql, args);
 
-			if (rows > 1) {
+			if (rows != 1) {
 				throw new Exception(
 						"La sentencia debería afectar un solo registro, la sentencia afecto "
 								+ rows + " registros.");
@@ -353,7 +353,7 @@ public class CentroDeCostoContableDAO implements ICentroDeCostoContableDAO {
 					.getCentroDeCostoContable(), item.getEjercicioContable()
 					.getId());
 
-			if (rows > 1) {
+			if (rows != 1) {
 				throw new Exception(
 						"La sentencia debería afectar un solo registro, la sentencia afecto "
 								+ rows + " registros.");

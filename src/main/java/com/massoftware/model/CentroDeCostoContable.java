@@ -1,17 +1,15 @@
 package com.massoftware.model;
 
-import java.io.Serializable;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.cendra.common.model.EntityId;
 
-public class CentroDeCostoContable extends EntityId implements Serializable,
-		Cloneable, Comparable<CentroDeCostoContable> {
+public class CentroDeCostoContable extends EntityId implements Cloneable,
+		Comparable<CentroDeCostoContable> {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3479432714155522333L;
+	private static final long serialVersionUID = 1651962136474483672L;
 
 	private EjercicioContable ejercicioContable;
 	private Short centroDeCostoContable;
@@ -26,29 +24,13 @@ public class CentroDeCostoContable extends EntityId implements Serializable,
 		setterByArray(row);
 	}
 
-	public String getId() {
-
-		String id = "";
-
-		if (this.centroDeCostoContable != null) {
-			id += this.centroDeCostoContable.toString();
-		}
-
-		if (this.ejercicioContable != null
-				&& this.ejercicioContable.getId() != null
-				&& this.ejercicioContable.getId().isEmpty() == false) {
-			id += " " + this.ejercicioContable.getId();
-		}
-
-		return id.trim();
-	}
-
 	public void setId(String id) {
-		// if (id != null && id.isEmpty() == false) {
-		// this.centroDeCostoContable = new Short(id.trim());
-		// } else {
-		// this.centroDeCostoContable = null;
-		// }
+		id = formatValue(id);
+		if (id != null) {
+			this.setCentroDeCostoContable(new Short(id));
+		} else {
+			this.setCentroDeCostoContable(null);
+		}
 	}
 
 	public Short getCentroDeCostoContable() {
@@ -57,6 +39,11 @@ public class CentroDeCostoContable extends EntityId implements Serializable,
 
 	public void setCentroDeCostoContable(Short centroDeCostoContable) {
 		this.centroDeCostoContable = centroDeCostoContable;
+		if (this.centroDeCostoContable != null) {
+			super.setId(this.centroDeCostoContable.toString());
+		} else {
+			super.setId(null);
+		}
 	}
 
 	public String getNombre() {
@@ -119,6 +106,7 @@ public class CentroDeCostoContable extends EntityId implements Serializable,
 	@Override
 	public CentroDeCostoContable clone() throws CloneNotSupportedException {
 		CentroDeCostoContable other = new CentroDeCostoContable();
+		
 		other.setAbreviatura(this.getAbreviatura());
 		other.setCentroDeCostoContable(this.getCentroDeCostoContable());
 		if (this.getEjercicioContable() != null) {

@@ -58,9 +58,9 @@ public class PuntoDeEquilibrioBO implements IPuntoDeEquilibrioBO {
 	}
 
 	@Override
-	public PuntoDeEquilibrio update(PuntoDeEquilibrio item) throws Exception {
+	public PuntoDeEquilibrio update(PuntoDeEquilibrio item, PuntoDeEquilibrio itemClone) throws Exception {
 
-		return puntoDeEquilibrioDAO.update(item);
+		return puntoDeEquilibrioDAO.update(item, itemClone);
 	}
 
 	@Override
@@ -73,6 +73,12 @@ public class PuntoDeEquilibrioBO implements IPuntoDeEquilibrioBO {
 	public Short findMaxPuntoDeEquilibrio(Integer ejercicio) throws Exception {
 
 		return puntoDeEquilibrioDAO.findMaxPuntoDeEquilibrio(ejercicio);
+	}
+	
+	@Override
+	public Short findMaxPuntoDeEquilibrio() throws Exception {
+
+		return puntoDeEquilibrioDAO.findMaxPuntoDeEquilibrio();
 	}
 
 }

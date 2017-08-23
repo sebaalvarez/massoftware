@@ -17,20 +17,13 @@ public class PuntoDeEquilibrioDAO implements IPuntoDeEquilibrioDAO {
 	private final String SQL_MS_1 = "SELECT	[dbo].[PuntoDeEquilibrio].[PUNTODEEQUILIBRIO], "
 			+ "[dbo].[PuntoDeEquilibrio].[NOMBRE]"
 			+ ", [dbo].[PuntoDeEquilibrio].[TIPO]"
-			+ ", [dbo].[EjerciciosContables].[EJERCICIO]"
-			+ ", [dbo].[EjerciciosContables].[COMENTARIO]"
-			+ ", [dbo].[EjerciciosContables].[FECHAAPERTURASQL]"
-			+ ", [dbo].[EjerciciosContables].[FECHACIERRESQL]"
-			+ ", [dbo].[EjerciciosContables].[EJERCICIOCERRADO]"
-			+ ", [dbo].[EjerciciosContables].[EJERCICIOCERRADOMODULOS] "
-			+ "FROM	[dbo].[PuntoDeEquilibrio] "
-			+ "JOIN	[dbo].[EjerciciosContables] "
-			+ "ON [dbo].[EjerciciosContables].EJERCICIO = [dbo].[PuntoDeEquilibrio].EJERCICIO";
+			+ ", [dbo].[PuntoDeEquilibrio].[EJERCICIO]"
+			+ "FROM	[dbo].[PuntoDeEquilibrio] ";
 
-	private final String SQL_MS_2 = "INSERT INTO [dbo].[PuntoDeEquilibrio] ([PUNTODEEQUILIBRIO],[NOMBRE] ,[TIPO] ,[EJERCICIO]) VALUES (?, ?, ?, ?)";
-	private final String SQL_MS_3 = "UPDATE [dbo].[PuntoDeEquilibrio] SET [NOMBRE] = ?, [TIPO] = ?, [EJERCICIO] = ? WHERE [PUNTODEEQUILIBRIO] = ? AND [EJERCICIO] = ?;";
+	private final String SQL_MS_2 = "INSERTxx INTO [dbo].[PuntoDeEquilibrio] ([PUNTODEEQUILIBRIO],[NOMBRE] ,[TIPO] ,[EJERCICIO]) VALUES (?, ?, ?, ?)";
+	private final String SQL_MS_3 = "UPDATE [dbo].[PuntoDeEquilibrio] SET [PUNTODEEQUILIBRIO] = ?, [NOMBRE] = ?, [TIPO] = ?, [EJERCICIO] = ?  WHERE [PUNTODEEQUILIBRIO] = ? AND [EJERCICIO] = ?;";
 	private final String SQL_MS_4 = "DELETE FROM [dbo].[PuntoDeEquilibrio] WHERE [PUNTODEEQUILIBRIO] = ? AND [EJERCICIO] = ?;";
-	private final String SQL_MS_5 = "SELECT	MAX([dbo].[PuntoDeEquilibrio].[PUNTODEEQUILIBRIO]) FROM [dbo].[PuntoDeEquilibrio] WHERE [EJERCICIO] = ?;";
+	private final String SQL_MS_5 = "SELECT	MAX([dbo].[PuntoDeEquilibrio].[PUNTODEEQUILIBRIO]) FROM [dbo].[PuntoDeEquilibrio];";
 
 	public PuntoDeEquilibrioDAO(DataSourceWrapper dataSourceWrapper) {
 		super();
@@ -111,6 +104,11 @@ public class PuntoDeEquilibrioDAO implements IPuntoDeEquilibrioDAO {
 	}
 
 	@Override
+	public Short findMaxPuntoDeEquilibrio() throws Exception {
+		return findMaxPuntoDeEquilibrio(null);
+	}
+
+	@Override
 	public Short findMaxPuntoDeEquilibrio(Integer ejercicio) throws Exception {
 
 		String sql = null;
@@ -124,6 +122,10 @@ public class PuntoDeEquilibrioDAO implements IPuntoDeEquilibrioDAO {
 
 			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
 				sql = SQL_MS_5;
+
+				if (ejercicio != null) {
+					sql += " WHERE [dbo].[PuntoDeEquilibrio].[EJERCICIO] = ? ";
+				}
 			}
 
 			Object[][] table = connectionWrapper.findToTable(sql, ejercicio);
@@ -163,10 +165,12 @@ public class PuntoDeEquilibrioDAO implements IPuntoDeEquilibrioDAO {
 			if (dataSourceWrapper.isDatabasePostgreSql()) {
 
 			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-				sql = SQL_MS_1 + " WHERE [PUNTODEEQUILIBRIO] = ? AND [dbo].[PuntoDeEquilibrio].[EJERCICIO] = ?;";
+				sql = SQL_MS_1
+						+ " WHERE [PUNTODEEQUILIBRIO] = ? AND [dbo].[PuntoDeEquilibrio].[EJERCICIO] = ?;";
 			}
 
-			Object[][] table = connectionWrapper.findToTable(sql, punto, ejercicio);
+			Object[][] table = connectionWrapper.findToTable(sql, punto,
+					ejercicio);
 
 			for (Object[] row : table) {
 
@@ -187,7 +191,10 @@ public class PuntoDeEquilibrioDAO implements IPuntoDeEquilibrioDAO {
 	@Override
 	public EntityId insert(PuntoDeEquilibrio item) throws Exception {
 
-		if (findByPuntoDeEquilibrio(item.getPuntoDeEquilibrio(), item.getEjercicioContable().getEjercicio()) != null) {
+		item.setEjercicio(0);
+
+		if (findByPuntoDeEquilibrio(item.getPuntoDeEquilibrio(),
+				item.getEjercicio()) != null) {
 			throw new InsertDuplicateException(item.getPuntoDeEquilibrio());
 		}
 
@@ -224,22 +231,29 @@ public class PuntoDeEquilibrioDAO implements IPuntoDeEquilibrioDAO {
 			} else {
 				tipo = Short.class;
 			}
-			Object ejercicioContable = null;
-			if (item.getEjercicioContable() != null
-					&& item.getEjercicioContable().getEjercicio() != null) {
-				ejercicioContable = item.getEjercicioContable().getEjercicio();
+			// Object ejercicioContable = null;
+			// if (item.getEjercicioContable() != null
+			// && item.getEjercicioContable().getEjercicio() != null) {
+			// ejercicioContable = item.getEjercicioContable().getEjercicio();
+			// } else {
+			// ejercicioContable = Integer.class;
+			// }
+			Object ejercicio = null;
+			if (item.getEjercicio() != null) {
+				ejercicio = item.getEjercicio();
 			} else {
-				ejercicioContable = Integer.class;
+				ejercicio = Integer.class;
 			}
 
-			Object[] args = { puntoDeEquilibrio, nombre, tipo,
-					ejercicioContable };
+			// Object[] args = { puntoDeEquilibrio, nombre, tipo,
+			// ejercicioContable };
+			Object[] args = { puntoDeEquilibrio, nombre, tipo, ejercicio };
 
 			int rows = connectionWrapper.insert(sql, args);
 
-			if (rows > 1) {
+			if (rows != 1) {
 				throw new Exception(
-						"La sentencia debería afectar un solo registro, la sentencia afecto "
+						"La sentencia debería afectar un registro, la sentencia afecto "
 								+ rows + " registros.");
 			}
 
@@ -256,7 +270,8 @@ public class PuntoDeEquilibrioDAO implements IPuntoDeEquilibrioDAO {
 	}
 
 	@Override
-	public PuntoDeEquilibrio update(PuntoDeEquilibrio item) throws Exception {
+	public PuntoDeEquilibrio update(PuntoDeEquilibrio item,
+			PuntoDeEquilibrio itemClone) throws Exception {
 
 		String sql = null;
 
@@ -291,20 +306,32 @@ public class PuntoDeEquilibrioDAO implements IPuntoDeEquilibrioDAO {
 			} else {
 				tipo = Short.class;
 			}
-			Object ejercicioContable = null;
-			if (item.getEjercicioContable() != null
-					&& item.getEjercicioContable().getEjercicio() != null) {
-				ejercicioContable = item.getEjercicioContable().getEjercicio();
+			Object ejercicio = null;
+			if (item.getEjercicio() != null) {
+				ejercicio = item.getEjercicio();
 			} else {
-				ejercicioContable = Integer.class;
+				ejercicio = Integer.class;
 			}
 
-			Object[] args = { nombre, tipo, ejercicioContable,
-					puntoDeEquilibrio, ejercicioContable };
+			Object puntoDeEquilibrioClone = null;
+			if (itemClone.getPuntoDeEquilibrio() != null) {
+				puntoDeEquilibrioClone = itemClone.getPuntoDeEquilibrio();
+			} else {
+				puntoDeEquilibrioClone = Short.class;
+			}
+			Object ejercicioClone = null;
+			if (itemClone.getEjercicio() != null) {
+				ejercicioClone = itemClone.getEjercicio();
+			} else {
+				ejercicioClone = Integer.class;
+			}
+
+			Object[] args = { puntoDeEquilibrio, nombre, tipo, ejercicio,
+					puntoDeEquilibrioClone, ejercicioClone };
 
 			int rows = connectionWrapper.update(sql, args);
 
-			if (rows > 1) {
+			if (rows != 1) {
 				throw new Exception(
 						"La sentencia debería afectar un solo registro, la sentencia afecto "
 								+ rows + " registros.");
@@ -321,7 +348,8 @@ public class PuntoDeEquilibrioDAO implements IPuntoDeEquilibrioDAO {
 			connectionWrapper.close(connectionWrapper);
 		}
 
-		item = this.findByPuntoDeEquilibrio(item.getPuntoDeEquilibrio(), item.getEjercicioContable().getEjercicio());
+		item = this.findByPuntoDeEquilibrio(item.getPuntoDeEquilibrio(),
+				item.getEjercicio());
 
 		return item;
 	}
@@ -344,11 +372,10 @@ public class PuntoDeEquilibrioDAO implements IPuntoDeEquilibrioDAO {
 
 			connectionWrapper.begin();
 
-			int rows = connectionWrapper.delete(sql, item
-					.getPuntoDeEquilibrio(), item.getEjercicioContable()
-					.getId());
+			int rows = connectionWrapper.delete(sql,
+					item.getPuntoDeEquilibrio(), item.getEjercicio());
 
-			if (rows > 1) {
+			if (rows != 1) {
 				throw new Exception(
 						"La sentencia debería afectar un solo registro, la sentencia afecto "
 								+ rows + " registros.");
@@ -366,5 +393,4 @@ public class PuntoDeEquilibrioDAO implements IPuntoDeEquilibrioDAO {
 		}
 
 	}
-
 }

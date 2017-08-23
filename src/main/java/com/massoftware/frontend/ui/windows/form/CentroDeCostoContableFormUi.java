@@ -12,8 +12,9 @@ import com.massoftware.frontend.ui.util.StringToShortConverterUnspecifiedLocale;
 import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.Usuario;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.data.validator.ShortRangeValidator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
@@ -38,8 +39,8 @@ public class CentroDeCostoContableFormUi extends FormUi {
 	// -------------------------------------------------------------------
 
 	public CentroDeCostoContableFormUi(EntityId item, BackendContext cx,
-			Window window, TableUi tableUi) {
-		super(item, cx, window, tableUi);
+			Window window, TableUi tableUi, Usuario usuario) {
+		super(item, cx, window, tableUi, usuario);
 		init();
 	}
 
@@ -87,12 +88,23 @@ public class CentroDeCostoContableFormUi extends FormUi {
 			item = item.clone();
 		} else {
 			item = new CentroDeCostoContable();
-			((CentroDeCostoContable) item)
-					.setEjercicioContable(ejercicioContableBO
-							.findMaxEjercicio());
 
-			Short t = centroDeCostoContableBO.findMaxCentroDeCostoContable(((CentroDeCostoContable) item)
-					.getEjercicioContable().getEjercicio());
+			EjercicioContable ejercicioContableDefault = usuario
+					.getEjercicioContableDefault();
+			if (ejercicioContableDefault != null
+					&& ejercicioContableDefault.getEjercicio() != null) {
+				((CentroDeCostoContable) item)
+						.setEjercicioContable(ejercicioContableDefault);
+
+			} else {
+				((CentroDeCostoContable) item)
+						.setEjercicioContable(ejercicioContableBO
+								.findMaxEjercicio());
+			}
+
+			Short t = centroDeCostoContableBO
+					.findMaxCentroDeCostoContable(((CentroDeCostoContable) item)
+							.getEjercicioContable().getEjercicio());
 			if (t == null || t < 1) {
 				t = 1;
 			}
@@ -108,7 +120,7 @@ public class CentroDeCostoContableFormUi extends FormUi {
 
 		// --------------------------------------------------------------------
 
-		ejercicioTXT = new TextField(attsName[0],
+		ejercicioTXT = new TextField(attsLabelShort[0],
 				beanItem2.getItemProperty(attsName2[0]));
 		ejercicioTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
 		ejercicioTXT.setRequired(true);
@@ -128,8 +140,8 @@ public class CentroDeCostoContableFormUi extends FormUi {
 		centroTXT.setRequiredError(centroTXTMsgError1);
 		centroTXT.setConverter(new StringToShortConverterUnspecifiedLocale());
 		centroTXT.setNullRepresentation("");
-		centroTXT.addValidator(new IntegerRangeValidator(centroTXTMsgError2, 1,
-				Short.MAX_VALUE + 0));
+		centroTXT.addValidator(new ShortRangeValidator(centroTXTMsgError2,
+				(short) 1, Short.MAX_VALUE));
 		formLayout.addComponent(centroTXT);
 
 		// --------------------------------------------------------------------

@@ -29,6 +29,7 @@ import com.massoftware.backend.dao.UsuarioDAO;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
+import com.massoftware.model.PuntoDeEquilibrioTipo;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 
 public class BackendContext extends AbstractContext {
@@ -89,15 +90,25 @@ public class BackendContext extends AbstractContext {
 		puntoDeEquilibrioMD.setName(PuntoDeEquilibrio.class.getCanonicalName());
 		puntoDeEquilibrioMD.setLabel("Punto de equilibrio");
 		puntoDeEquilibrioMD.setLabelPlural("Puntos de equilibrio");
-		puntoDeEquilibrioMD.addAtt("ejercicioContable",
-				ejercicioContableMD.getLabelShort(),
-				ejercicioContableMD.getLabel());
+//		puntoDeEquilibrioMD.addAtt("ejercicioContable",
+//				ejercicioContableMD.getLabelShort(),
+//				ejercicioContableMD.getLabel());
 		puntoDeEquilibrioMD.addAtt("puntoDeEquilibrio", "Pto. de Equ.",
 				"Punto de equilibrio");
 		puntoDeEquilibrioMD.addAtt("nombre", "Nombre");
 		puntoDeEquilibrioMD.addAtt("tipo", "Tipo");
+//		puntoDeEquilibrioMD.addAtt("ejercicio", "Ejercicio");
 		entityMetaDataMap.put(puntoDeEquilibrioMD.getName(),
 				puntoDeEquilibrioMD);
+		
+		EntityMetaData puntoDeEquilibrioTipoMD = new EntityMetaData();
+		puntoDeEquilibrioTipoMD.setName(PuntoDeEquilibrioTipo.class.getCanonicalName());
+		puntoDeEquilibrioTipoMD.setLabel("Tipo de punto de equilibrio");
+		puntoDeEquilibrioTipoMD.setLabelPlural("Tipos de punto de equilibrio");			
+		puntoDeEquilibrioTipoMD.addAtt("tipo", "Tipo");
+		puntoDeEquilibrioTipoMD.addAtt("nombre", "Nombre");
+		entityMetaDataMap.put(puntoDeEquilibrioTipoMD.getName(),
+				puntoDeEquilibrioTipoMD);
 
 	}
 

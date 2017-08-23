@@ -14,6 +14,7 @@ import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.frontend.ui.windows.form.CentroDeCostoContableFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.Usuario;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
@@ -34,22 +35,22 @@ public class CentroDeCostoContableTableUi extends TableUi {
 	 */
 	private static final long serialVersionUID = 4355038684086959846L;
 
-	private ComboBox ejerciciosCBX;
-	private Button clearFilterBTN;
+	protected ComboBox ejerciciosCBX;
+	protected Button clearFilterBTN;
 	protected OptionGroup optionsOrderBy;
 
 	private String ejerciciosCBXCaption = "Ejercicio...";
-	private String clearFilterTextBtnCaption = "Quitar los filtros aplicados a la búsqueda";
+	protected String clearFilterTextBtnCaption = "Quitar los filtros aplicados a la búsqueda";
 	protected String optionGroupItem1Caption = "Ordenar por centro de costo";
-	private String optionGroupItem2Caption = "Ordenar por nombre";
+	protected String optionGroupItem2Caption = "Ordenar por nombre";
 
 	private ICentroDeCostoContableBO centroDeCostoContableBO;
 	protected IEjercicioContableBO ejercicioContableBO;
 
 	// --------------------------------------------------------------
 
-	public CentroDeCostoContableTableUi(BackendContext cx) {
-		super(cx);
+	public CentroDeCostoContableTableUi(BackendContext cx, Usuario usuario) {
+		super(cx, usuario);
 		init();
 	}
 
@@ -91,18 +92,39 @@ public class CentroDeCostoContableTableUi extends TableUi {
 		grid.getColumn(attsName[3]).setHeaderCaption(attsLabelShort[3]);
 	}
 
-	protected Component[] buildHeaderToolbar() {
+	protected Component[] buildHeaderToolbar() throws Exception {
 		ejerciciosCBX = new ComboBox();
 		ejerciciosCBX.setInputPrompt(ejerciciosCBXCaption);
 		ejerciciosCBX.setItemCaptionPropertyId(getEntityAttMetaDataCB()
 				.getAttNames()[0]);
 		ejerciciosCBX.addStyleName(ValoTheme.COMBOBOX_SMALL);
-		ejerciciosCBX.setIcon(FontAwesome.SEARCH);
+		ejerciciosCBX.setIcon(FontAwesome.SEARCH);				
+		loadEjerciciosCBX();
+		if (ejerciciosCBX.getContainerDataSource() == null
+				|| ejerciciosCBX.getContainerDataSource().size() == 0) {
+
+			agregarBtn.setEnabled(false);
+		} else {
+
+			EjercicioContable ejercicioContableDefault = usuario
+					.getEjercicioContableDefault();
+
+			if (ejercicioContableDefault != null
+					&& ejercicioContableDefault.getEjercicio() != null) {
+				ejerciciosCBX.setValue(ejercicioContableDefault);
+			} else {
+				EjercicioContable maxEjercicioContable = ejercicioContableBO
+						.findMaxEjercicio();
+				ejerciciosCBX.setValue(maxEjercicioContable);
+			}
+		}
 		ejerciciosCBX.addValueChangeListener(e -> {
 
 			updateGrid();
 
 		});
+		
+		
 
 		clearFilterBTN = new Button(FontAwesome.TIMES);
 		clearFilterBTN.setDescription(clearFilterTextBtnCaption);
@@ -136,7 +158,7 @@ public class CentroDeCostoContableTableUi extends TableUi {
 			}
 		});
 
-		loadEjerciciosCBX();
+		
 
 		return new Component[] { filtering, optionsOrderBy };
 	}
@@ -184,13 +206,13 @@ public class CentroDeCostoContableTableUi extends TableUi {
 
 	protected CustomComponent getWindowsContent(Window win, EntityId item) {
 
-		return new CentroDeCostoContableFormUi(item, cx, win, this);
+		return new CentroDeCostoContableFormUi(item, cx, win, this, usuario);
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////////
 
 	@SuppressWarnings("unchecked")
-	private void loadEjerciciosCBX() {
+	protected void loadEjerciciosCBX() {
 		try {
 
 			List<EjercicioContable> items = ejercicioContableBO.findAll();

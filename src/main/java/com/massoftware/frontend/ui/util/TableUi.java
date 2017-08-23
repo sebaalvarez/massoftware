@@ -8,6 +8,7 @@ import org.cendra.common.model.EntityMetaData;
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.model.Usuario;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -49,74 +50,84 @@ public abstract class TableUi extends CustomComponent {
 
 	// --------------------------------------------------------------
 
-	public TableUi(BackendContext cx) {
+	protected Usuario usuario;
+
+	// --------------------------------------------------------------
+
+	public TableUi(BackendContext cx, Usuario usuario) {
 		this.cx = cx;
+		this.usuario = usuario;
 	}
 
 	protected void init() {
+		try {
 
-		initObjectBO();
+			initObjectBO();
 
-		// ------------------------------------------------------------------
+			// ------------------------------------------------------------------
 
-		rootVH = new VerticalLayout();
-		rootVH.setMargin(true);
-		rootVH.setSpacing(true);
+			rootVH = new VerticalLayout();
+			rootVH.setMargin(true);
+			rootVH.setSpacing(true);
 
-		// ------------------------------------------------------------------
+			// ------------------------------------------------------------------
 
-		toolbarHL = new HorizontalLayout();
-		toolbarHL.setWidth("100%");
-		toolbarHL.setSpacing(true);
-		toolbarHL.addComponents(buildHeaderToolbar());
-		// toolbarHL.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
+			toolbarHL = new HorizontalLayout();
+			toolbarHL.setWidth("100%");
+			toolbarHL.setSpacing(true);
+			toolbarHL.addComponents(buildHeaderToolbar());
+			// toolbarHL.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
 
-		// ------------------------------------------------------------------
+			// ------------------------------------------------------------------
 
-		grid = new Grid();
+			grid = new Grid();
 
-		grid.setImmediate(true);
+			grid.setImmediate(true);
 
-		grid.setColumns(getColumnNames());
+			grid.setColumns(getColumnNames());
 
-		grid.setSelectionMode(SelectionMode.SINGLE);
+			grid.setSelectionMode(SelectionMode.SINGLE);
 
-		// ------------------------------------------------------------------
+			// ------------------------------------------------------------------
 
-		grid.setSizeFull();
-		rootVH.addComponents(toolbarHL, grid);
+			grid.setSizeFull();
+			rootVH.addComponents(toolbarHL, grid);
 
-		// ------------------------------------------------------------------
+			// ------------------------------------------------------------------
 
-		buildFooterToolbar();
+			buildFooterToolbar();
 
-		// ------------------------------------------------------------------
+			// ------------------------------------------------------------------
 
-		setCompositionRoot(rootVH);
+			setCompositionRoot(rootVH);
 
-		// ------------------------------------------------------------------
+			// ------------------------------------------------------------------
 
-		grid.addItemClickListener(new ItemClickListener() {
-			/**
+			grid.addItemClickListener(new ItemClickListener() {
+				/**
 			 * 
 			 */
-			private static final long serialVersionUID = -7043113996470420510L;
+				private static final long serialVersionUID = -7043113996470420510L;
 
-			@Override
-			public void itemClick(ItemClickEvent event) {
-				if (event.isDoubleClick()) {
+				@Override
+				public void itemClick(ItemClickEvent event) {
+					if (event.isDoubleClick()) {
 
-					if (grid.getSelectedRow() != null) {
-						openForm(grid.getSelectedRow());
+						if (grid.getSelectedRow() != null) {
+							openForm(grid.getSelectedRow());
+						}
+
 					}
-
 				}
-			}
-		});
+			});
 
-		// ------------------------------------------------------------------
+			// ------------------------------------------------------------------
 
-		updateGrid();
+			updateGrid();
+
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
 
 	}
 
@@ -327,7 +338,7 @@ public abstract class TableUi extends CustomComponent {
 
 	protected abstract void configGrid();
 
-	protected abstract Component[] buildHeaderToolbar();
+	protected abstract Component[] buildHeaderToolbar() throws Exception;
 
 	public abstract void updateGrid();
 

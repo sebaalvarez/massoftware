@@ -2,10 +2,10 @@ package com.massoftware.frontend.ui.util;
 
 import java.util.Locale;
 
-import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.util.converter.StringToShortConverter;
 
 public class StringToShortConverterUnspecifiedLocale extends
-		StringToIntegerConverter {
+		StringToShortConverter {
 
 	/**
 	 * 

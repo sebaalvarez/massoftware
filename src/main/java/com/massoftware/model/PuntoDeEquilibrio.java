@@ -1,23 +1,19 @@
 package com.massoftware.model;
 
-import java.io.Serializable;
-
-import org.apache.commons.lang3.ArrayUtils;
 import org.cendra.common.model.EntityId;
 
-public class PuntoDeEquilibrio extends EntityId implements Serializable,
-		Cloneable {
+public class PuntoDeEquilibrio extends EntityId implements Cloneable,
+		Comparable<PuntoDeEquilibrio> {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -9084841223445053283L;
+	private static final long serialVersionUID = -7063241156348196814L;
 
-	private EjercicioContable ejercicioContable;
 	private Short puntoDeEquilibrio;
 	private String nombre;
 	private PuntoDeEquilibrioTipo tipo = PuntoDeEquilibrioTipo.TIPO_1;
-	
+	private Integer ejercicio;
 
 	public PuntoDeEquilibrio() {
 
@@ -27,18 +23,12 @@ public class PuntoDeEquilibrio extends EntityId implements Serializable,
 		setterByArray(row);
 	}
 
-	public String getId() {
-		if (this.puntoDeEquilibrio != null) {
-			return this.puntoDeEquilibrio.toString();
-		}
-		return null;
-	}
-
 	public void setId(String id) {
-		if (id != null && id.isEmpty() == false) {
-			this.puntoDeEquilibrio = new Short(id.trim());
+		id = formatValue(id);
+		if (id != null) {
+			this.setPuntoDeEquilibrio(new Short(id));
 		} else {
-			this.puntoDeEquilibrio = null;
+			this.setPuntoDeEquilibrio(null);
 		}
 	}
 
@@ -48,13 +38,20 @@ public class PuntoDeEquilibrio extends EntityId implements Serializable,
 
 	public void setPuntoDeEquilibrio(Short puntoDeEquilibrio) {
 		this.puntoDeEquilibrio = puntoDeEquilibrio;
+		if (this.puntoDeEquilibrio != null) {
+			super.setId(this.puntoDeEquilibrio.toString());
+		} else {
+			super.setId(null);
+		}
 	}
 
 	public String getNombre() {
+		nombre = formatValue(nombre);
 		return nombre;
 	}
 
 	public void setNombre(String nombre) {
+		nombre = formatValue(nombre);
 		this.nombre = nombre;
 	}
 
@@ -66,31 +63,12 @@ public class PuntoDeEquilibrio extends EntityId implements Serializable,
 		this.tipo = tipo;
 	}
 
-	public EjercicioContable getEjercicioContable() {
-		return ejercicioContable;
+	public Integer getEjercicio() {
+		return ejercicio;
 	}
 
-	public void setEjercicioContable(EjercicioContable ejercicioContable) {
-		this.ejercicioContable = ejercicioContable;
-	}
-
-	@Override
-	public PuntoDeEquilibrio clone() throws CloneNotSupportedException {
-		PuntoDeEquilibrio other = new PuntoDeEquilibrio();
-		other.setNombre(this.getNombre());
-		other.setPuntoDeEquilibrio(this.getPuntoDeEquilibrio());
-		if (this.getTipo() != null) {
-			other.setTipo(this.getTipo().clone());
-		} else {
-			other.setTipo(null);
-		}
-		if (this.getEjercicioContable() != null) {
-			other.setEjercicioContable(this.getEjercicioContable().clone());
-		} else {
-			other.setEjercicioContable(null);
-		}
-
-		return other;
+	public void setEjercicio(Integer ejercicio) {
+		this.ejercicio = ejercicio;
 	}
 
 	public void setterByArray(Object[] row) {
@@ -112,13 +90,43 @@ public class PuntoDeEquilibrio extends EntityId implements Serializable,
 		if (row[column] != null) {
 			this.setTipo(new PuntoDeEquilibrioTipo((Short) row[column]));
 		}
-		
-		EjercicioContable ejercicioContable = new EjercicioContable(
-				ArrayUtils.subarray(row, 3, 9));
 
-		if (ejercicioContable.getEjercicio() != null) {
-			this.setEjercicioContable(ejercicioContable);
+		column++;
+
+		if (row[column] != null) {
+			this.setEjercicio((Integer) row[column]);
 		}
+
+	}
+
+	@Override
+	public PuntoDeEquilibrio clone() throws CloneNotSupportedException {
+
+		PuntoDeEquilibrio other = new PuntoDeEquilibrio();
+
+		other.setNombre(this.getNombre());
+		other.setPuntoDeEquilibrio(this.getPuntoDeEquilibrio());
+		if (this.getTipo() != null) {
+			other.setTipo(this.getTipo().clone());
+		} else {
+			other.setTipo(null);
+		}
+		other.setEjercicio(this.getEjercicio());
+
+		return other;
+	}
+
+	public int compareTo(PuntoDeEquilibrio o) {
+
+		if (this.puntoDeEquilibrio < o.puntoDeEquilibrio) {
+			return -1;
+		} else if (this.puntoDeEquilibrio > o.puntoDeEquilibrio) {
+			return 1;
+		} else if (this.puntoDeEquilibrio == o.puntoDeEquilibrio) {
+			return 0;
+		}
+
+		return 0;
 
 	}
 

@@ -1,13 +1,12 @@
 package com.massoftware.model;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
 import org.cendra.common.model.EntityId;
 
-public class EjercicioContable extends EntityId implements Serializable,
-		Cloneable, Comparable<EjercicioContable> {
+public class EjercicioContable extends EntityId implements Cloneable,
+		Comparable<EjercicioContable> {
 
 	/**
 	 * 

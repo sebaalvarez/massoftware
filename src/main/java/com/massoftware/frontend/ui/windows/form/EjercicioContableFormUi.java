@@ -15,6 +15,7 @@ import com.massoftware.frontend.ui.util.StringToIntegerConverterUnspecifiedLocal
 import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.frontend.ui.util.UtilDate;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.Usuario;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.converter.Converter;
@@ -56,8 +57,8 @@ public class EjercicioContableFormUi extends FormUi {
 	// -------------------------------------------------------------------
 
 	public EjercicioContableFormUi(EntityId item, BackendContext cx,
-			Window window, TableUi tableUi) {
-		super(item, cx, window, tableUi);
+			Window window, TableUi tableUi, Usuario usuario) {
+		super(item, cx, window, tableUi, usuario);
 		init();
 	}
 

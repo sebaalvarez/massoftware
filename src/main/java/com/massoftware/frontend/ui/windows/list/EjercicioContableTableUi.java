@@ -11,6 +11,7 @@ import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.frontend.ui.windows.form.EjercicioContableFormUi;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.Usuario;
 import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
@@ -42,8 +43,8 @@ public class EjercicioContableTableUi extends TableUi {
 
 	private IEjercicioContableBO ejercicioContableBO;
 
-	public EjercicioContableTableUi(BackendContext cx) {
-		super(cx);
+	public EjercicioContableTableUi(BackendContext cx, Usuario usuario) {
+		super(cx, usuario);
 		init();
 	}
 
@@ -167,7 +168,7 @@ public class EjercicioContableTableUi extends TableUi {
 	}
 
 	protected CustomComponent getWindowsContent(Window win, EntityId item) {
-		return new EjercicioContableFormUi(item, cx, win, this);
+		return new EjercicioContableFormUi(item, cx, win, this, usuario);
 	}
 
 }

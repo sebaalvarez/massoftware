@@ -24,11 +24,11 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class ContabilidadGeneralMenu extends VerticalLayout implements View {
@@ -317,9 +317,10 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 		try {
 
 			String title = cx.getEntityMetaData(
-					EjercicioContable.class.getCanonicalName()).getLabel();
+					EjercicioContable.class.getCanonicalName())
+					.getLabelPlural();
 
-			EjercicioContableTableUi ui = new EjercicioContableTableUi(cx);
+			EjercicioContableTableUi ui = new EjercicioContableTableUi(cx, usuario);
 
 			Window win = new Window(title);
 			// win.setWidth((float)(ejerciciosContablesDesing.rootVH.getWidth()
@@ -346,10 +347,11 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 		try {
 
 			String title = cx.getEntityMetaData(
-					CentroDeCostoContable.class.getCanonicalName()).getLabel();
+					CentroDeCostoContable.class.getCanonicalName())
+					.getLabelPlural();
 
 			CentroDeCostoContableTableUi ui = new CentroDeCostoContableTableUi(
-					cx);
+					cx, usuario);
 
 			Window win = new Window(title);
 			// win.setWidth((float)(ejerciciosContablesDesing.rootVH.getWidth()
@@ -376,9 +378,10 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 		try {
 
 			String title = cx.getEntityMetaData(
-					PuntoDeEquilibrio.class.getCanonicalName()).getLabel();
+					PuntoDeEquilibrio.class.getCanonicalName())
+					.getLabelPlural();
 
-			PuntoDeEquilibrioTableUi ui = new PuntoDeEquilibrioTableUi(cx);
+			PuntoDeEquilibrioTableUi ui = new PuntoDeEquilibrioTableUi(cx, usuario);
 
 			Window win = new Window(title);
 			// win.setWidth((float)(ejerciciosContablesDesing.rootVH.getWidth()

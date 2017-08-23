@@ -23,10 +23,12 @@ public interface IPuntoDeEquilibrioBO {
 
 	EntityId insert(PuntoDeEquilibrio item) throws Exception;
 
-	PuntoDeEquilibrio update(PuntoDeEquilibrio item) throws Exception;
+	PuntoDeEquilibrio update(PuntoDeEquilibrio item, PuntoDeEquilibrio itemClone) throws Exception;
 
 	EntityId delete(PuntoDeEquilibrio item) throws Exception;
 
 	Short findMaxPuntoDeEquilibrio(Integer ejercicio) throws Exception;
+	
+	Short findMaxPuntoDeEquilibrio() throws Exception;
 
 }

@@ -1,8 +1,9 @@
 package com.massoftware.model;
 
-import java.io.Serializable;
+import org.cendra.common.model.EntityId;
 
-public class PuntoDeEquilibrioTipo implements Serializable, Cloneable {
+public class PuntoDeEquilibrioTipo extends EntityId implements Cloneable,
+		Comparable<PuntoDeEquilibrioTipo> {
 
 	/**
 	 * 
@@ -57,8 +58,17 @@ public class PuntoDeEquilibrioTipo implements Serializable, Cloneable {
 	}
 
 	private void init(Short tipo, String nombre) {
-		this.tipo = tipo;
-		this.nombre = nombre;
+		setTipo(tipo);
+		setNombre(nombre);
+	}
+
+	public void setId(String id) {
+		id = formatValue(id);
+		if (id != null) {
+			this.setTipo(new Short(id));
+		} else {
+			this.setTipo(null);
+		}
 	}
 
 	public Short getTipo() {
@@ -67,6 +77,11 @@ public class PuntoDeEquilibrioTipo implements Serializable, Cloneable {
 
 	public void setTipo(Short tipo) {
 		this.tipo = tipo;
+		if (this.tipo != null) {
+			super.setId(this.tipo.toString());
+		} else {
+			super.setId(null);
+		}
 	}
 
 	public String getNombre() {
@@ -85,9 +100,23 @@ public class PuntoDeEquilibrioTipo implements Serializable, Cloneable {
 		return other;
 	}
 
+	public int compareTo(PuntoDeEquilibrioTipo o) {
+
+		if (this.tipo < o.tipo) {
+			return -1;
+		} else if (this.tipo > o.tipo) {
+			return 1;
+		} else if (this.tipo == o.tipo) {
+			return 0;
+		}
+
+		return 0;
+
+	}
+
 	@Override
 	public String toString() {
-		return "(" + tipo + ") " + nombre;
+		return "(" + getTipo() + ") " + getNombre();
 
 	}
 
