@@ -20,10 +20,12 @@ import com.massoftware.backend.bo.ICentroDeCostoContableBO;
 import com.massoftware.backend.bo.IEjercicioContableBO;
 import com.massoftware.backend.bo.IPuntoDeEquilibrioBO;
 import com.massoftware.backend.bo.IUsuarioBO;
+import com.massoftware.backend.bo.PlanDeCuentaBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.backend.dao.CentroDeCostoContableDAO;
 import com.massoftware.backend.dao.EjercicioContableDAO;
+import com.massoftware.backend.dao.PlanDeCuentaDAO;
 import com.massoftware.backend.dao.PuntoDeEquilibrioDAO;
 import com.massoftware.backend.dao.UsuarioDAO;
 import com.massoftware.model.CentroDeCostoContable;
@@ -45,12 +47,16 @@ public class BackendContext extends AbstractContext {
 			// init("Postgresql");
 			init("sqlserver");
 			initMetaData();
+			
+//			buildPlanDeCuentaBO().findAllOrderByCuentaContable(null, null);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),
 					LogPrinter.LEVEL_FATAL, e);
 		}
+		
+		
 	}
 
 	private void initMetaData() {
@@ -268,7 +274,8 @@ public class BackendContext extends AbstractContext {
 
 	public IEjercicioContableBO buildEjercicioContableBO() {
 
-		try {
+		try {					
+			
 			return new EjercicioContableBO(new EjercicioContableDAO(
 					dataSourceWrapper));
 		} catch (Exception e) {
@@ -299,6 +306,8 @@ public class BackendContext extends AbstractContext {
 	public IPuntoDeEquilibrioBO buildPuntoDeEquilibrioBO() {
 
 		try {
+			
+			buildPlanDeCuentaBO().findAllOrderByCuentaContable(null, null);
 			return new PuntoDeEquilibrioBO(new PuntoDeEquilibrioDAO(
 					dataSourceWrapper));
 		} catch (Exception e) {
@@ -316,6 +325,20 @@ public class BackendContext extends AbstractContext {
 		try {
 			return new UsuarioBO(new UsuarioDAO(dataSourceWrapper));
 		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+	
+	public PlanDeCuentaBO buildPlanDeCuentaBO() {
+
+		try {
+			return new PlanDeCuentaBO(new PlanDeCuentaDAO(dataSourceWrapper));
+		} catch (Exception e) {	
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),
 					LogPrinter.LEVEL_FATAL, e);

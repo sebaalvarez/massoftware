@@ -31,6 +31,8 @@ public class CentroDeCostoContableDAO implements ICentroDeCostoContableDAO {
 	private final String SQL_MS_3 = "UPDATE [dbo].[CentrosDeCostoContable] SET [NOMBRE] = ?, [ABREVIATURA] = ?, [EJERCICIO] = ? WHERE [CENTRODECOSTOCONTABLE] = ? AND [EJERCICIO] = ? AND [PRUEBA] = 0;";
 	private final String SQL_MS_4 = "DELETE FROM [dbo].[CentrosDeCostoContable] WHERE [CENTRODECOSTOCONTABLE] = ? AND [EJERCICIO] = ? AND [PRUEBA] = 0;";
 	private final String SQL_MS_5 = "SELECT	MAX([dbo].[CentrosDeCostoContable].[CENTRODECOSTOCONTABLE]) FROM [dbo].[CentrosDeCostoContable] WHERE [EJERCICIO] = ?;";
+	
+	
 
 	public CentroDeCostoContableDAO(DataSourceWrapper dataSourceWrapper) {
 		super();

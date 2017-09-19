@@ -168,15 +168,7 @@ public class EjercicioContable extends EntityId implements Cloneable,
 
 	public int compareTo(EjercicioContable o) {
 
-		if (this.ejercicio < o.ejercicio) {
-			return -1;
-		} else if (this.ejercicio > o.ejercicio) {
-			return 1;
-		} else if (this.ejercicio == o.ejercicio) {
-			return 0;
-		}
-
-		return 0;
+		return this.getEjercicio().compareTo(o.getEjercicio());
 
 	}
 

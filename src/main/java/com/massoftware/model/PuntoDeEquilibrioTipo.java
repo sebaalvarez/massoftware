@@ -48,7 +48,7 @@ public class PuntoDeEquilibrioTipo extends EntityId implements Cloneable,
 			init(tipo, TIPO_5.getNombre());
 			break;
 		default:
-			init(TIPO_1.getTipo(), TIPO_5.getNombre());
+			init(TIPO_1.getTipo(), TIPO_1.getNombre());
 		}
 	}
 
@@ -85,10 +85,12 @@ public class PuntoDeEquilibrioTipo extends EntityId implements Cloneable,
 	}
 
 	public String getNombre() {
+		nombre = formatValue(nombre);
 		return nombre;
 	}
 
 	public void setNombre(String nombre) {
+		nombre = formatValue(nombre);
 		this.nombre = nombre;
 	}
 

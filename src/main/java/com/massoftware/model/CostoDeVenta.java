@@ -2,27 +2,28 @@ package com.massoftware.model;
 
 import org.cendra.common.model.EntityId;
 
-public class PlanDeCuentaEstado extends EntityId implements Cloneable,
-		Comparable<PlanDeCuentaEstado> {
+public class CostoDeVenta extends EntityId implements Cloneable,
+		Comparable<CostoDeVenta> {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1065267368781846000L;
+	private static final long serialVersionUID = 4675550606073336901L;
 
-	final public static PlanDeCuentaEstado TIPO_1 = new PlanDeCuentaEstado(1,
-			"Cuenta fuera de uso");
-	final public static PlanDeCuentaEstado TIPO_2 = new PlanDeCuentaEstado(2,
-			"Cuenta en uso");
+	final public static CostoDeVenta TIPO_1 = new CostoDeVenta(1,
+			"No Participa");
+	final public static CostoDeVenta TIPO_2 = new CostoDeVenta(2, "Stock");
+	final public static CostoDeVenta TIPO_3 = new CostoDeVenta(3, "Compras");
+	final public static CostoDeVenta TIPO_4 = new CostoDeVenta(4, "Gastos");
 
 	private Integer codigo;
 	private String nombre;
 
-	public PlanDeCuentaEstado() {
+	public CostoDeVenta() {
 
 	}
 
-	public PlanDeCuentaEstado(Integer codigo) {
+	public CostoDeVenta(Integer codigo) {
 		super();
 		this.codigo = codigo;
 		switch (codigo) {
@@ -32,12 +33,18 @@ public class PlanDeCuentaEstado extends EntityId implements Cloneable,
 		case 2:
 			init(codigo, TIPO_2.getNombre());
 			break;
+		case 3:
+			init(codigo, TIPO_3.getNombre());
+			break;
+		case 4:
+			init(codigo, TIPO_4.getNombre());
+			break;
 		default:
 			init(TIPO_1.getCodigo(), TIPO_1.getNombre());
 		}
 	}
 
-	public PlanDeCuentaEstado(Integer codigo, String nombre) {
+	public CostoDeVenta(Integer codigo, String nombre) {
 		super();
 		init(codigo, nombre);
 	}
@@ -78,15 +85,15 @@ public class PlanDeCuentaEstado extends EntityId implements Cloneable,
 	}
 
 	@Override
-	public PlanDeCuentaEstado clone() throws CloneNotSupportedException {
-		PlanDeCuentaEstado other = new PlanDeCuentaEstado();
+	public CostoDeVenta clone() throws CloneNotSupportedException {
+		CostoDeVenta other = new CostoDeVenta();
 		other.setCodigo(getCodigo());
 		other.setNombre(this.getNombre());
 		return other;
 	}
 
 	@Override
-	public int compareTo(PlanDeCuentaEstado o) {
+	public int compareTo(CostoDeVenta o) {
 
 		return this.getCodigo().compareTo(o.getCodigo());
 	}

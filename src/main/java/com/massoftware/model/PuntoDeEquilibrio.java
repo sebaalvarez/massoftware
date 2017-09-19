@@ -12,8 +12,9 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 
 	private Short puntoDeEquilibrio;
 	private String nombre;
-	private PuntoDeEquilibrioTipo tipo = PuntoDeEquilibrioTipo.TIPO_1;
+	private PuntoDeEquilibrioTipo tipo;
 	private Integer ejercicio;
+	private EjercicioContable ejercicioContable;
 
 	public PuntoDeEquilibrio() {
 
@@ -71,6 +72,14 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 		this.ejercicio = ejercicio;
 	}
 
+	public EjercicioContable getEjercicioContable() {
+		return ejercicioContable;
+	}
+
+	public void setEjercicioContable(EjercicioContable ejercicioContable) {
+		this.ejercicioContable = ejercicioContable;
+	}
+
 	public void setterByArray(Object[] row) {
 
 		int column = 0;
@@ -118,15 +127,7 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 
 	public int compareTo(PuntoDeEquilibrio o) {
 
-		if (this.puntoDeEquilibrio < o.puntoDeEquilibrio) {
-			return -1;
-		} else if (this.puntoDeEquilibrio > o.puntoDeEquilibrio) {
-			return 1;
-		} else if (this.puntoDeEquilibrio == o.puntoDeEquilibrio) {
-			return 0;
-		}
-
-		return 0;
+		return this.getPuntoDeEquilibrio().compareTo(o.getPuntoDeEquilibrio());
 
 	}
 

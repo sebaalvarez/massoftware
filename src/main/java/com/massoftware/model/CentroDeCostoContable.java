@@ -106,7 +106,7 @@ public class CentroDeCostoContable extends EntityId implements Cloneable,
 	@Override
 	public CentroDeCostoContable clone() throws CloneNotSupportedException {
 		CentroDeCostoContable other = new CentroDeCostoContable();
-		
+
 		other.setAbreviatura(this.getAbreviatura());
 		other.setCentroDeCostoContable(this.getCentroDeCostoContable());
 		if (this.getEjercicioContable() != null) {
@@ -121,15 +121,10 @@ public class CentroDeCostoContable extends EntityId implements Cloneable,
 
 	public int compareTo(CentroDeCostoContable o) {
 
-		if (this.centroDeCostoContable < o.centroDeCostoContable) {
-			return -1;
-		} else if (this.centroDeCostoContable > o.centroDeCostoContable) {
-			return 1;
-		} else if (this.centroDeCostoContable == o.centroDeCostoContable) {
-			return 0;
-		}
-
-		return 0;
+		return this.getCentroDeCostoContable().compareTo(
+				this.getCentroDeCostoContable());
 	}
+
+
 
 }
