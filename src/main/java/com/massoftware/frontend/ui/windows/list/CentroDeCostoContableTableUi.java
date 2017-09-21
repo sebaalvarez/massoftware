@@ -6,8 +6,8 @@ import java.util.List;
 import org.cendra.common.model.EntityId;
 import org.cendra.common.model.EntityMetaData;
 
+import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.ICentroDeCostoContableBO;
-import com.massoftware.backend.bo.IEjercicioContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.TableUi;
@@ -45,7 +45,7 @@ public class CentroDeCostoContableTableUi extends TableUi {
 	protected String optionGroupItem2Caption = "Ordenar por nombre";
 
 	private ICentroDeCostoContableBO centroDeCostoContableBO;
-	protected IEjercicioContableBO ejercicioContableBO;
+	protected EjercicioContableBO ejercicioContableBO;
 
 	// --------------------------------------------------------------
 
@@ -107,7 +107,7 @@ public class CentroDeCostoContableTableUi extends TableUi {
 		} else {
 
 			EjercicioContable ejercicioContableDefault = usuario
-					.getEjercicioContableDefault();
+					.getEjercicioContable();
 
 			if (ejercicioContableDefault != null
 					&& ejercicioContableDefault.getEjercicio() != null) {

@@ -5,12 +5,11 @@ import java.util.List;
 
 import org.cendra.common.model.EntityId;
 
-import com.massoftware.backend.bo.IEjercicioContableBO;
+import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.IPuntoDeEquilibrioBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.FormUi;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StringToIntegerConverterUnspecifiedLocale;
 import com.massoftware.frontend.ui.util.StringToShortConverterUnspecifiedLocale;
 import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.model.EjercicioContable;
@@ -40,7 +39,7 @@ public class PuntoDeEquilibrioFormUi_OLD extends FormUi {
 	// -------------------------------------------------------------------
 
 	private IPuntoDeEquilibrioBO puntoDeEquilibrioBO;
-	private IEjercicioContableBO ejercicioContableBO;
+	private EjercicioContableBO ejercicioContableBO;
 
 	// -------------------------------------------------------------------
 

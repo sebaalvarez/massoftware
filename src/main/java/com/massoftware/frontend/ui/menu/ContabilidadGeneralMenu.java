@@ -3,8 +3,8 @@ package com.massoftware.frontend.ui.menu;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.massoftware.backend.bo.IEjercicioContableBO;
-import com.massoftware.backend.bo.IUsuarioBO;
+import com.massoftware.backend.bo.EjercicioContableBO;
+import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.windows.list.CentroDeCostoContableTableUi;
@@ -40,8 +40,8 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 
 	private BackendContext cx;
 
-	private IUsuarioBO usuarioBO;
-	private IEjercicioContableBO ejercicioContableBO;
+	private UsuarioBO usuarioBO;
+	private EjercicioContableBO ejercicioContableBO;
 
 	private ComboBox ejercicioContableCBX;
 
@@ -75,7 +75,7 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 	}
 
 	private void initObjectBO() {
-		this.usuarioBO = cx.buildUsuariioBO();
+		this.usuarioBO = cx.buildUsuarioBO();
 		this.ejercicioContableBO = cx.buildEjercicioContableBO();
 	}
 
@@ -248,7 +248,7 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 		loadEjerciciosCBX();
 
 		EjercicioContable ejercicioContableDefault = usuario
-				.getEjercicioContableDefault();
+				.getEjercicioContable();
 		if (ejercicioContableDefault != null
 				&& ejercicioContableDefault.getEjercicio() != null) {
 			ejercicioContableCBX.setValue(ejercicioContableDefault);
@@ -280,7 +280,7 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 			EjercicioContable ejercicioContableDefault = (EjercicioContable) ejercicioContableCBX
 					.getValue();
 
-			usuario.setEjercicioContableDefault(ejercicioContableDefault);
+			usuario.setEjercicioContable(ejercicioContableDefault);
 
 			usuarioBO.update(usuario);
 

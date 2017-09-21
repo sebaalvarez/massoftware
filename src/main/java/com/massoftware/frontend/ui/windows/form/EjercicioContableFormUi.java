@@ -8,7 +8,7 @@ import java.util.Map;
 import org.cendra.common.model.EntityId;
 import org.cendra.common.model.EntityMetaData;
 
-import com.massoftware.backend.bo.IEjercicioContableBO;
+import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.FormUi;
 import com.massoftware.frontend.ui.util.StringToIntegerConverterUnspecifiedLocale;
@@ -50,7 +50,7 @@ public class EjercicioContableFormUi extends FormUi {
 	private String seccionLBLValue = "Se copiaran los datos del ejercicio ${maxEjercicio}";
 	private String ejercicioTXTMsgError2 = "El ejercicio debe ser un número entero y positivo de 4 cifras, igual a ${maxEjercicio}. Usted cargo el valor \"{0}\" y es inválido.";
 
-	private IEjercicioContableBO ejercicioContableBO;
+	private EjercicioContableBO ejercicioContableBO;
 	private EjercicioContable maxEjercicioContable;
 	private String format = "dd/MM/yyyy";
 

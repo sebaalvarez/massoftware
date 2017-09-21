@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.cendra.common.model.EntityId;
 
-import com.massoftware.backend.bo.IEjercicioContableBO;
+import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.frontend.ui.windows.form.EjercicioContableFormUi;
@@ -41,7 +41,7 @@ public class EjercicioContableTableUi extends TableUi {
 
 	private boolean configGridFlag = false;
 
-	private IEjercicioContableBO ejercicioContableBO;
+	private EjercicioContableBO ejercicioContableBO;
 
 	public EjercicioContableTableUi(BackendContext cx, Usuario usuario) {
 		super(cx, usuario);

@@ -7,24 +7,13 @@ import javax.servlet.annotation.WebServlet;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.menu.ContabilidadGeneralMenu;
-import com.massoftware.frontend.ui.windows.list.CentroDeCostoContableTableUi;
-import com.massoftware.frontend.ui.windows.list.EjercicioContableTableUi;
-import com.massoftware.frontend.ui.windows.list.PuntoDeEquilibrioTableUi_OLD;
-import com.massoftware.model.CentroDeCostoContable;
-import com.massoftware.model.EjercicioContable;
-import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.Usuario;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser
@@ -50,9 +39,10 @@ public class MasSoftware extends UI {
 	protected void init(VaadinRequest vaadinRequest) {
 
 		try {
-			BackendContext cx = new BackendContext();
+//			BackendContext cx = new BackendContext("sqlserver");
+			BackendContext cx = new BackendContext("Postgresql");
 
-			Usuario usuario = cx.buildUsuariioBO()
+			Usuario usuario = cx.buildUsuarioBO()
 					.findByNombre("Administrador");
 
 			final VerticalLayout layout = new VerticalLayout();

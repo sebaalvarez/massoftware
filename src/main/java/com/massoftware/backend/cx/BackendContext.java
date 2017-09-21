@@ -17,17 +17,13 @@ import org.cendra.log.LogPrinter;
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.ICentroDeCostoContableBO;
-import com.massoftware.backend.bo.IEjercicioContableBO;
 import com.massoftware.backend.bo.IPuntoDeEquilibrioBO;
-import com.massoftware.backend.bo.IUsuarioBO;
 import com.massoftware.backend.bo.PlanDeCuentaBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.backend.dao.CentroDeCostoContableDAO;
-import com.massoftware.backend.dao.EjercicioContableDAO;
 import com.massoftware.backend.dao.PlanDeCuentaDAO;
 import com.massoftware.backend.dao.PuntoDeEquilibrioDAO;
-import com.massoftware.backend.dao.UsuarioDAO;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
@@ -41,22 +37,21 @@ public class BackendContext extends AbstractContext {
 	private DataSourceWrapper dataSourceWrapper;
 	private Map<String, EntityMetaData> entityMetaDataMap = new HashMap<String, EntityMetaData>();
 
-	public BackendContext() {
+	public BackendContext(String type) {
 		super();
 		try {
 			// init("Postgresql");
-			init("sqlserver");
+			init(type);
 			initMetaData();
-			
-//			buildPlanDeCuentaBO().findAllOrderByCuentaContable(null, null);
+
+			// buildPlanDeCuentaBO().findAllOrderByCuentaContable(null, null);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),
 					LogPrinter.LEVEL_FATAL, e);
 		}
-		
-		
+
 	}
 
 	private void initMetaData() {
@@ -96,21 +91,22 @@ public class BackendContext extends AbstractContext {
 		puntoDeEquilibrioMD.setName(PuntoDeEquilibrio.class.getCanonicalName());
 		puntoDeEquilibrioMD.setLabel("Punto de equilibrio");
 		puntoDeEquilibrioMD.setLabelPlural("Puntos de equilibrio");
-//		puntoDeEquilibrioMD.addAtt("ejercicioContable",
-//				ejercicioContableMD.getLabelShort(),
-//				ejercicioContableMD.getLabel());
+		// puntoDeEquilibrioMD.addAtt("ejercicioContable",
+		// ejercicioContableMD.getLabelShort(),
+		// ejercicioContableMD.getLabel());
 		puntoDeEquilibrioMD.addAtt("puntoDeEquilibrio", "Pto. de Equ.",
 				"Punto de equilibrio");
 		puntoDeEquilibrioMD.addAtt("nombre", "Nombre");
 		puntoDeEquilibrioMD.addAtt("tipo", "Tipo");
-//		puntoDeEquilibrioMD.addAtt("ejercicio", "Ejercicio");
+		// puntoDeEquilibrioMD.addAtt("ejercicio", "Ejercicio");
 		entityMetaDataMap.put(puntoDeEquilibrioMD.getName(),
 				puntoDeEquilibrioMD);
-		
+
 		EntityMetaData puntoDeEquilibrioTipoMD = new EntityMetaData();
-		puntoDeEquilibrioTipoMD.setName(PuntoDeEquilibrioTipo.class.getCanonicalName());
+		puntoDeEquilibrioTipoMD.setName(PuntoDeEquilibrioTipo.class
+				.getCanonicalName());
 		puntoDeEquilibrioTipoMD.setLabel("Tipo de punto de equilibrio");
-		puntoDeEquilibrioTipoMD.setLabelPlural("Tipos de punto de equilibrio");			
+		puntoDeEquilibrioTipoMD.setLabelPlural("Tipos de punto de equilibrio");
 		puntoDeEquilibrioTipoMD.addAtt("tipo", "Tipo");
 		puntoDeEquilibrioTipoMD.addAtt("nombre", "Nombre");
 		entityMetaDataMap.put(puntoDeEquilibrioTipoMD.getName(),
@@ -272,12 +268,11 @@ public class BackendContext extends AbstractContext {
 		return entityMetaDataMap.get(key);
 	}
 
-	public IEjercicioContableBO buildEjercicioContableBO() {
+	public EjercicioContableBO buildEjercicioContableBO() {
 
-		try {					
-			
-			return new EjercicioContableBO(new EjercicioContableDAO(
-					dataSourceWrapper));
+		try {
+
+			return new EjercicioContableBO(dataSourceWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),
@@ -306,7 +301,7 @@ public class BackendContext extends AbstractContext {
 	public IPuntoDeEquilibrioBO buildPuntoDeEquilibrioBO() {
 
 		try {
-			
+
 			buildPlanDeCuentaBO().findAllOrderByCuentaContable(null, null);
 			return new PuntoDeEquilibrioBO(new PuntoDeEquilibrioDAO(
 					dataSourceWrapper));
@@ -320,10 +315,10 @@ public class BackendContext extends AbstractContext {
 
 	}
 
-	public IUsuarioBO buildUsuariioBO() {
+	public UsuarioBO buildUsuarioBO() {
 
 		try {
-			return new UsuarioBO(new UsuarioDAO(dataSourceWrapper));
+			return new UsuarioBO(dataSourceWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),
@@ -333,12 +328,12 @@ public class BackendContext extends AbstractContext {
 		return null;
 
 	}
-	
+
 	public PlanDeCuentaBO buildPlanDeCuentaBO() {
 
 		try {
 			return new PlanDeCuentaBO(new PlanDeCuentaDAO(dataSourceWrapper));
-		} catch (Exception e) {	
+		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),
 					LogPrinter.LEVEL_FATAL, e);

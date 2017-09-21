@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
-import org.cendra.jdbc.MapperCendraConvention;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.massoftware.model.PlanDeCuenta;
@@ -39,14 +38,10 @@ public class PlanDeCuentaDAO implements IPlanDeCuentaDAO {
 		ConnectionWrapper connectionWrapper = dataSourceWrapper
 				.getConnectionWrapper();
 
-		try {
+		try {			
 
-			ResultSet resultSet = connectionWrapper.findToResultSet(sql,
-					cuentaContable, nombre);
-
-			try {
-				MapperCendraConvention mapperCendraConvention = new MapperCendraConvention();
-				List list = mapperCendraConvention.listMapper(resultSet);
+			try {				
+				List list = connectionWrapper.findToListByCendraConvention(sql);
 
 				System.out.println(list.size());
 

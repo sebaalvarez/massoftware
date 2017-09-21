@@ -3,8 +3,8 @@ package com.massoftware.frontend.ui.windows.form;
 import org.cendra.common.model.EntityId;
 import org.cendra.common.model.EntityMetaData;
 
+import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.ICentroDeCostoContableBO;
-import com.massoftware.backend.bo.IEjercicioContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.FormUi;
 import com.massoftware.frontend.ui.util.StringToIntegerConverterUnspecifiedLocale;
@@ -34,7 +34,7 @@ public class CentroDeCostoContableFormUi extends FormUi {
 	// -------------------------------------------------------------------
 
 	private ICentroDeCostoContableBO centroDeCostoContableBO;
-	private IEjercicioContableBO ejercicioContableBO;
+	private EjercicioContableBO ejercicioContableBO;
 
 	// -------------------------------------------------------------------
 
@@ -90,7 +90,7 @@ public class CentroDeCostoContableFormUi extends FormUi {
 			item = new CentroDeCostoContable();
 
 			EjercicioContable ejercicioContableDefault = usuario
-					.getEjercicioContableDefault();
+					.getEjercicioContable();
 			if (ejercicioContableDefault != null
 					&& ejercicioContableDefault.getEjercicio() != null) {
 				((CentroDeCostoContable) item)

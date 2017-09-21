@@ -13,9 +13,9 @@ public class Usuario extends EntityId implements Serializable, Cloneable,
 	 */
 	private static final long serialVersionUID = 6203529732262874998L;
 
-	private Integer no;
+	private Integer numero;
 	private String nombre;
-	private EjercicioContable ejercicioContableDefault;
+	private EjercicioContable ejercicioContable;
 
 	public Usuario() {
 
@@ -28,20 +28,20 @@ public class Usuario extends EntityId implements Serializable, Cloneable,
 	public void setId(String id) {
 		id = formatValue(id);
 		if (id != null) {
-			this.setNo(new Integer(id));
+			this.setNumero(new Integer(id));
 		} else {
-			this.setNo(null);
-		}		
+			this.setNumero(null);
+		}
 	}
 
-	public Integer getNo() {
-		return no;
+	public Integer getNumero() {
+		return numero;
 	}
 
-	public void setNo(Integer no) {
-		this.no = no;
-		if (this.no != null) {
-			super.setId(this.no.toString());
+	public void setNumero(Integer nnumero) {
+		this.numero = nnumero;
+		if (this.numero != null) {
+			super.setId(this.numero.toString());
 		} else {
 			super.setId(null);
 		}
@@ -54,16 +54,15 @@ public class Usuario extends EntityId implements Serializable, Cloneable,
 
 	public void setNombre(String nombre) {
 		nombre = this.formatValue(nombre);
-		this.nombre = nombre;		
+		this.nombre = nombre;
 	}
 
-	public EjercicioContable getEjercicioContableDefault() {
-		return ejercicioContableDefault;
+	public EjercicioContable getEjercicioContable() {
+		return ejercicioContable;
 	}
 
-	public void setEjercicioContableDefault(
-			EjercicioContable ejercicioContableDefault) {
-		this.ejercicioContableDefault = ejercicioContableDefault;
+	public void setEjercicioContable(EjercicioContable ejercicioContable) {
+		this.ejercicioContable = ejercicioContable;
 	}
 
 	public void setterByArray(Object[] row) {
@@ -71,7 +70,7 @@ public class Usuario extends EntityId implements Serializable, Cloneable,
 		int column = 0;
 
 		if (row[column] != null) {
-			this.setNo((Integer) row[column]);
+			this.setNumero((Integer) row[column]);
 		}
 
 		column++;
@@ -84,7 +83,7 @@ public class Usuario extends EntityId implements Serializable, Cloneable,
 				ArrayUtils.subarray(row, 2, 8));
 
 		if (ejercicioContable.getEjercicio() != null) {
-			this.setEjercicioContableDefault(ejercicioContable);
+			this.setEjercicioContable(ejercicioContable);
 		}
 
 	}
@@ -93,11 +92,11 @@ public class Usuario extends EntityId implements Serializable, Cloneable,
 		Usuario other = (Usuario) super.clone();
 
 		other.setNombre(nombre);
-		if (this.getEjercicioContableDefault() != null) {
-			other.setEjercicioContableDefault(getEjercicioContableDefault()
+		if (this.getEjercicioContable() != null) {
+			other.setEjercicioContable(getEjercicioContable()
 					.clone());
 		} else {
-			other.setEjercicioContableDefault(null);
+			other.setEjercicioContable(null);
 		}
 
 		return other;

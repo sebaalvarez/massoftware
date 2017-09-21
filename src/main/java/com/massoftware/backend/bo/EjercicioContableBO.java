@@ -1,56 +1,647 @@
 package com.massoftware.backend.bo;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.cendra.common.model.EntityId;
+import org.cendra.ex.crud.DeleteForeingObjectConflictException;
+import org.cendra.ex.crud.InsertDuplicateException;
+import org.cendra.jdbc.ConnectionWrapper;
+import org.cendra.jdbc.DataSourceWrapper;
+import org.cendra.jdbc.SQLExceptionWrapper;
 
-import com.massoftware.backend.dao.IEjercicioContableDAO;
 import com.massoftware.model.EjercicioContable;
 
-public class EjercicioContableBO implements IEjercicioContableBO {
+public class EjercicioContableBO {
 
-	private IEjercicioContableDAO ejercicioContableDAO;
+	private final String SQL_PG_1 = "SELECT * FROM  massoftware.EjercicioContable ORDER BY ejercicio DESC;";
+	private final String SQL_PG_2 = "SELECT * FROM  massoftware.\"EjercicioContable\" WHERE ejercicio::VARCHAR ILIKE '%'||(?::VARCHAR) ORDER BY ejercicio DESC;";
+	private final String SQL_PG_3 = "SELECT MAX(ejercicio) FROM  massoftware.\"EjercicioContable\";";
+	private final String SQL_PG_4 = "SELECT * FROM  massoftware.vEjercicioContable WHERE ejercicio = ?;";
+	private final String SQL_PG_5 = "INSERT INTO massoftware.EjercicioContable (id, ejercicio, comentario, fechaApertura, fechaCierre, ejercicioCerrado, ejercicioCerradoModulos) VALUES (?, ?, ?, ?, ?, ?, ?);";
+	private final String SQL_PG_6 = "";
+	private final String SQL_PG_7 = "";
 
-	public EjercicioContableBO(IEjercicioContableDAO ejercicioContableDAO) {
+	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.vEjercicioContable ORDER BY ejercicio DESC;";
+	private final String SQL_MS_2 = "SELECT * FROM VetaroRep.dbo.vEjercicioContable WHERE CAST(ejercicio AS VARCHAR)  LIKE CONCAT('%', CAST(? AS VARCHAR)) ORDER BY ejercicio DESC;";
+	private final String SQL_MS_3 = "SELECT MAX(ejercicio) FROM VetaroRep.dbo.vEjercicioContable;";
+	private final String SQL_MS_4 = "SELECT * FROM VetaroRep.dbo.vEjercicioContable WHERE ejercicio = ?;";
+	private final String SQL_MS_5 = "INSERT INTO [dbo].[EjerciciosContables] ([id], [EJERCICIO], [COMENTARIO], [FECHAAPERTURASQL], [FECHACIERRESQL], [EJERCICIOCERRADO], [EJERCICIOCERRADOMODULOS]) VALUES (?, ?, ?, ?, ?, ?, ?);";
+	private final String SQL_MS_6 = "UPDATE VetaroRep.dbo.EjerciciosContables SET COMENTARIO = ?, FECHAAPERTURASQL = ?, FECHACIERRESQL = ?, EJERCICIOCERRADO = ?, EJERCICIOCERRADOMODULOS = ? WHERE EJERCICIO = ?;";
+	private final String SQL_MS_7 = "DELETE FROM VetaroRep.dbo.EjerciciosContables WHERE EJERCICIO = ?;";
+
+	private DataSourceWrapper dataSourceWrapper;
+
+	public EjercicioContableBO(DataSourceWrapper dataSourceWrapper) {
 		super();
-		this.ejercicioContableDAO = ejercicioContableDAO;
+		this.dataSourceWrapper = dataSourceWrapper;
 	};
 
-	@Override
 	public EjercicioContable findByEjercicio(Integer ejercicio)
 			throws Exception {
 
-		return this.ejercicioContableDAO.findByEjercicio(ejercicio);
+		EjercicioContable ejercicioContable = null;
+
+		String sql = null;
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+				sql = SQL_PG_4;
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+				sql = SQL_MS_4;
+			}
+
+			// Object[][] table = connectionWrapper.findToTable(sql, ejercicio);
+			//
+			// for (Object[] row : table) {
+			//
+			// ejercicioContable = new EjercicioContable(row);
+			//
+			// break;
+			// }
+
+			@SuppressWarnings("unchecked")
+			List<EjercicioContable> list = connectionWrapper
+					.findToListByCendraConvention(sql, ejercicio);
+
+			for (EjercicioContable obj : list) {
+
+				ejercicioContable = obj;
+
+				break;
+			}
+			return ejercicioContable;
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
 	}
 
 	public List<EjercicioContable> findAll() throws Exception {
-		return this.ejercicioContableDAO.findAll();
+		return findAll(null);
 	}
 
-	@Override
 	public List<EjercicioContable> findAll(String ejercicioEndsWith)
 			throws Exception {
-		return this.ejercicioContableDAO.findAll(ejercicioEndsWith);
+
+		// ArrayList<EjercicioContable> ejercicioContables = new
+		// ArrayList<EjercicioContable>();
+
+		String sql = null;
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+			if (ejercicioEndsWith == null) {
+				sql = SQL_PG_1;
+			} else {
+				sql = SQL_PG_2;
+			}
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+			if (ejercicioEndsWith == null) {
+				sql = SQL_MS_1;
+			} else {
+				sql = SQL_MS_2;
+			}
+		}
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			// Object[][] table = null;
+			//
+			// if (ejercicioEndsWith == null) {
+			// table = connectionWrapper.findToTable(sql);
+			// } else {
+			// table = connectionWrapper.findToTable(sql, ejercicioEndsWith);
+			// }
+			//
+			// for (Object[] row : table) {
+			// ejercicioContables.add(new EjercicioContable(row));
+			// }
+
+			@SuppressWarnings({ "unchecked" })
+			List<EjercicioContable> list = connectionWrapper
+					.findToListByCendraConvention(sql, ejercicioEndsWith);
+
+			return list;
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
 	}
 
-	@Override
 	public EjercicioContable findMaxEjercicio() throws Exception {
-		return this.ejercicioContableDAO.findMaxEjercicio();
+
+		Integer maxEjercicio = null;
+		EjercicioContable ejercicioContable = null;
+
+		String sql = null;
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+			sql = SQL_PG_3;
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			sql = SQL_MS_3;
+		}
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			Object[][] table = connectionWrapper.findToTable(sql);
+			for (Object[] row : table) {
+				int column = 0;
+				if (row[column] != null) {
+					maxEjercicio = (Integer) row[column];
+					break;
+				}
+			}
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+				sql = SQL_PG_4;
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+				sql = SQL_MS_4;
+			}
+
+			@SuppressWarnings("unchecked")
+			List<EjercicioContable> list = connectionWrapper
+					.findToListByCendraConvention(sql, maxEjercicio);
+			if (list.size() == 1) {
+				ejercicioContable = list.get(0);
+			}
+
+			// table = connectionWrapper.findToTable(sql, maxEjercicio);
+			//
+			// for (Object[] row : table) {
+			// ejercicioContable = new EjercicioContable();
+			//
+			// int column = 0;
+			//
+			// if (row[column] != null) {
+			// ejercicioContable.setEjercicio((Integer) row[column]);
+			// }
+			//
+			// column++;
+			//
+			// if (row[column] != null) {
+			// ejercicioContable.setComentario((String) row[column]);
+			// }
+			//
+			// column++;
+			//
+			// if (row[column] != null) {
+			//
+			// Timestamp t = (Timestamp) row[column];
+			// Date d = new Date(t.getTime());
+			//
+			// ejercicioContable.setFechaApertura(d);
+			// }
+			//
+			// column++;
+			//
+			// if (row[column] != null) {
+			// Timestamp t = (Timestamp) row[column];
+			// Date d = new Date(t.getTime());
+			//
+			// ejercicioContable.setFechaCierre(d);
+			// }
+			//
+			// column++;
+			//
+			// if (row[column] != null) {
+			// Short s = (Short) row[column];
+			// Boolean b = (s != null && s == 1);
+			//
+			// ejercicioContable.setEjercicioCerrado(b);
+			// }
+			//
+			// column++;
+			//
+			// if (row[column] != null) {
+			// Short s = (Short) row[column];
+			// Boolean b = (s != null && s == 1);
+			//
+			// ejercicioContable.setEjercicioCerradoModulos(b);
+			// }
+			//
+			// break;
+			// }
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
+		return ejercicioContable;
 	}
 
-	@Override
-	public EntityId insert(EjercicioContable item) throws Exception {
-		return this.ejercicioContableDAO.insert(item);
+	public List<EjercicioContable> insert(List<EjercicioContable> items) throws Exception {
+
+		String sql = null;
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+			sql = SQL_PG_5;
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			sql = SQL_MS_5;
+		}
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			connectionWrapper.begin();
+
+			for (EjercicioContable item : items) {
+
+				if (findByEjercicio(item.getEjercicio()) != null) {
+					throw new InsertDuplicateException(item.getEjercicio());
+				}
+
+				
+				Object id = null;
+				if (item.getId() != null) {
+					id = item.getId();
+				} else {
+					id = String.class;
+				}
+				Object ejercico = null;
+				if (item.getEjercicio() != null) {
+					ejercico = item.getEjercicio();
+				} else {
+					ejercico = Integer.class;
+				}
+				Object comentario = null;
+				if (item.getComentario() != null) {
+					comentario = item.getComentario();
+				} else {
+					comentario = String.class;
+				}
+				Object fechaApertura = null;
+				if (item.getFechaApertura() != null) {
+					fechaApertura = item.getFechaApertura();
+				} else {
+					fechaApertura = Date.class;
+				}
+				Object fechaCierre = null;
+				if (item.getFechaCierre() != null) {
+					fechaCierre = item.getFechaCierre();
+				} else {
+					fechaCierre = Date.class;
+				}
+
+				Object ejercicioCerrado = null;
+				Object ejercicioCerradoModulos = null;
+
+				if (dataSourceWrapper.isDatabasePostgreSql()) {
+					if (item.getEjercicioCerrado() != null
+							&& item.getEjercicioCerrado() == true) {
+						ejercicioCerrado = true;
+					} else {
+						ejercicioCerrado = false;
+					}
+
+					if (item.getEjercicioCerradoModulos() != null
+							&& item.getEjercicioCerradoModulos() == true) {
+						ejercicioCerradoModulos = true;
+					} else {
+						ejercicioCerradoModulos = false;
+					}
+				} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+					if (item.getEjercicioCerrado() != null
+							&& item.getEjercicioCerrado() == true) {
+						ejercicioCerrado = 1;
+					} else {
+						ejercicioCerrado = 1;
+					}
+
+					if (item.getEjercicioCerradoModulos() != null
+							&& item.getEjercicioCerradoModulos() == true) {
+						ejercicioCerradoModulos = 1;
+					} else {
+						ejercicioCerradoModulos = 0;
+					}
+				}
+
+				Object[] args = { id, ejercico, comentario, fechaApertura,
+						fechaCierre, ejercicioCerrado, ejercicioCerradoModulos };
+
+				int rows = connectionWrapper.insert(sql, args);
+
+				if (rows != 1) {
+					throw new Exception(
+							"La sentencia debería afectar un solo registro, la sentencia afecto "
+									+ rows + " registros.");
+				}
+
+			}
+
+			connectionWrapper.commit();
+
+			return items;
+
+		} catch (Exception e) {
+			connectionWrapper.rollBack();
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
 	}
-	
-	@Override
+
+	public EjercicioContable insert(EjercicioContable item) throws Exception {
+
+		if (findByEjercicio(item.getEjercicio()) != null) {
+			throw new InsertDuplicateException(item.getEjercicio());
+		}
+
+		String sql = null;
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+			sql = SQL_PG_5;
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			sql = SQL_MS_5;
+		}
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			connectionWrapper.begin();
+
+			Object id = null;
+			if (item.getId() != null) {
+				id = item.getId();
+			} else {
+				id = String.class;
+			}
+			Object ejercico = null;
+			if (item.getEjercicio() != null) {
+				ejercico = item.getEjercicio();
+			} else {
+				ejercico = Integer.class;
+			}
+			Object comentario = null;
+			if (item.getComentario() != null) {
+				comentario = item.getComentario();
+			} else {
+				comentario = String.class;
+			}
+			Object fechaApertura = null;
+			if (item.getFechaApertura() != null) {
+				fechaApertura = item.getFechaApertura();
+			} else {
+				fechaApertura = Date.class;
+			}
+			Object fechaCierre = null;
+			if (item.getFechaCierre() != null) {
+				fechaCierre = item.getFechaCierre();
+			} else {
+				fechaCierre = Date.class;
+			}
+			// short ejercicioCerrado = 0;
+			// if (item.getEjercicioCerrado() != null
+			// && item.getEjercicioCerrado() == true) {
+			// ejercicioCerrado = 1;
+			// }
+			// short ejercicioCerradoModulos = 0;
+			// if (item.getEjercicioCerradoModulos() != null
+			// && item.getEjercicioCerradoModulos() == true) {
+			// ejercicioCerradoModulos = 1;
+			// }
+			Object ejercicioCerrado = null;
+			Object ejercicioCerradoModulos = null;
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+				if (item.getEjercicioCerrado() != null
+						&& item.getEjercicioCerrado() == true) {
+					ejercicioCerrado = true;
+				} else {
+					ejercicioCerrado = false;
+				}
+
+				if (item.getEjercicioCerradoModulos() != null
+						&& item.getEjercicioCerradoModulos() == true) {
+					ejercicioCerradoModulos = true;
+				} else {
+					ejercicioCerradoModulos = false;
+				}
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+				if (item.getEjercicioCerrado() != null
+						&& item.getEjercicioCerrado() == true) {
+					ejercicioCerrado = 1;
+				} else {
+					ejercicioCerrado = 1;
+				}
+
+				if (item.getEjercicioCerradoModulos() != null
+						&& item.getEjercicioCerradoModulos() == true) {
+					ejercicioCerradoModulos = 1;
+				} else {
+					ejercicioCerradoModulos = 0;
+				}
+			}
+
+			Object[] args = { id, ejercico, comentario, fechaApertura, fechaCierre,
+					ejercicioCerrado, ejercicioCerradoModulos };
+
+			int rows = connectionWrapper.insert(sql, args);
+
+			if (rows != 1) {
+				throw new Exception(
+						"La sentencia debería afectar un solo registro, la sentencia afecto "
+								+ rows + " registros.");
+			}
+
+			connectionWrapper.commit();
+
+			return item;
+
+		} catch (Exception e) {
+			connectionWrapper.rollBack();
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
+	}
+
 	public EjercicioContable update(EjercicioContable item) throws Exception {
-		return this.ejercicioContableDAO.update(item);
+
+		String sql = null;
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+			sql = SQL_PG_6;
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			sql = SQL_MS_6;
+		}
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			connectionWrapper.begin();
+
+			Object comentario = null;
+			if (item.getComentario() != null) {
+				comentario = item.getComentario();
+			} else {
+				comentario = String.class;
+			}
+			Object fechaApertura = null;
+			if (item.getFechaApertura() != null) {
+				fechaApertura = item.getFechaApertura();
+			} else {
+				fechaApertura = Date.class;
+			}
+			Object fechaCierre = null;
+			if (item.getFechaCierre() != null) {
+				fechaCierre = item.getFechaCierre();
+			} else {
+				fechaCierre = Date.class;
+			}
+			// short ejercicioCerrado = 0;
+			// if (item.getEjercicioCerrado() != null
+			// && item.getEjercicioCerrado() == true) {
+			// ejercicioCerrado = 1;
+			// }
+			// short ejercicioCerradoModulos = 0;
+			// if (item.getEjercicioCerradoModulos() != null
+			// && item.getEjercicioCerradoModulos() == true) {
+			// ejercicioCerradoModulos = 1;
+			// }
+			Object ejercicioCerrado = null;
+			Object ejercicioCerradoModulos = null;
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+				if (item.getEjercicioCerrado() != null
+						&& item.getEjercicioCerrado() == true) {
+					ejercicioCerrado = true;
+				} else {
+					ejercicioCerrado = false;
+				}
+
+				if (item.getEjercicioCerradoModulos() != null
+						&& item.getEjercicioCerradoModulos() == true) {
+					ejercicioCerradoModulos = true;
+				} else {
+					ejercicioCerradoModulos = false;
+				}
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+				if (item.getEjercicioCerrado() != null
+						&& item.getEjercicioCerrado() == true) {
+					ejercicioCerrado = 1;
+				} else {
+					ejercicioCerrado = 1;
+				}
+
+				if (item.getEjercicioCerradoModulos() != null
+						&& item.getEjercicioCerradoModulos() == true) {
+					ejercicioCerradoModulos = 1;
+				} else {
+					ejercicioCerradoModulos = 0;
+				}
+			}
+
+			Object[] args = { comentario, fechaApertura, fechaCierre,
+					ejercicioCerrado, ejercicioCerradoModulos,
+					item.getEjercicio() };
+
+			int rows = connectionWrapper.update(sql, args);
+
+			if (rows != 1) {
+				throw new Exception(
+						"La sentencia debería afectar un solo registro, la sentencia afecto "
+								+ rows + " registros.");
+			}
+
+			connectionWrapper.commit();
+
+		} catch (Exception e) {
+			connectionWrapper.rollBack();
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
+		item = this.findByEjercicio(item.getEjercicio());
+
+		return item;
+
 	}
-	
-	@Override
+
 	public EntityId delete(EjercicioContable item) throws Exception {
-		return this.ejercicioContableDAO.delete(item);
+
+		// check dependencias !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+		String sql = null;
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+			sql = SQL_PG_7;
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			sql = SQL_MS_7;
+		}
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			connectionWrapper.begin();
+
+			int rows = connectionWrapper.delete(sql, item.getEjercicio());
+
+			if (rows != 1) {
+				throw new Exception(
+						"La sentencia debería afectar un solo registro, la sentencia afecto "
+								+ rows + " registros.");
+			}
+
+			connectionWrapper.commit();
+
+			return item;
+
+		} catch (SQLExceptionWrapper e) {
+
+			connectionWrapper.rollBack();
+
+			if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()
+					&& e.getsQLException().getErrorCode() == 547) {
+
+				throw new DeleteForeingObjectConflictException(sql + "\nargs:["
+						+ item.getEjercicio() + "]");
+				// } else if (dataSourceWrapper.isDatabasePostgreSql() &&
+				// e.getsQLException().getErrorCode() == ###) {
+			} else {
+				throw e;
+			}
+
+		} catch (Exception e) {
+			connectionWrapper.rollBack();
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
 	}
 
 }

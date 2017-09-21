@@ -10,11 +10,12 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 	 */
 	private static final long serialVersionUID = -7063241156348196814L;
 
+	private EjercicioContable ejercicioContable;
 	private Short puntoDeEquilibrio;
 	private String nombre;
 	private PuntoDeEquilibrioTipo tipo;
 	private Integer ejercicio;
-	private EjercicioContable ejercicioContable;
+	
 
 	public PuntoDeEquilibrio() {
 
