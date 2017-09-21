@@ -24,14 +24,14 @@ public class CentroDeCostoContable extends EntityId implements Cloneable,
 		setterByArray(row);
 	}
 
-	public void setId(String id) {
-		id = formatValue(id);
-		if (id != null) {
-			this.setCentroDeCostoContable(new Short(id));
-		} else {
-			this.setCentroDeCostoContable(null);
-		}
-	}
+//	public void setId(String id) {
+//		id = formatValue(id);
+//		if (id != null) {			
+//			this.setCentroDeCostoContable(new Short(id.split("-")[1]));			
+//		} else {
+//			this.setCentroDeCostoContable(null);
+//		}
+//	}
 
 	public Short getCentroDeCostoContable() {
 		return centroDeCostoContable;
@@ -39,11 +39,11 @@ public class CentroDeCostoContable extends EntityId implements Cloneable,
 
 	public void setCentroDeCostoContable(Short centroDeCostoContable) {
 		this.centroDeCostoContable = centroDeCostoContable;
-		if (this.centroDeCostoContable != null) {
-			super.setId(this.centroDeCostoContable.toString());
-		} else {
-			super.setId(null);
-		}
+//		if (this.centroDeCostoContable != null) {
+//			super.setId(this.centroDeCostoContable.toString());
+//		} else {
+//			super.setId(null);
+//		}
 	}
 
 	public String getNombre() {

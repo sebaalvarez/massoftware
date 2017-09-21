@@ -6,8 +6,8 @@ import java.util.List;
 import org.cendra.common.model.EntityId;
 import org.cendra.common.model.EntityMetaData;
 
+import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
-import com.massoftware.backend.bo.ICentroDeCostoContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.TableUi;
@@ -44,7 +44,7 @@ public class CentroDeCostoContableTableUi extends TableUi {
 	protected String optionGroupItem1Caption = "Ordenar por centro de costo";
 	protected String optionGroupItem2Caption = "Ordenar por nombre";
 
-	private ICentroDeCostoContableBO centroDeCostoContableBO;
+	private CentroDeCostoContableBO centroDeCostoContableBO;
 	protected EjercicioContableBO ejercicioContableBO;
 
 	// --------------------------------------------------------------

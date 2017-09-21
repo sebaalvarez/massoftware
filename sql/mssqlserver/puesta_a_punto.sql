@@ -35,6 +35,9 @@ UPDATE [dbo].[EjerciciosContables]  SET [id] = CAST([EjerciciosContables].[EJERC
 
 ALTER TABLE [dbo].[SSECUR_User] ADD id CHAR(36) NULL;  
 UPDATE [dbo].[SSECUR_User]  SET [id] = CAST([SSECUR_User].[NO] AS VARCHAR);
+
+ALTER TABLE [dbo].[CentrosDeCostoContable] ADD id CHAR(36) NULL;  
+UPDATE [dbo].[CentrosDeCostoContable]  SET [id] = CONCAT ( CAST([CentrosDeCostoContable].[EJERCICIO] AS VARCHAR), '-', CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS VARCHAR) );
 		
 		
 -- VISTAS
@@ -44,60 +47,76 @@ UPDATE [dbo].[SSECUR_User]  SET [id] = CAST([SSECUR_User].[NO] AS VARCHAR);
 	CREATE VIEW [dbo].[vEjercicioContable] AS
 
 	SELECT	'com.massoftware.model.EjercicioContable' AS ClassEjercicioContable
-			,[EjerciciosContables].[id]  AS id
+			-- ,[EjerciciosContables].[id]  AS id
+			,CAST([EjerciciosContables].[EJERCICIO] AS VARCHAR) As id			
 			,[EjerciciosContables].[EJERCICIO] AS ejercicio
 			,[EjerciciosContables].[COMENTARIO] AS comentario
 			,[EjerciciosContables].[FECHAAPERTURASQL] AS fechaApertura
 			,[EjerciciosContables].[FECHACIERRESQL] AS fechaCierre
 			,[EjerciciosContables].[EJERCICIOCERRADO] AS ejercicioCerrado
 			,[EjerciciosContables].[EJERCICIOCERRADOMODULOS] AS ejercicioCerradoModulos
-	FROM	[dbo].[EjerciciosContables];
+	FROM	VetaroRep.[dbo].[EjerciciosContables];
 	
+	-- SELECT * FROM VetaroRep.dbo.[EjerciciosContables] ;
 	-- SELECT * FROM VetaroRep.dbo.[vEjercicioContable] ;
 	-- SELECT * FROM VetaroRep.dbo.[vEjercicioContable] WHERE CAST(ejercicio AS VARCHAR)  LIKE CONCAT('%', CAST(12 AS VARCHAR)) ORDER BY ejercicio DESC;
+	-- SELECT * FROM VetaroRep.dbo.vEjercicioContable ORDER BY ejercicio DESC;
 
 -------------------------------------------------------------
 
 	CREATE VIEW [dbo].[vUsuario] AS
 
 	 SELECT	'com.massoftware.model.Usuario' AS ClassUsuario
-			,[SSECUR_User].[id]  AS id
+			--,[SSECUR_User].[id]  AS id
+			,CAST([SSECUR_User].[NO] AS VARCHAR) As id			
 			,[SSECUR_User].[NO] AS numero
 			,[SSECUR_User].[LASTNAME] AS nombre
 			--,[SSECUR_User].[DEFAULT_EJERCICIO_CONTABLE]
+				,vEjercicioContable.id  AS ejercicioContable_id			
 				,vEjercicioContable.ejercicio AS ejercicioContable_ejercicio		
 				,vEjercicioContable.fechaApertura AS ejercicioContable_fechaApertura
 				,vEjercicioContable.fechaCierre AS ejercicioContable_fechaCierre
 				,vEjercicioContable.ejercicioCerrado AS ejercicioContable_ejercicioCerrado
 				,vEjercicioContable.ejercicioCerradoModulos AS ejercicioContable_ejercicioCerradoModulos
 				,vEjercicioContable.comentario AS ejercicioContable_comentario
-	FROM	[dbo].[SSECUR_User] 
+	FROM	VetaroRep.[dbo].[SSECUR_User] 
 	LEFT JOIN	[dbo].[vEjercicioContable] 
-		ON [dbo].[vEjercicioContable].EJERCICIO = [dbo].[SSECUR_User].[DEFAULT_EJERCICIO_CONTABLE];
+		ON [dbo].[vEjercicioContable].EJERCICIO = VetaroRep.[dbo].[SSECUR_User].[DEFAULT_EJERCICIO_CONTABLE];
 
+	-- SELECT * FROM VetaroRep.dbo.[SSECUR_User] ;
 	-- SELECT * FROM VetaroRep.dbo.[vUsuario] ;
 	-- SELECT * FROM VetaroRep.dbo.vUsuario WHERE nombre = 'Administrador';
 
+	
+
 -------------------------------------------------------------
 	
-	CREATE VIEW [dbo].[v_CentroDeCostoContable] AS        
+	CREATE VIEW [dbo].[vCentroDeCostoContable] AS        
 
 	SELECT	'com.massoftware.model.CentroDeCostoContable' AS ClassCentroDeCostoContable
+			,[CentrosDeCostoContable].[id]  AS id
 			,[CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS centroDeCostoContable
 			,[CentrosDeCostoContable].[NOMBRE] AS nombre
 			,[CentrosDeCostoContable].[ABREVIATURA] AS abreviatura
 			--,[CentrosDeCostoContable].[EJERCICIO] 
-				,v_EjercicioContable.ejercicio AS ejercicioContable_ejercicio		
-				,v_EjercicioContable.fechaApertura AS ejercicioContable_fechaApertura
-				,v_EjercicioContable.fechaCierre AS ejercicioContable_fechaCierre
-				,v_EjercicioContable.ejercicioCerrado AS ejercicioContable_ejercicioCerrado
-				,v_EjercicioContable.ejercicioCerradoModulos AS ejercicioContable_ejercicioCerradoModulos
-				,v_EjercicioContable.comentario AS ejercicioContable_comentario
+				,vEjercicioContable.ejercicio AS ejercicioContable_ejercicio		
+				,vEjercicioContable.fechaApertura AS ejercicioContable_fechaApertura
+				,vEjercicioContable.fechaCierre AS ejercicioContable_fechaCierre
+				,vEjercicioContable.ejercicioCerrado AS ejercicioContable_ejercicioCerrado
+				,vEjercicioContable.ejercicioCerradoModulos AS ejercicioContable_ejercicioCerradoModulos
+				,vEjercicioContable.comentario AS ejercicioContable_comentario
 			--,[CentrosDeCostoContable].[PRUEBA1] 
 			--,[CentrosDeCostoContable].[PRUEBA]
 	FROM [dbo].[CentrosDeCostoContable]
-	LEFT JOIN	[dbo].[v_EjercicioContable]
-		ON [dbo].[v_EjercicioContable].[ejercicio] = [dbo].[CentrosDeCostoContable].[EJERCICIO];
+	LEFT JOIN	[dbo].[vEjercicioContable]
+		ON [dbo].[vEjercicioContable].[ejercicio] = [dbo].[CentrosDeCostoContable].[EJERCICIO];
+
+	-- SELECT * FROM VetaroRep.dbo.[CentrosDeCostoContable] ;
+	-- SELECT * FROM VetaroRep.dbo.[vCentroDeCostoContable] ;
+	-- SELECT * FROM VetaroRep.dbo.vCentroDeCostoContable ORDER BY nombre;
+	-- SELECT * FROM VetaroRep.dbo.vCentroDeCostoContable ORDER BY centroDeCostoContable;
+	-- SELECT * FROM VetaroRep.dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = 2015  ORDER BY centroDeCostoContable;
+
 		
 -------------------------------------------------------------
 		

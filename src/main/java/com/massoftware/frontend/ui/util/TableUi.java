@@ -272,7 +272,7 @@ public abstract class TableUi extends CustomComponent {
 								"Esta seguro de eliminar el "
 										+ getEntityAttMetaDataGrid().getLabel()
 												.toLowerCase() + " "
-										+ item.getId(),
+										+ item,
 								new YesNoDialog.Callback() {
 									public void onDialogResult(boolean yes) {
 										if (yes) {
@@ -305,7 +305,7 @@ public abstract class TableUi extends CustomComponent {
 
 				String msg = "Se eliminó con éxito el "
 						+ getEntityAttMetaDataGrid().getLabel().toLowerCase()
-						+ " " + item.getId();
+						+ " " + item;
 
 				LogAndNotification.printSuccessOk(msg);
 

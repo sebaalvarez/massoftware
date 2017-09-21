@@ -3,8 +3,8 @@ package com.massoftware.frontend.ui.windows.form;
 import org.cendra.common.model.EntityId;
 import org.cendra.common.model.EntityMetaData;
 
+import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
-import com.massoftware.backend.bo.ICentroDeCostoContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.FormUi;
 import com.massoftware.frontend.ui.util.StringToIntegerConverterUnspecifiedLocale;
@@ -33,7 +33,7 @@ public class CentroDeCostoContableFormUi extends FormUi {
 
 	// -------------------------------------------------------------------
 
-	private ICentroDeCostoContableBO centroDeCostoContableBO;
+	private CentroDeCostoContableBO centroDeCostoContableBO;
 	private EjercicioContableBO ejercicioContableBO;
 
 	// -------------------------------------------------------------------

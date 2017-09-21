@@ -19,7 +19,7 @@ public class MigradorMSToPG {
 		}
 	}
 
-	private static void migrar() throws Exception {
+	public static void migrar() throws Exception {
 
 		BackendContext cxMSSQL = new BackendContext("sqlserver");
 		BackendContext cxPG = new BackendContext("Postgresql");

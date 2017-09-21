@@ -2,6 +2,7 @@ package com.massoftware.backend.bo;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.cendra.common.model.EntityId;
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
@@ -10,25 +11,28 @@ import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 import org.cendra.jdbc.SQLExceptionWrapper;
 
+import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 
 public class EjercicioContableBO {
 
-	private final String SQL_PG_1 = "SELECT * FROM  massoftware.EjercicioContable ORDER BY ejercicio DESC;";
-	private final String SQL_PG_2 = "SELECT * FROM  massoftware.\"EjercicioContable\" WHERE ejercicio::VARCHAR ILIKE '%'||(?::VARCHAR) ORDER BY ejercicio DESC;";
-	private final String SQL_PG_3 = "SELECT MAX(ejercicio) FROM  massoftware.\"EjercicioContable\";";
+	private final String SQL_PG_1 = "SELECT * FROM  massoftware.vEjercicioContable ORDER BY ejercicio DESC;";
+	private final String SQL_PG_2 = "SELECT * FROM  massoftware.vEjercicioContable WHERE ejercicio::VARCHAR ILIKE '%'||(?::VARCHAR) ORDER BY ejercicio DESC;";
+	private final String SQL_PG_3 = "SELECT MAX(ejercicio) FROM  massoftware.vEjercicioContable;";
 	private final String SQL_PG_4 = "SELECT * FROM  massoftware.vEjercicioContable WHERE ejercicio = ?;";
 	private final String SQL_PG_5 = "INSERT INTO massoftware.EjercicioContable (id, ejercicio, comentario, fechaApertura, fechaCierre, ejercicioCerrado, ejercicioCerradoModulos) VALUES (?, ?, ?, ?, ?, ?, ?);";
-	private final String SQL_PG_6 = "";
-	private final String SQL_PG_7 = "";
+	private final String SQL_PG_6 = "UPDATE massoftware.EjercicioContable SET ejercicio = ?, comentario = ?, fechaApertura = ?, fechaCierre = ?, ejercicioCerrado = ?, ejercicioCerradoModulos = ? WHERE id = ?;";;
+	private final String SQL_PG_7 = "DELETE FROM massoftware.EjercicioContable WHERE id = ?;";
+	private final String SQL_PG_8 = "SELECT count(ejercicioContable) FROM massoftware.CentroDeCostoContable WHERE ejercicioContable = ?;";
 
 	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.vEjercicioContable ORDER BY ejercicio DESC;";
 	private final String SQL_MS_2 = "SELECT * FROM VetaroRep.dbo.vEjercicioContable WHERE CAST(ejercicio AS VARCHAR)  LIKE CONCAT('%', CAST(? AS VARCHAR)) ORDER BY ejercicio DESC;";
 	private final String SQL_MS_3 = "SELECT MAX(ejercicio) FROM VetaroRep.dbo.vEjercicioContable;";
 	private final String SQL_MS_4 = "SELECT * FROM VetaroRep.dbo.vEjercicioContable WHERE ejercicio = ?;";
-	private final String SQL_MS_5 = "INSERT INTO [dbo].[EjerciciosContables] ([id], [EJERCICIO], [COMENTARIO], [FECHAAPERTURASQL], [FECHACIERRESQL], [EJERCICIOCERRADO], [EJERCICIOCERRADOMODULOS]) VALUES (?, ?, ?, ?, ?, ?, ?);";
+	private final String SQL_MS_5 = "INSERT INTO [dbo].[EjerciciosContables] ([EJERCICIO], [COMENTARIO], [FECHAAPERTURASQL], [FECHACIERRESQL], [EJERCICIOCERRADO], [EJERCICIOCERRADOMODULOS]) VALUES (?, ?, ?, ?, ?, ?);";
 	private final String SQL_MS_6 = "UPDATE VetaroRep.dbo.EjerciciosContables SET COMENTARIO = ?, FECHAAPERTURASQL = ?, FECHACIERRESQL = ?, EJERCICIOCERRADO = ?, EJERCICIOCERRADOMODULOS = ? WHERE EJERCICIO = ?;";
 	private final String SQL_MS_7 = "DELETE FROM VetaroRep.dbo.EjerciciosContables WHERE EJERCICIO = ?;";
+	private final String SQL_MS_8 = "SELECT count([EJERCICIO]) FROM [dbo].[CentrosDeCostoContable] WHERE [EJERCICIO] = ?;";
 
 	private DataSourceWrapper dataSourceWrapper;
 
@@ -249,7 +253,8 @@ public class EjercicioContableBO {
 		return ejercicioContable;
 	}
 
-	public List<EjercicioContable> insert(List<EjercicioContable> items) throws Exception {
+	public List<EjercicioContable> insert(List<EjercicioContable> items)
+			throws Exception {
 
 		String sql = null;
 
@@ -272,7 +277,6 @@ public class EjercicioContableBO {
 					throw new InsertDuplicateException(item.getEjercicio());
 				}
 
-				
 				Object id = null;
 				if (item.getId() != null) {
 					id = item.getId();
@@ -385,17 +389,12 @@ public class EjercicioContableBO {
 
 			connectionWrapper.begin();
 
-			Object id = null;
-			if (item.getId() != null) {
-				id = item.getId();
-			} else {
-				id = String.class;
-			}
-			Object ejercico = null;
+			
+			Object ejercicio = null;
 			if (item.getEjercicio() != null) {
-				ejercico = item.getEjercicio();
+				ejercicio = item.getEjercicio();
 			} else {
-				ejercico = Integer.class;
+				ejercicio = Integer.class;
 			}
 			Object comentario = null;
 			if (item.getComentario() != null) {
@@ -415,16 +414,7 @@ public class EjercicioContableBO {
 			} else {
 				fechaCierre = Date.class;
 			}
-			// short ejercicioCerrado = 0;
-			// if (item.getEjercicioCerrado() != null
-			// && item.getEjercicioCerrado() == true) {
-			// ejercicioCerrado = 1;
-			// }
-			// short ejercicioCerradoModulos = 0;
-			// if (item.getEjercicioCerradoModulos() != null
-			// && item.getEjercicioCerradoModulos() == true) {
-			// ejercicioCerradoModulos = 1;
-			// }
+
 			Object ejercicioCerrado = null;
 			Object ejercicioCerradoModulos = null;
 
@@ -459,10 +449,26 @@ public class EjercicioContableBO {
 				}
 			}
 
-			Object[] args = { id, ejercico, comentario, fechaApertura, fechaCierre,
-					ejercicioCerrado, ejercicioCerradoModulos };
+			int rows = -1;
 
-			int rows = connectionWrapper.insert(sql, args);
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+				
+				String id = UUID.randomUUID().toString();
+				item.setId(id);
+
+				Object[] args = { id, ejercicio, comentario, fechaApertura,
+						fechaCierre, ejercicioCerrado, ejercicioCerradoModulos };
+
+				rows = connectionWrapper.insert(sql, args);
+
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+				Object[] args = { ejercicio, comentario, fechaApertura,
+						fechaCierre, ejercicioCerrado, ejercicioCerradoModulos };
+
+				rows = connectionWrapper.insert(sql, args);
+
+			}
 
 			if (rows != 1) {
 				throw new Exception(
@@ -500,6 +506,18 @@ public class EjercicioContableBO {
 
 			connectionWrapper.begin();
 
+			Object id = null;
+			if (item.getId() != null) {
+				id = item.getId();
+			} else {
+				id = String.class;
+			}
+			Object ejercicio = null;
+			if (item.getEjercicio() != null) {
+				ejercicio = item.getEjercicio();
+			} else {
+				ejercicio = Integer.class;
+			}
 			Object comentario = null;
 			if (item.getComentario() != null) {
 				comentario = item.getComentario();
@@ -518,16 +536,7 @@ public class EjercicioContableBO {
 			} else {
 				fechaCierre = Date.class;
 			}
-			// short ejercicioCerrado = 0;
-			// if (item.getEjercicioCerrado() != null
-			// && item.getEjercicioCerrado() == true) {
-			// ejercicioCerrado = 1;
-			// }
-			// short ejercicioCerradoModulos = 0;
-			// if (item.getEjercicioCerradoModulos() != null
-			// && item.getEjercicioCerradoModulos() == true) {
-			// ejercicioCerradoModulos = 1;
-			// }
+
 			Object ejercicioCerrado = null;
 			Object ejercicioCerradoModulos = null;
 
@@ -562,11 +571,23 @@ public class EjercicioContableBO {
 				}
 			}
 
-			Object[] args = { comentario, fechaApertura, fechaCierre,
-					ejercicioCerrado, ejercicioCerradoModulos,
-					item.getEjercicio() };
+			int rows = -1;
 
-			int rows = connectionWrapper.update(sql, args);
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+				Object[] args = { ejercicio, comentario, fechaApertura,
+						fechaCierre, ejercicioCerrado, ejercicioCerradoModulos,
+						id };
+
+				rows = connectionWrapper.update(sql, args);
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+				Object[] args = { comentario, fechaApertura, fechaCierre,
+						ejercicioCerrado, ejercicioCerradoModulos, ejercicio };
+
+				rows = connectionWrapper.update(sql, args);
+
+			}
 
 			if (rows != 1) {
 				throw new Exception(
@@ -595,12 +616,6 @@ public class EjercicioContableBO {
 
 		String sql = null;
 
-		if (dataSourceWrapper.isDatabasePostgreSql()) {
-			sql = SQL_PG_7;
-		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-			sql = SQL_MS_7;
-		}
-
 		ConnectionWrapper connectionWrapper = dataSourceWrapper
 				.getConnectionWrapper();
 
@@ -608,7 +623,57 @@ public class EjercicioContableBO {
 
 			connectionWrapper.begin();
 
-			int rows = connectionWrapper.delete(sql, item.getEjercicio());
+//			if (dataSourceWrapper.isDatabasePostgreSql()) {
+//				Object id = null;
+//				if (item.getId() != null) {
+//					id = item.getId();
+//				} else {
+//					id = String.class;
+//				}
+//
+//				sql = SQL_PG_8;
+//
+//				Object[][] table = connectionWrapper.findToTable(sql, id);
+//				if ((int) table[0][1] > 0) {
+//					throw new DeleteForeingObjectConflictException(sql
+//							+ "\nargs:[" + item.getEjercicio() + "]",
+//							CentroDeCostoContable.class.getSimpleName());
+//				}
+//
+//			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+//				sql = SQL_MS_8;
+//			}
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+				sql = SQL_PG_7;
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+				sql = SQL_MS_7;
+			}
+
+			int rows = -1;
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+				Object id = null;
+				if (item.getId() != null) {
+					id = item.getId();
+				} else {
+					id = String.class;
+				}
+
+				rows = connectionWrapper.delete(sql, id);
+
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+				Object ejercicio = null;
+				if (item.getEjercicio() != null) {
+					ejercicio = item.getEjercicio();
+				} else {
+					ejercicio = Integer.class;
+				}
+
+				rows = connectionWrapper.delete(sql, ejercicio);
+			}
 
 			if (rows != 1) {
 				throw new Exception(

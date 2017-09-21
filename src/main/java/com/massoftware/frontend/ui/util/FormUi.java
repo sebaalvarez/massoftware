@@ -168,13 +168,13 @@ public abstract class FormUi extends CustomComponent {
 				insert();
 				msg = "Se agregó con éxito el "
 						+ getEntityAttMetaDataForm().getLabel().toLowerCase()
-						+ " " + item.getId();
+						+ " " + item;
 
 			} else {
 				update();
 				msg = "Se modificó con éxito el "
 						+ getEntityAttMetaDataForm().getLabel().toLowerCase()
-						+ " " + item.getId();
+						+ " " + item;
 			}
 
 			LogAndNotification.printSuccessOk(msg);

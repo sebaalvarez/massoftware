@@ -16,12 +16,10 @@ import org.cendra.log.LogPrinter;
 
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
-import com.massoftware.backend.bo.ICentroDeCostoContableBO;
 import com.massoftware.backend.bo.IPuntoDeEquilibrioBO;
 import com.massoftware.backend.bo.PlanDeCuentaBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.bo.UsuarioBO;
-import com.massoftware.backend.dao.CentroDeCostoContableDAO;
 import com.massoftware.backend.dao.PlanDeCuentaDAO;
 import com.massoftware.backend.dao.PuntoDeEquilibrioDAO;
 import com.massoftware.model.CentroDeCostoContable;
@@ -283,11 +281,10 @@ public class BackendContext extends AbstractContext {
 
 	}
 
-	public ICentroDeCostoContableBO buildCentroDeCostoContableBO() {
+	public CentroDeCostoContableBO buildCentroDeCostoContableBO() {
 
 		try {
-			return new CentroDeCostoContableBO(new CentroDeCostoContableDAO(
-					dataSourceWrapper));
+			return new CentroDeCostoContableBO(dataSourceWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),

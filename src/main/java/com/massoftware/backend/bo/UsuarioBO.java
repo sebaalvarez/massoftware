@@ -13,12 +13,14 @@ public class UsuarioBO {
 	private DataSourceWrapper dataSourceWrapper;
 
 	private final String SQL_PG_1 = "SELECT * FROM massoftware.vUsuario";
-	private final String SQL_PG_3 = "UPDATE FROM massoftware.Usuario SET ejercicioContable = ? WHERE nombre = ?;";
+	private final String SQL_PG_3 = "UPDATE massoftware.Usuario SET ejercicioContable = ? WHERE id = ?;";
 	private final String SQL_PG_5 = "INSERT INTO massoftware.usuario(id, ejerciciocontable, numero, nombre)	VALUES (?, ?, ?, ?);";
 
 	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.vUsuario";
 	private final String SQL_MS_3 = "UPDATE [dbo].[SSECUR_User] SET [DEFAULT_EJERCICIO_CONTABLE] = ? WHERE [LASTNAME] = ?;";
-	private final String SQL_MS_5 = "INSERT INTO [dbo].[SSECUR_User] ( [id], [DEFAULT_EJERCICIO_CONTABLE], [NO], [LASTNAME] ) VALUES (?, ?, ?, ?);";
+
+	// private final String SQL_MS_5 =
+	// "INSERT INTO [dbo].[SSECUR_User] ( [DEFAULT_EJERCICIO_CONTABLE], [NO], [LASTNAME] ) VALUES (?, ?, ?, ?);";
 
 	public UsuarioBO(DataSourceWrapper dataSourceWrapper) {
 		super();
@@ -74,7 +76,7 @@ public class UsuarioBO {
 			@SuppressWarnings("unchecked")
 			List<Usuario> usuarios = connectionWrapper
 					.findToListByCendraConvention(sql, nombre);
-			if (usuarios.size() == 1) {
+			if (usuarios.size() == 1) {				
 				return usuarios.get(0);
 			}
 
@@ -104,25 +106,42 @@ public class UsuarioBO {
 
 			connectionWrapper.begin();
 
-			Object ejercicioContableDefault = null;
+			Object ejercicio = null;
 			if (item.getEjercicioContable() != null
 					&& item.getEjercicioContable().getEjercicio() != null) {
-				ejercicioContableDefault = item.getEjercicioContable()
-						.getEjercicio();
+				ejercicio = item.getEjercicioContable().getEjercicio();
 			} else {
-				ejercicioContableDefault = Integer.class;
+				ejercicio = Integer.class;
 			}
 
-			Object nombre = null;
-			if (item.getNombre() != null) {
-				nombre = item.getNombre();
-			} else {
-				nombre = String.class;
+			int rows = -1;
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+				Object id = null;
+				if (item.getId() != null) {
+					id = item.getId();
+				} else {
+					id = String.class;
+				}
+
+				Object[] args = { ejercicio, id };
+
+				rows = connectionWrapper.update(sql, args);
+
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+				Object nombre = null;
+				if (item.getNombre() != null) {
+					nombre = item.getNombre();
+				} else {
+					nombre = String.class;
+				}
+
+				Object[] args = { ejercicio, nombre };
+
+				rows = connectionWrapper.update(sql, args);
 			}
-
-			Object[] args = { ejercicioContableDefault, nombre };
-
-			int rows = connectionWrapper.update(sql, args);
 
 			if (rows > 1) {
 				throw new Exception(
@@ -151,7 +170,7 @@ public class UsuarioBO {
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
 			sql = SQL_PG_5;
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-			sql = SQL_MS_5;
+			// sql = SQL_MS_5;
 		}
 
 		ConnectionWrapper connectionWrapper = dataSourceWrapper

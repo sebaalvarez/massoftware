@@ -297,6 +297,7 @@ CREATE OR REPLACE VIEW massoftware.vUsuario AS
 			,Usuario.id
 			,Usuario.numero
 			,Usuario.nombre			
+            	,vEjercicioContable.id AS ejercicioContable_id		
 				,vEjercicioContable.ejercicio AS ejercicioContable_ejercicio		
 				,vEjercicioContable.fechaApertura AS ejercicioContable_fechaApertura
 				,vEjercicioContable.fechaCierre AS ejercicioContable_fechaCierre

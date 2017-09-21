@@ -28,14 +28,14 @@ public class EjercicioContable extends EntityId implements Cloneable,
 		setterByArray(row);
 	}
 
-	public void setId(String id) {
-		id = formatValue(id);
-		if (id != null) {
-			this.setEjercicio(new Integer(id));
-		} else {
-			this.setEjercicio(null);
-		}
-	}
+	// public void setId(String id) {
+	// id = formatValue(id);
+	// if (id != null) {
+	// this.setEjercicio(new Integer(id));
+	// } else {
+	// this.setEjercicio(null);
+	// }
+	// }
 
 	public Integer getEjercicio() {
 		return ejercicio;
@@ -43,11 +43,11 @@ public class EjercicioContable extends EntityId implements Cloneable,
 
 	public void setEjercicio(Integer ejercicio) {
 		this.ejercicio = ejercicio;
-		if (this.ejercicio != null) {
-			super.setId(this.ejercicio.toString());
-		} else {
-			super.setId(null);
-		}
+		// if (this.ejercicio != null) {
+		// super.setId(this.ejercicio.toString());
+		// } else {
+		// super.setId(null);
+		// }
 	}
 
 	public Date getFechaApertura() {
@@ -148,6 +148,7 @@ public class EjercicioContable extends EntityId implements Cloneable,
 	public EjercicioContable clone() throws CloneNotSupportedException {
 		EjercicioContable other = new EjercicioContable();
 
+		other.setId(this.getId());
 		other.setEjercicio(this.getEjercicio());
 		if (this.getFechaApertura() != null) {
 			other.setFechaApertura((Date) this.getFechaApertura().clone());
@@ -170,6 +171,16 @@ public class EjercicioContable extends EntityId implements Cloneable,
 
 		return this.getEjercicio().compareTo(o.getEjercicio());
 
+	}
+
+	@Override
+	public String toString() {
+
+		if (this.getEjercicio() != null) {
+			return this.getEjercicio().toString();
+		}
+
+		return "";
 	}
 
 }
