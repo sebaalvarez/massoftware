@@ -135,12 +135,12 @@ CREATE TABLE massoftware.CentroDeCostoContable
 (
     id VARCHAR NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),  
     ejercicioContable VARCHAR NOT NULL REFERENCES massoftware.EjercicioContable (id),	
-    centroDeCostoContable INTEGER NOT NULL,
+    numero INTEGER NOT NULL,
     nombre VARCHAR,
     abreviatura VARCHAR
 );
 
-CREATE UNIQUE INDEX u_CentroDeCostoContable_ejercicioContable_centroDeCostoContable ON massoftware.CentroDeCostoContable (ejercicioContable, centroDeCostoContable);
+CREATE UNIQUE INDEX u_CentroDeCostoContable_ejercicioContable_centroDeCostoContable ON massoftware.CentroDeCostoContable (ejercicioContable, numero);
 
 -- SELECT * FROM massoftware.CentroDeCostoContable;
 
@@ -308,6 +308,32 @@ CREATE OR REPLACE VIEW massoftware.vUsuario AS
 	LEFT JOIN	massoftware.vEjercicioContable 
 		ON vEjercicioContable.id = Usuario.ejercicioContable;
         
--- SELECT * FROM massoftware.vUsuario;        
+-- SELECT * FROM massoftware.vUsuario; 
+
+-- ==========================================================================================================================
+
+DROP VIEW IF EXISTS massoftware.vCentroDeCostoContable CASCADE; 
+
+CREATE OR REPLACE VIEW massoftware.vCentroDeCostoContable AS
+
+	 SELECT	'com.massoftware.model.CentroDeCostoContable' AS ClassCentroDeCostoContable
+			,CentroDeCostoContable.id
+			,CentroDeCostoContable.numero 
+			,CentroDeCostoContable.nombre			
+            ,CentroDeCostoContable.abreviatura
+            	,vEjercicioContable.id AS ejercicioContable_id		
+				,vEjercicioContable.ejercicio AS ejercicioContable_ejercicio		
+				,vEjercicioContable.fechaApertura AS ejercicioContable_fechaApertura
+				,vEjercicioContable.fechaCierre AS ejercicioContable_fechaCierre
+				,vEjercicioContable.ejercicioCerrado AS ejercicioContable_ejercicioCerrado
+				,vEjercicioContable.ejercicioCerradoModulos AS ejercicioContable_ejercicioCerradoModulos
+				,vEjercicioContable.comentario AS ejercicioContable_comentario
+	FROM	massoftware.CentroDeCostoContable
+	LEFT JOIN	massoftware.vEjercicioContable 
+		ON vEjercicioContable.id = CentroDeCostoContable.ejercicioContable;
+        
+-- SELECT * FROM massoftware.vCentroDeCostoContable; 
+-- SELECT	MAX(massoftware.vCentroDeCostoContable.numero) FROM massoftware.vCentroDeCostoContable;
+-- SELECT * FROM massoftware.vCentroDeCostoContable ORDER BY numero;
 	
 

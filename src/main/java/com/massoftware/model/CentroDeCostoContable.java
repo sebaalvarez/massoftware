@@ -12,7 +12,7 @@ public class CentroDeCostoContable extends EntityId implements Cloneable,
 	private static final long serialVersionUID = 1651962136474483672L;
 
 	private EjercicioContable ejercicioContable;
-	private Short centroDeCostoContable;
+	private Integer numero;
 	private String nombre;
 	private String abreviatura;
 
@@ -24,26 +24,12 @@ public class CentroDeCostoContable extends EntityId implements Cloneable,
 		setterByArray(row);
 	}
 
-//	public void setId(String id) {
-//		id = formatValue(id);
-//		if (id != null) {			
-//			this.setCentroDeCostoContable(new Short(id.split("-")[1]));			
-//		} else {
-//			this.setCentroDeCostoContable(null);
-//		}
-//	}
-
-	public Short getCentroDeCostoContable() {
-		return centroDeCostoContable;
+	public Integer getNumero() {
+		return numero;
 	}
 
-	public void setCentroDeCostoContable(Short centroDeCostoContable) {
-		this.centroDeCostoContable = centroDeCostoContable;
-//		if (this.centroDeCostoContable != null) {
-//			super.setId(this.centroDeCostoContable.toString());
-//		} else {
-//			super.setId(null);
-//		}
+	public void setNumero(Integer numero) {
+		this.numero = numero;
 	}
 
 	public String getNombre() {
@@ -79,7 +65,7 @@ public class CentroDeCostoContable extends EntityId implements Cloneable,
 		int column = 0;
 
 		if (row[column] != null) {
-			this.setCentroDeCostoContable((Short) row[column]);
+			this.setNumero((Integer) row[column]);
 		}
 
 		column++;
@@ -107,8 +93,9 @@ public class CentroDeCostoContable extends EntityId implements Cloneable,
 	public CentroDeCostoContable clone() throws CloneNotSupportedException {
 		CentroDeCostoContable other = new CentroDeCostoContable();
 
+		other.setId(this.getId());
 		other.setAbreviatura(this.getAbreviatura());
-		other.setCentroDeCostoContable(this.getCentroDeCostoContable());
+		other.setNumero(this.getNumero());
 		if (this.getEjercicioContable() != null) {
 			other.setEjercicioContable(this.getEjercicioContable().clone());
 		} else {
@@ -121,10 +108,12 @@ public class CentroDeCostoContable extends EntityId implements Cloneable,
 
 	public int compareTo(CentroDeCostoContable o) {
 
-		return this.getCentroDeCostoContable().compareTo(
-				this.getCentroDeCostoContable());
+		return this.getNumero().compareTo(this.getNumero());
 	}
 
-
+	@Override
+	public String toString() {
+		return this.getEjercicioContable() + "-" + this.getNumero();
+	}
 
 }

@@ -20,7 +20,7 @@ ALTER TABLE [dbo].[PlanDeCuentas]
 		
 */
   
-ALTER TABLE [dbo].[SSECUR_User] ADD DEFAULT_EJERCICIO_CONTABLE int NULL;  
+
 
 /*
 ALTER TABLE [dbo].[SSECUR_User] 
@@ -30,14 +30,17 @@ ALTER TABLE [dbo].[SSECUR_User]
 */
 
 
-ALTER TABLE [dbo].[EjerciciosContables] ADD id CHAR(36) NULL;  
-UPDATE [dbo].[EjerciciosContables]  SET [id] = CAST([EjerciciosContables].[EJERCICIO] AS VARCHAR);
+--ALTER TABLE [dbo].[EjerciciosContables] ADD id CHAR(36) NULL;  
+--UPDATE [dbo].[EjerciciosContables]  SET [id] = CAST([EjerciciosContables].[EJERCICIO] AS VARCHAR);
 
-ALTER TABLE [dbo].[SSECUR_User] ADD id CHAR(36) NULL;  
-UPDATE [dbo].[SSECUR_User]  SET [id] = CAST([SSECUR_User].[NO] AS VARCHAR);
+--ALTER TABLE [dbo].[SSECUR_User] ADD id CHAR(36) NULL;  
+--UPDATE [dbo].[SSECUR_User]  SET [id] = CAST([SSECUR_User].[NO] AS VARCHAR);
 
-ALTER TABLE [dbo].[CentrosDeCostoContable] ADD id CHAR(36) NULL;  
-UPDATE [dbo].[CentrosDeCostoContable]  SET [id] = CONCAT ( CAST([CentrosDeCostoContable].[EJERCICIO] AS VARCHAR), '-', CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS VARCHAR) );
+--ALTER TABLE [dbo].[CentrosDeCostoContable] ADD id CHAR(36) NULL;  
+--UPDATE [dbo].[CentrosDeCostoContable]  SET [id] = CONCAT ( CAST([CentrosDeCostoContable].[EJERCICIO] AS VARCHAR), '-', CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS VARCHAR) );
+
+
+ALTER TABLE [dbo].[SSECUR_User] ADD DEFAULT_EJERCICIO_CONTABLE int NULL;  
 		
 		
 -- VISTAS
@@ -93,12 +96,13 @@ UPDATE [dbo].[CentrosDeCostoContable]  SET [id] = CONCAT ( CAST([CentrosDeCostoC
 	
 	CREATE VIEW [dbo].[vCentroDeCostoContable] AS        
 
-	SELECT	'com.massoftware.model.CentroDeCostoContable' AS ClassCentroDeCostoContable
-			,[CentrosDeCostoContable].[id]  AS id
-			,[CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS centroDeCostoContable
+	SELECT	'com.massoftware.model.CentroDeCostoContable' AS ClassCentroDeCostoContable			
+			, CONCAT ( CAST([CentrosDeCostoContable].[EJERCICIO] AS VARCHAR), '-', CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS VARCHAR) ) As id			
+			,CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS Int) AS numero			 
 			,[CentrosDeCostoContable].[NOMBRE] AS nombre
 			,[CentrosDeCostoContable].[ABREVIATURA] AS abreviatura
 			--,[CentrosDeCostoContable].[EJERCICIO] 
+				,vEjercicioContable.id  AS ejercicioContable_id			
 				,vEjercicioContable.ejercicio AS ejercicioContable_ejercicio		
 				,vEjercicioContable.fechaApertura AS ejercicioContable_fechaApertura
 				,vEjercicioContable.fechaCierre AS ejercicioContable_fechaCierre
@@ -114,8 +118,10 @@ UPDATE [dbo].[CentrosDeCostoContable]  SET [id] = CONCAT ( CAST([CentrosDeCostoC
 	-- SELECT * FROM VetaroRep.dbo.[CentrosDeCostoContable] ;
 	-- SELECT * FROM VetaroRep.dbo.[vCentroDeCostoContable] ;
 	-- SELECT * FROM VetaroRep.dbo.vCentroDeCostoContable ORDER BY nombre;
-	-- SELECT * FROM VetaroRep.dbo.vCentroDeCostoContable ORDER BY centroDeCostoContable;
+	-- SELECT * FROM VetaroRep.dbo.vCentroDeCostoContable ORDER BY numero;
 	-- SELECT * FROM VetaroRep.dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = 2015  ORDER BY centroDeCostoContable;
+	-- SELECT	MAX(VetaroRep.dbo.vCentroDeCostoContable.numero) FROM VetaroRep.dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = 2015;
+
 
 		
 -------------------------------------------------------------

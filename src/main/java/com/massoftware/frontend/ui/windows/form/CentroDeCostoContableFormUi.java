@@ -14,7 +14,7 @@ import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.validator.ShortRangeValidator;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
@@ -77,7 +77,7 @@ public class CentroDeCostoContableFormUi extends FormUi {
 		String centroTXTMsgError1 = "El campo " + attsName[1]
 				+ " es requerido.";
 		String centroTXTMsgError2 = "El centro debe ser un número entero y positivo, mayor o igual a 1 y menor o igual a "
-				+ Short.MAX_VALUE
+				+ Integer.MAX_VALUE
 				+ ". Usted cargo el valor \"{0}\" y es inválido.";
 		String nombreTXTMsgError1 = "El campo " + attsName[2]
 				+ " es requerido.";
@@ -102,14 +102,14 @@ public class CentroDeCostoContableFormUi extends FormUi {
 								.findMaxEjercicio());
 			}
 
-			Short t = centroDeCostoContableBO
+			Integer t = centroDeCostoContableBO
 					.findMaxCentroDeCostoContable(((CentroDeCostoContable) item)
 							.getEjercicioContable().getEjercicio());
 			if (t == null || t < 1) {
 				t = 1;
 			}
 
-			((CentroDeCostoContable) item).setCentroDeCostoContable(t);
+			((CentroDeCostoContable) item).setNumero(t);
 		}
 
 		BeanItem<CentroDeCostoContable> beanItem = new BeanItem<CentroDeCostoContable>(
@@ -138,10 +138,13 @@ public class CentroDeCostoContableFormUi extends FormUi {
 		centroTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
 		centroTXT.setRequired(true);
 		centroTXT.setRequiredError(centroTXTMsgError1);
-		centroTXT.setConverter(new StringToShortConverterUnspecifiedLocale());
+//		centroTXT.setConverter(new StringToShortConverterUnspecifiedLocale());
+		centroTXT.setConverter(new StringToIntegerConverterUnspecifiedLocale());
 		centroTXT.setNullRepresentation("");
-		centroTXT.addValidator(new ShortRangeValidator(centroTXTMsgError2,
-				(short) 1, Short.MAX_VALUE));
+		// centroTXT.addValidator(new ShortRangeValidator(centroTXTMsgError2,
+		// (short) 1, Short.MAX_VALUE));
+		centroTXT.addValidator(new IntegerRangeValidator(centroTXTMsgError2, 1,
+				Integer.MAX_VALUE));
 		formLayout.addComponent(centroTXT);
 
 		// --------------------------------------------------------------------

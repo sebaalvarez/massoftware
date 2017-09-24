@@ -1,12 +1,6 @@
 package com.massoftware.backend;
 
-import java.util.List;
-
-import com.massoftware.backend.bo.EjercicioContableBO;
-import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.model.EjercicioContable;
-import com.massoftware.model.Usuario;
 
 public class MigradorMSToPG {
 
@@ -24,24 +18,14 @@ public class MigradorMSToPG {
 		BackendContext cxMSSQL = new BackendContext("sqlserver");
 		BackendContext cxPG = new BackendContext("Postgresql");
 
-		EjercicioContableBO ejercicioContableBOMSSQL = cxMSSQL
-				.buildEjercicioContableBO();
+		cxPG.buildEjercicioContableBO().insert(
+				cxMSSQL.buildEjercicioContableBO().findAll());
 
-		EjercicioContableBO ejercicioContableBOPG = cxPG
-				.buildEjercicioContableBO();
+		cxPG.buildUsuarioBO().insert(cxMSSQL.buildUsuarioBO().findAll());
 
-		List<EjercicioContable> ejercicioContables = ejercicioContableBOMSSQL
-				.findAll();
-		
-//		System.out.println(ejercicioContables);
-		ejercicioContableBOPG.insert(ejercicioContables);
-
-		UsuarioBO usuarioBOMSSQL = cxMSSQL.buildUsuarioBO();
-
-		UsuarioBO usuarioBOPG = cxPG.buildUsuarioBO();
-
-		List<Usuario> usuarios = usuarioBOMSSQL.findAll();
-		usuarioBOPG.insert(usuarios);
+		cxPG.buildCentroDeCostoContableBO().insert(
+				cxMSSQL.buildCentroDeCostoContableBO()
+						.findAllOrderByCentroDeCostoContable());
 
 	}
 }

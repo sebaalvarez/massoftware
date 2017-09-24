@@ -1,6 +1,7 @@
 package com.massoftware.backend.bo;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.cendra.common.model.EntityId;
 import org.cendra.ex.crud.InsertDuplicateException;
@@ -13,12 +14,17 @@ public class CentroDeCostoContableBO {
 
 	private DataSourceWrapper dataSourceWrapper;
 
-	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.vCentroDeCostoContable";
+	private final String SQL_PG_1 = "SELECT * FROM massoftware.vCentroDeCostoContable";
+	private final String SQL_PG_2 = "INSERT INTO massoftware.CentroDeCostoContable(id, ejercicioContable, numero, nombre, abreviatura) VALUES (?, ?, ?, ?, ?);";
+	private final String SQL_PG_3 = "UPDATE massoftware.centrodecostocontable SET ejerciciocontable=?, numero=?, nombre=?, abreviatura=? WHERE id=?;";
+	private final String SQL_PG_4 = "DELETE FROM massoftware.centrodecostocontable WHERE id = ?";
+	private final String SQL_PG_5 = "SELECT	MAX(massoftware.vCentroDeCostoContable.numero) FROM massoftware.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = ?;";
 
-	private final String SQL_MS_2 = "INSERT INTO [dbo].[CentrosDeCostoContable] ([id], [CENTRODECOSTOCONTABLE],[NOMBRE] ,[ABREVIATURA] ,[EJERCICIO], [PRUEBA]) VALUES (?, ?, ?, ?, ?, 0)";
+	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.vCentroDeCostoContable";
+	private final String SQL_MS_2 = "INSERT INTO [dbo].[CentrosDeCostoContable] ([CENTRODECOSTOCONTABLE],[NOMBRE] ,[ABREVIATURA] ,[EJERCICIO], [PRUEBA]) VALUES (?, ?, ?, ?, 0)";
 	private final String SQL_MS_3 = "UPDATE [dbo].[CentrosDeCostoContable] SET [NOMBRE] = ?, [ABREVIATURA] = ?, [EJERCICIO] = ? WHERE [CENTRODECOSTOCONTABLE] = ? AND [EJERCICIO] = ? AND [PRUEBA] = 0;";
 	private final String SQL_MS_4 = "DELETE FROM [dbo].[CentrosDeCostoContable] WHERE [CENTRODECOSTOCONTABLE] = ? AND [EJERCICIO] = ? AND [PRUEBA] = 0;";
-	private final String SQL_MS_5 = "SELECT	MAX([dbo].[CentrosDeCostoContable].[CENTRODECOSTOCONTABLE]) FROM [dbo].[CentrosDeCostoContable] WHERE [EJERCICIO] = ?;";
+	private final String SQL_MS_5 = "SELECT	MAX(VetaroRep.dbo.vCentroDeCostoContable.numnero) FROM VetaroRep.dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = ?;";
 
 	public CentroDeCostoContableBO(DataSourceWrapper dataSourceWrapper) {
 		super();
@@ -33,6 +39,18 @@ public class CentroDeCostoContableBO {
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
 
+			String where = "";
+
+			if (ejercicio != null) {
+				where = " WHERE ejercicioContable_ejercicio = ? ";
+			}
+
+			if (ordeByNombre) {
+				sql = SQL_PG_1 + where + " ORDER BY nombre;";
+			} else {
+				sql = SQL_PG_1 + where + " ORDER BY numero;";
+			}
+
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
 
 			String where = "";
@@ -44,7 +62,7 @@ public class CentroDeCostoContableBO {
 			if (ordeByNombre) {
 				sql = SQL_MS_1 + where + " ORDER BY nombre;";
 			} else {
-				sql = SQL_MS_1 + where + " ORDER BY centroDeCostoContable;";
+				sql = SQL_MS_1 + where + " ORDER BY numero;";
 			}
 		}
 
@@ -92,7 +110,7 @@ public class CentroDeCostoContableBO {
 		return findAllOrderBy(true, ejercicio);
 	}
 
-	public Short findMaxCentroDeCostoContable(Integer ejercicio)
+	public Integer findMaxCentroDeCostoContable(Integer ejercicio)
 			throws Exception {
 
 		String sql = null;
@@ -103,7 +121,7 @@ public class CentroDeCostoContableBO {
 		try {
 
 			if (dataSourceWrapper.isDatabasePostgreSql()) {
-
+				sql = SQL_PG_5;
 			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
 				sql = SQL_MS_5;
 			}
@@ -112,7 +130,7 @@ public class CentroDeCostoContableBO {
 
 			for (Object[] row : table) {
 
-				Short v = (Short) row[0];
+				Integer v = (Integer) row[0];
 				if (v == null) {
 					v = 0;
 				}
@@ -129,7 +147,7 @@ public class CentroDeCostoContableBO {
 		return 1;
 	}
 
-	private CentroDeCostoContable findByCentroDeCostoContable(Short centro,
+	private CentroDeCostoContable findByCentroDeCostoContable(Integer numero,
 			Integer ejercicio) throws Exception {
 
 		CentroDeCostoContable centroDeCostoContable = null;
@@ -142,15 +160,16 @@ public class CentroDeCostoContableBO {
 		try {
 
 			if (dataSourceWrapper.isDatabasePostgreSql()) {
-
+				sql = SQL_PG_1
+						+ " WHERE numero = ? AND ejercicioContable_ejercicio = ?;";
 			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
 				sql = SQL_MS_1
-						+ " WHERE centroDeCostoContable = ? AND ejercicioContable_ejercicio = ?;";
+						+ " WHERE numero = ? AND ejercicioContable_ejercicio = ?;";
 			}
 
 			@SuppressWarnings("unchecked")
 			List<CentroDeCostoContable> list = connectionWrapper
-					.findToListByCendraConvention(sql, centro, ejercicio);
+					.findToListByCendraConvention(sql, numero, ejercicio);
 
 			if (list.size() == 1) {
 				return list.get(0);
@@ -165,17 +184,13 @@ public class CentroDeCostoContableBO {
 		return centroDeCostoContable;
 	}
 
-	public EntityId insert(CentroDeCostoContable item) throws Exception {
-
-		if (findByCentroDeCostoContable(item.getCentroDeCostoContable(), item
-				.getEjercicioContable().getEjercicio()) != null) {
-			throw new InsertDuplicateException(item.getCentroDeCostoContable());
-		}
+	public List<CentroDeCostoContable> insert(List<CentroDeCostoContable> items)
+			throws Exception {
 
 		String sql = null;
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
-
+			sql = SQL_PG_2;
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
 			sql = SQL_MS_2;
 		}
@@ -187,17 +202,118 @@ public class CentroDeCostoContableBO {
 
 			connectionWrapper.begin();
 
+			for (CentroDeCostoContable item : items) {
+
+				if (findByCentroDeCostoContable(item.getNumero(), item
+						.getEjercicioContable().getEjercicio()) != null) {
+					throw new InsertDuplicateException(item.getNumero());
+				}
+
+				Object id = null;
+				if (item.getId() != null) {
+					id = item.getId();
+				} else {
+					id = String.class;
+				}
+				Object numero = null;
+				if (item.getNumero() != null) {
+					numero = item.getNumero();
+				} else {
+					numero = Short.class;
+				}
+				Object nombre = null;
+				if (item.getNombre() != null) {
+					nombre = item.getNombre();
+				} else {
+					nombre = String.class;
+				}
+				Object abreviatura = null;
+				if (item.getAbreviatura() != null) {
+					abreviatura = item.getAbreviatura();
+				} else {
+					abreviatura = String.class;
+				}
+				Object ejercicioContable = null;
+				if (item.getEjercicioContable() != null
+						&& item.getEjercicioContable().getEjercicio() != null) {
+					ejercicioContable = item.getEjercicioContable()
+							.getEjercicio();
+				} else {
+					ejercicioContable = Integer.class;
+				}
+
+				int rows = -1;
+
+				if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+					if (id == null) {
+						item.setId(UUID.randomUUID().toString());
+						id = item.getId();
+					}
+
+					Object[] args = { id, ejercicioContable, numero, nombre,
+							abreviatura, };
+					rows = connectionWrapper.insert(sql, args);
+
+				} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+					Object[] args = { numero, nombre, abreviatura,
+							ejercicioContable };
+					rows = connectionWrapper.insert(sql, args);
+				}
+
+				if (rows != 1) {
+					throw new Exception(
+							"La sentencia debería afectar un solo registro, la sentencia afecto "
+									+ rows + " registros.");
+				}
+			}
+
+			connectionWrapper.commit();
+
+			return items;
+
+		} catch (Exception e) {
+			connectionWrapper.rollBack();
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+	}
+
+	public CentroDeCostoContable insert(CentroDeCostoContable item)
+			throws Exception {
+
+		String sql = null;
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+			sql = SQL_PG_2;
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			sql = SQL_MS_2;
+		}
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			connectionWrapper.begin();
+
+			if (findByCentroDeCostoContable(item.getNumero(), item
+					.getEjercicioContable().getEjercicio()) != null) {
+				throw new InsertDuplicateException(item.getNumero());
+			}
+
 			Object id = null;
 			if (item.getId() != null) {
 				id = item.getId();
 			} else {
 				id = String.class;
 			}
-			Object centroDeCostoContable = null;
-			if (item.getCentroDeCostoContable() != null) {
-				centroDeCostoContable = item.getCentroDeCostoContable();
+			Object numero = null;
+			if (item.getNumero() != null) {
+				numero = item.getNumero();
 			} else {
-				centroDeCostoContable = Short.class;
+				numero = Short.class;
 			}
 			Object nombre = null;
 			if (item.getNombre() != null) {
@@ -219,10 +335,24 @@ public class CentroDeCostoContableBO {
 				ejercicioContable = Integer.class;
 			}
 
-			Object[] args = { id, centroDeCostoContable, nombre, abreviatura,
-					ejercicioContable };
+			int rows = -1;
 
-			int rows = connectionWrapper.insert(sql, args);
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+				if (item.getId() == null) {
+					item.setId(UUID.randomUUID().toString());
+					id = item.getId();
+				}
+
+				Object[] args = { id, ejercicioContable, numero, nombre,
+						abreviatura, };
+				rows = connectionWrapper.insert(sql, args);
+
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+				Object[] args = { numero, nombre, abreviatura,
+						ejercicioContable };
+				rows = connectionWrapper.insert(sql, args);
+			}
 
 			if (rows != 1) {
 				throw new Exception(
@@ -248,7 +378,7 @@ public class CentroDeCostoContableBO {
 		String sql = null;
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
-
+			sql = SQL_PG_3;
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
 			sql = SQL_MS_3;
 		}
@@ -260,11 +390,17 @@ public class CentroDeCostoContableBO {
 
 			connectionWrapper.begin();
 
-			Object centroDeCostoContable = null;
-			if (item.getCentroDeCostoContable() != null) {
-				centroDeCostoContable = item.getCentroDeCostoContable();
+			Object id = null;
+			if (item.getId() != null) {
+				id = item.getId();
 			} else {
-				centroDeCostoContable = Short.class;
+				id = String.class;
+			}
+			Object numero = null;
+			if (item.getNumero() != null) {
+				numero = item.getNumero();
+			} else {
+				numero = Short.class;
 			}
 			Object nombre = null;
 			if (item.getNombre() != null) {
@@ -278,26 +414,44 @@ public class CentroDeCostoContableBO {
 			} else {
 				abreviatura = String.class;
 			}
-			Object ejercicioContable = null;
-			if (item.getEjercicioContable() != null
-					&& item.getEjercicioContable().getEjercicio() != null) {
-				ejercicioContable = item.getEjercicioContable().getEjercicio();
-			} else {
-				ejercicioContable = Integer.class;
+
+			int rows = -1;
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+				Object ejercicioContable = null;
+				if (item.getEjercicioContable() != null
+						&& item.getEjercicioContable().getEjercicio() != null) {
+					ejercicioContable = item.getEjercicioContable().getId();
+				} else {
+					ejercicioContable = Integer.class;
+				}
+
+				Object[] args = { ejercicioContable, numero, nombre,
+						abreviatura, id };
+
+				rows = connectionWrapper.update(sql, args);
+
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+				Object ejercicioContable = null;
+				if (item.getEjercicioContable() != null
+						&& item.getEjercicioContable().getEjercicio() != null) {
+					ejercicioContable = item.getEjercicioContable()
+							.getEjercicio();
+				} else {
+					ejercicioContable = Integer.class;
+				}
+
+				Object[] args = { nombre, abreviatura, ejercicioContable,
+						numero, ejercicioContable };
+
+				rows = connectionWrapper.update(sql, args);
 			}
-
-			Object[] args = { nombre, abreviatura, ejercicioContable,
-					centroDeCostoContable, ejercicioContable };
-
-			int rows = connectionWrapper.update(sql, args);
 
 			if (rows != 1) {
 				throw new Exception(
 						"La sentencia debería afectar un solo registro, la sentencia afecto "
 								+ rows + " registros.");
 			}
-
-			//
 
 			connectionWrapper.commit();
 
@@ -308,9 +462,8 @@ public class CentroDeCostoContableBO {
 			connectionWrapper.close(connectionWrapper);
 		}
 
-		item = this.findByCentroDeCostoContable(
-				item.getCentroDeCostoContable(), item.getEjercicioContable()
-						.getEjercicio());
+		item = this.findByCentroDeCostoContable(item.getNumero(), item
+				.getEjercicioContable().getEjercicio());
 
 		return item;
 	}
@@ -320,7 +473,7 @@ public class CentroDeCostoContableBO {
 		String sql = null;
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
-
+			sql = SQL_PG_4;
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
 			sql = SQL_MS_4;
 		}
@@ -332,9 +485,39 @@ public class CentroDeCostoContableBO {
 
 			connectionWrapper.begin();
 
-			int rows = connectionWrapper.delete(sql, item
-					.getCentroDeCostoContable(), item.getEjercicioContable()
-					.getId());
+			int rows = -1;
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+				Object id = null;
+				if (item.getId() != null) {
+					id = item.getId();
+				} else {
+					id = String.class;
+				}
+
+				rows = connectionWrapper.delete(sql, id);
+
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+				Object numero = null;
+				if (item.getNumero() != null) {
+					numero = item.getNumero();
+				} else {
+					numero = Short.class;
+				}
+
+				Object ejercicioContable = null;
+				if (item.getEjercicioContable() != null
+						&& item.getEjercicioContable().getEjercicio() != null) {
+					ejercicioContable = item.getEjercicioContable()
+							.getEjercicio();
+				} else {
+					ejercicioContable = Integer.class;
+				}
+
+				rows = connectionWrapper.delete(sql, numero, ejercicioContable);
+			}
 
 			if (rows != 1) {
 				throw new Exception(

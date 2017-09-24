@@ -78,7 +78,7 @@ public class BackendContext extends AbstractContext {
 		centroDeCostoContableMD.addAtt("ejercicioContable",
 				ejercicioContableMD.getLabelShort(),
 				ejercicioContableMD.getLabel());
-		centroDeCostoContableMD.addAtt("centroDeCostoContable", "C.C.",
+		centroDeCostoContableMD.addAtt("numero", "C.C.",
 				"Centro de costo contable");
 		centroDeCostoContableMD.addAtt("nombre", "Nomnre");
 		centroDeCostoContableMD.addAtt("abreviatura", "Abreviatura");

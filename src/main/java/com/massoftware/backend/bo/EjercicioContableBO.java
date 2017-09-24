@@ -283,11 +283,11 @@ public class EjercicioContableBO {
 				} else {
 					id = String.class;
 				}
-				Object ejercico = null;
+				Object ejercicio = null;
 				if (item.getEjercicio() != null) {
-					ejercico = item.getEjercicio();
+					ejercicio = item.getEjercicio();
 				} else {
-					ejercico = Integer.class;
+					ejercicio = Integer.class;
 				}
 				Object comentario = null;
 				if (item.getComentario() != null) {
@@ -342,10 +342,30 @@ public class EjercicioContableBO {
 					}
 				}
 
-				Object[] args = { id, ejercico, comentario, fechaApertura,
-						fechaCierre, ejercicioCerrado, ejercicioCerradoModulos };
+				int rows = -1;
 
-				int rows = connectionWrapper.insert(sql, args);
+				if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+					if (item.getId() == null) {
+						item.setId(UUID.randomUUID().toString());
+						id = item.getId();
+					}
+
+					Object[] args = { id, ejercicio, comentario, fechaApertura,
+							fechaCierre, ejercicioCerrado,
+							ejercicioCerradoModulos };
+
+					rows = connectionWrapper.insert(sql, args);
+
+				} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+					Object[] args = { ejercicio, comentario, fechaApertura,
+							fechaCierre, ejercicioCerrado,
+							ejercicioCerradoModulos };
+
+					rows = connectionWrapper.insert(sql, args);
+
+				}
 
 				if (rows != 1) {
 					throw new Exception(
@@ -370,10 +390,6 @@ public class EjercicioContableBO {
 
 	public EjercicioContable insert(EjercicioContable item) throws Exception {
 
-		if (findByEjercicio(item.getEjercicio()) != null) {
-			throw new InsertDuplicateException(item.getEjercicio());
-		}
-
 		String sql = null;
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
@@ -389,7 +405,16 @@ public class EjercicioContableBO {
 
 			connectionWrapper.begin();
 
-			
+			if (findByEjercicio(item.getEjercicio()) != null) {
+				throw new InsertDuplicateException(item.getEjercicio());
+			}
+
+			Object id = null;
+			if (item.getId() != null) {
+				id = item.getId();
+			} else {
+				id = String.class;
+			}
 			Object ejercicio = null;
 			if (item.getEjercicio() != null) {
 				ejercicio = item.getEjercicio();
@@ -452,9 +477,11 @@ public class EjercicioContableBO {
 			int rows = -1;
 
 			if (dataSourceWrapper.isDatabasePostgreSql()) {
-				
-				String id = UUID.randomUUID().toString();
-				item.setId(id);
+
+				if (id == null) {
+					item.setId(UUID.randomUUID().toString());
+					id = item.getId();
+				}
 
 				Object[] args = { id, ejercicio, comentario, fechaApertura,
 						fechaCierre, ejercicioCerrado, ejercicioCerradoModulos };
@@ -623,26 +650,26 @@ public class EjercicioContableBO {
 
 			connectionWrapper.begin();
 
-//			if (dataSourceWrapper.isDatabasePostgreSql()) {
-//				Object id = null;
-//				if (item.getId() != null) {
-//					id = item.getId();
-//				} else {
-//					id = String.class;
-//				}
-//
-//				sql = SQL_PG_8;
-//
-//				Object[][] table = connectionWrapper.findToTable(sql, id);
-//				if ((int) table[0][1] > 0) {
-//					throw new DeleteForeingObjectConflictException(sql
-//							+ "\nargs:[" + item.getEjercicio() + "]",
-//							CentroDeCostoContable.class.getSimpleName());
-//				}
-//
-//			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-//				sql = SQL_MS_8;
-//			}
+			// if (dataSourceWrapper.isDatabasePostgreSql()) {
+			// Object id = null;
+			// if (item.getId() != null) {
+			// id = item.getId();
+			// } else {
+			// id = String.class;
+			// }
+			//
+			// sql = SQL_PG_8;
+			//
+			// Object[][] table = connectionWrapper.findToTable(sql, id);
+			// if ((int) table[0][1] > 0) {
+			// throw new DeleteForeingObjectConflictException(sql
+			// + "\nargs:[" + item.getEjercicio() + "]",
+			// CentroDeCostoContable.class.getSimpleName());
+			// }
+			//
+			// } else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			// sql = SQL_MS_8;
+			// }
 
 			if (dataSourceWrapper.isDatabasePostgreSql()) {
 				sql = SQL_PG_7;
