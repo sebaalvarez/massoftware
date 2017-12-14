@@ -26,6 +26,17 @@ public class MigradorMSToPG {
 		cxPG.buildCentroDeCostoContableBO().insert(
 				cxMSSQL.buildCentroDeCostoContableBO()
 						.findAllOrderByCentroDeCostoContable());
+		
+		
+		cxPG.buildPuntoDeEquilibrioTipoBO().insert(cxMSSQL.buildPuntoDeEquilibrioTipoBO().findAll());
+		
+		cxPG.buildPuntoDeEquilibrioBO().insert(cxMSSQL.buildPuntoDeEquilibrioBO().findAllOrderByPuntoDeEquilibrio());
+		
+		cxPG.buildPlanDeCuentaEstadoBO().insert(cxMSSQL.buildPlanDeCuentaEstadoBO().findAll());
+		
+		cxPG.buildCostoDeVentaBO().insert(cxMSSQL.buildCostoDeVentaBO().findAll());
+		
+		cxPG.buildPlanDeCuentaBO().insert(cxMSSQL.buildPlanDeCuentaBO().findAll());
 
 	}
 }

@@ -1,25 +1,28 @@
 package com.massoftware.frontend.ui.windows.list;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.cendra.common.model.EntityId;
+import org.cendra.common.model.EntityMetaData;
 
-import com.massoftware.backend.bo.IPuntoDeEquilibrioBO;
+import com.massoftware.backend.bo.EjercicioContableBO;
+import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.frontend.ui.windows.form.PuntoDeEquilibrioFormUi;
+import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.Usuario;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -30,14 +33,24 @@ public class PuntoDeEquilibrioTableUi extends TableUi {
 	 */
 	private static final long serialVersionUID = 4355038684086959846L;
 
-	private OptionGroup optionsOrderBy;
+	protected CssLayout filtering;
+	protected ComboBox ejerciciosCBX;
+	protected String ejerciciosCBXCaption = "Buscar por "
+			+ getEntityAttMetaDataGrid().getAttShortLabels()[0].toLowerCase()
+			+ " ..";
+	protected String ejerciciosCBXError = "Se requiere de al menos un "
+			+ getEntityAttMetaDataGrid().getAttShortLabels()[0].toLowerCase()
+			+ "  para poder operar con esta ventana.";
 
-	private String optionGroupItem1Caption = "Ordenar por punto de equlirio";
-	private String optionGroupItem2Caption = "Ordenar por nombre";
+	// private OptionGroup optionsOrderBy;
+
+	// private String optionGroupItem1Caption = "Ordenar por punto de equlirio";
+	// private String optionGroupItem2Caption = "Ordenar por nombre";
 
 	private String copiarBtnCaption = "Copiar";
 
-	private IPuntoDeEquilibrioBO puntoDeEquilibrioBO;
+	private PuntoDeEquilibrioBO puntoDeEquilibrioBO;
+	protected EjercicioContableBO ejercicioContableBO;
 
 	// --------------------------------------------------------------
 
@@ -45,10 +58,27 @@ public class PuntoDeEquilibrioTableUi extends TableUi {
 		super(cx, usuario);
 		init();
 		buildFooterToolbar();
+
+		if (ejerciciosCBX.getContainerDataSource() == null
+				|| ejerciciosCBX.getContainerDataSource().size() == 0) {
+
+			ventanaInoperable();
+
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	private Class getClassCB() {
+		return EjercicioContable.class;
+	}
+
+	private EntityMetaData getEntityAttMetaDataCB() {
+		return cx.getEntityMetaData(getClassCB().getCanonicalName());
 	}
 
 	protected void initObjectBO() {
 		this.puntoDeEquilibrioBO = cx.buildPuntoDeEquilibrioBO();
+		this.ejercicioContableBO = cx.buildEjercicioContableBO();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -74,44 +104,100 @@ public class PuntoDeEquilibrioTableUi extends TableUi {
 	}
 
 	protected Component[] buildHeaderToolbar() throws Exception {
-
-		optionsOrderBy = new OptionGroup();
-		optionsOrderBy.addStyleName(ValoTheme.OPTIONGROUP_SMALL);
-		optionsOrderBy.setMultiSelect(false);
-		optionsOrderBy.setNullSelectionAllowed(false);
-		optionsOrderBy.addItem(optionGroupItem1Caption);
-		optionsOrderBy.addItem(optionGroupItem2Caption);
-		optionsOrderBy.select(optionGroupItem1Caption);
-		optionsOrderBy.addValueChangeListener(new ValueChangeListener() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1177475956411161697L;
-
-			@Override
-			public void valueChange(ValueChangeEvent event) {
-				updateGrid();
-			}
+		ejerciciosCBX = new ComboBox(ejerciciosCBXCaption);
+		ejerciciosCBX.setInputPrompt(ejerciciosCBXCaption);
+		ejerciciosCBX.setItemCaptionPropertyId(getEntityAttMetaDataCB()
+				.getAttNames()[0]);
+		ejerciciosCBX.addStyleName(ValoTheme.COMBOBOX_SMALL);
+		ejerciciosCBX.setIcon(FontAwesome.SEARCH);
+		ejerciciosCBX.setNullSelectionAllowed(false);
+		ejerciciosCBX.setRequired(true);
+		ejerciciosCBX.setRequiredError(ejerciciosCBXError);
+		ejerciciosCBX.addValueChangeListener(e -> {
+			updateGrid();
 		});
 
-		return new Component[] { optionsOrderBy };
+		filtering = new CssLayout();
+		filtering.addComponents(ejerciciosCBX/* , clearFilterBTN */);
+		filtering.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+
+		// optionsOrderBy = new OptionGroup();
+		// optionsOrderBy.addStyleName(ValoTheme.OPTIONGROUP_SMALL);
+		// optionsOrderBy.setMultiSelect(false);
+		// optionsOrderBy.setNullSelectionAllowed(false);
+		// optionsOrderBy.addItem(optionGroupItem1Caption);
+		// optionsOrderBy.addItem(optionGroupItem2Caption);
+		// optionsOrderBy.select(optionGroupItem1Caption);
+		// optionsOrderBy.addValueChangeListener(new ValueChangeListener() {
+		//
+		// /**
+		// *
+		// */
+		// private static final long serialVersionUID = 1177475956411161697L;
+		//
+		// @Override
+		// public void valueChange(ValueChangeEvent event) {
+		// updateGrid();
+		// }
+		// });
+
+		// --------------------------------------------------------------------
+		// LOAD DATA
+
+		loadEjerciciosCBX();
+
+		if (ejerciciosCBX.getContainerDataSource() == null
+				|| ejerciciosCBX.getContainerDataSource().size() == 0) {
+
+			ventanaInoperable();
+
+		} else {
+
+			EjercicioContable ejercicioContableDefault = usuario
+					.getEjercicioContable();
+
+			if (ejercicioContableDefault != null
+					&& ejercicioContableDefault.getEjercicio() != null) {
+				ejerciciosCBX.setValue(ejercicioContableDefault);
+			} else {
+				EjercicioContable maxEjercicioContable = ejercicioContableBO
+						.findMaxEjercicio();
+				ejerciciosCBX.setValue(maxEjercicioContable);
+			}
+		}
+
+		return new Component[] { filtering /* optionsOrderBy */};
 	}
 
 	public void updateGrid() {
-		updateGrid(new Object[0]);
+		// updateGrid(new Object[0]);
+		updateGrid((EjercicioContable) ejerciciosCBX.getValue());
 	}
 
 	@SuppressWarnings("rawtypes")
 	protected List updateGridBO(Object... args) throws Exception {
 
-		List<PuntoDeEquilibrio> items = null;
+		EjercicioContable ejercicioContable = (EjercicioContable) args[0];
 
-		if (optionsOrderBy.getValue().equals(this.optionGroupItem1Caption)) {
-			items = this.puntoDeEquilibrioBO.findAllOrderByPuntoDeEquilibrio();
-		} else {
-			items = this.puntoDeEquilibrioBO.findAllOrderByNombre();
+		List<PuntoDeEquilibrio> items = new ArrayList<PuntoDeEquilibrio>();
+
+		if (ejerciciosCBX.getContainerDataSource() == null
+				|| ejerciciosCBX.getContainerDataSource().size() == 0) {
+
+			return items;
 		}
+
+		// items = this.puntoDeEquilibrioBO.findAllOrderByNombre();
+
+		// if (optionsOrderBy.getValue().equals(this.optionGroupItem1Caption)) {
+		// items = this.puntoDeEquilibrioBO.findAllOrderByPuntoDeEquilibrio();
+		// } else {
+		// items = this.puntoDeEquilibrioBO.findAllOrderByNombre();
+		// }
+
+		items = this.puntoDeEquilibrioBO
+				.findAllOrderByPuntoDeEquilibrio(ejercicioContable
+						.getEjercicio());
 
 		return items;
 	}
@@ -121,7 +207,6 @@ public class PuntoDeEquilibrioTableUi extends TableUi {
 	}
 
 	protected CustomComponent getWindowsContent(Window win, EntityId item) {
-
 		return new PuntoDeEquilibrioFormUi(item, cx, win, this, usuario);
 	}
 
@@ -160,11 +245,44 @@ public class PuntoDeEquilibrioTableUi extends TableUi {
 			item.setPuntoDeEquilibrio(null);
 
 			openForm(item, "Copiar y agregar");
-			
+
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
 
+	}
+
+	@SuppressWarnings("unchecked")
+	protected void loadEjerciciosCBX() {
+		try {
+
+			List<EjercicioContable> items = ejercicioContableBO.findAll();
+
+			ejerciciosCBX.setContainerDataSource(new BeanItemContainer<>(
+					getClassCB(), items));
+
+			if (ejerciciosCBX.getContainerDataSource() == null
+					|| ejerciciosCBX.getContainerDataSource().size() == 0) {
+
+				ventanaInoperable();
+
+			}
+
+		} catch (Exception e) {
+			ejerciciosCBX.setContainerDataSource(new BeanItemContainer<>(
+					getClassCB(), new ArrayList<>()));
+
+			LogAndNotification.print(e);
+		}
+
+	}
+
+	private void ventanaInoperable() {
+		agregarBtn.setEnabled(false);
+		cambiarBtn.setEnabled(false);
+		eliminarBtn.setEnabled(false);
+		grid.setEnabled(false);
+		filtering.setEnabled(false);
 	}
 
 }

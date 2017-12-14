@@ -11,40 +11,24 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 	private static final long serialVersionUID = -7063241156348196814L;
 
 	private EjercicioContable ejercicioContable;
-	private Short puntoDeEquilibrio;
+	private Integer puntoDeEquilibrio;
 	private String nombre;
-	private PuntoDeEquilibrioTipo tipo;
-	private Integer ejercicio;
-	
+	private PuntoDeEquilibrioTipo puntoDeEquilibrioTipo;
 
 	public PuntoDeEquilibrio() {
 
 	}
 
 	public PuntoDeEquilibrio(Object[] row) {
-		setterByArray(row);
+		// setterByArray(row);
 	}
 
-	public void setId(String id) {
-		id = formatValue(id);
-		if (id != null) {
-			this.setPuntoDeEquilibrio(new Short(id));
-		} else {
-			this.setPuntoDeEquilibrio(null);
-		}
-	}
-
-	public Short getPuntoDeEquilibrio() {
+	public Integer getPuntoDeEquilibrio() {
 		return puntoDeEquilibrio;
 	}
 
-	public void setPuntoDeEquilibrio(Short puntoDeEquilibrio) {
+	public void setPuntoDeEquilibrio(Integer puntoDeEquilibrio) {
 		this.puntoDeEquilibrio = puntoDeEquilibrio;
-		if (this.puntoDeEquilibrio != null) {
-			super.setId(this.puntoDeEquilibrio.toString());
-		} else {
-			super.setId(null);
-		}
 	}
 
 	public String getNombre() {
@@ -57,20 +41,13 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 		this.nombre = nombre;
 	}
 
-	public PuntoDeEquilibrioTipo getTipo() {
-		return tipo;
+	public PuntoDeEquilibrioTipo getPuntoDeEquilibrioTipo() {
+		return puntoDeEquilibrioTipo;
 	}
 
-	public void setTipo(PuntoDeEquilibrioTipo tipo) {
-		this.tipo = tipo;
-	}
-
-	public Integer getEjercicio() {
-		return ejercicio;
-	}
-
-	public void setEjercicio(Integer ejercicio) {
-		this.ejercicio = ejercicio;
+	public void setPuntoDeEquilibrioTipo(
+			PuntoDeEquilibrioTipo puntoDeEquilibrioTipo) {
+		this.puntoDeEquilibrioTipo = puntoDeEquilibrioTipo;
 	}
 
 	public EjercicioContable getEjercicioContable() {
@@ -81,47 +58,25 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 		this.ejercicioContable = ejercicioContable;
 	}
 
-	public void setterByArray(Object[] row) {
-
-		int column = 0;
-
-		if (row[column] != null) {
-			this.setPuntoDeEquilibrio((Short) row[column]);
-		}
-
-		column++;
-
-		if (row[column] != null) {
-			this.setNombre((String) row[column]);
-		}
-
-		column++;
-
-		if (row[column] != null) {
-			this.setTipo(new PuntoDeEquilibrioTipo((Short) row[column]));
-		}
-
-		column++;
-
-		if (row[column] != null) {
-			this.setEjercicio((Integer) row[column]);
-		}
-
-	}
-
 	@Override
 	public PuntoDeEquilibrio clone() throws CloneNotSupportedException {
 
 		PuntoDeEquilibrio other = new PuntoDeEquilibrio();
 
+		other.setId(this.getId());
+		if (this.getEjercicioContable() != null) {
+			other.setEjercicioContable(this.getEjercicioContable().clone());
+		} else {
+			other.setEjercicioContable(null);
+		}
 		other.setNombre(this.getNombre());
 		other.setPuntoDeEquilibrio(this.getPuntoDeEquilibrio());
-		if (this.getTipo() != null) {
-			other.setTipo(this.getTipo().clone());
+		if (this.getPuntoDeEquilibrioTipo() != null) {
+			other.setPuntoDeEquilibrioTipo(this.getPuntoDeEquilibrioTipo()
+					.clone());
 		} else {
-			other.setTipo(null);
+			other.setPuntoDeEquilibrioTipo(null);
 		}
-		other.setEjercicio(this.getEjercicio());
 
 		return other;
 	}
@@ -130,6 +85,11 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 
 		return this.getPuntoDeEquilibrio().compareTo(o.getPuntoDeEquilibrio());
 
+	}
+
+	@Override
+	public String toString() {
+		return this.getEjercicioContable() + "-" + this.getPuntoDeEquilibrio();
 	}
 
 }

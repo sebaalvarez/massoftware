@@ -30,7 +30,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">centrodecostocontable</TD></TR>
       <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
       <TR><TD PORT="ejerciciocontable" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">ejerciciocontable</TD></TR>
-      <TR><TD PORT="centrodecostocontable" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">centrodecostocontable</TD></TR>
+      <TR><TD PORT="numero" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">numero</TD></TR>
       <TR><TD PORT="nombre" COLSPAN="3" ALIGN="LEFT">nombre</TD></TR>
       <TR><TD PORT="abreviatura" COLSPAN="3" ALIGN="LEFT">abreviatura</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1 &gt;</TD></TR>
@@ -49,7 +49,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="ejerciciocerrado" COLSPAN="3" ALIGN="LEFT">ejerciciocerrado</TD></TR>
       <TR><TD PORT="ejerciciocerradomodulos" COLSPAN="3" ALIGN="LEFT">ejerciciocerradomodulos</TD></TR>
       <TR><TD PORT="comentario" COLSPAN="3" ALIGN="LEFT">comentario</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">3 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">4 &gt;</TD></TR>
     </TABLE>>
     URL="ejerciciocontable.html"
     tooltip="ejerciciocontable"
@@ -60,7 +60,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">plandecuenta</TD></TR>
       <TR><TD PORT="id" COLSPAN="2" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD><TD PORT="id.type" ALIGN="LEFT">varchar[2147483647]</TD></TR>
       <TR><TD PORT="ejerciciocontable" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">ejerciciocontable</TD><TD PORT="ejerciciocontable.type" ALIGN="LEFT">varchar[2147483647]</TD></TR>
-      <TR><TD PORT="cuentacontable" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">cuentacontable</TD><TD PORT="cuentacontable.type" ALIGN="LEFT">varchar[2147483647]</TD></TR>
+      <TR><TD PORT="cuentacontable" COLSPAN="2" ALIGN="LEFT">cuentacontable</TD><TD PORT="cuentacontable.type" ALIGN="LEFT">varchar[2147483647]</TD></TR>
       <TR><TD PORT="integra" COLSPAN="2" ALIGN="LEFT">integra</TD><TD PORT="integra.type" ALIGN="LEFT">varchar[2147483647]</TD></TR>
       <TR><TD PORT="cuentadejerarquia" COLSPAN="2" ALIGN="LEFT">cuentadejerarquia</TD><TD PORT="cuentadejerarquia.type" ALIGN="LEFT">varchar[2147483647]</TD></TR>
       <TR><TD PORT="nombre" COLSPAN="2" ALIGN="LEFT">nombre</TD><TD PORT="nombre.type" ALIGN="LEFT">varchar[2147483647]</TD></TR>
@@ -86,8 +86,8 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="ejerciciocontable" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">ejerciciocontable</TD></TR>
       <TR><TD PORT="puntodeequilibrio" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">puntodeequilibrio</TD></TR>
       <TR><TD PORT="nombre" COLSPAN="3" ALIGN="LEFT">nombre</TD></TR>
-      <TR><TD PORT="tipo" COLSPAN="3" ALIGN="LEFT">tipo</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1 &gt;</TD></TR>
+      <TR><TD PORT="puntodeequilibriotipo" COLSPAN="3" ALIGN="LEFT">puntodeequilibriotipo</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1 &gt;</TD></TR>
     </TABLE>>
     URL="puntodeequilibrio.html"
     tooltip="puntodeequilibrio"

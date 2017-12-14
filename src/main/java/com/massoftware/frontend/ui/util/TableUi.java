@@ -10,6 +10,7 @@ import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -41,8 +42,8 @@ public abstract class TableUi extends CustomComponent {
 	private HorizontalLayout footerHL;
 
 	protected Button agregarBtn;
-	private Button cambiarBtn;
-	private Button eliminarBtn;
+	protected Button cambiarBtn;
+	protected Button eliminarBtn;
 
 	private String agregarBtnCaption = "Agregar";
 	private String cambiarBtnCaption = "Cambiar";
@@ -75,7 +76,7 @@ public abstract class TableUi extends CustomComponent {
 			toolbarHL = new HorizontalLayout();
 			toolbarHL.setWidth("100%");
 			toolbarHL.setSpacing(true);
-			toolbarHL.addComponents(buildHeaderToolbar());
+//			toolbarHL.addComponents(buildHeaderToolbar());
 			// toolbarHL.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
 
 			// ------------------------------------------------------------------
@@ -121,6 +122,10 @@ public abstract class TableUi extends CustomComponent {
 				}
 			});
 
+			// ------------------------------------------------------------------
+			
+			toolbarHL.addComponents(buildHeaderToolbar());
+			
 			// ------------------------------------------------------------------
 
 			updateGrid();
@@ -271,8 +276,7 @@ public abstract class TableUi extends CustomComponent {
 						new YesNoDialog("Eliminar",
 								"Esta seguro de eliminar el "
 										+ getEntityAttMetaDataGrid().getLabel()
-												.toLowerCase() + " "
-										+ item,
+												.toLowerCase() + " " + item,
 								new YesNoDialog.Callback() {
 									public void onDialogResult(boolean yes) {
 										if (yes) {
@@ -331,6 +335,7 @@ public abstract class TableUi extends CustomComponent {
 
 		grid.setContainerDataSource(new BeanItemContainer<>(getClassGrid(),
 				items));
+
 	}
 
 	// ====================================================================================

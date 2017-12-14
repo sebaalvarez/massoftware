@@ -5,30 +5,41 @@ import org.cendra.common.model.EntityId;
 public class PlanDeCuenta extends EntityId implements Cloneable,
 		Comparable<PlanDeCuenta> {
 
+	/*
+	 * Al crear controlar 
+	 * 	1 que tenga un padre que existe 
+	 * 	2 que no exista otra cuenta con el mismo código 
+	 * Al actualizar controlar 
+	 * 	1 que no tenga cuentas hijas 
+	 * 	2 que tenga un padre que exista 
+	 * Al borrar controlar 
+	 *  1 que no tengacuentas hijas
+	 */
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5815944546414564475L;
+	private static final long serialVersionUID = -6146349571117309204L;
 
-	private String cuentaContable;
-	private String integra;
-	private String cuentaDeJerarquia;
-	private String nombre;
-	private Boolean imputable = false;
-	private Boolean cuentaConApropiacion = false;
-	private Boolean ajustaPorInflacion = false;
-	private PlanDeCuentaEstado estado;
-	private CentroDeCostoContable centroDeCostoContable;
-	private String cuentaAgrupadora;
-	private Double porsentaje;
-	private PuntoDeEquilibrio puntoDeEquilibrio;
-	private CostoDeVenta costoDeVenta;
+	// --------------------------------------------------------------------------
 	private EjercicioContable ejercicioContable;
 
-	public void setId(String id) {
-		id = formatValue(id);
-		this.setCuentaContable(id);
-	}
+	private String codigoCuentaPadre; // integra; // cuenta padre
+										// 6.40.00.00.00.00
+	private String codigoCuenta; // cuentaDeJerarquia; 6.40.00.00.00.01
+	private String cuentaContable; // texto libre
+	private String nombre; // texto libre
+	// --------------------------------------------------------------------------
+	private Boolean imputable = false;
+	private Boolean ajustaPorInflacion = false;
+	private PlanDeCuentaEstado planDeCuentaEstado;
+	private Boolean cuentaConApropiacion = false;
+	// --------------------------------------------------------------------------
+	private CentroDeCostoContable centroDeCostoContable;
+	private String cuentaAgrupadora; // aca va cualquier texto, texto libre
+	private Double porcentaje = 0.0;
+	private PuntoDeEquilibrio puntoDeEquilibrio;
+	private CostoDeVenta costoDeVenta;
 
 	public EjercicioContable getEjercicioContable() {
 		return ejercicioContable;
@@ -36,6 +47,26 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 
 	public void setEjercicioContable(EjercicioContable ejercicioContable) {
 		this.ejercicioContable = ejercicioContable;
+	}
+
+	public String getCodigoCuentaPadre() {
+		codigoCuentaPadre = formatValue(codigoCuentaPadre);
+		return codigoCuentaPadre;
+	}
+
+	public void setCodigoCuentaPadre(String codigoCuentaPadre) {
+		codigoCuentaPadre = formatValue(codigoCuentaPadre);
+		this.codigoCuentaPadre = codigoCuentaPadre;
+	}
+
+	public String getCodigoCuenta() {
+		codigoCuenta = formatValue(codigoCuenta);
+		return codigoCuenta;
+	}
+
+	public void setCodigoCuenta(String codigoCuenta) {
+		codigoCuenta = formatValue(codigoCuenta);
+		this.codigoCuenta = codigoCuenta;
 	}
 
 	public String getCuentaContable() {
@@ -46,27 +77,6 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 	public void setCuentaContable(String cuentaContable) {
 		cuentaContable = formatValue(cuentaContable);
 		this.cuentaContable = cuentaContable;
-		super.setId(this.cuentaContable);
-	}
-
-	public String getIntegra() {
-		integra = formatValue(integra);
-		return integra;
-	}
-
-	public void setIntegra(String integra) {
-		integra = formatValue(integra);
-		this.integra = integra;
-	}
-
-	public String getCuentaDeJerarquia() {
-		cuentaDeJerarquia = formatValue(cuentaDeJerarquia);
-		return cuentaDeJerarquia;
-	}
-
-	public void setCuentaDeJerarquia(String cuentaDeJerarquia) {
-		cuentaDeJerarquia = formatValue(cuentaDeJerarquia);
-		this.cuentaDeJerarquia = cuentaDeJerarquia;
 	}
 
 	public String getNombre() {
@@ -99,12 +109,12 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 		this.ajustaPorInflacion = ajustaPorInflacion;
 	}
 
-	public PlanDeCuentaEstado getEstado() {
-		return estado;
+	public PlanDeCuentaEstado getPlanDeCuentaEstado() {
+		return planDeCuentaEstado;
 	}
 
-	public void setEstado(PlanDeCuentaEstado estado) {
-		this.estado = estado;
+	public void setPlanDeCuentaEstado(PlanDeCuentaEstado planDeCuentaEstado) {
+		this.planDeCuentaEstado = planDeCuentaEstado;
 	}
 
 	public Boolean getCuentaConApropiacion() {
@@ -136,12 +146,14 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 		this.cuentaAgrupadora = cuentaAgrupadora;
 	}
 
-	public Double getPorsentaje() {
-		return porsentaje;
+	public Double getPorcentaje() {
+//		porcentaje = nullIsZero(porcentaje);
+		return porcentaje;
 	}
 
-	public void setPorsentaje(Double porsentaje) {
-		this.porsentaje = porsentaje;
+	public void setPorcentaje(Double porcentaje) {
+//		porcentaje = nullIsZero(porcentaje);
+		this.porcentaje = porcentaje;
 	}
 
 	public PuntoDeEquilibrio getPuntoDeEquilibrio() {
@@ -164,21 +176,22 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 	public PlanDeCuenta clone() throws CloneNotSupportedException {
 		PlanDeCuenta other = new PlanDeCuenta();
 
+		other.setId(this.getId());
 		if (this.getEjercicioContable() != null) {
 			other.setEjercicioContable(this.getEjercicioContable().clone());
 		} else {
 			other.setEjercicioContable(null);
 		}
 		other.setCuentaContable(this.getCuentaContable());
-		other.setIntegra(this.getIntegra());
-		other.setCuentaDeJerarquia(this.getCuentaDeJerarquia());
+		other.setCodigoCuentaPadre(this.getCodigoCuentaPadre());
+		other.setCodigoCuenta(this.getCodigoCuenta());
 		other.setNombre(this.getNombre());
 		other.setImputable(this.getImputable());
 		other.setAjustaPorInflacion(this.getAjustaPorInflacion());
-		if (this.getEstado() != null) {
-			other.setEstado(this.getEstado().clone());
+		if (this.getPlanDeCuentaEstado() != null) {
+			other.setPlanDeCuentaEstado(this.getPlanDeCuentaEstado().clone());
 		} else {
-			other.setEstado(null);
+			other.setPlanDeCuentaEstado(null);
 		}
 		other.setCuentaConApropiacion(this.getCuentaConApropiacion());
 		if (this.getCentroDeCostoContable() != null) {
@@ -188,7 +201,7 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 			other.setCentroDeCostoContable(null);
 		}
 		other.setCuentaAgrupadora(this.getCuentaAgrupadora());
-		other.setPorsentaje(this.getPorsentaje());
+		other.setPorcentaje(this.getPorcentaje());
 		if (this.getPuntoDeEquilibrio() != null) {
 			other.setPuntoDeEquilibrio(this.getPuntoDeEquilibrio().clone());
 		} else {
@@ -205,24 +218,15 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 
 	@Override
 	public String toString() {
-		return "PlanDeCuenta [cuentaContable=" + cuentaContable + ", integra="
-				+ integra + ", cuentaDeJerarquia=" + cuentaDeJerarquia
-				+ ", nombre=" + nombre + ", imputable=" + imputable
-				+ ", cuentaConApropiacion=" + cuentaConApropiacion
-				+ ", ajustaPorInflacion=" + ajustaPorInflacion + ", estado="
-				+ estado + ", centroDeCostoContable=" + centroDeCostoContable
-				+ ", cuentaAgrupadora=" + cuentaAgrupadora + ", porsentaje="
-				+ porsentaje + ", puntoDeEquilibrio=" + puntoDeEquilibrio
-				+ ", costoDeVenta=" + costoDeVenta + ", ejercicioContable="
-				+ ejercicioContable + "]";
+		return "PlanDeCuenta [ejercicioContable=" + ejercicioContable
+				+ ", codigoCuenta=" + codigoCuenta + ", cuentaContable="
+				+ cuentaContable + ", nombre=" + nombre + "]";
 	}
 
 	@Override
 	public int compareTo(PlanDeCuenta o) {
 
-		return this.getCuentaContable().compareTo(o.getCuentaContable());
+		return this.getCodigoCuenta().compareTo(o.getCodigoCuenta());
 	}
-	
-	
 
 }

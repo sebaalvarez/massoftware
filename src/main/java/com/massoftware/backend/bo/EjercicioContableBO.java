@@ -11,13 +11,12 @@ import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 import org.cendra.jdbc.SQLExceptionWrapper;
 
-import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 
 public class EjercicioContableBO {
 
 	private final String SQL_PG_1 = "SELECT * FROM  massoftware.vEjercicioContable ORDER BY ejercicio DESC;";
-	private final String SQL_PG_2 = "SELECT * FROM  massoftware.vEjercicioContable WHERE ejercicio::VARCHAR ILIKE '%'||(?::VARCHAR) ORDER BY ejercicio DESC;";
+	private final String SQL_PG_2 = "SELECT * FROM  massoftware.vEjercicioContable WHERE ejercicio::VARCHAR ILIKE '%'||(TRIM(?::VARCHAR)) ORDER BY ejercicio DESC;";
 	private final String SQL_PG_3 = "SELECT MAX(ejercicio) FROM  massoftware.vEjercicioContable;";
 	private final String SQL_PG_4 = "SELECT * FROM  massoftware.vEjercicioContable WHERE ejercicio = ?;";
 	private final String SQL_PG_5 = "INSERT INTO massoftware.EjercicioContable (id, ejercicio, comentario, fechaApertura, fechaCierre, ejercicioCerrado, ejercicioCerradoModulos) VALUES (?, ?, ?, ?, ?, ?, ?);";
@@ -44,7 +43,7 @@ public class EjercicioContableBO {
 	public EjercicioContable findByEjercicio(Integer ejercicio)
 			throws Exception {
 
-		EjercicioContable ejercicioContable = null;
+//		EjercicioContable ejercicioContable = null;
 
 		String sql = null;
 
@@ -72,13 +71,23 @@ public class EjercicioContableBO {
 			List<EjercicioContable> list = connectionWrapper
 					.findToListByCendraConvention(sql, ejercicio);
 
-			for (EjercicioContable obj : list) {
-
-				ejercicioContable = obj;
-
-				break;
+//			for (EjercicioContable obj : list) {
+//
+//				ejercicioContable = obj;
+//
+//				break;
+//			}
+//			return ejercicioContable;
+			
+			if (list.size() == 1) {
+				return list.get(0);
 			}
-			return ejercicioContable;
+
+//			throw new Exception(
+//					"La sentencia debería afectar un solo registro, la sentencia afecto "
+//							+ list.size() + " registros.");
+			
+			return null;
 
 		} catch (Exception e) {
 			throw e;
@@ -409,12 +418,7 @@ public class EjercicioContableBO {
 				throw new InsertDuplicateException(item.getEjercicio());
 			}
 
-			Object id = null;
-			if (item.getId() != null) {
-				id = item.getId();
-			} else {
-				id = String.class;
-			}
+			
 			Object ejercicio = null;
 			if (item.getEjercicio() != null) {
 				ejercicio = item.getEjercicio();
@@ -463,7 +467,7 @@ public class EjercicioContableBO {
 						&& item.getEjercicioCerrado() == true) {
 					ejercicioCerrado = 1;
 				} else {
-					ejercicioCerrado = 1;
+					ejercicioCerrado = 0;
 				}
 
 				if (item.getEjercicioCerradoModulos() != null
@@ -477,11 +481,8 @@ public class EjercicioContableBO {
 			int rows = -1;
 
 			if (dataSourceWrapper.isDatabasePostgreSql()) {
-
-				if (id == null) {
-					item.setId(UUID.randomUUID().toString());
-					id = item.getId();
-				}
+				item.setId(UUID.randomUUID().toString());				
+				Object id = item.getId();
 
 				Object[] args = { id, ejercicio, comentario, fechaApertura,
 						fechaCierre, ejercicioCerrado, ejercicioCerradoModulos };

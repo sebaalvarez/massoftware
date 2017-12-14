@@ -1,29 +1,427 @@
 package com.massoftware.backend.bo;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.massoftware.backend.dao.IPlanDeCuentaDAO;
+import org.cendra.ex.crud.InsertDuplicateException;
+import org.cendra.jdbc.ConnectionWrapper;
+import org.cendra.jdbc.DataSourceWrapper;
+
+import com.massoftware.model.CentroDeCostoContable;
+import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PlanDeCuenta;
+import com.massoftware.model.PuntoDeEquilibrio;
 
-public class PlanDeCuentaBO implements IPlanDeCuentaBO {
+public class PlanDeCuentaBO {
 
-	private IPlanDeCuentaDAO planDeCuentaDAO;
+	private DataSourceWrapper dataSourceWrapper;
 
-	public PlanDeCuentaBO(IPlanDeCuentaDAO planDeCuentaDAO) {
+	private final String SQL_PG_1 = "SELECT * FROM massoftware.vPlanDeCuenta";
+	private final String SQL_PG_2 = "INSERT INTO massoftware.plandecuenta(id, ejerciciocontable, codigocuentapadre, codigocuenta, cuentacontable, nombre, imputable, ajustaporinflacion, plandecuentaestado, cuentaconapropiacion, centrodecostocontable, cuentaagrupadora, porcentaje, puntodeequilibrio, costodeventa)	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.vPlanDeCuenta";
+
+	public PlanDeCuentaBO(DataSourceWrapper dataSourceWrapper) {
 		super();
-		this.planDeCuentaDAO = planDeCuentaDAO;
+		this.dataSourceWrapper = dataSourceWrapper;
 	}
 
-	@Override
+	public List<PlanDeCuenta> findAll() throws Exception {
+
+		return findAllOrderByCodigoCuenta(null, null, null);
+	}
+
+	public List<PlanDeCuenta> findAllOrderByCodigoCuenta(
+			EjercicioContable ejercicioContable,
+			CentroDeCostoContable centroDeCostoContable,
+			PuntoDeEquilibrio puntoDeEquilibrio) throws Exception {
+
+		return findAllOrderBy(true, false, false, false, ejercicioContable,
+				centroDeCostoContable, puntoDeEquilibrio);
+	}
+
 	public List<PlanDeCuenta> findAllOrderByCuentaContable(
-			String cuentaContable, String nombre) throws Exception {
-		
-		System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+			EjercicioContable ejercicioContable,
+			CentroDeCostoContable centroDeCostoContable,
+			PuntoDeEquilibrio puntoDeEquilibrio) throws Exception {
 
-		return planDeCuentaDAO.findAllOrderByCuentaContable(
-				cuentaContable, nombre);
+		return findAllOrderBy(false, true, false, false, ejercicioContable,
+				centroDeCostoContable, puntoDeEquilibrio);
 	}
 
+	public List<PlanDeCuenta> findAllOrderByNombre(
+			EjercicioContable ejercicioContable,
+			CentroDeCostoContable centroDeCostoContable,
+			PuntoDeEquilibrio puntoDeEquilibrio) throws Exception {
 
+		return findAllOrderBy(false, false, true, false, ejercicioContable,
+				centroDeCostoContable, puntoDeEquilibrio);
+	}
 
+	public List<PlanDeCuenta> findAllOrderByCuentaAgrupadora(
+			EjercicioContable ejercicioContable,
+			CentroDeCostoContable centroDeCostoContable,
+			PuntoDeEquilibrio puntoDeEquilibrio) throws Exception {
+
+		return findAllOrderBy(false, false, false, true, ejercicioContable,
+				centroDeCostoContable, puntoDeEquilibrio);
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<PlanDeCuenta> findAllOrderBy(boolean ordeByCodigoCuenta,
+			boolean ordeByCuentaContable, boolean ordeByNombre,
+			boolean ordeByCuentaAgrupadora,
+			EjercicioContable ejercicioContable,
+			CentroDeCostoContable centroDeCostoContable,
+			PuntoDeEquilibrio puntoDeEquilibrio/*, String codigoCuenta */) throws Exception {
+
+		String sql = null;
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+			sql = SQL_PG_1;
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			sql = SQL_MS_1;
+		}
+
+		String where = "";
+
+		if (ejercicioContable != null && ejercicioContable.getId() != null) {
+			where = " WHERE ejercicioContable_id = ? ";
+		}
+
+		if (centroDeCostoContable != null
+				&& centroDeCostoContable.getId() != null) {
+			if (where.trim().length() == 0) {
+				where = " WHERE centroDeCostoContable_id = ? ";
+			} else {
+				where += " AND centroDeCostoContable_id = ? ";
+			}
+		}
+
+		if (puntoDeEquilibrio != null && puntoDeEquilibrio.getId() != null) {
+			if (where.trim().length() == 0) {
+				where = " WHERE puntoDeEquilibrio_id = ? ";
+			} else {
+				where += " AND puntoDeEquilibrio_id = ? ";
+			}
+		}
+
+		sql += where;
+
+		sql += " ORDER BY ejercicioContable_ejercicio DESC ";
+
+		if (ordeByCodigoCuenta) {
+			sql += " , codigoCuenta ASC; ";
+		} else if (ordeByCuentaContable) {
+			sql += " , cuentaContable ASC; ";
+		} else if (ordeByNombre) {
+			sql += " , nombre ASC; ";
+		} else if (ordeByCuentaAgrupadora) {
+			sql += " , cuentaAgrupadora ASC; ";
+		} else {
+			sql += " , codigoCuenta ASC; ";
+		}
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			List<PlanDeCuenta> list = null;
+			List<Object> args = new ArrayList<Object>();
+
+			if (ejercicioContable != null && ejercicioContable.getId() != null) {
+				args.add(ejercicioContable.getId());
+			}
+
+			if (centroDeCostoContable != null
+					&& centroDeCostoContable.getId() != null) {
+				args.add(centroDeCostoContable.getId());
+			}
+
+			if (puntoDeEquilibrio != null && puntoDeEquilibrio.getId() != null) {
+				args.add(puntoDeEquilibrio.getId());
+			}
+
+			if (args.size() > 0) {
+				list = connectionWrapper.findToListByCendraConvention(sql,
+						args.toArray());
+			} else {
+				list = connectionWrapper.findToListByCendraConvention(sql);
+
+			}
+
+			return list;
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	private PlanDeCuenta findByPlanDeCuenta(PlanDeCuenta planDeCuenta)
+			throws Exception {
+
+		String sql = null;
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			// ----------------------------------------------------------
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+				sql = SQL_PG_1
+						+ " WHERE codigoCuentaPadre = ? AND codigoCuenta = ? AND ejercicioContable_ejercicio = ?;";
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+				sql = SQL_MS_1
+						+ " WHERE codigoCuentaPadre = ? AND codigoCuenta = ? AND ejercicioContable_ejercicio = ?;";
+			}
+
+			List<PlanDeCuenta> list = connectionWrapper
+					.findToListByCendraConvention(sql, planDeCuenta
+							.getCodigoCuentaPadre(), planDeCuenta
+							.getCodigoCuenta(), planDeCuenta
+							.getEjercicioContable().getEjercicio());
+
+			if (list.size() > 1) {
+				throw new Exception(
+						"La sentencia debería devolver un solo registro, la sentencia retorno "
+								+ list.size() + " registros.");
+			}
+
+			// ----------------------------------------------------------
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+				sql = SQL_PG_1
+						+ " WHERE cuentaContable = ? AND ejercicioContable_ejercicio = ?;";
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+				sql = SQL_MS_1
+						+ " WHERE cuentaContable = ? AND ejercicioContable_ejercicio = ?;";
+			}
+
+			list = connectionWrapper.findToListByCendraConvention(sql,
+					planDeCuenta.getCuentaContable(), planDeCuenta
+							.getEjercicioContable().getEjercicio());
+
+			if (list.size() > 1) {
+				throw new Exception(
+						"La sentencia debería devolver un solo registro, la sentencia retorno "
+								+ list.size() + " registros.");
+			}
+
+			// ----------------------------------------------------------
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+				sql = SQL_PG_1
+						+ " WHERE nombre = ? AND codigoCuenta = ? AND ejercicioContable_ejercicio = ?;";
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+				sql = SQL_MS_1
+						+ " WHERE nombre = ? AND codigoCuenta = ? AND ejercicioContable_ejercicio = ?;";
+			}
+
+			list = connectionWrapper.findToListByCendraConvention(sql,
+					planDeCuenta.getNombre(), planDeCuenta.getCodigoCuenta(),
+					planDeCuenta.getEjercicioContable().getEjercicio());
+
+			if (list.size() > 1) {
+				throw new Exception(
+						"La sentencia debería devolver un solo registro, la sentencia retorno "
+								+ list.size() + " registros.");
+			}
+
+			// ----------------------------------------------------------
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+				sql = SQL_PG_1
+						+ " WHERE codigoCuenta = ? AND ejercicioContable_ejercicio = ?;";
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+				sql = SQL_MS_1
+						+ " WHERE codigoCuenta = ? AND ejercicioContable_ejercicio = ?;";
+			}
+
+			list = connectionWrapper.findToListByCendraConvention(sql,
+					planDeCuenta.getCodigoCuenta(), planDeCuenta
+							.getEjercicioContable().getEjercicio());
+
+			if (list.size() == 1) {
+				return list.get(0);
+			} else if (list.size() > 1) {
+				throw new Exception(
+						"La sentencia debería devolver un solo registro, la sentencia retorno "
+								+ list.size() + " registros.");
+			}
+
+			// ----------------------------------------------------------
+
+			return null;
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
+	}
+
+	public List<PlanDeCuenta> insert(List<PlanDeCuenta> items) throws Exception {
+
+		String sql = null;
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+			sql = SQL_PG_2;
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			// sql = SQL_MS_2;
+		}
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			connectionWrapper.begin();
+
+			for (PlanDeCuenta item : items) {
+
+				if (findByPlanDeCuenta(item) != null) {
+					throw new InsertDuplicateException(item.getCodigoCuenta());
+				}
+
+				Object id = null;
+				if (item.getId() != null) {
+					id = item.getId();
+				} else {
+					id = String.class;
+				}
+				Object ejercicioContable = null;
+				if (item.getEjercicioContable() != null
+						&& item.getEjercicioContable().getId() != null) {
+					ejercicioContable = item.getEjercicioContable().getId();
+				} else {
+					ejercicioContable = String.class;
+				}
+				Object codigoCuentaPadre = null;
+				if (item.getCodigoCuentaPadre() != null) {
+					codigoCuentaPadre = item.getCodigoCuentaPadre();
+				} else {
+					codigoCuentaPadre = String.class;
+				}
+				Object codigoCuenta = null;
+				if (item.getCodigoCuenta() != null) {
+					codigoCuenta = item.getCodigoCuenta();
+				} else {
+					codigoCuenta = String.class;
+				}
+				Object cuentaContable = null;
+				if (item.getCuentaContable() != null) {
+					cuentaContable = item.getCuentaContable();
+				} else {
+					cuentaContable = String.class;
+				}
+				Object nombre = null;
+				if (item.getNombre() != null) {
+					nombre = item.getNombre();
+				} else {
+					nombre = String.class;
+				}
+				Object imputable = null;
+				if (item.getImputable() != null) {
+					imputable = item.getImputable();
+				} else {
+					imputable = Boolean.class;
+				}
+				Object ajustaPorInflacion = null;
+				if (item.getAjustaPorInflacion() != null) {
+					ajustaPorInflacion = item.getAjustaPorInflacion();
+				} else {
+					ajustaPorInflacion = Boolean.class;
+				}
+				Object planDeCuentaEstado = null;
+				if (item.getPlanDeCuentaEstado() != null
+						&& item.getPlanDeCuentaEstado().getId() != null) {
+					planDeCuentaEstado = item.getPlanDeCuentaEstado().getId();
+				} else {
+					planDeCuentaEstado = String.class;
+				}
+				Object cuentaConApropiacion = null;
+				if (item.getCuentaConApropiacion() != null) {
+					cuentaConApropiacion = item.getCuentaConApropiacion();
+				} else {
+					cuentaConApropiacion = Boolean.class;
+				}
+				Object centroDeCostoContable = null;
+				if (item.getCentroDeCostoContable() != null
+						&& item.getCentroDeCostoContable().getId() != null) {
+					centroDeCostoContable = item.getCentroDeCostoContable()
+							.getId();
+				} else {
+					centroDeCostoContable = String.class;
+				}
+				Object cuentaAgrupadora = null;
+				if (item.getCuentaAgrupadora() != null) {
+					cuentaAgrupadora = item.getCuentaAgrupadora();
+				} else {
+					cuentaAgrupadora = String.class;
+				}
+				Object porcentaje = null;
+				if (item.getPorcentaje() != null) {
+					porcentaje = item.getPorcentaje();
+				} else {
+					porcentaje = Double.class;
+				}
+				Object puntoDeEquilibrio = null;
+				if (item.getPuntoDeEquilibrio() != null
+						&& item.getPuntoDeEquilibrio().getId() != null) {
+					puntoDeEquilibrio = item.getPuntoDeEquilibrio().getId();
+				} else {
+					puntoDeEquilibrio = String.class;
+				}
+				Object costoDeVenta = null;
+				if (item.getCostoDeVenta() != null
+						&& item.getCostoDeVenta().getId() != null) {
+					costoDeVenta = item.getCostoDeVenta().getId();
+				} else {
+					costoDeVenta = String.class;
+				}
+
+				int rows = -1;
+
+				if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+					Object[] args = { id, ejercicioContable, codigoCuentaPadre,
+							codigoCuenta, cuentaContable, nombre, imputable,
+							ajustaPorInflacion, planDeCuentaEstado,
+							cuentaConApropiacion, centroDeCostoContable,
+							cuentaAgrupadora, porcentaje, puntoDeEquilibrio,
+							costoDeVenta };
+
+					rows = connectionWrapper.insert(sql, args);
+
+					if (rows != 1) {
+						throw new Exception(
+								"La sentencia debería afectar un solo registro, la sentencia afecto "
+										+ rows + " registros.");
+					}
+
+				} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+				}
+
+			}
+
+			connectionWrapper.commit();
+
+			return items;
+
+		} catch (Exception e) {
+			connectionWrapper.rollBack();
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+	}
 }

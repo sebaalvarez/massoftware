@@ -67,18 +67,22 @@ public class EjercicioContable extends EntityId implements Cloneable,
 	}
 
 	public Boolean getEjercicioCerrado() {
+		ejercicioCerrado = this.nullIsFalse(ejercicioCerrado);
 		return ejercicioCerrado;
 	}
 
 	public void setEjercicioCerrado(Boolean ejercicioCerrado) {
+		ejercicioCerrado = this.nullIsFalse(ejercicioCerrado);
 		this.ejercicioCerrado = ejercicioCerrado;
 	}
 
 	public Boolean getEjercicioCerradoModulos() {
+		ejercicioCerradoModulos = this.nullIsFalse(ejercicioCerradoModulos);
 		return ejercicioCerradoModulos;
 	}
 
 	public void setEjercicioCerradoModulos(Boolean ejercicioCerradoModulos) {
+		ejercicioCerradoModulos = this.nullIsFalse(ejercicioCerradoModulos);
 		this.ejercicioCerradoModulos = ejercicioCerradoModulos;
 	}
 
@@ -176,11 +180,7 @@ public class EjercicioContable extends EntityId implements Cloneable,
 	@Override
 	public String toString() {
 
-		if (this.getEjercicio() != null) {
-			return this.getEjercicio().toString();
-		}
-
-		return "";
+		return this.getEjercicio() + "";
 	}
 
 }

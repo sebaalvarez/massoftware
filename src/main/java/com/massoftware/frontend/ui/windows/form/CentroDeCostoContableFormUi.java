@@ -8,7 +8,6 @@ import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.FormUi;
 import com.massoftware.frontend.ui.util.StringToIntegerConverterUnspecifiedLocale;
-import com.massoftware.frontend.ui.util.StringToShortConverterUnspecifiedLocale;
 import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;

@@ -17,6 +17,7 @@
  <ul>
   <li><a href='../index.html' title='All tables and views in the schema'>Tables</a></li>
   <li><a href='../relationships.html' title='Diagram of table relationships'>Relationships</a></li>
+  <li><a href='../utilities.html' title='View of tables with neither parents nor children'>Utility&nbsp;Tables</a></li>
   <li><a href='../constraints.html' title='Useful for diagnosing error messages that just give constraint name or number'>Constraints</a></li>
   <li><a href='../anomalies.html' title="Things that might not be quite right">Anomalies</a></li>
   <li><a href='../columns.byTable.html' title="All of the columns in the schema">Columns</a></li>
@@ -141,7 +142,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='even'>
- <td class='indexedColumn' title='Indexed'>centrodecostocontable</td>
+ <td class='indexedColumn' title='Indexed'>numero</td>
  <td class='detail'>int4</td>
  <td class='detail' align='right'>10</td>
  <td class='detail' align='center'></td>
@@ -174,7 +175,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 </table>
-<p title='5 columns'>Table contained 0 rows at mié sep 20 15:45 ART 2017<p/>
+<p title='5 columns'>Table contained 0 rows at lun nov 20 19:08 ART 2017<p/>
 </td></tr></table>
 <div class='indent'>
 <b>Indexes:</b>
@@ -195,7 +196,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   <td class='constraint' style='text-align:left;'>centrodecostocontable_pkey</td>
  </tr>
  <tr>
-  <td class='indexedColumn'>ejerciciocontable + centrodecostocontable</td>
+  <td class='indexedColumn'>ejerciciocontable + numero</td>
   <td class='detail'>Must be unique</td>
   <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
   <td class='constraint' style='text-align:left;'>u_centrodecostocontable_ejerciciocontable_centrodecostocontable</td>
@@ -206,16 +207,17 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <br><form action='get'><b>Close relationships</b><span class='degrees' id='degrees' title='Detail diminishes with increased separation from centrodecostocontable'>
 &nbsp;within <label for='oneDegree'><input type='radio' name='degrees' id='oneDegree' checked>one</label>  <label for='twoDegrees'><input type='radio' name='degrees' id='twoDegrees'>two degrees</label> of separation</span><b>:</b></form>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" href="centrodecostocontable.html" title="centrodecostocontable" alt="" coords="243,200,579,376" >
+<area shape="rect" href="centrodecostocontable.html" title="centrodecostocontable" alt="" coords="243,200,539,376" >
 <area shape="rect" href="ejerciciocontable.html" title="ejerciciocontable" alt="" coords="7,158,199,374" >
-<area shape="rect" href="plandecuenta.html" title="plandecuenta" alt="" coords="623,8,805,405" >
+<area shape="rect" href="plandecuenta.html" title="plandecuenta" alt="" coords="583,8,765,405" >
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='../diagrams/centrodecostocontable.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" href="centrodecostocontable.html" title="centrodecostocontable" alt="" coords="243,109,579,285" >
-<area shape="rect" href="ejerciciocontable.html" title="ejerciciocontable" alt="" coords="7,134,199,350" >
-<area shape="rect" href="plandecuenta.html" title="plandecuenta" alt="" coords="623,8,805,405" >
-<area shape="rect" href="puntodeequilibrio.html" title="puntodeequilibrio" alt="" coords="339,302,483,382" >
+<area shape="rect" href="centrodecostocontable.html" title="centrodecostocontable" alt="" coords="243,109,539,285" >
+<area shape="rect" href="ejerciciocontable.html" title="ejerciciocontable" alt="" coords="7,218,199,434" >
+<area shape="rect" href="plandecuenta.html" title="plandecuenta" alt="" coords="583,7,765,405" >
+<area shape="rect" href="puntodeequilibrio.html" title="puntodeequilibrio" alt="" coords="319,302,463,382" >
+<area shape="rect" href="usuario.html" title="usuario" alt="" coords="330,399,453,479" >
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='../diagrams/centrodecostocontable.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>

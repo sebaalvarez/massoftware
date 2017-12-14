@@ -9,9 +9,11 @@ import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.windows.list.CentroDeCostoContableTableUi;
 import com.massoftware.frontend.ui.windows.list.EjercicioContableTableUi;
+import com.massoftware.frontend.ui.windows.list.PlanDeCuentaTableUi;
 import com.massoftware.frontend.ui.windows.list.PuntoDeEquilibrioTableUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.PlanDeCuenta;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.util.BeanItemContainer;
@@ -76,7 +78,7 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 
 	private void initObjectBO() {
 		this.usuarioBO = cx.buildUsuarioBO();
-		this.ejercicioContableBO = cx.buildEjercicioContableBO();
+		this.ejercicioContableBO = cx.buildEjercicioContableBO();		
 	}
 
 	private MenuBar getMenuBar() {
@@ -101,7 +103,20 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 
 		archivos.addItem("Plan de cuentas (orden -> cta de jerarquía) ...",
 				click);
-		archivos.addItem("Plan de cuentas ...", click);
+
+		Command openPlanDeCuentaTableUi = new Command() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 3890088916049691923L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+				openPlanDeCuentaTableUi();
+			}
+		};
+		archivos.addItem("Plan de cuentas ...", openPlanDeCuentaTableUi);
 
 		Command openEjercicioContableTableUi = new Command() {
 
@@ -320,7 +335,8 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 					EjercicioContable.class.getCanonicalName())
 					.getLabelPlural();
 
-			EjercicioContableTableUi ui = new EjercicioContableTableUi(cx, usuario);
+			EjercicioContableTableUi ui = new EjercicioContableTableUi(cx,
+					usuario);
 
 			Window win = new Window(title);
 			// win.setWidth((float)(ejerciciosContablesDesing.rootVH.getWidth()
@@ -381,13 +397,43 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 					PuntoDeEquilibrio.class.getCanonicalName())
 					.getLabelPlural();
 
-			PuntoDeEquilibrioTableUi ui = new PuntoDeEquilibrioTableUi(cx, usuario);
+			PuntoDeEquilibrioTableUi ui = new PuntoDeEquilibrioTableUi(cx,
+					usuario);
 
 			Window win = new Window(title);
 			// win.setWidth((float)(ejerciciosContablesDesing.rootVH.getWidth()
 			// * 1.2),
 			// ejerciciosContablesDesing.grid.getHeightUnits());
 			win.setWidth("660px");
+			win.setClosable(true);
+			win.setResizable(false);
+			win.setContent(ui);
+			// win.addCloseShortcut(KeyCode.ESCAPE, null);
+			getUI().addWindow(win);
+
+			win.center();
+			win.focus();
+
+		} catch (Exception e) {
+
+			LogAndNotification.print(e);
+		}
+
+	}
+
+	private void openPlanDeCuentaTableUi() {
+		try {
+
+			String title = cx.getEntityMetaData(
+					PlanDeCuenta.class.getCanonicalName()).getLabelPlural();
+
+			PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(cx, usuario);
+
+			Window win = new Window(title);
+			// win.setWidth((float)(ejerciciosContablesDesing.rootVH.getWidth()
+			// * 1.2),
+			// ejerciciosContablesDesing.grid.getHeightUnits());
+			win.setWidth("1050px");
 			win.setClosable(true);
 			win.setResizable(false);
 			win.setContent(ui);

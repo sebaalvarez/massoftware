@@ -68,6 +68,12 @@
 			<artifactId>vaadin-themes</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>inputmask</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-core-asl -->
 		<dependency>
@@ -156,14 +162,14 @@
 			<scope>system</scope>
 			<systemPath>D:\dev\source\cendracx\target\cendracx-0.0.1-SNAPSHOT.jar</systemPath>
 		</dependency>
-		
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.massoftware.model</groupId> -->
-<!-- 			<artifactId>massoftwaremodel</artifactId> -->
-<!-- 			<version>0.0.1-SNAPSHOT</version> -->
-<!-- 			<scope>system</scope> -->
-<!-- 			<systemPath>D:\dev\ambientes\mas_software\workspace\massoftwaremodel\target\massoftwaremodel-0.0.1-SNAPSHOT.jar</systemPath> -->
-<!-- 		</dependency> -->
+
+		<!-- <dependency> -->
+		<!-- <groupId>com.massoftware.model</groupId> -->
+		<!-- <artifactId>massoftwaremodel</artifactId> -->
+		<!-- <version>0.0.1-SNAPSHOT</version> -->
+		<!-- <scope>system</scope> -->
+		<!-- <systemPath>D:\dev\ambientes\mas_software\workspace\massoftwaremodel\target\massoftwaremodel-0.0.1-SNAPSHOT.jar</systemPath> -->
+		<!-- </dependency> -->
 
 	</dependencies>
 

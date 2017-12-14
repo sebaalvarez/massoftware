@@ -1,17 +1,14 @@
 package com.massoftware.model;
 
-import java.io.Serializable;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.cendra.common.model.EntityId;
 
-public class Usuario extends EntityId implements Serializable, Cloneable,
-		Comparable<Usuario> {
+public class Usuario extends EntityId implements Cloneable, Comparable<Usuario> {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6203529732262874998L;
+	private static final long serialVersionUID = 809942438468897333L;
 
 	private Integer numero;
 	private String nombre;
@@ -25,26 +22,12 @@ public class Usuario extends EntityId implements Serializable, Cloneable,
 		setterByArray(row);
 	}
 
-	public void setId(String id) {
-		id = formatValue(id);
-		if (id != null) {
-			this.setNumero(new Integer(id));
-		} else {
-			this.setNumero(null);
-		}
-	}
-
 	public Integer getNumero() {
 		return numero;
 	}
 
 	public void setNumero(Integer nnumero) {
 		this.numero = nnumero;
-		if (this.numero != null) {
-			super.setId(this.numero.toString());
-		} else {
-			super.setId(null);
-		}
 	}
 
 	public String getNombre() {
@@ -91,10 +74,10 @@ public class Usuario extends EntityId implements Serializable, Cloneable,
 	public Usuario clone() throws CloneNotSupportedException {
 		Usuario other = (Usuario) super.clone();
 
+		other.setNumero(numero);
 		other.setNombre(nombre);
 		if (this.getEjercicioContable() != null) {
-			other.setEjercicioContable(getEjercicioContable()
-					.clone());
+			other.setEjercicioContable(getEjercicioContable().clone());
 		} else {
 			other.setEjercicioContable(null);
 		}
@@ -105,11 +88,12 @@ public class Usuario extends EntityId implements Serializable, Cloneable,
 	@Override
 	public int compareTo(Usuario o) {
 		if (this.getNombre() != null && o != null) {
-			return this.getNombre().compareTo(((Usuario) o).getNombre());
+			return this.getNombre().toLowerCase()
+					.compareTo(((Usuario) o).getNombre().toLowerCase());
 		}
 
 		if (this.getNombre() != null && o == null) {
-			return this.getNombre().compareTo("");
+			return this.getNombre().toLowerCase().compareTo("");
 		}
 
 		return "".compareTo(((Usuario) o).getNombre());

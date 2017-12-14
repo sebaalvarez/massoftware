@@ -58,7 +58,7 @@ public class UsuarioBO {
 
 	public Usuario findByNombre(String nombre) throws Exception {
 
-		Usuario usuario = null;
+		// Usuario usuario = null;
 
 		String sql = null;
 
@@ -76,9 +76,15 @@ public class UsuarioBO {
 			@SuppressWarnings("unchecked")
 			List<Usuario> usuarios = connectionWrapper
 					.findToListByCendraConvention(sql, nombre);
-			if (usuarios.size() == 1) {				
+			if (usuarios.size() == 1) {
 				return usuarios.get(0);
 			}
+
+			// throw new Exception(
+			// "La sentencia debería afectar un solo registro, la sentencia afecto "
+			// + usuarios.size() + " registros.");
+
+			return null;
 
 		} catch (Exception e) {
 			throw e;
@@ -86,7 +92,7 @@ public class UsuarioBO {
 			connectionWrapper.close(connectionWrapper);
 		}
 
-		return usuario;
+		// return usuario;
 	}
 
 	public Usuario update(Usuario item) throws Exception {
@@ -106,14 +112,6 @@ public class UsuarioBO {
 
 			connectionWrapper.begin();
 
-			Object ejercicio = null;
-			if (item.getEjercicioContable() != null
-					&& item.getEjercicioContable().getEjercicio() != null) {
-				ejercicio = item.getEjercicioContable().getEjercicio();
-			} else {
-				ejercicio = Integer.class;
-			}
-
 			int rows = -1;
 
 			if (dataSourceWrapper.isDatabasePostgreSql()) {
@@ -125,11 +123,27 @@ public class UsuarioBO {
 					id = String.class;
 				}
 
+				Object ejercicio = null;
+				if (item.getEjercicioContable() != null
+						&& item.getEjercicioContable().getEjercicio() != null) {
+					ejercicio = item.getEjercicioContable().getId();
+				} else {
+					ejercicio = Integer.class;
+				}
+
 				Object[] args = { ejercicio, id };
 
 				rows = connectionWrapper.update(sql, args);
 
 			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+				Object ejercicio = null;
+				if (item.getEjercicioContable() != null
+						&& item.getEjercicioContable().getEjercicio() != null) {
+					ejercicio = item.getEjercicioContable().getEjercicio();
+				} else {
+					ejercicio = Integer.class;
+				}
 
 				Object nombre = null;
 				if (item.getNombre() != null) {

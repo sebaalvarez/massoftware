@@ -10,51 +10,51 @@ public class PlanDeCuentaEstado extends EntityId implements Cloneable,
 	 */
 	private static final long serialVersionUID = -1065267368781846000L;
 
-	final public static PlanDeCuentaEstado TIPO_1 = new PlanDeCuentaEstado(1,
-			"Cuenta fuera de uso");
-	final public static PlanDeCuentaEstado TIPO_2 = new PlanDeCuentaEstado(2,
-			"Cuenta en uso");
+//	final public static PlanDeCuentaEstado TIPO_1 = new PlanDeCuentaEstado(1,
+//			"Cuenta fuera de uso");
+//	final public static PlanDeCuentaEstado TIPO_2 = new PlanDeCuentaEstado(2,
+//			"Cuenta en uso");
 
 	private Integer codigo;
 	private String nombre;
 
-	public PlanDeCuentaEstado() {
+//	public PlanDeCuentaEstado() {
+//
+//	}
 
-	}
+//	public PlanDeCuentaEstado(Integer codigo) {
+//		super();
+//		this.codigo = codigo;
+//		switch (codigo) {
+//		case 1:
+//			init(codigo, TIPO_1.getNombre());
+//			break;
+//		case 2:
+//			init(codigo, TIPO_2.getNombre());
+//			break;
+//		default:
+//			init(TIPO_1.getCodigo(), TIPO_1.getNombre());
+//		}
+//	}
 
-	public PlanDeCuentaEstado(Integer codigo) {
-		super();
-		this.codigo = codigo;
-		switch (codigo) {
-		case 1:
-			init(codigo, TIPO_1.getNombre());
-			break;
-		case 2:
-			init(codigo, TIPO_2.getNombre());
-			break;
-		default:
-			init(TIPO_1.getCodigo(), TIPO_1.getNombre());
-		}
-	}
+//	public PlanDeCuentaEstado(Integer codigo, String nombre) {
+//		super();
+//		init(codigo, nombre);
+//	}
 
-	public PlanDeCuentaEstado(Integer codigo, String nombre) {
-		super();
-		init(codigo, nombre);
-	}
+//	private void init(Integer codigo, String nombre) {
+//		this.setCodigo(codigo);
+//		this.setNombre(nombre);
+//	}
 
-	private void init(Integer codigo, String nombre) {
-		this.setCodigo(codigo);
-		this.setNombre(nombre);
-	}
-
-	public void setId(String id) {
-		id = formatValue(id);
-		if (id != null) {
-			this.setCodigo(new Integer(id));
-		} else {
-			this.setCodigo(null);
-		}
-	}
+//	public void setId(String id) {
+//		id = formatValue(id);
+//		if (id != null) {
+//			this.setCodigo(new Integer(id));
+//		} else {
+//			this.setCodigo(null);
+//		}
+//	}
 
 	public Integer getCodigo() {
 		return codigo;
@@ -62,11 +62,11 @@ public class PlanDeCuentaEstado extends EntityId implements Cloneable,
 
 	public void setCodigo(Integer codigo) {
 		this.codigo = codigo;
-		if (this.codigo != null) {
-			super.setId(this.codigo.toString());
-		} else {
-			super.setId(null);
-		}
+//		if (this.codigo != null) {
+//			super.setId(this.codigo.toString());
+//		} else {
+//			super.setId(null);
+//		}
 	}
 
 	public String getNombre() {
@@ -80,6 +80,7 @@ public class PlanDeCuentaEstado extends EntityId implements Cloneable,
 	@Override
 	public PlanDeCuentaEstado clone() throws CloneNotSupportedException {
 		PlanDeCuentaEstado other = new PlanDeCuentaEstado();
+		other.setId(this.getId());
 		other.setCodigo(getCodigo());
 		other.setNombre(this.getNombre());
 		return other;

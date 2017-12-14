@@ -8,7 +8,7 @@
          <column autoUpdated="false" digits="0" id="1" name="ejerciciocontable" nullable="false" remarks="" size="2147483647" type="varchar">
             <parent column="id" foreignKey="centrodecostocontable_ejerciciocontable_fkey" implied="false" onDeleteCascade="false" table="ejerciciocontable"/>
          </column>
-         <column autoUpdated="false" digits="0" id="2" name="centrodecostocontable" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="2" name="numero" nullable="false" remarks="" size="10" type="int4"/>
          <column autoUpdated="false" digits="0" id="3" name="nombre" nullable="true" remarks="" size="2147483647" type="varchar"/>
          <column autoUpdated="false" digits="0" id="4" name="abreviatura" nullable="true" remarks="" size="2147483647" type="varchar"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
@@ -17,7 +17,7 @@
          </index>
          <index name="u_centrodecostocontable_ejerciciocontable_centrodecostocontable" unique="true">
             <column ascending="true" name="ejerciciocontable"/>
-            <column ascending="true" name="centrodecostocontable"/>
+            <column ascending="true" name="numero"/>
          </index>
       </table>
       <table name="ejerciciocontable" numRows="0" remarks="" schema="massoftware" type="TABLE">
@@ -25,6 +25,7 @@
             <child column="ejerciciocontable" foreignKey="centrodecostocontable_ejerciciocontable_fkey" implied="false" onDeleteCascade="false" table="centrodecostocontable"/>
             <child column="ejerciciocontable" foreignKey="plandecuenta_ejerciciocontable_fkey" implied="false" onDeleteCascade="false" table="plandecuenta"/>
             <child column="ejerciciocontable" foreignKey="puntodeequilibrio_ejerciciocontable_fkey" implied="false" onDeleteCascade="false" table="puntodeequilibrio"/>
+            <child column="ejerciciocontable" foreignKey="usuario_ejerciciocontable_fkey" implied="false" onDeleteCascade="false" table="usuario"/>
          </column>
          <column autoUpdated="false" digits="0" id="1" name="ejercicio" nullable="false" remarks="" size="10" type="int4"/>
          <column autoUpdated="false" digits="0" id="2" name="fechaapertura" nullable="false" remarks="" size="13" type="date"/>
@@ -66,11 +67,7 @@
          <index name="plandecuenta_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
-         <index name="u_plandecuenta_ejerciciocontable_cuentacontable" unique="true">
-            <column ascending="true" name="ejerciciocontable"/>
-            <column ascending="true" name="cuentacontable"/>
-         </index>
-         <index name="u_plandecuenta_ejerciciocontable_cuentacontable_lower" unique="true">
+         <index name="u_plandecuenta_ejerciciocontable_puntodeequilibrio" unique="true">
             <column ascending="true" name="ejerciciocontable"/>
          </index>
       </table>
@@ -83,7 +80,9 @@
          </column>
          <column autoUpdated="false" digits="0" id="2" name="puntodeequilibrio" nullable="false" remarks="" size="10" type="int4"/>
          <column autoUpdated="false" digits="0" id="3" name="nombre" nullable="false" remarks="" size="2147483647" type="varchar"/>
-         <column autoUpdated="false" defaultValue="1" digits="0" id="4" name="tipo" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="4" name="puntodeequilibriotipo" nullable="false" remarks="" size="2147483647" type="varchar">
+            <parent column="id" foreignKey="puntodeequilibrio_puntodeequilibriotipo_fkey" implied="false" onDeleteCascade="false" table="puntodeequilibriotipo"/>
+         </column>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="puntodeequilibrio_pkey" unique="true">
             <column ascending="true" name="id"/>
@@ -92,6 +91,96 @@
             <column ascending="true" name="ejerciciocontable"/>
             <column ascending="true" name="puntodeequilibrio"/>
          </index>
+      </table>
+      <table name="puntodeequilibriotipo" numRows="5" remarks="" schema="massoftware" type="TABLE">
+         <column autoUpdated="false" defaultValue="uuid_generate_v4()" digits="0" id="0" name="id" nullable="false" remarks="" size="2147483647" type="varchar">
+            <child column="puntodeequilibriotipo" foreignKey="puntodeequilibrio_puntodeequilibriotipo_fkey" implied="false" onDeleteCascade="false" table="puntodeequilibrio"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="tipo" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="2" name="nombre" nullable="false" remarks="" size="2147483647" type="varchar"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="puntodeequilibriotipo_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="u_puntodeequilibriotipo_nombre" unique="true"/>
+         <index name="u_puntodeequilibriotipo_tipo" unique="true">
+            <column ascending="true" name="tipo"/>
+         </index>
+      </table>
+      <table name="usuario" numRows="0" remarks="" schema="massoftware" type="TABLE">
+         <column autoUpdated="false" defaultValue="uuid_generate_v4()" digits="0" id="0" name="id" nullable="false" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="1" name="ejerciciocontable" nullable="true" remarks="" size="2147483647" type="varchar">
+            <parent column="id" foreignKey="usuario_ejerciciocontable_fkey" implied="false" onDeleteCascade="false" table="ejerciciocontable"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="numero" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="nombre" nullable="false" remarks="" size="2147483647" type="varchar"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="usuario_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="u_usuario_nombre" unique="true"/>
+         <index name="usuario_numero_key" unique="true">
+            <column ascending="true" name="numero"/>
+         </index>
+      </table>
+      <table name="vcentrodecostocontable" numRows="0" remarks="" schema="massoftware" type="VIEW">
+         <column autoUpdated="false" digits="0" id="0" name="classcentrodecostocontable" nullable="true" remarks="" size="2147483647" type="unknown"/>
+         <column autoUpdated="false" digits="0" id="1" name="id" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="numero" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="nombre" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="4" name="abreviatura" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="5" name="ejerciciocontable_id" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="6" name="ejerciciocontable_ejercicio" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="7" name="ejerciciocontable_fechaapertura" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="8" name="ejerciciocontable_fechacierre" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="9" name="ejerciciocontable_ejerciciocerrado" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="10" name="ejerciciocontable_ejerciciocerradomodulos" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="11" name="ejerciciocontable_comentario" nullable="true" remarks="" size="2147483647" type="varchar"/>
+      </table>
+      <table name="vejerciciocontable" numRows="0" remarks="" schema="massoftware" type="VIEW">
+         <column autoUpdated="false" digits="0" id="0" name="classejerciciocontable" nullable="true" remarks="" size="2147483647" type="unknown"/>
+         <column autoUpdated="false" digits="0" id="1" name="id" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="ejercicio" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="comentario" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="4" name="fechaapertura" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="5" name="fechacierre" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="6" name="ejerciciocerrado" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="7" name="ejerciciocerradomodulos" nullable="true" remarks="" size="1" type="bool"/>
+      </table>
+      <table name="vpuntodeequilibrio" numRows="0" remarks="" schema="massoftware" type="VIEW">
+         <column autoUpdated="false" digits="0" id="0" name="classpuntodeequilibrio" nullable="true" remarks="" size="2147483647" type="unknown"/>
+         <column autoUpdated="false" digits="0" id="1" name="id" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="ejerciciocontable_id" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="3" name="ejerciciocontable_ejercicio" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="4" name="ejerciciocontable_fechaapertura" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="5" name="ejerciciocontable_fechacierre" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="6" name="ejerciciocontable_ejerciciocerrado" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="7" name="ejerciciocontable_ejerciciocerradomodulos" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="8" name="ejerciciocontable_comentario" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="9" name="puntodeequilibrio" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="10" name="nombre" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="11" name="puntodeequilibriotipo_id" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="12" name="puntodeequilibriotipo_tipo" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="13" name="puntodeequilibriotipo_nombre" nullable="true" remarks="" size="2147483647" type="varchar"/>
+      </table>
+      <table name="vpuntodeequilibriotipo" numRows="0" remarks="" schema="massoftware" type="VIEW">
+         <column autoUpdated="false" digits="0" id="0" name="classpuntodeequilibriotipo" nullable="true" remarks="" size="2147483647" type="unknown"/>
+         <column autoUpdated="false" digits="0" id="1" name="id" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="tipo" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="nombre" nullable="true" remarks="" size="2147483647" type="varchar"/>
+      </table>
+      <table name="vusuario" numRows="0" remarks="" schema="massoftware" type="VIEW">
+         <column autoUpdated="false" digits="0" id="0" name="classusuario" nullable="true" remarks="" size="2147483647" type="unknown"/>
+         <column autoUpdated="false" digits="0" id="1" name="id" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="numero" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="nombre" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="4" name="ejerciciocontable_id" nullable="true" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="5" name="ejerciciocontable_ejercicio" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="6" name="ejerciciocontable_fechaapertura" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="7" name="ejerciciocontable_fechacierre" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="8" name="ejerciciocontable_ejerciciocerrado" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="9" name="ejerciciocontable_ejerciciocerradomodulos" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="10" name="ejerciciocontable_comentario" nullable="true" remarks="" size="2147483647" type="varchar"/>
       </table>
    </tables>
 </database>

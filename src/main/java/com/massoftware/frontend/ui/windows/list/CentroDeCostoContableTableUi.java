@@ -14,9 +14,8 @@ import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.frontend.ui.windows.form.CentroDeCostoContableFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.PlanDeCuenta;
 import com.massoftware.model.Usuario;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
@@ -24,7 +23,6 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -36,13 +34,19 @@ public class CentroDeCostoContableTableUi extends TableUi {
 	private static final long serialVersionUID = 4355038684086959846L;
 
 	protected ComboBox ejerciciosCBX;
-	protected Button clearFilterBTN;
-	protected OptionGroup optionsOrderBy;
+	// protected Button clearFilterBTN;
+	protected CssLayout filtering;
+	// protected OptionGroup optionsOrderBy;
 
-	private String ejerciciosCBXCaption = "Ejercicio...";
+	protected String ejerciciosCBXCaption = "Buscar por "
+			+ getEntityAttMetaDataGrid().getAttShortLabels()[0].toLowerCase()
+			+ " ..";
+	protected String ejerciciosCBXError = "Se requiere de al menos un "
+			+ getEntityAttMetaDataGrid().getAttShortLabels()[0].toLowerCase()
+			+ "  para poder operar con esta ventana.";
 	protected String clearFilterTextBtnCaption = "Quitar los filtros aplicados a la búsqueda";
-	protected String optionGroupItem1Caption = "Ordenar por centro de costo";
-	protected String optionGroupItem2Caption = "Ordenar por nombre";
+	// protected String optionGroupItem1Caption = "Ordenar por centro de costo";
+	// protected String optionGroupItem2Caption = "Ordenar por nombre";
 
 	private CentroDeCostoContableBO centroDeCostoContableBO;
 	protected EjercicioContableBO ejercicioContableBO;
@@ -52,6 +56,13 @@ public class CentroDeCostoContableTableUi extends TableUi {
 	public CentroDeCostoContableTableUi(BackendContext cx, Usuario usuario) {
 		super(cx, usuario);
 		init();
+
+		if (ejerciciosCBX.getContainerDataSource() == null
+				|| ejerciciosCBX.getContainerDataSource().size() == 0) {
+
+			ventanaInoperable();
+
+		}
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -93,17 +104,62 @@ public class CentroDeCostoContableTableUi extends TableUi {
 	}
 
 	protected Component[] buildHeaderToolbar() throws Exception {
-		ejerciciosCBX = new ComboBox();
+		ejerciciosCBX = new ComboBox(ejerciciosCBXCaption);
 		ejerciciosCBX.setInputPrompt(ejerciciosCBXCaption);
 		ejerciciosCBX.setItemCaptionPropertyId(getEntityAttMetaDataCB()
 				.getAttNames()[0]);
 		ejerciciosCBX.addStyleName(ValoTheme.COMBOBOX_SMALL);
-		ejerciciosCBX.setIcon(FontAwesome.SEARCH);				
+		ejerciciosCBX.setIcon(FontAwesome.SEARCH);
+		ejerciciosCBX.setNullSelectionAllowed(false);
+		ejerciciosCBX.setRequired(true);
+		ejerciciosCBX.setRequiredError(ejerciciosCBXError);
+		ejerciciosCBX.addValueChangeListener(e -> {
+			updateGrid();
+		});
+
+		// clearFilterBTN = new Button(FontAwesome.TIMES);
+		// clearFilterBTN.setDescription(clearFilterTextBtnCaption);
+		// clearFilterBTN.addStyleName(ValoTheme.BUTTON_SMALL);
+		// clearFilterBTN.addClickListener(e -> {
+		// ejerciciosCBX.select(null);
+		// updateGrid(new Object[] { null });
+		// });
+
+		filtering = new CssLayout();
+		filtering.addComponents(ejerciciosCBX/* , clearFilterBTN */);
+		filtering.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+
+		// --------------------------------------------------------------------
+
+		// optionsOrderBy = new OptionGroup();
+		// optionsOrderBy.addStyleName(ValoTheme.OPTIONGROUP_SMALL);
+		// optionsOrderBy.setMultiSelect(false);
+		// optionsOrderBy.setNullSelectionAllowed(false);
+		// optionsOrderBy.addItem(optionGroupItem1Caption);
+		// optionsOrderBy.addItem(optionGroupItem2Caption);
+		// optionsOrderBy.select(optionGroupItem1Caption);
+		// optionsOrderBy.addValueChangeListener(new ValueChangeListener() {
+		//
+		// /**
+		// *
+		// */
+		// private static final long serialVersionUID = 1177475956411161697L;
+		//
+		// @Override
+		// public void valueChange(ValueChangeEvent event) {
+		// updateGrid();
+		// }
+		// });
+
+		// --------------------------------------------------------------------
+		// LOAD DATA
+
 		loadEjerciciosCBX();
 		if (ejerciciosCBX.getContainerDataSource() == null
 				|| ejerciciosCBX.getContainerDataSource().size() == 0) {
 
-			agregarBtn.setEnabled(false);
+			ventanaInoperable();
+
 		} else {
 
 			EjercicioContable ejercicioContableDefault = usuario
@@ -118,49 +174,10 @@ public class CentroDeCostoContableTableUi extends TableUi {
 				ejerciciosCBX.setValue(maxEjercicioContable);
 			}
 		}
-		ejerciciosCBX.addValueChangeListener(e -> {
 
-			updateGrid();
+		// --------------------------------------------------------------------
 
-		});
-		
-		
-
-		clearFilterBTN = new Button(FontAwesome.TIMES);
-		clearFilterBTN.setDescription(clearFilterTextBtnCaption);
-		clearFilterBTN.addStyleName(ValoTheme.BUTTON_SMALL);
-		clearFilterBTN.addClickListener(e -> {
-			ejerciciosCBX.select(null);
-			updateGrid(new Object[] { null });
-		});
-
-		CssLayout filtering = new CssLayout();
-		filtering.addComponents(ejerciciosCBX, clearFilterBTN);
-		filtering.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-
-		optionsOrderBy = new OptionGroup();
-		optionsOrderBy.addStyleName(ValoTheme.OPTIONGROUP_SMALL);
-		optionsOrderBy.setMultiSelect(false);
-		optionsOrderBy.setNullSelectionAllowed(false);
-		optionsOrderBy.addItem(optionGroupItem1Caption);
-		optionsOrderBy.addItem(optionGroupItem2Caption);
-		optionsOrderBy.select(optionGroupItem1Caption);
-		optionsOrderBy.addValueChangeListener(new ValueChangeListener() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1177475956411161697L;
-
-			@Override
-			public void valueChange(ValueChangeEvent event) {
-				updateGrid();
-			}
-		});
-
-		
-
-		return new Component[] { filtering, optionsOrderBy };
+		return new Component[] { filtering /* , optionsOrderBy */};
 	}
 
 	public void updateGrid() {
@@ -172,29 +189,39 @@ public class CentroDeCostoContableTableUi extends TableUi {
 
 		EjercicioContable ejercicioContable = (EjercicioContable) args[0];
 
-		List<CentroDeCostoContable> items = null;
+		List<CentroDeCostoContable> items = new ArrayList<CentroDeCostoContable>();
 
-		if (ejercicioContable == null) {
-			if (optionsOrderBy.getValue().equals(this.optionGroupItem1Caption)) {
+		if (ejerciciosCBX.getContainerDataSource() == null
+				|| ejerciciosCBX.getContainerDataSource().size() == 0) {
 
-				items = this.centroDeCostoContableBO
-						.findAllOrderByCentroDeCostoContable();
-			} else {
-				items = this.centroDeCostoContableBO.findAllOrderByNombre();
-			}
-
-		} else {
-
-			if (optionsOrderBy.getValue().equals(this.optionGroupItem1Caption)) {
-
-				items = this.centroDeCostoContableBO
-						.findAllOrderByCentroDeCostoContable(ejercicioContable
-								.getEjercicio());
-			} else {
-				items = this.centroDeCostoContableBO
-						.findAllOrderByNombre(ejercicioContable.getEjercicio());
-			}
+			return items;
 		}
+
+		// if (ejercicioContable == null) {
+		// if (optionsOrderBy.getValue().equals(this.optionGroupItem1Caption)) {
+		//
+		// items = this.centroDeCostoContableBO
+		// .findAllOrderByCentroDeCostoContable();
+		// } else {
+		// items = this.centroDeCostoContableBO.findAllOrderByNombre();
+		// }
+		//
+		// } else {
+		//
+		// if (optionsOrderBy.getValue().equals(this.optionGroupItem1Caption)) {
+		//
+		// items = this.centroDeCostoContableBO
+		// .findAllOrderByCentroDeCostoContable(ejercicioContable
+		// .getEjercicio());
+		// } else {
+		// items = this.centroDeCostoContableBO
+		// .findAllOrderByNombre(ejercicioContable.getEjercicio());
+		// }
+		// }
+
+		items = this.centroDeCostoContableBO
+				.findAllOrderByCentroDeCostoContable(ejercicioContable
+						.getEjercicio());
 
 		return items;
 	}
@@ -222,7 +249,9 @@ public class CentroDeCostoContableTableUi extends TableUi {
 
 			if (ejerciciosCBX.getContainerDataSource() == null
 					|| ejerciciosCBX.getContainerDataSource().size() == 0) {
-				agregarBtn.setEnabled(false);
+
+				ventanaInoperable();
+
 			}
 
 		} catch (Exception e) {
@@ -232,6 +261,14 @@ public class CentroDeCostoContableTableUi extends TableUi {
 			LogAndNotification.print(e);
 		}
 
+	}
+
+	private void ventanaInoperable() {
+		agregarBtn.setEnabled(false);
+		cambiarBtn.setEnabled(false);
+		eliminarBtn.setEnabled(false);
+		grid.setEnabled(false);
+		filtering.setEnabled(false);
 	}
 
 }

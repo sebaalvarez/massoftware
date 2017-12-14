@@ -5,18 +5,21 @@ import java.util.List;
 
 import org.cendra.common.model.EntityId;
 
-import com.massoftware.backend.bo.IPuntoDeEquilibrioBO;
+import com.massoftware.backend.bo.EjercicioContableBO;
+import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
+import com.massoftware.backend.bo.PuntoDeEquilibrioTipoBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.FormUi;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StringToShortConverterUnspecifiedLocale;
+import com.massoftware.frontend.ui.util.StringToIntegerConverterUnspecifiedLocale;
 import com.massoftware.frontend.ui.util.TableUi;
+import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.PuntoDeEquilibrioTipo;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.validator.ShortRangeValidator;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
@@ -29,13 +32,16 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 	 */
 	private static final long serialVersionUID = -1215098492704552373L;
 
+	private TextField ejercicioTXT;
 	private TextField puntoDeEquilibrioTXT;
 	private TextField nombreTXT;
 	private ComboBox tipoCBX;
 
 	// -------------------------------------------------------------------
 
-	private IPuntoDeEquilibrioBO puntoDeEquilibrioBO;
+	private PuntoDeEquilibrioBO puntoDeEquilibrioBO;
+	private PuntoDeEquilibrioTipoBO puntoDeEquilibrioTipoBO;
+	private EjercicioContableBO ejercicioContableBO;
 
 	// -------------------------------------------------------------------
 
@@ -53,6 +59,8 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 
 	protected void initObjectBO() {
 		this.puntoDeEquilibrioBO = cx.buildPuntoDeEquilibrioBO();
+		this.puntoDeEquilibrioTipoBO = cx.buildPuntoDeEquilibrioTipoBO();
+		this.ejercicioContableBO = cx.buildEjercicioContableBO();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -62,25 +70,29 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 
 	protected void buildFormBody() throws Exception {
 		String[] attsName = getEntityAttMetaDataForm().getAttNames();
+		String[] attsName2 = cx.getEntityMetaData(
+				EjercicioContable.class.getCanonicalName()).getAttNames();
 
 		String[] attsLabelShort = getEntityAttMetaDataForm()
 				.getAttShortLabels();
 
-		String puntoDeEquilibrioTXTMsgError1 = "El campo " + attsLabelShort[0]
+		String ejercicioTXTMsgError1 = "El campo " + attsName[1]
+				+ " es requerido.";
+		String puntoDeEquilibrioTXTMsgError1 = "El campo " + attsLabelShort[1]
 				+ " es requerido.";
 		String puntoDeEquilibrioTXTMsgError2 = "El punto de equilibrio debe ser un número entero y positivo, mayor o igual a 1 y menor o igual a "
 				+ Short.MAX_VALUE
 				+ ". Usted cargo el valor \"{0}\" y es inválido.";
-		String nombreTXTMsgError1 = "El campo " + attsLabelShort[1]
+		String nombreTXTMsgError1 = "El campo " + attsLabelShort[2]
 				+ " es requerido.";
-		String tipoCBXMsgError1 = "El campo " + attsLabelShort[2]
+		String tipoCBXMsgError1 = "El campo " + attsLabelShort[3]
 				+ " es requerido.";
 
 		if (item != null) {
 			item = item.clone();
 
 			if (((PuntoDeEquilibrio) item).getPuntoDeEquilibrio() == null) {
-				Short t = puntoDeEquilibrioBO.findMaxPuntoDeEquilibrio();
+				Integer t = puntoDeEquilibrioBO.findMaxPuntoDeEquilibrio();
 				if (t == null || t < 1) {
 					t = 1;
 				}
@@ -96,7 +108,20 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 		} else {
 			item = new PuntoDeEquilibrio();
 
-			Short t = puntoDeEquilibrioBO.findMaxPuntoDeEquilibrio();
+			EjercicioContable ejercicioContableDefault = usuario
+					.getEjercicioContable();
+			if (ejercicioContableDefault != null
+					&& ejercicioContableDefault.getEjercicio() != null) {
+				((PuntoDeEquilibrio) item)
+						.setEjercicioContable(ejercicioContableDefault);
+
+			} else {
+				((PuntoDeEquilibrio) item)
+						.setEjercicioContable(ejercicioContableBO
+								.findMaxEjercicio());
+			}
+
+			Integer t = puntoDeEquilibrioBO.findMaxPuntoDeEquilibrio();
 			if (t == null || t < 1) {
 				t = 1;
 			}
@@ -107,24 +132,40 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 		BeanItem<PuntoDeEquilibrio> beanItem = new BeanItem<PuntoDeEquilibrio>(
 				(PuntoDeEquilibrio) item);
 
+		BeanItem<EjercicioContable> beanItem2 = new BeanItem<EjercicioContable>(
+				((PuntoDeEquilibrio) item).getEjercicioContable());
+
 		// --------------------------------------------------------------------
 
-		puntoDeEquilibrioTXT = new TextField(attsLabelShort[0],
-				beanItem.getItemProperty(attsName[0]));
+		ejercicioTXT = new TextField(attsLabelShort[0],
+				beanItem2.getItemProperty(attsName2[0]));
+		ejercicioTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+		ejercicioTXT.setRequired(true);
+		ejercicioTXT.setRequiredError(ejercicioTXTMsgError1);
+		ejercicioTXT
+				.setConverter(new StringToIntegerConverterUnspecifiedLocale());
+		ejercicioTXT.setNullRepresentation("");
+		ejercicioTXT.setReadOnly(true);
+		formLayout.addComponent(ejercicioTXT);
+
+		// --------------------------------------------------------------------
+
+		puntoDeEquilibrioTXT = new TextField(attsLabelShort[1],
+				beanItem.getItemProperty(attsName[1]));
 		puntoDeEquilibrioTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
 		puntoDeEquilibrioTXT.setRequired(true);
 		puntoDeEquilibrioTXT.setRequiredError(puntoDeEquilibrioTXTMsgError1);
 		puntoDeEquilibrioTXT
-				.setConverter(new StringToShortConverterUnspecifiedLocale());
+				.setConverter(new StringToIntegerConverterUnspecifiedLocale());
 		puntoDeEquilibrioTXT.setNullRepresentation("");
-		puntoDeEquilibrioTXT.addValidator(new ShortRangeValidator(
-				puntoDeEquilibrioTXTMsgError2, (short) 1, Short.MAX_VALUE));
+		puntoDeEquilibrioTXT.addValidator(new IntegerRangeValidator(
+				puntoDeEquilibrioTXTMsgError2, 1, Integer.MAX_VALUE));
 		formLayout.addComponent(puntoDeEquilibrioTXT);
 
 		// --------------------------------------------------------------------
 
-		nombreTXT = new TextField(attsLabelShort[1],
-				beanItem.getItemProperty(attsName[1]));
+		nombreTXT = new TextField(attsLabelShort[2],
+				beanItem.getItemProperty(attsName[2]));
 		nombreTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
 		nombreTXT.setRequired(true);
 		nombreTXT.setRequiredError(nombreTXTMsgError1);
@@ -133,8 +174,8 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 
 		// --------------------------------------------------------------------
 
-		tipoCBX = new ComboBox(attsLabelShort[2]);
-		tipoCBX.setPropertyDataSource(beanItem.getItemProperty(attsName[2]));
+		tipoCBX = new ComboBox(attsLabelShort[3]);
+		tipoCBX.setPropertyDataSource(beanItem.getItemProperty(attsName[3]));
 		tipoCBX.addStyleName(ValoTheme.COMBOBOX_SMALL);
 		tipoCBX.setNullSelectionAllowed(false);
 		tipoCBX.setRequired(true);
@@ -146,11 +187,12 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 			guardarBTN.setEnabled(false);
 
 		} else {
-			if (((PuntoDeEquilibrio) item).getTipo() != null) {
-				tipoCBX.setValue(((PuntoDeEquilibrio) item).getTipo());
-			} else {
-				tipoCBX.setValue(PuntoDeEquilibrioTipo.TIPO_1);
+			if (((PuntoDeEquilibrio) item).getPuntoDeEquilibrioTipo() != null) {
+				tipoCBX.setValue(((PuntoDeEquilibrio) item)
+						.getPuntoDeEquilibrioTipo());
+
 			}
+
 		}
 
 		formLayout.addComponent(tipoCBX);
@@ -159,12 +201,14 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 	}
 
 	protected void validateControls() {
+		ejercicioTXT.validate();
 		puntoDeEquilibrioTXT.validate();
 		nombreTXT.validate();
 		tipoCBX.validate();
 	}
 
 	protected void insert() throws Exception {
+
 		puntoDeEquilibrioBO.insert((PuntoDeEquilibrio) item);
 	}
 
@@ -179,12 +223,14 @@ public class PuntoDeEquilibrioFormUi extends FormUi {
 	private void loadTipoCBX() {
 		try {
 
-			List<PuntoDeEquilibrioTipo> items = new ArrayList<PuntoDeEquilibrioTipo>();
-			items.add(PuntoDeEquilibrioTipo.TIPO_1);
-			items.add(PuntoDeEquilibrioTipo.TIPO_2);
-			items.add(PuntoDeEquilibrioTipo.TIPO_3);
-			items.add(PuntoDeEquilibrioTipo.TIPO_4);
-			items.add(PuntoDeEquilibrioTipo.TIPO_5);
+			List<PuntoDeEquilibrioTipo> items = puntoDeEquilibrioTipoBO
+					.findAll();
+
+			// items.add(PuntoDeEquilibrioTipo.TIPO_1);
+			// items.add(PuntoDeEquilibrioTipo.TIPO_2);
+			// items.add(PuntoDeEquilibrioTipo.TIPO_3);
+			// items.add(PuntoDeEquilibrioTipo.TIPO_4);
+			// items.add(PuntoDeEquilibrioTipo.TIPO_5);
 
 			tipoCBX.setContainerDataSource(new BeanItemContainer<>(
 					PuntoDeEquilibrioTipo.class, items));
