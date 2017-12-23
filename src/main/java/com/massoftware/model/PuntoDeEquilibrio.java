@@ -89,7 +89,8 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 
 	@Override
 	public String toString() {
-		return this.getEjercicioContable() + "-" + this.getPuntoDeEquilibrio();
+		return this.getPuntoDeEquilibrio() + " - " + this.getNombre()
+				+ " - " + this.getEjercicioContable();
 	}
 
 }

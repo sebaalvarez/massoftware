@@ -7,9 +7,10 @@ import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
+import com.massoftware.frontend.ui.windows.form.PlanDeCuantaFormUi;
 import com.massoftware.frontend.ui.windows.list.CentroDeCostoContableTableUi;
 import com.massoftware.frontend.ui.windows.list.EjercicioContableTableUi;
-import com.massoftware.frontend.ui.windows.list.PlanDeCuentaTableUi;
+import com.massoftware.frontend.ui.windows.list.PlanDeCuentaTableUi2;
 import com.massoftware.frontend.ui.windows.list.PuntoDeEquilibrioTableUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
@@ -78,7 +79,7 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 
 	private void initObjectBO() {
 		this.usuarioBO = cx.buildUsuarioBO();
-		this.ejercicioContableBO = cx.buildEjercicioContableBO();		
+		this.ejercicioContableBO = cx.buildEjercicioContableBO();
 	}
 
 	private MenuBar getMenuBar() {
@@ -211,8 +212,12 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 		planDeCuentas.setIcon(FontAwesome.APPLE);
 		planDeCuentas.addClickListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
-				Notification.show("Clicked "
-						+ event.getButton().getDescription());
+				PlanDeCuantaFormUi win = new PlanDeCuantaFormUi(cx);
+				// getUI().addWindow(planDeCuentaForm);
+				getUI().addWindow(win);
+				win.focus();
+				// Notification.show("Clicked "
+				// + event.getButton().getDescription());
 			}
 		});
 		row.addComponent(planDeCuentas);
@@ -423,31 +428,18 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 
 	private void openPlanDeCuentaTableUi() {
 		try {
-
-			String title = cx.getEntityMetaData(
-					PlanDeCuenta.class.getCanonicalName()).getLabelPlural();
-
-			PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(cx, usuario);
-
-			Window win = new Window(title);
-			// win.setWidth((float)(ejerciciosContablesDesing.rootVH.getWidth()
-			// * 1.2),
-			// ejerciciosContablesDesing.grid.getHeightUnits());
-			win.setWidth("1050px");
+			// PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(cx, usuario);
+			PlanDeCuentaTableUi2 ui = new PlanDeCuentaTableUi2(cx, usuario);
+			Window win = new Window("Plan de cuentas");
 			win.setClosable(true);
 			win.setResizable(false);
 			win.setContent(ui);
-			// win.addCloseShortcut(KeyCode.ESCAPE, null);
 			getUI().addWindow(win);
-
 			win.center();
 			win.focus();
-
 		} catch (Exception e) {
-
 			LogAndNotification.print(e);
 		}
-
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
 import com.massoftware.frontend.ui.util.TableUi;
+import com.massoftware.frontend.ui.windows.form.PlanDeCuantaFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PlanDeCuenta;
@@ -371,8 +372,8 @@ public class PlanDeCuentaTableUi extends TableUi {
 
 	protected CustomComponent getWindowsContent(Window win, EntityId item) {
 
-		// return new CentroDeCostoContableFormUi(item, cx, win, this, usuario);
-		return null;
+//		return new PlanDeCuantaFormUi(cx, (PlanDeCuenta) item);
+		 return null;
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////////

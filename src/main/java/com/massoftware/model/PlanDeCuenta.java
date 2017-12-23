@@ -5,15 +5,17 @@ import org.cendra.common.model.EntityId;
 public class PlanDeCuenta extends EntityId implements Cloneable,
 		Comparable<PlanDeCuenta> {
 
+	
+//	Al crear controlar
+//		1 que tenga un padre que existe
+//		2 que no exista otra cuenta con el mismo código
+	
 	/*
-	 * Al crear controlar 
-	 * 	1 que tenga un padre que existe 
-	 * 	2 que no exista otra cuenta con el mismo código 
-	 * Al actualizar controlar 
-	 * 	1 que no tenga cuentas hijas 
-	 * 	2 que tenga un padre que exista 
-	 * Al borrar controlar 
-	 *  1 que no tengacuentas hijas
+	 *  
+	 *  
+	 *  Al actualizar controlar 1 que no tenga cuentas
+	 * hijas 2 que tenga un padre que exista Al borrar controlar 1 que no
+	 * tengacuentas hijas
 	 */
 
 	/**
@@ -147,12 +149,12 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 	}
 
 	public Double getPorcentaje() {
-//		porcentaje = nullIsZero(porcentaje);
+		// porcentaje = nullIsZero(porcentaje);
 		return porcentaje;
 	}
 
 	public void setPorcentaje(Double porcentaje) {
-//		porcentaje = nullIsZero(porcentaje);
+		// porcentaje = nullIsZero(porcentaje);
 		this.porcentaje = porcentaje;
 	}
 
@@ -218,9 +220,8 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 
 	@Override
 	public String toString() {
-		return "PlanDeCuenta [ejercicioContable=" + ejercicioContable
-				+ ", codigoCuenta=" + codigoCuenta + ", cuentaContable="
-				+ cuentaContable + ", nombre=" + nombre + "]";
+		return this.getEjercicioContable() + " " + this.getCodigoCuenta() + " "
+				+ this.getNombre();
 	}
 
 	@Override

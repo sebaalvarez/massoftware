@@ -55,7 +55,7 @@ public class LogAndNotification {
 		// notification.setDelayMsec(10000);
 		notification.show(Page.getCurrent());
 
-		e.printStackTrace();
+//		e.printStackTrace();
 	}
 
 	public static void print(InsertDuplicateException e) {
@@ -67,7 +67,7 @@ public class LogAndNotification {
 		// notification.setDelayMsec(10000);
 		notification.show(Page.getCurrent());
 
-		e.printStackTrace();
+//		e.printStackTrace();
 	}
 
 	public static void printSuccessOk(String msg) {

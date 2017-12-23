@@ -73,7 +73,8 @@ public class PlanDeCuentaBO {
 			boolean ordeByCuentaAgrupadora,
 			EjercicioContable ejercicioContable,
 			CentroDeCostoContable centroDeCostoContable,
-			PuntoDeEquilibrio puntoDeEquilibrio/*, String codigoCuenta */) throws Exception {
+			PuntoDeEquilibrio puntoDeEquilibrio/* , String codigoCuenta */)
+			throws Exception {
 
 		String sql = null;
 
@@ -152,6 +153,92 @@ public class PlanDeCuentaBO {
 			}
 
 			return list;
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
+	}
+
+	public Boolean ifExistsCodigoCuentaPadre(String codigoCuentaPadre,
+			Integer ejercicio) throws Exception {
+
+		String sql = null;
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+			sql = SQL_PG_1;
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			sql = SQL_MS_1;
+		}
+
+		sql += " WHERE ejercicioContable_ejercicio = ? AND codigoCuenta = ? ";
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			Object ejercicioArg = null;
+			if (ejercicio != null) {
+				ejercicioArg = ejercicio;
+			} else {
+				ejercicioArg = Integer.class;
+			}
+
+			Object codigoCuentaPadreArg = null;
+			if (codigoCuentaPadre != null) {
+				codigoCuentaPadreArg = codigoCuentaPadre;
+			} else {
+				codigoCuentaPadreArg = String.class;
+			}
+
+			return connectionWrapper.findToListByCendraConvention(sql,
+					ejercicioArg, codigoCuentaPadreArg).size() == 1;
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
+	}
+
+	public Boolean ifExistsCodigoCuenta(String codigoCuenta, Integer ejercicio)
+			throws Exception {
+
+		String sql = null;
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+			sql = SQL_PG_1;
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			sql = SQL_MS_1;
+		}
+
+		sql += " WHERE ejercicioContable_ejercicio = ? AND codigoCuenta = ? ";
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			Object ejercicioArg = null;
+			if (ejercicio != null) {
+				ejercicioArg = ejercicio;
+			} else {
+				ejercicioArg = Integer.class;
+			}
+
+			Object codigoCuentaArg = null;
+			if (codigoCuenta != null) {
+				codigoCuentaArg = codigoCuenta;
+			} else {
+				codigoCuentaArg = String.class;
+			}
+
+			return connectionWrapper.findToListByCendraConvention(sql,
+					ejercicioArg, codigoCuentaArg).size() == 1;
 
 		} catch (Exception e) {
 			throw e;
@@ -424,4 +511,157 @@ public class PlanDeCuentaBO {
 			connectionWrapper.close(connectionWrapper);
 		}
 	}
+
+	public PlanDeCuenta insert(PlanDeCuenta item) throws Exception {
+
+		String sql = null;
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+			sql = SQL_PG_2;
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			// sql = SQL_MS_2;
+		}
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			connectionWrapper.begin();
+
+			if (findByPlanDeCuenta(item) != null) {
+				throw new InsertDuplicateException(item.getCodigoCuenta());
+			}
+
+			Object id = null;
+			if (item.getId() != null) {
+				id = item.getId();
+			} else {
+				id = String.class;
+			}
+			Object ejercicioContable = null;
+			if (item.getEjercicioContable() != null
+					&& item.getEjercicioContable().getId() != null) {
+				ejercicioContable = item.getEjercicioContable().getId();
+			} else {
+				ejercicioContable = String.class;
+			}
+			Object codigoCuentaPadre = null;
+			if (item.getCodigoCuentaPadre() != null) {
+				codigoCuentaPadre = item.getCodigoCuentaPadre();
+			} else {
+				codigoCuentaPadre = String.class;
+			}
+			Object codigoCuenta = null;
+			if (item.getCodigoCuenta() != null) {
+				codigoCuenta = item.getCodigoCuenta();
+			} else {
+				codigoCuenta = String.class;
+			}
+			Object cuentaContable = null;
+			if (item.getCuentaContable() != null) {
+				cuentaContable = item.getCuentaContable();
+			} else {
+				cuentaContable = String.class;
+			}
+			Object nombre = null;
+			if (item.getNombre() != null) {
+				nombre = item.getNombre();
+			} else {
+				nombre = String.class;
+			}
+			Object imputable = null;
+			if (item.getImputable() != null) {
+				imputable = item.getImputable();
+			} else {
+				imputable = Boolean.class;
+			}
+			Object ajustaPorInflacion = null;
+			if (item.getAjustaPorInflacion() != null) {
+				ajustaPorInflacion = item.getAjustaPorInflacion();
+			} else {
+				ajustaPorInflacion = Boolean.class;
+			}
+			Object planDeCuentaEstado = null;
+			if (item.getPlanDeCuentaEstado() != null
+					&& item.getPlanDeCuentaEstado().getId() != null) {
+				planDeCuentaEstado = item.getPlanDeCuentaEstado().getId();
+			} else {
+				planDeCuentaEstado = String.class;
+			}
+			Object cuentaConApropiacion = null;
+			if (item.getCuentaConApropiacion() != null) {
+				cuentaConApropiacion = item.getCuentaConApropiacion();
+			} else {
+				cuentaConApropiacion = Boolean.class;
+			}
+			Object centroDeCostoContable = null;
+			if (item.getCentroDeCostoContable() != null
+					&& item.getCentroDeCostoContable().getId() != null) {
+				centroDeCostoContable = item.getCentroDeCostoContable().getId();
+			} else {
+				centroDeCostoContable = String.class;
+			}
+			Object cuentaAgrupadora = null;
+			if (item.getCuentaAgrupadora() != null) {
+				cuentaAgrupadora = item.getCuentaAgrupadora();
+			} else {
+				cuentaAgrupadora = String.class;
+			}
+			Object porcentaje = null;
+			if (item.getPorcentaje() != null) {
+				porcentaje = item.getPorcentaje();
+			} else {
+				porcentaje = Double.class;
+			}
+			Object puntoDeEquilibrio = null;
+			if (item.getPuntoDeEquilibrio() != null
+					&& item.getPuntoDeEquilibrio().getId() != null) {
+				puntoDeEquilibrio = item.getPuntoDeEquilibrio().getId();
+			} else {
+				puntoDeEquilibrio = String.class;
+			}
+			Object costoDeVenta = null;
+			if (item.getCostoDeVenta() != null
+					&& item.getCostoDeVenta().getId() != null) {
+				costoDeVenta = item.getCostoDeVenta().getId();
+			} else {
+				costoDeVenta = String.class;
+			}
+
+			int rows = -1;
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+				Object[] args = { id, ejercicioContable, codigoCuentaPadre,
+						codigoCuenta, cuentaContable, nombre, imputable,
+						ajustaPorInflacion, planDeCuentaEstado,
+						cuentaConApropiacion, centroDeCostoContable,
+						cuentaAgrupadora, porcentaje, puntoDeEquilibrio,
+						costoDeVenta };
+
+				rows = connectionWrapper.insert(sql, args);
+
+				if (rows != 1) {
+					throw new Exception(
+							"La sentencia debería afectar un solo registro, la sentencia afecto "
+									+ rows + " registros.");
+				}
+
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+			}
+
+			connectionWrapper.commit();
+
+			return item;
+
+		} catch (Exception e) {
+			connectionWrapper.rollBack();
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+	}
+
 }
