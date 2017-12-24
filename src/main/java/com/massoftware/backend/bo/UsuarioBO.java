@@ -68,9 +68,9 @@ public class UsuarioBO {
 		try {
 
 			if (dataSourceWrapper.isDatabasePostgreSql()) {
-				sql = SQL_PG_1 + " WHERE nombre = ?;";
+				sql = SQL_PG_1 + " WHERE nombre = ? ORDER BY nombre;";
 			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-				sql = SQL_MS_1 + " WHERE nombre = ?;";
+				sql = SQL_MS_1 + " WHERE nombre = ? ORDER BY nombre;";
 			}
 
 			@SuppressWarnings("unchecked")
