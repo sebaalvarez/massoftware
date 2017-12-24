@@ -33,17 +33,18 @@ public class LogAndNotification {
 
 		e.printStackTrace();
 	}
-	
-	public static void print(DeleteForeingObjectConflictException e, String humanObject) {
+
+	public static void print(DeleteForeingObjectConflictException e,
+			String humanObject) {
 		Notification notification = new Notification("Objeto no borrable",
-				e.getHumanMsg(humanObject), Type.WARNING_MESSAGE);
+				e.getHumanMsg(), Type.WARNING_MESSAGE);
 		// notification.setStyleName("warning failure");
 		notification.setStyleName("tray failure");
 		notification.setPosition(Position.BOTTOM_LEFT);
 		// notification.setDelayMsec(10000);
 		notification.show(Page.getCurrent());
-		
-//		e.printStackTrace();
+
+		// e.printStackTrace();
 	}
 
 	public static void print(InvalidValueException e) {
@@ -55,7 +56,7 @@ public class LogAndNotification {
 		// notification.setDelayMsec(10000);
 		notification.show(Page.getCurrent());
 
-//		e.printStackTrace();
+		// e.printStackTrace();
 	}
 
 	public static void print(InsertDuplicateException e) {
@@ -67,7 +68,7 @@ public class LogAndNotification {
 		// notification.setDelayMsec(10000);
 		notification.show(Page.getCurrent());
 
-//		e.printStackTrace();
+		// e.printStackTrace();
 	}
 
 	public static void printSuccessOk(String msg) {

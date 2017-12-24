@@ -429,11 +429,12 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 	private void openPlanDeCuentaTableUi() {
 		try {
 			// PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(cx, usuario);
-			PlanDeCuentaTableUi2 ui = new PlanDeCuentaTableUi2(cx, usuario);
+			
 			Window win = new Window("Plan de cuentas");
 			win.setClosable(true);
 			win.setResizable(false);
-			win.setContent(ui);
+			PlanDeCuentaTableUi2 ui = new PlanDeCuentaTableUi2(win, cx, usuario);
+			win.setContent(ui);			
 			getUI().addWindow(win);
 			win.center();
 			win.focus();

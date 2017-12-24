@@ -3,10 +3,12 @@ package com.massoftware.backend.bo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
+import com.massoftware.frontend.ui.util.FormatPlanDeCuentaCodigoCuenta;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PlanDeCuenta;
@@ -18,8 +20,10 @@ public class PlanDeCuentaBO {
 
 	private final String SQL_PG_1 = "SELECT * FROM massoftware.vPlanDeCuenta";
 	private final String SQL_PG_2 = "INSERT INTO massoftware.plandecuenta(id, ejerciciocontable, codigocuentapadre, codigocuenta, cuentacontable, nombre, imputable, ajustaporinflacion, plandecuentaestado, cuentaconapropiacion, centrodecostocontable, cuentaagrupadora, porcentaje, puntodeequilibrio, costodeventa)	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private final String SQL_PG_4 = "DELETE FROM massoftware.PlanDeCuenta WHERE id = ?";
 
 	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.vPlanDeCuenta";
+	private final String SQL_MS_4 = "DELETE FROM [dbo].[PlanDeCuentas] WHERE [EJERCICIO] = ? AND [CUENTACONTABLE] = ?";
 
 	public PlanDeCuentaBO(DataSourceWrapper dataSourceWrapper) {
 		super();
@@ -239,6 +243,49 @@ public class PlanDeCuentaBO {
 
 			return connectionWrapper.findToListByCendraConvention(sql,
 					ejercicioArg, codigoCuentaArg).size() == 1;
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
+	}
+
+	public Boolean ifExistsCodigoCuentaHijo(String codigoCuentaPadre,
+			Integer ejercicio) throws Exception {
+
+		String sql = null;
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+			sql = SQL_PG_1;
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			sql = SQL_MS_1;
+		}
+
+		sql += " WHERE ejercicioContable_ejercicio = ? AND codigoCuentaPadre = ? ";
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			Object ejercicioArg = null;
+			if (ejercicio != null) {
+				ejercicioArg = ejercicio;
+			} else {
+				ejercicioArg = Integer.class;
+			}
+
+			Object codigoCuentaPadreArg = null;
+			if (codigoCuentaPadre != null) {
+				codigoCuentaPadreArg = codigoCuentaPadre;
+			} else {
+				codigoCuentaPadreArg = String.class;
+			}
+
+			return connectionWrapper.findToListByCendraConvention(sql,
+					ejercicioArg, codigoCuentaPadreArg).size() == 1;
 
 		} catch (Exception e) {
 			throw e;
@@ -662,6 +709,77 @@ public class PlanDeCuentaBO {
 		} finally {
 			connectionWrapper.close(connectionWrapper);
 		}
+	}
+
+	public String delete(String id, String codigoCuenta, Integer ejercicio,
+			String cuentaContable) throws Exception {
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			connectionWrapper.begin();
+
+			if (ifExistsCodigoCuentaHijo(codigoCuenta, ejercicio) == true) {
+				String msg = "No se puede borrar la cuenta. La cuenta "
+						+ FormatPlanDeCuentaCodigoCuenta.format(codigoCuenta)
+						+ "  - " + cuentaContable + " del ejercicio "
+						+ ejercicio + ", tiene otras cuentas asociadas.";
+
+				throw new DeleteForeingObjectConflictException(msg);
+			}
+
+			int rows = -1;
+
+			if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+				Object idArg = null;
+				if (id != null) {
+					idArg = id;
+				} else {
+					idArg = String.class;
+				}
+
+				rows = connectionWrapper.delete(SQL_PG_4, idArg);
+
+			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+				Object ejercicioArg = null;
+				if (ejercicio != null) {
+					ejercicioArg = ejercicio;
+				} else {
+					ejercicioArg = Integer.class;
+				}
+
+				Object cuentaContableArg = null;
+				if (cuentaContable != null) {
+					cuentaContableArg = cuentaContable;
+				} else {
+					cuentaContableArg = String.class;
+				}
+
+				rows = connectionWrapper.delete(SQL_MS_4, ejercicioArg,
+						cuentaContableArg);
+			}
+
+			if (rows != 1) {
+				throw new Exception(
+						"La sentencia debería afectar un solo registro, la sentencia afecto "
+								+ rows + " registros.");
+			}
+
+			connectionWrapper.commit();
+
+			return id;
+
+		} catch (Exception e) {
+			connectionWrapper.rollBack();
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
 	}
 
 }

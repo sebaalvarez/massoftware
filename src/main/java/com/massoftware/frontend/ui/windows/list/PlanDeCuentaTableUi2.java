@@ -3,10 +3,14 @@ package com.massoftware.frontend.ui.windows.list;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cendra.common.model.EntityId;
+import org.cendra.ex.crud.DeleteForeingObjectConflictException;
+
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
+import com.massoftware.frontend.ui.util.YesNoDialog;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PlanDeCuenta;
@@ -27,6 +31,7 @@ import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class PlanDeCuentaTableUi2 extends CustomComponent {
@@ -38,7 +43,8 @@ public class PlanDeCuentaTableUi2 extends CustomComponent {
 
 	// ----------------------------------------------
 
-	private BackendContext cx;
+	protected Window window;
+	protected BackendContext cx;
 	protected Usuario usuario;
 
 	// ----------------------------------------------
@@ -91,9 +97,11 @@ public class PlanDeCuentaTableUi2 extends CustomComponent {
 
 	// ----------------------------------------------
 
-	public PlanDeCuentaTableUi2(BackendContext cx, Usuario usuario) {
+	public PlanDeCuentaTableUi2(Window window, BackendContext cx,
+			Usuario usuario) {
 		super();
 		try {
+			this.window = window;
 			this.cx = cx;
 			this.usuario = usuario;
 			viewPort768x1024();
@@ -343,12 +351,12 @@ public class PlanDeCuentaTableUi2 extends CustomComponent {
 				"cuentaAgrupadora", "porcentaje", "puntoDeEquilibrio",
 				"costoDeVenta");
 
-		//.......
-		
+		// .......
+
 		planDeCuentasGRD.getColumn("ejercicioContable").setWidth(80);
 		planDeCuentasGRD.getColumn("codigoCuenta").setWidth(140);
-		
-		//.......
+
+		// .......
 
 		planDeCuentasGRD.getColumn("ejercicioContable").setHidable(true);
 		planDeCuentasGRD.getColumn("ejercicioContable").setHidable(true);
@@ -365,9 +373,9 @@ public class PlanDeCuentaTableUi2 extends CustomComponent {
 		planDeCuentasGRD.getColumn("porcentaje").setHidable(true);
 		planDeCuentasGRD.getColumn("puntoDeEquilibrio").setHidable(true);
 		planDeCuentasGRD.getColumn("costoDeVenta").setHidable(true);
-		
-		//.......
-		
+
+		// .......
+
 		planDeCuentasGRD.getColumn("ejercicioContable").setHidden(true);
 		planDeCuentasGRD.getColumn("codigoCuentaPadre").setHidden(true);
 		planDeCuentasGRD.getColumn("codigoCuenta").setHeaderCaption(
@@ -462,9 +470,79 @@ public class PlanDeCuentaTableUi2 extends CustomComponent {
 		eliminarBTN.setIcon(FontAwesome.TRASH);
 		eliminarBTN.setCaption("Eliminar");
 
+		eliminarBTN.addClickListener(e -> {
+			eliminarBTNClick();
+		});
+
 		barraDeHerramientasFila2.addComponent(eliminarBTN);
 
 		// ----------------------------------------------
+		// ----------------------------------------------
+
+	}
+
+	protected void eliminarBTNClick() {
+		try {
+
+			if (planDeCuentasGRD.getSelectedRow() != null) {
+
+				PlanDeCuenta item = (PlanDeCuenta) planDeCuentasGRD.getSelectedRow();
+
+				getUI().addWindow(
+						new YesNoDialog("Eliminar",
+								"Esta seguro de eliminar la cuenta " + item,
+								new YesNoDialog.Callback() {
+									public void onDialogResult(boolean yes) {
+										if (yes) {
+											delete();
+										}
+									}
+								}));
+			}
+
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
+
+	protected void delete() {
+		try {
+
+			if (planDeCuentasGRD.getSelectedRow() != null) {
+
+				PlanDeCuenta item = (PlanDeCuenta) planDeCuentasGRD
+						.getSelectedRow();
+				try {
+
+					EjercicioContable ejercicioContable = item
+							.getEjercicioContable();
+					Integer ejercicio = null;
+					if (ejercicioContable != null) {
+						ejercicio = ejercicioContable.getEjercicio();
+					}
+
+					cx.buildPlanDeCuentaBO().delete(item.getId(),
+							item.getCodigoCuenta(), ejercicio,
+							item.getCuentaContable());
+
+				} catch (DeleteForeingObjectConflictException e) {
+					LogAndNotification.print(e,
+							"Cuenta contable " + item.getId());
+					return;
+				}
+
+				String msg = "Se eliminó con éxito la cuenta " + item;
+
+				LogAndNotification.printSuccessOk(msg);
+
+				loadModelViewPort768x1024();
+			}
+
+		} catch (DeleteForeingObjectConflictException e) {
+			LogAndNotification.print(e, "Cuenta contable");
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
 	}
 
 	protected void filtroGenericoTXTTextChange(String filterValue) {
@@ -580,6 +658,9 @@ public class PlanDeCuentaTableUi2 extends CustomComponent {
 			filtroGenericoTXT.setInputPrompt(caption);
 
 			removerFiltroGenericoBTNClick();
+
+			filtroGenericoTXT.focus();
+
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -726,6 +807,10 @@ public class PlanDeCuentaTableUi2 extends CustomComponent {
 			planDeCuentasGRD.setEnabled(enabled);
 			barraDeHerramientasFila1.setEnabled(enabled);
 			barraDeHerramientasFila2.setEnabled(enabled);
+
+			if (enabled) {
+				planDeCuentasGRDSort();
+			}
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
