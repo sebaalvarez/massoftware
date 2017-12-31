@@ -28,8 +28,7 @@ public class SimpleStringTraslateFilter implements Filter {
 		this.filterString = Traslate.translate(filterString, ignoreCase).trim();
 		this.ignoreCase = ignoreCase;
 		this.matchMode = matchMode;
-		
-		
+
 	}
 
 	@Override
@@ -42,43 +41,63 @@ public class SimpleStringTraslateFilter implements Filter {
 		if (propertyValue == null) {
 			return false;
 		}
-//		if(filterString.trim().length() == 0){
-//			return true;
-//		}
-		
-		final String value = Traslate.translate(
-				propertyValue.toString().trim(), ignoreCase);
+		// if(filterString.trim().length() == 0){
+		// return true;
+		// }
 
-		if (matchMode.equalsIgnoreCase(STARTS_WITCH)) {
-			if (!value.startsWith(filterString.trim())) {
-                return false;
-            }
-		} else if (matchMode.equalsIgnoreCase(ENDS_WITCH)) {
-			if (!value.endsWith(filterString.trim())) {
-                return false;
-            }
-		} else if (matchMode.equalsIgnoreCase(CONTAINS)) {
-			if (!value.contains(filterString.trim())) {
-                return false;
-            }			
-		} else if (matchMode.equalsIgnoreCase(CONTAINS_WORDS)) {
-			String words[] = filterString.trim().split(" ");
-			boolean b = false;
-			
-			for (String word : words) {
-				word = word.trim();
-				
-				if (word.length() > 0){
-					if (value.contains(word)) {
-		                b = true;
-		            }					
-				}
+		if (propertyValue instanceof Boolean) {
+			Boolean b = (Boolean) propertyValue;
+
+			if (b == true && filterString.equalsIgnoreCase("si")) {
+				return true;
 			}
-			
-			if (b == false) {
-                return false;
-            }
+			if (b == true && filterString.equalsIgnoreCase("s")) {
+				return true;
+			}
+			if (b == false && filterString.equalsIgnoreCase("n")) {
+				return true;
+			}
+			if (b == false && filterString.equalsIgnoreCase("no")) {
+				return true;
+			}
 
+			return false;
+
+		} else {
+			final String value = Traslate.translate(propertyValue.toString()
+					.trim(), ignoreCase);
+
+			if (matchMode.equalsIgnoreCase(STARTS_WITCH)) {
+				if (!value.startsWith(filterString.trim())) {
+					return false;
+				}
+			} else if (matchMode.equalsIgnoreCase(ENDS_WITCH)) {
+				if (!value.endsWith(filterString.trim())) {
+					return false;
+				}
+			} else if (matchMode.equalsIgnoreCase(CONTAINS)) {
+				if (!value.contains(filterString.trim())) {
+					return false;
+				}
+			} else if (matchMode.equalsIgnoreCase(CONTAINS_WORDS)) {
+				String words[] = filterString.trim().split(" ");
+				boolean b = false;
+
+				for (String word : words) {
+					word = word.trim();
+
+					if (word.length() > 0) {
+						if (value.contains(word)) {
+							b = true;
+						}
+					}
+				}
+
+				if (b == false) {
+					return false;
+				}
+
+			}
 		}
 
 		return true;
@@ -164,19 +183,19 @@ public class SimpleStringTraslateFilter implements Filter {
 		return matchMode;
 	}
 
-//	/**
-//	 * Returns true if the filter only applies to the beginning of the value
-//	 * string, false for any location in the value.
-//	 *
-//	 * Note: this method is intended only for implementations of lazy string
-//	 * filters and may change in the future.
-//	 *
-//	 * @return true if checking for matches at the beginning of the value only,
-//	 *         false if matching any part of value
-//	 */
-//	public boolean isOnlyMatchPrefix() {
-//		return onlyMatchPrefix;
-//	}
-	
-	
+	// /**
+	// * Returns true if the filter only applies to the beginning of the value
+	// * string, false for any location in the value.
+	// *
+	// * Note: this method is intended only for implementations of lazy string
+	// * filters and may change in the future.
+	// *
+	// * @return true if checking for matches at the beginning of the value
+	// only,
+	// * false if matching any part of value
+	// */
+	// public boolean isOnlyMatchPrefix() {
+	// return onlyMatchPrefix;
+	// }
+
 }

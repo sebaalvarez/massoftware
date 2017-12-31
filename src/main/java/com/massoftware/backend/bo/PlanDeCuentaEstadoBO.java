@@ -41,7 +41,14 @@ public class PlanDeCuentaEstadoBO {
 
 		try {
 
-			return connectionWrapper.findToListByCendraConvention(sql);
+			List<PlanDeCuentaEstado> list = connectionWrapper
+					.findToListByCendraConvention(sql);
+
+			for (PlanDeCuentaEstado item : list) {
+				item.validate();
+			}
+
+			return list;
 
 		} catch (Exception e) {
 			throw e;
@@ -71,6 +78,7 @@ public class PlanDeCuentaEstadoBO {
 					.findToListByCendraConvention(sql, tipo);
 
 			if (list.size() == 1) {
+				list.get(0).validate();
 				return list.get(0);
 			}
 

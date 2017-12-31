@@ -41,7 +41,13 @@ public class CostoDeVentaBO {
 
 		try {
 
-			return connectionWrapper.findToListByCendraConvention(sql);
+			List<CostoDeVenta> list =  connectionWrapper.findToListByCendraConvention(sql);
+			
+			for (CostoDeVenta item : list) {
+				item.validate();
+			}
+			
+			return list;
 
 		} catch (Exception e) {
 			throw e;
@@ -71,6 +77,7 @@ public class CostoDeVentaBO {
 					.findToListByCendraConvention(sql, tipo);
 
 			if (list.size() == 1) {
+				list.get(0).validate();
 				return list.get(0);
 			}
 

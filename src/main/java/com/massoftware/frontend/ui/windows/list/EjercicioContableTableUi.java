@@ -20,6 +20,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid.HeaderCell;
 import com.vaadin.ui.Grid.HeaderRow;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.renderers.DateRenderer;
@@ -91,6 +92,7 @@ public class EjercicioContableTableUi extends TableUi {
 		grid.getColumn(attsName[2]).setHeaderCaption(attsLabelShort[2]);
 		grid.getColumn(attsName[3]).setHeaderCaption(attsLabelShort[3]);
 		grid.getColumn(attsName[4]).setHeaderCaption(attsLabelShort[4]);
+		
 
 	}
 

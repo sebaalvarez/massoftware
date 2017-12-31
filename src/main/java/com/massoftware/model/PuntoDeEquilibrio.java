@@ -93,4 +93,38 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 				+ " - " + this.getEjercicioContable();
 	}
 
+	public boolean validate() {
+
+		super.validate();
+
+		if (this.ejercicioContable == null) {
+
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".ejercicioContable es nulo.");
+		} else {
+			this.ejercicioContable.validate();
+		}
+
+		if (this.puntoDeEquilibrio == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".puntoDeEquilibrio es nulo.");
+		}
+		
+		if (this.nombre == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".nombre es nulo.");
+		}
+		
+		if (this.puntoDeEquilibrioTipo == null) {
+
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".puntoDeEquilibrioTipo es nulo.");
+		} else {			
+			this.puntoDeEquilibrioTipo.validate();
+		}
+
+
+		return true;
+	}
+	
 }

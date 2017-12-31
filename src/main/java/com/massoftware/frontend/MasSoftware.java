@@ -39,8 +39,8 @@ public class MasSoftware extends UI {
 	protected void init(VaadinRequest vaadinRequest) {
 
 		try {
-//			BackendContext cx = new BackendContext("sqlserver");
-			BackendContext cx = new BackendContext("Postgresql");
+			BackendContext cx = new BackendContext("sqlserver");
+//			BackendContext cx = new BackendContext("Postgresql");
 
 			Usuario usuario = cx.buildUsuarioBO()
 					.findByNombre("Administrador");

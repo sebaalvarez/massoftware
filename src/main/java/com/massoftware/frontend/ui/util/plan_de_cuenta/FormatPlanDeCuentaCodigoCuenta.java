@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.util;
+package com.massoftware.frontend.ui.util.plan_de_cuenta;
 
 public class FormatPlanDeCuentaCodigoCuenta {
 

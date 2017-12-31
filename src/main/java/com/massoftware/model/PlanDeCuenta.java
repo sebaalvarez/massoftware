@@ -117,6 +117,9 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 
 	public void setPlanDeCuentaEstado(PlanDeCuentaEstado planDeCuentaEstado) {
 		this.planDeCuentaEstado = planDeCuentaEstado;
+		if(this.planDeCuentaEstado != null && this.planDeCuentaEstado.getId() == null){
+			throw new IllegalArgumentException(this.planDeCuentaEstado.getClass().getCanonicalName() + ".id is null");
+		}
 	}
 
 	public Boolean getCuentaConApropiacion() {
@@ -228,6 +231,69 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 	public int compareTo(PlanDeCuenta o) {
 
 		return this.getCodigoCuenta().compareTo(o.getCodigoCuenta());
+	}
+	
+	public boolean validate() {
+
+		super.validate();
+
+		if (this.ejercicioContable == null) {
+
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".ejercicioContable es nulo.");
+		} else {
+			this.ejercicioContable.validate();
+		}
+
+		if (this.codigoCuentaPadre == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".codigoCuentaPadre es nulo.");
+		}
+		
+		if (this.codigoCuenta == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".codigoCuenta es nulo.");
+		}
+		
+		if (this.cuentaContable == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".cuentaContable es nulo.");
+		}
+		
+		if (this.nombre == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".nombre es nulo.");
+		}
+		
+		if (this.imputable == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".imputable es nulo.");
+		}
+		
+		if (this.ajustaPorInflacion == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".ajustaPorInflacion es nulo.");
+		}
+		
+		if (this.planDeCuentaEstado == null) {
+
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".planDeCuentaEstado es nulo.");
+		} else {
+			this.planDeCuentaEstado.validate();
+		}
+		
+		if (this.cuentaConApropiacion == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".cuentaConApropiacion es nulo.");
+		}
+		
+		if (this.porcentaje == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".porcentaje es nulo.");
+		}
+
+		return true;
 	}
 
 }

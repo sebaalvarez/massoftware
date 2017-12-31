@@ -337,6 +337,7 @@ ALTER TABLE [dbo].[SSECUR_User] ADD DEFAULT_EJERCICIO_CONTABLE int NULL;
 	-- SELECT * FROM VetaroRep.dbo.[vPlanDeCuenta] ;
 	-- SELECT * FROM VetaroRep.dbo.[vPlanDeCuenta] WHERE codigoCuentaPadre IS NULL OR codigoCuentaPadre = '' ;
 	-- SELECT * FROM VetaroRep.dbo.[vPlanDeCuenta] WHERE id = '2017-11010200002' ;	
+	-- SELECT * FROM VetaroRep.dbo.[vPlanDeCuenta] WHERE id = '2017-10000000000' ;	
 	-- SELECT * FROM VetaroRep.dbo.[vPlanDeCuenta] WHERE nombre = 'Moneda Extranjera' ;	
 	-- SELECT * FROM VetaroRep.dbo.vPlanDeCuenta ORDER BY ejercicioContable_ejercicio DESC, codigoCuenta;		
 	-- SELECT * FROM VetaroRep.dbo.vPlanDeCuenta ORDER BY ejercicioContable_ejercicio DESC  , codigoCuenta ASC;

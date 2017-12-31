@@ -176,6 +176,8 @@ public class Traslate {
 			value = value.replaceAll("Ñ", "N");
 		}
 
+		value = value.replaceAll("-", "");
+		value = value.replaceAll("_", "");
 		value = value.replaceAll(",", "");
 		value = value.replaceAll(";", "");
 		value = value.replaceAll("'", "");

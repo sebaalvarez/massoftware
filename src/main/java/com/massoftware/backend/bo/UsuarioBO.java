@@ -45,6 +45,10 @@ public class UsuarioBO {
 			@SuppressWarnings({ "unchecked" })
 			List<Usuario> list = connectionWrapper
 					.findToListByCendraConvention(sql);
+			
+			for(Usuario item : list){
+				item.validate();
+			}
 
 			return list;
 
@@ -77,6 +81,7 @@ public class UsuarioBO {
 			List<Usuario> usuarios = connectionWrapper
 					.findToListByCendraConvention(sql, nombre);
 			if (usuarios.size() == 1) {
+				usuarios.get(0).validate();
 				return usuarios.get(0);
 			}
 

@@ -80,6 +80,7 @@ public class EjercicioContableBO {
 //			return ejercicioContable;
 			
 			if (list.size() == 1) {
+				list.get(0).validate();
 				return list.get(0);
 			}
 
@@ -146,6 +147,11 @@ public class EjercicioContableBO {
 			List<EjercicioContable> list = connectionWrapper
 					.findToListByCendraConvention(sql, ejercicioEndsWith);
 
+			
+			for(EjercicioContable item : list){
+				item.validate();
+			}
+			
 			return list;
 
 		} catch (Exception e) {
@@ -193,6 +199,7 @@ public class EjercicioContableBO {
 			List<EjercicioContable> list = connectionWrapper
 					.findToListByCendraConvention(sql, maxEjercicio);
 			if (list.size() == 1) {
+				list.get(0).validate();
 				ejercicioContable = list.get(0);
 			}
 

@@ -145,7 +145,7 @@ public class EjercicioContableFormUi extends FormUi {
 		// --------------------------------------------------------------------
 
 		ejercicioTXT = new TextField(attsLabelShort[0],
-				beanItem.getItemProperty(attsName[0]));
+				beanItem.getItemProperty(attsName[0]));		
 		ejercicioTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
 		ejercicioTXT.setRequired(true);
 		ejercicioTXT.setRequiredError(ejercicioTXTMsgError1);

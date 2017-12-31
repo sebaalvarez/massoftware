@@ -10,7 +10,7 @@ import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.windows.form.PlanDeCuantaFormUi;
 import com.massoftware.frontend.ui.windows.list.CentroDeCostoContableTableUi;
 import com.massoftware.frontend.ui.windows.list.EjercicioContableTableUi;
-import com.massoftware.frontend.ui.windows.list.PlanDeCuentaTableUi2;
+import com.massoftware.frontend.ui.windows.list.PlanDeCuentaTableUi;
 import com.massoftware.frontend.ui.windows.list.PuntoDeEquilibrioTableUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
@@ -212,12 +212,8 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 		planDeCuentas.setIcon(FontAwesome.APPLE);
 		planDeCuentas.addClickListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
-				PlanDeCuantaFormUi win = new PlanDeCuantaFormUi(cx);
-				// getUI().addWindow(planDeCuentaForm);
-				getUI().addWindow(win);
-				win.focus();
-				// Notification.show("Clicked "
-				// + event.getButton().getDescription());
+				Notification.show("Clicked "
+						+ event.getButton().getDescription());
 			}
 		});
 		row.addComponent(planDeCuentas);
@@ -429,12 +425,12 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 	private void openPlanDeCuentaTableUi() {
 		try {
 			// PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(cx, usuario);
-			
+
 			Window win = new Window("Plan de cuentas");
 			win.setClosable(true);
 			win.setResizable(false);
-			PlanDeCuentaTableUi2 ui = new PlanDeCuentaTableUi2(win, cx, usuario);
-			win.setContent(ui);			
+			PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(win, cx, usuario);
+			win.setContent(ui);
 			getUI().addWindow(win);
 			win.center();
 			win.focus();

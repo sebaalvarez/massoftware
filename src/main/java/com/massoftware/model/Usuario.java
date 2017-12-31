@@ -118,4 +118,21 @@ public class Usuario extends EntityId implements Cloneable, Comparable<Usuario> 
 		return "";
 	}
 
+	public boolean validate() throws IllegalArgumentException {
+
+		super.validate();
+
+		if (this.numero == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".numero es nulo.");
+		}
+
+		if (this.nombre == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".nombre es nulo.");
+		}
+
+		return true;
+	}
+
 }

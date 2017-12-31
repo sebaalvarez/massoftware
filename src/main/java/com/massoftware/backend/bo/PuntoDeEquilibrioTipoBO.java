@@ -41,7 +41,13 @@ public class PuntoDeEquilibrioTipoBO {
 
 		try {
 
-			return connectionWrapper.findToListByCendraConvention(sql);
+			List<PuntoDeEquilibrioTipo> list = connectionWrapper.findToListByCendraConvention(sql);
+			
+			for(PuntoDeEquilibrioTipo item : list){
+				item.validate();
+			}
+			
+			return list;
 
 		} catch (Exception e) {
 			throw e;
@@ -71,6 +77,7 @@ public class PuntoDeEquilibrioTipoBO {
 					.findToListByCendraConvention(sql, tipo);
 
 			if (list.size() == 1) {
+				list.get(0).validate();
 				return list.get(0);
 			}
 

@@ -29,9 +29,9 @@ public class PuntoDeEquilibrioTipo extends EntityId implements Cloneable,
 	private Integer codigo;
 	private String nombre;
 
-//	public PuntoDeEquilibrioTipo() {
-//
-//	}
+	// public PuntoDeEquilibrioTipo() {
+	//
+	// }
 
 	// public PuntoDeEquilibrioTipo(Integer tipo) {
 	// super();
@@ -101,7 +101,7 @@ public class PuntoDeEquilibrioTipo extends EntityId implements Cloneable,
 
 	@Override
 	public PuntoDeEquilibrioTipo clone() throws CloneNotSupportedException {
-		
+
 		PuntoDeEquilibrioTipo other = new PuntoDeEquilibrioTipo();
 
 		other.setId(this.getId());
@@ -120,6 +120,23 @@ public class PuntoDeEquilibrioTipo extends EntityId implements Cloneable,
 	@Override
 	public String toString() {
 		return "(" + getCodigo() + ") " + getNombre();
+	}
+
+	public boolean validate() throws IllegalArgumentException {
+
+		super.validate();
+
+		if (this.codigo == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".codigo es nulo.");
+		}
+
+		if (this.nombre == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".nombre es nulo.");
+		}
+
+		return true;
 	}
 
 }

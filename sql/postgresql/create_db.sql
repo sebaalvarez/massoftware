@@ -391,7 +391,8 @@ CREATE TABLE massoftware.PlanDeCuenta
 CREATE UNIQUE INDEX u_PlanDeCuenta_ejercicioContable_codigoCuenta ON massoftware.PlanDeCuenta (ejercicioContable, LOWER(TRIM(codigoCuenta)));
 CREATE UNIQUE INDEX u_PlanDeCuenta_ejercicioContable_codigoCuentaPadre_codigoCuenta ON massoftware.PlanDeCuenta (ejercicioContable, LOWER(TRIM(codigoCuentaPadre)), LOWER(TRIM(codigoCuenta)));
 CREATE UNIQUE INDEX u_PlanDeCuenta_ejercicioContable_cuentaContable ON massoftware.PlanDeCuenta (ejercicioContable, LOWER(TRIM(cuentaContable)));
-CREATE UNIQUE INDEX u_PlanDeCuenta_ejercicioContable_nombre ON massoftware.PlanDeCuenta (ejercicioContable, LOWER(TRIM(codigoCuenta)), LOWER(TRIM(nombre)));
+-- CREATE UNIQUE INDEX u_PlanDeCuenta_ejercicioContable_nombre ON massoftware.PlanDeCuenta (ejercicioContable, LOWER(TRIM(nombre)));
+CREATE UNIQUE INDEX u_PlanDeCuenta_ejercicioContable_codigoCuenta_nombre ON massoftware.PlanDeCuenta (ejercicioContable, LOWER(TRIM(codigoCuenta)), LOWER(TRIM(nombre)));
 
 -- ---------------------------------------------------------------------------------------------------------------------------
 

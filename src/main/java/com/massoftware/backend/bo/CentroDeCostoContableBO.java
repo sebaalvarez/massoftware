@@ -84,6 +84,10 @@ public class CentroDeCostoContableBO {
 				list = connectionWrapper.findToListByCendraConvention(sql);
 
 			}
+			
+			for(CentroDeCostoContable item : list){
+				item.validate();
+			}
 
 			return list;
 
@@ -174,6 +178,7 @@ public class CentroDeCostoContableBO {
 					.findToListByCendraConvention(sql, numero, ejercicio);
 
 			if (list.size() == 1) {
+				list.get(0).validate();
 				return list.get(0);
 			}
 

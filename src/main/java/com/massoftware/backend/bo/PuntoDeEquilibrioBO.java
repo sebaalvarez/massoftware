@@ -77,11 +77,24 @@ public class PuntoDeEquilibrioBO {
 
 			if (ejercicio != null) {
 
-				return connectionWrapper.findToListByCendraConvention(sql,
-						ejercicio);
+				List<PuntoDeEquilibrio> list = connectionWrapper
+						.findToListByCendraConvention(sql, ejercicio);
+
+				for (PuntoDeEquilibrio item : list) {
+					item.validate();
+				}
+
+				return list;
 			} else {
 
-				return connectionWrapper.findToListByCendraConvention(sql);
+				List<PuntoDeEquilibrio> list = connectionWrapper
+						.findToListByCendraConvention(sql);
+
+				for (PuntoDeEquilibrio item : list) {
+					item.validate();
+				}
+
+				return list;
 
 			}
 
@@ -196,6 +209,10 @@ public class PuntoDeEquilibrioBO {
 			throw e;
 		} finally {
 			connectionWrapper.close(connectionWrapper);
+		}
+
+		if (puntoDeEquilibrio != null) {
+			puntoDeEquilibrio.validate();
 		}
 
 		return puntoDeEquilibrio;

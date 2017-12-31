@@ -183,4 +183,36 @@ public class EjercicioContable extends EntityId implements Cloneable,
 		return this.getEjercicio() + "";
 	}
 
+	public boolean validate() throws IllegalArgumentException {
+		
+		super.validate();
+		
+		if (this.ejercicio == null || this.ejercicio == 0) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".ejercicio es nulo o igual a cero.");
+		}
+
+		if (this.fechaApertura == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".fechaApertura es nulo.");
+		}
+
+		if (this.fechaCierre == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".fechaCierre es nulo.");
+		}
+
+		if (this.ejercicioCerrado == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".ejercicioCerrado es nulo.");
+		}
+
+		if (this.ejercicioCerradoModulos == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".ejercicioCerradoModulos es nulo.");
+		}
+
+		return true;
+	}
+
 }

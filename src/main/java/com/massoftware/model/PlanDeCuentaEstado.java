@@ -97,5 +97,22 @@ public class PlanDeCuentaEstado extends EntityId implements Cloneable,
 		return "(" + getCodigo() + ") " + getNombre();
 
 	}
+	
+	public boolean validate() throws IllegalArgumentException {
+
+		super.validate();
+
+		if (this.codigo == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".codigo es nulo.");
+		}
+
+		if (this.nombre == null) {
+			throw new IllegalArgumentException(this.getClass()
+					.getCanonicalName() + ".nombre es nulo.");
+		}
+
+		return true;
+	}
 
 }

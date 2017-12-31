@@ -1,7 +1,9 @@
 package com.massoftware.frontend.ui.windows.form;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.cendra.ex.crud.InsertDuplicateException;
 import org.vaadin.inputmask.InputMask;
@@ -9,8 +11,11 @@ import org.vaadin.inputmask.InputMask;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.StringLengthValidatorInputMask;
-import com.massoftware.frontend.ui.util.StringPlanDeCuentaCodigoPadreValidator;
-import com.massoftware.frontend.ui.util.StringPlanDeCuentaCodigoValidator;
+import com.massoftware.frontend.ui.util.plan_de_cuenta.FormatPlanDeCuentaCodigoCuenta;
+import com.massoftware.frontend.ui.util.plan_de_cuenta.ValidatorPlanDeCuentaCodigo;
+import com.massoftware.frontend.ui.util.plan_de_cuenta.ValidatorPlanDeCuentaCodigoPadre;
+import com.massoftware.frontend.ui.util.plan_de_cuenta.ValidatorPlanDeCuentaCuentaContable;
+import com.massoftware.frontend.ui.windows.list.PlanDeCuentaTableUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CostoDeVenta;
 import com.massoftware.model.EjercicioContable;
@@ -22,14 +27,20 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.StringToDoubleConverter;
+import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutAction.ModifierKey;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TabSheet;
@@ -37,7 +48,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class PlanDeCuantaFormUi extends Window {
+public class PlanDeCuantaFormUi extends CustomComponent {
 
 	/**
 	 * 
@@ -45,12 +56,16 @@ public class PlanDeCuantaFormUi extends Window {
 	private static final long serialVersionUID = -2532562154487745403L;
 
 	// ----------------------------------------------
-	
+
+	private Window window;
 	private BackendContext cx;
-	
+	private PlanDeCuentaTableUi planDeCuentaTableUi;
+
+	private boolean isForInsertForm;
+
 	// ----------------------------------------------
 	// CONTROLES
-	
+
 	protected AbsoluteLayout rootAL;
 	protected TabSheet pestaniasTBS;
 
@@ -77,36 +92,64 @@ public class PlanDeCuantaFormUi extends Window {
 
 	protected Button agregarBTN;
 	protected Button cancelarBTN;
-	
+
 	// ----------------------------------------------
 	// OPCIONES
-	
-	protected BeanItemContainer<PlanDeCuentaEstado> estadosBIC;
+
+	protected BeanItemContainer<PlanDeCuentaEstado> planDeCuentaEstadoBIC;
 	protected BeanItemContainer<CentroDeCostoContable> centrosDeCostosContablesBIC;
 	protected BeanItemContainer<PuntoDeEquilibrio> puntosDeEquilibrioBIC;
 	protected BeanItemContainer<CostoDeVenta> costosDeVentaBIC;
 
 	// ----------------------------------------------
 	// MODELOS
-	
+
 	protected BeanItem<PlanDeCuenta> planDeCuentaBI;
 	protected BeanItem<EjercicioContable> ejercicioContableBI;
 
-	public PlanDeCuantaFormUi(BackendContext cx) {
+	protected Integer ejercicioOriginal;
+	protected String cuentaContableOriginal;
+	protected String codigoCuentaOriginal;
+
+	public PlanDeCuantaFormUi(Window window, BackendContext cx,
+			PlanDeCuentaTableUi planDeCuentaTableUi,
+			EjercicioContable ejercicioContable) {
 		super();
 		try {
+			this.isForInsertForm = true;
+			this.window = window;
 			this.cx = cx;
-			buildStateViewA(null);
+			this.planDeCuentaTableUi = planDeCuentaTableUi;
+			buildStateViewA(null, ejercicioContable);
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
 	}
 
-	public PlanDeCuantaFormUi(BackendContext cx, PlanDeCuenta planDeCuenta) {
+	public PlanDeCuantaFormUi(Window window, BackendContext cx,
+			PlanDeCuentaTableUi planDeCuentaTableUi, PlanDeCuenta planDeCuenta) {
 		super();
 		try {
+			this.isForInsertForm = true;
+			this.window = window;
 			this.cx = cx;
-			buildStateViewA(planDeCuenta);
+			this.planDeCuentaTableUi = planDeCuentaTableUi;
+			buildStateViewA(planDeCuenta, null);
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
+
+	public PlanDeCuantaFormUi(Window window, BackendContext cx,
+			PlanDeCuentaTableUi planDeCuentaTableUi, PlanDeCuenta planDeCuenta,
+			boolean isForUpdateForm) {
+		super();
+		try {
+			this.isForInsertForm = isForUpdateForm;
+			this.window = window;
+			this.cx = cx;
+			this.planDeCuentaTableUi = planDeCuentaTableUi;
+			buildStateViewA(planDeCuenta, null);
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -116,7 +159,7 @@ public class PlanDeCuantaFormUi extends Window {
 
 		try {
 
-			this.close();
+			window.close();
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -127,8 +170,9 @@ public class PlanDeCuantaFormUi extends Window {
 
 	// AAA ................................................................
 
-	protected void buildStateViewA(PlanDeCuenta planDeCuenta) throws Exception {
-		instanceStateViewA(planDeCuenta);
+	protected void buildStateViewA(PlanDeCuenta planDeCuenta,
+			EjercicioContable ejercicioContable) throws Exception {
+		instanceStateViewA(planDeCuenta, ejercicioContable);
 		listenersStateViewA();
 		loadOptionsStateViewA();
 		propertiesStateViewA();
@@ -136,7 +180,8 @@ public class PlanDeCuantaFormUi extends Window {
 		loadOptionsPostLoadModelStateView();
 	}
 
-	protected void instanceStateViewA(PlanDeCuenta planDeCuenta) {
+	protected void instanceStateViewA(PlanDeCuenta planDeCuenta,
+			EjercicioContable ejercicioContable) {
 
 		// CONTROLES
 		rootAL = new AbsoluteLayout();
@@ -160,13 +205,12 @@ public class PlanDeCuantaFormUi extends Window {
 		centroDeCostoContableCB = new ComboBox();
 		cuentaAgrupadoraPorcentajeHL = new HorizontalLayout();
 		cuentaAgrupadoraTXT = new TextField();
-		porcentajeTXT = new TextField();
-		// porcentajeTXT = new NumberField ();
+		porcentajeTXT = new TextField(); // porcentajeTXT = new NumberField ();
 		puntoDeEquilibrioCB = new ComboBox();
 		costoDeVentaCB = new ComboBox();
 
 		// OPCIONES
-		estadosBIC = new BeanItemContainer<PlanDeCuentaEstado>(
+		planDeCuentaEstadoBIC = new BeanItemContainer<PlanDeCuentaEstado>(
 				PlanDeCuentaEstado.class, new ArrayList<PlanDeCuentaEstado>());
 		centrosDeCostosContablesBIC = new BeanItemContainer<CentroDeCostoContable>(
 				CentroDeCostoContable.class,
@@ -180,17 +224,22 @@ public class PlanDeCuantaFormUi extends Window {
 		if (planDeCuenta != null) {
 			planDeCuentaBI = new BeanItem<PlanDeCuenta>(planDeCuenta);
 		} else {
-			planDeCuentaBI = new BeanItem<PlanDeCuenta>(new PlanDeCuenta());
+			planDeCuenta = new PlanDeCuenta();
+			planDeCuenta.setEjercicioContable(ejercicioContable);
+			planDeCuentaBI = new BeanItem<PlanDeCuenta>(planDeCuenta);
 		}
 
 		ejercicioContableBI = new BeanItem<EjercicioContable>(
-				new EjercicioContable());
+				planDeCuenta.getEjercicioContable());
+
+		ejercicioOriginal = ejercicioContableBI.getBean().getEjercicio();
+		cuentaContableOriginal = planDeCuentaBI.getBean().getCuentaContable();
+		codigoCuentaOriginal = planDeCuentaBI.getBean().getCodigoCuenta();
 	}
 
 	protected void listenersStateViewA() throws Exception {
 		agregarBTN.addClickListener(listener -> agregarBTNClick());
 		cancelarBTN.addClickListener(listener -> exit());
-		imputableCKB.addValueChangeListener(listener -> imputableCKBChange());
 
 		codigoCuentaTXT.addTextChangeListener(new TextChangeListener() {
 
@@ -221,19 +270,20 @@ public class PlanDeCuantaFormUi extends Window {
 
 					}
 				});
+
 	}
 
 	protected void loadOptionsStateViewA() throws Exception {
 
 		List<PlanDeCuentaEstado> planDeCuentaEstados = cx
 				.buildPlanDeCuentaEstadoBO().findAll();
-		estadosBIC.removeAllItems();
+		planDeCuentaEstadoBIC.removeAllItems();
 		for (PlanDeCuentaEstado planDeCuentaEstado : planDeCuentaEstados) {
-			estadosBIC.addBean(planDeCuentaEstado);
+			planDeCuentaEstadoBIC.addBean(planDeCuentaEstado);
 		}
 
 		List<CostoDeVenta> costosDeVenta = cx.buildCostoDeVentaBO().findAll();
-		costosDeVentaBIC.removeAllItems();
+		// costosDeVentaBIC.removeAllItems();
 		for (CostoDeVenta costoDeVenta : costosDeVenta) {
 			costosDeVentaBIC.addBean(costoDeVenta);
 		}
@@ -242,13 +292,13 @@ public class PlanDeCuantaFormUi extends Window {
 
 	protected void propertiesStateViewA() {
 
-		this.setCaption("Plan de cuenta");
-		this.setImmediate(true);
-		this.setWidth("-1px");
-		this.setHeight("-1px");
-		this.setClosable(true);
-		this.setResizable(false);
-		this.center();
+		// this.setCaption("Plan de cuenta");
+		// this.setImmediate(true);
+		// this.setWidth("-1px");
+		// this.setHeight("-1px");
+		// this.setClosable(true);
+		// this.setResizable(false);
+		// this.center();
 
 		// --------------------------------------------------
 
@@ -285,7 +335,7 @@ public class PlanDeCuantaFormUi extends Window {
 		// --------------------------------------------------
 
 		ejercicioContableTXT.setCaption("Ejercicio");
-		ejercicioContableTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+		ejercicioContableTXT.addStyleName(ValoTheme.TEXTAREA_TINY);
 		ejercicioContableTXT.setTabIndex(-1);
 		ejercicioContableTXT.setWidth("-1px");
 		ejercicioContableTXT.setHeight("-1px");
@@ -317,7 +367,7 @@ public class PlanDeCuantaFormUi extends Window {
 		// --------------------------------------------------
 
 		codigoCuentaPadreTXT.setCaption("Integra");
-		codigoCuentaPadreTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+		codigoCuentaPadreTXT.addStyleName(ValoTheme.TEXTFIELD_TINY);
 		codigoCuentaPadreTXT.setTabIndex(10);
 		codigoCuentaPadreTXT.setWidth("-1px");
 		codigoCuentaPadreTXT.setHeight("-1px");
@@ -350,7 +400,7 @@ public class PlanDeCuantaFormUi extends Window {
 		codigoCuentaPadreNIM.setDigitsOptional(false);
 		// codigoCuentaNIM.setJitMasking(true);
 		codigoCuentaPadreNIM.extend(codigoCuentaPadreTXT);
-		StringPlanDeCuentaCodigoPadreValidator stringPlanDeCuentaCodigoPadreValidator = new StringPlanDeCuentaCodigoPadreValidator(
+		ValidatorPlanDeCuentaCodigoPadre stringPlanDeCuentaCodigoPadreValidator = new ValidatorPlanDeCuentaCodigoPadre(
 				"", cx, planDeCuentaBI);
 		codigoCuentaPadreTXT
 				.addValidator(stringPlanDeCuentaCodigoPadreValidator);
@@ -358,7 +408,7 @@ public class PlanDeCuantaFormUi extends Window {
 		// --------------------------------------------------
 
 		codigoCuentaTXT.setCaption("Cuenta de jerarquia");
-		codigoCuentaTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+		codigoCuentaTXT.addStyleName(ValoTheme.TEXTFIELD_TINY);
 		codigoCuentaTXT.setTabIndex(20);
 		codigoCuentaTXT.setWidth("-1px");
 		codigoCuentaTXT.setHeight("-1px");
@@ -391,14 +441,22 @@ public class PlanDeCuantaFormUi extends Window {
 		codigoCuentaNIM.setDigitsOptional(false);
 		// codigoCuentaNIM.setJitMasking(true);
 		codigoCuentaNIM.extend(codigoCuentaTXT);
-		StringPlanDeCuentaCodigoValidator stringPlanDeCuentaCodigoValidator = new StringPlanDeCuentaCodigoValidator(
-				"", cx, planDeCuentaBI);
+
+		ValidatorPlanDeCuentaCodigo stringPlanDeCuentaCodigoValidator;
+
+		if (isForInsertForm) {
+			stringPlanDeCuentaCodigoValidator = new ValidatorPlanDeCuentaCodigo(
+					"", cx, planDeCuentaBI);
+		} else {
+			stringPlanDeCuentaCodigoValidator = new ValidatorPlanDeCuentaCodigo(
+					"", cx, planDeCuentaBI, codigoCuentaOriginal);
+		}
 		codigoCuentaTXT.addValidator(stringPlanDeCuentaCodigoValidator);
 
 		// --------------------------------------------------
 
 		cuentaContableTXT.setCaption("Cuenta contable");
-		cuentaContableTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+		cuentaContableTXT.addStyleName(ValoTheme.TEXTFIELD_TINY);
 		cuentaContableTXT.setTabIndex(30);
 		cuentaContableTXT.setWidth("-1px");
 		cuentaContableTXT.setHeight("-1px");
@@ -416,11 +474,22 @@ public class PlanDeCuantaFormUi extends Window {
 		cuentaContableTXT.setImmediate(true);
 		cuentaContableTXT.setPropertyDataSource(planDeCuentaBI
 				.getItemProperty("cuentaContable"));
+		ValidatorPlanDeCuentaCuentaContable stringPlanDeCuentaCuentaContableValidator = null;
+
+		if (isForInsertForm) {
+			stringPlanDeCuentaCuentaContableValidator = new ValidatorPlanDeCuentaCuentaContable(
+					"", cx, planDeCuentaBI);
+		} else {
+			stringPlanDeCuentaCuentaContableValidator = new ValidatorPlanDeCuentaCuentaContable(
+					"", cx, planDeCuentaBI, cuentaContableOriginal);
+		}
+		cuentaContableTXT
+				.addValidator(stringPlanDeCuentaCuentaContableValidator);
 
 		// --------------------------------------------------
 
 		nombreTXT.setCaption("Nombre");
-		nombreTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+		nombreTXT.addStyleName(ValoTheme.TEXTFIELD_TINY);
 		nombreTXT.setTabIndex(40);
 		nombreTXT.setWidth("-1px");
 		nombreTXT.setHeight("-1px");
@@ -437,6 +506,11 @@ public class PlanDeCuantaFormUi extends Window {
 		nombreTXT.setImmediate(true);
 		nombreTXT.setPropertyDataSource(planDeCuentaBI
 				.getItemProperty("nombre"));
+		// ValidatorPlanDeCuentaCodigoCuentaNombre
+		// validatorPlanDeCuentaCodigoCuentaNombre = new
+		// ValidatorPlanDeCuentaCodigoCuentaNombre(
+		// "", cx, planDeCuentaBI);
+		// nombreTXT.addValidator(validatorPlanDeCuentaCodigoCuentaNombre);
 
 		// --------------------------------------------------
 
@@ -496,14 +570,14 @@ public class PlanDeCuantaFormUi extends Window {
 		planDeCuentaEstadoCB.setNullSelectionAllowed(false);
 		// planDeCuentaEstadoCB.setNullSelectionItemId(new
 		// PlanDeCuentaEstado()); // un item que representa el nulo
+		planDeCuentaEstadoCB.setContainerDataSource(planDeCuentaEstadoBIC);
 		planDeCuentaEstadoCB.setPropertyDataSource(planDeCuentaBI
 				.getItemProperty("planDeCuentaEstado"));
-		planDeCuentaEstadoCB.setContainerDataSource(estadosBIC);
 		planDeCuentaEstadoCB.setTextInputAllowed(false);
 
 		// --------------------------------------------------
 
-		cuentaConApropiacionCKB.setCaption("Ajusta por inflación");
+		cuentaConApropiacionCKB.setCaption("Cuenta con apropiación");
 		cuentaConApropiacionCKB.addStyleName(ValoTheme.CHECKBOX_SMALL);
 		cuentaConApropiacionCKB.setTabIndex(90);
 		cuentaConApropiacionCKB.setWidth("-1px");
@@ -529,7 +603,7 @@ public class PlanDeCuantaFormUi extends Window {
 		// --------------------------------------------------
 
 		centroDeCostoContableCB.setCaption("Centro de costo");
-		centroDeCostoContableCB.addStyleName(ValoTheme.COMBOBOX_SMALL);
+		centroDeCostoContableCB.addStyleName(ValoTheme.COMBOBOX_TINY);
 		centroDeCostoContableCB.setTabIndex(10);
 		centroDeCostoContableCB.setWidth("100%");
 		centroDeCostoContableCB.setHeight("-1px");
@@ -543,11 +617,63 @@ public class PlanDeCuantaFormUi extends Window {
 		centroDeCostoContableCB.setReadOnly(false);
 		centroDeCostoContableCB.setImmediate(true);
 		centroDeCostoContableCB.setNullSelectionAllowed(true);
-		centroDeCostoContableCB.setPropertyDataSource(planDeCuentaBI
-				.getItemProperty("centroDeCostoContable"));
+		centroDeCostoContableCB.setTextInputAllowed(true);
 		centroDeCostoContableCB
 				.setContainerDataSource(centrosDeCostosContablesBIC);
+		centroDeCostoContableCB.setPropertyDataSource(planDeCuentaBI
+				.getItemProperty("centroDeCostoContable"));
 		centroDeCostoContableCB.setTextInputAllowed(true);
+
+		centroDeCostoContableCB.addShortcutListener(
+		// pass any KeyCode.A, KeyCode.B, KeyCode.C etc..
+
+				new ShortcutListener("Agregar centro de costo contable", KeyCode.ENTER, new int[] {ModifierKey.CTRL}) {
+
+				/**
+				 * 
+				 */
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void handleAction(Object sender, Object target) {
+						System.out.println("sender " + sender + " target "
+								+ target);
+						System.out.println("getKeyCode() " + getKeyCode());
+						if (getModifiers().length > 0) {
+							System.out.println("modifier " + getModifiers()[0]);
+						}
+						if (getKeyCode() == KeyCode.TAB) {
+
+						}
+					}
+				});
+		// centroDeCostoContableCB.setNewItemHandler(new NewItemHandler() {
+		// /**
+		// *
+		// */
+		// private static final long serialVersionUID = 3864057773228372727L;
+		//
+		// @Override
+		// public void addNewItem(String newItemCaption) {
+		//
+		// System.out.println("newItemCaption " + newItemCaption);
+		//
+		// CentroDeCostoContable centroDeCostoContable = new
+		// CentroDeCostoContable();
+		// centroDeCostoContable.setEjercicioContable(ejercicioContableBI
+		// .getBean());
+		// centroDeCostoContable.setNumero(new Integer(newItemCaption
+		// .split("-")[0].trim()));
+		// centroDeCostoContable.setNombre(newItemCaption.split("-")[1]
+		// .trim());
+		// centrosDeCostosContablesBIC.addBean(centroDeCostoContable);
+		//
+		// // Remember to set the selection to the new item
+		// centroDeCostoContableCB.select(centroDeCostoContable);
+		//
+		// Notification.show("Added new planet called " + newItemCaption);
+		// }
+		// });
 
 		// --------------------------------------------------
 
@@ -563,7 +689,7 @@ public class PlanDeCuantaFormUi extends Window {
 		// --------------------------------------------------
 
 		cuentaAgrupadoraTXT.setCaption("Cuenta agrupadora");
-		cuentaAgrupadoraTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+		cuentaAgrupadoraTXT.addStyleName(ValoTheme.TEXTFIELD_TINY);
 		cuentaAgrupadoraTXT.setTabIndex(20);
 		cuentaAgrupadoraTXT.setWidth("-1px");
 		cuentaAgrupadoraTXT.setHeight("-1px");
@@ -585,37 +711,94 @@ public class PlanDeCuantaFormUi extends Window {
 		// --------------------------------------------------
 
 		porcentajeTXT.setCaption("Porcentaje");
-		porcentajeTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+		porcentajeTXT.addStyleName(ValoTheme.TEXTFIELD_TINY);
 		porcentajeTXT.setTabIndex(30);
 		porcentajeTXT.setWidth("-1px");
 		porcentajeTXT.setHeight("-1px");
-		porcentajeTXT.setColumns(8);
-		porcentajeTXT.setMaxLength(8);
+		porcentajeTXT.setColumns(6);
+		porcentajeTXT.setMaxLength(6);
 		porcentajeTXT.setRequired(false);
 		porcentajeTXT.setRequiredError("El campo " + porcentajeTXT.getCaption()
 				+ " es requerido. Es decir no debe estar vacio.");
 		porcentajeTXT.setValidationVisible(true);
+		porcentajeTXT
+				.setConversionError("El campo "
+						+ porcentajeTXT.getCaption()
+						+ " es de tipo decimal. Es decir requiere ingresar un numero como por ejemplo 1921.36");
 		porcentajeTXT.setNullRepresentation("");
 		porcentajeTXT.setVisible(true);
 		porcentajeTXT.setEnabled(true);
 		porcentajeTXT.setReadOnly(false);
 		porcentajeTXT.setImmediate(true);
+		porcentajeTXT
+				.addValidator(new DoubleRangeValidator(
+						"El campo "
+								+ porcentajeTXT.getCaption()
+								+ " es de tipo decimal. Es decir requiere ingresar un numero entre -999.9 y 999.99 ",
+						-999.99, 999.99));
+		// porcentajeTXT.addValidator(new ValidatorPlanDeCuentaPorcentaje());
 		porcentajeTXT.setPropertyDataSource(planDeCuentaBI
 				.getItemProperty("porcentaje"));
-		InputMask porcentajeNIM = new InputMask("999.99 %");
-		porcentajeNIM.setAutoUnmask(true);
-		porcentajeNIM.setNumericInput(true);
-		porcentajeNIM.setAllowMinus(false);
-		// numericInputMask.setClearIncomplete(true);
-		// numericInputMask.setClearMaskOnLostFocus(true);
-		// porcentajeNIM.setDigitsOptional(false);
-		// numericInputMask.setJitMasking(true);
-		porcentajeNIM.extend(porcentajeTXT);
+		porcentajeTXT.setLocale(Locale.US);
+		porcentajeTXT.setConverter(new StringToDoubleConverter() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -6766755526727086492L;
+
+			protected java.text.NumberFormat getFormat(Locale locale) {
+				NumberFormat format = super.getFormat(Locale.US);
+				format.setGroupingUsed(false);
+				return format;
+			};
+
+			@Override
+			public Double convertToModel(String value,
+					Class<? extends Double> targetType, Locale locale)
+					throws ConversionException {
+
+				if (value == null) {
+					return 0.0;
+				}
+
+				value = value.trim();
+
+				if (value.isEmpty()) {
+					return 0.0;
+				}
+
+				// char[] chars = value.toCharArray();
+				// String newValue = "";
+				// for (char c : chars) {
+				// if (Character.isDigit(c) || c == '.') {
+				// newValue += c;
+				// }
+				// }
+
+				// value = newValue.trim();
+
+				// if (value.isEmpty()) {
+				// return 0.0;
+				// }
+
+				if (value.length() == 1 && value.startsWith("[.]")) {
+					return 0.0;
+				}
+
+				if (value.startsWith(".")) {
+					value = 0 + value;
+				}
+
+				Number n = convertToNumber(value, targetType, Locale.US);
+				return n == null ? null : n.doubleValue();
+			}
+		});
 
 		// --------------------------------------------------
 
 		puntoDeEquilibrioCB.setCaption("Punto de equilibrio");
-		puntoDeEquilibrioCB.addStyleName(ValoTheme.COMBOBOX_SMALL);
+		puntoDeEquilibrioCB.addStyleName(ValoTheme.COMBOBOX_TINY);
 		puntoDeEquilibrioCB.setTabIndex(40);
 		puntoDeEquilibrioCB.setWidth("100%");
 		puntoDeEquilibrioCB.setHeight("-1px");
@@ -629,38 +812,42 @@ public class PlanDeCuantaFormUi extends Window {
 		puntoDeEquilibrioCB.setReadOnly(false);
 		puntoDeEquilibrioCB.setImmediate(true);
 		puntoDeEquilibrioCB.setNullSelectionAllowed(true);
+		puntoDeEquilibrioCB.setContainerDataSource(puntosDeEquilibrioBIC);
 		puntoDeEquilibrioCB.setPropertyDataSource(planDeCuentaBI
 				.getItemProperty("puntoDeEquilibrio"));
-		puntoDeEquilibrioCB.setContainerDataSource(puntosDeEquilibrioBIC);
 		puntoDeEquilibrioCB.setTextInputAllowed(true);
 
 		// --------------------------------------------------
 
 		costoDeVentaCB.setCaption("Costo de venta");
-		costoDeVentaCB.addStyleName(ValoTheme.COMBOBOX_SMALL);
+		costoDeVentaCB.addStyleName(ValoTheme.COMBOBOX_TINY);
 		costoDeVentaCB.setTabIndex(50);
 		costoDeVentaCB.setWidth("100%");
 		costoDeVentaCB.setHeight("-1px");
-		costoDeVentaCB.setRequired(true);
-		costoDeVentaCB.setRequiredError("El campo "
-				+ costoDeVentaCB.getCaption()
-				+ " es requerido. Es decir no debe estar vacio.");
+		// costoDeVentaCB.setRequired(true);
+		// costoDeVentaCB.setRequiredError("El campo "
+		// + costoDeVentaCB.getCaption()
+		// + " es requerido. Es decir no debe estar vacio.");
 		costoDeVentaCB.setValidationVisible(true);
 		costoDeVentaCB.setVisible(true);
 		costoDeVentaCB.setEnabled(true);
 		costoDeVentaCB.setReadOnly(false);
 		costoDeVentaCB.setImmediate(true);
 		costoDeVentaCB.setNullSelectionAllowed(false);
+		costoDeVentaCB.setContainerDataSource(costosDeVentaBIC);
 		costoDeVentaCB.setPropertyDataSource(planDeCuentaBI
 				.getItemProperty("costoDeVenta"));
-		costoDeVentaCB.setContainerDataSource(costosDeVentaBIC);
 		costoDeVentaCB.setTextInputAllowed(false);
 
 		// --------------------------------------------------
 
-		agregarBTN.setCaption("Agregar");
+		if (isForInsertForm) {
+			agregarBTN.setCaption("Agregar");
+		} else {
+			agregarBTN.setCaption("Modificar");
+		}
 		agregarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-		agregarBTN.addStyleName(ValoTheme.BUTTON_SMALL);
+		agregarBTN.addStyleName(ValoTheme.BUTTON_TINY);
 		agregarBTN.setIcon(FontAwesome.CHECK);
 		agregarBTN.setTabIndex(90);
 		agregarBTN.setWidth("-1px");
@@ -674,7 +861,7 @@ public class PlanDeCuantaFormUi extends Window {
 
 		cancelarBTN.setCaption("Cancelar");
 		cancelarBTN.addStyleName(ValoTheme.BUTTON_DANGER);
-		cancelarBTN.addStyleName(ValoTheme.BUTTON_SMALL);
+		cancelarBTN.addStyleName(ValoTheme.BUTTON_TINY);
 		cancelarBTN.setIcon(FontAwesome.CLOSE);
 		cancelarBTN.setTabIndex(90);
 		cancelarBTN.setWidth("-1px");
@@ -690,7 +877,8 @@ public class PlanDeCuantaFormUi extends Window {
 	protected void treeStateViewA() {
 
 		rootAL.removeAllComponents();
-		this.setContent(rootAL);
+		// this.setContent(rootAL);
+		this.setCompositionRoot(rootAL);
 
 		rootAL.addComponent(pestaniasTBS);
 		rootAL.addComponent(agregarBTN, "top:444.0px;left:10.0px;");
@@ -733,6 +921,16 @@ public class PlanDeCuantaFormUi extends Window {
 				Alignment.TOP_LEFT);
 		cuentaAgrupadoraPorcentajeHL.setComponentAlignment(porcentajeTXT,
 				Alignment.TOP_LEFT);
+
+		transitionB();
+
+		imputableCKB.addValueChangeListener(listener -> imputableCKBChange());
+
+		if (planDeCuentaBI.getBean().getImputable() == true) {
+			transitionBackB();
+		} else {
+			transitionB();
+		}
 	}
 
 	protected void loadOptionsPostLoadModelStateView() throws Exception {
@@ -783,14 +981,46 @@ public class PlanDeCuantaFormUi extends Window {
 			puntosDeEquilibrioBIC.addBean(puntoDeEquilibrio);
 		}
 
-		if (centrosDeCostosContablesBIC.size() > 0) {
-			planDeCuentaBI.getBean().setCentroDeCostoContable(
-					centrosDeCostosContablesBIC.getIdByIndex(0));
-		}
+		if (this.isForInsertForm) {
 
-		if (puntosDeEquilibrioBIC.size() > 0) {
-			planDeCuentaBI.getBean().setPuntoDeEquilibrio(
-					puntosDeEquilibrioBIC.getIdByIndex(0));
+			if (planDeCuentaEstadoBIC.size() > 0) {
+				planDeCuentaBI.getBean().setPlanDeCuentaEstado(
+						planDeCuentaEstadoBIC.getIdByIndex(1));
+			}
+
+			if (centrosDeCostosContablesBIC.size() > 0) {
+				planDeCuentaBI.getBean().setCentroDeCostoContable(
+						centrosDeCostosContablesBIC.getIdByIndex(0));
+			}
+
+			if (puntosDeEquilibrioBIC.size() > 0) {
+				planDeCuentaBI.getBean().setPuntoDeEquilibrio(
+						puntosDeEquilibrioBIC.getIdByIndex(0));
+			}
+
+			if (costosDeVentaBIC.size() > 0) {
+				planDeCuentaBI.getBean().setCostoDeVenta(
+						costosDeVentaBIC.getIdByIndex(0));
+			}
+
+		} else {
+			// planDeCuentaEstadoCB.setValue(planDeCuentaBI.getBean()
+			// .getPlanDeCuentaEstado());
+			//
+			// centroDeCostoContableCB.setValue(planDeCuentaBI.getBean()
+			// .getCentroDeCostoContable());
+			//
+			// puntoDeEquilibrioCB.setValue(planDeCuentaBI.getBean()
+			// .getPuntoDeEquilibrio());
+
+			// costoDeVentaCB.setValue(planDeCuentaBI.getBean().getCostoDeVenta());
+
+			// System.out.println("planDeCuentaBI.getBean().getCostoDeVenta().getId() "
+			// + planDeCuentaBI.getBean().getCostoDeVenta());
+			// System.out.println("costosDeVentaBIC.getIdByIndex(0) " +
+			// costosDeVentaBIC.getIdByIndex(0));
+
+			// planDeCuentaBI.getBean().setCostoDeVenta(planDeCuentaBI.getBean().getCostoDeVenta());
 		}
 
 	}
@@ -798,14 +1028,15 @@ public class PlanDeCuantaFormUi extends Window {
 	// TRANSITIONS AAA ==================================================
 
 	protected void transitionB() {
-		pestaniasTBS.getTab(centroDeCostosFL).setEnabled(true);
-	}
-
-	protected void transitionBackB() {
 		pestaniasTBS.getTab(centroDeCostosFL).setEnabled(false);
 	}
 
+	private void transitionBackB() {
+		pestaniasTBS.getTab(centroDeCostosFL).setEnabled(true);
+	}
+
 	// EVTs LISTENERS ===================================================
+
 	protected void agregarBTNClick() {
 
 		// StringPlanDeCuentaCodigoPadreValidator
@@ -839,14 +1070,28 @@ public class PlanDeCuantaFormUi extends Window {
 				porcentajeTXT.validate();
 			}
 
-			// cx.buildPlanDeCuentaBO().insert(planDeCuentaBI.getBean());
+			String msg = planDeCuentaBI.getBean().getEjercicioContable()
+					+ " "
+					+ FormatPlanDeCuentaCodigoCuenta.format(planDeCuentaBI
+							.getBean().getCodigoCuenta()) + " "
+					+ planDeCuentaBI.getBean().getNombre();
 
-			String msg = "Se agregó con éxito el \"Plan de cuenta: "
-					+ planDeCuentaBI.getBean() + "\".";
+			if (isForInsertForm) {
+				cx.buildPlanDeCuentaBO().insert(planDeCuentaBI.getBean());
+
+				msg = "Se agregó con éxito el \"Plan de cuenta: " + msg + "\".";
+
+			} else {
+				cx.buildPlanDeCuentaBO().update(planDeCuentaBI.getBean(),
+						ejercicioOriginal, cuentaContableOriginal);
+
+				msg = "Se modificó con éxito el \"Plan de cuenta: " + msg
+						+ "\".";
+			}
 
 			LogAndNotification.printSuccessOk(msg);
 
-			// tableUi.updateGrid();
+			planDeCuentaTableUi.updateModelViewPort768x1024();
 
 			exit();
 
@@ -867,9 +1112,9 @@ public class PlanDeCuantaFormUi extends Window {
 	protected void imputableCKBChange() {
 		try {
 			if (planDeCuentaBI.getBean().getImputable() == true) {
-				transitionB();
-			} else {
 				transitionBackB();
+			} else {
+				transitionB();
 			}
 		} catch (Exception e) {
 			LogAndNotification.print(e);
