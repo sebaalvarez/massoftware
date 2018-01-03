@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.list;
+package com.massoftware.frontend.ui.windows.punto_de_equilibrio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,6 @@ import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.TableUi;
-import com.massoftware.frontend.ui.windows.form.PuntoDeEquilibrioFormUi;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.Usuario;

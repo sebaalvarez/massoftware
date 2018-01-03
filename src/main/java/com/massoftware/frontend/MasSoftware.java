@@ -6,14 +6,13 @@ import java.util.logging.Logger;
 import javax.servlet.annotation.WebServlet;
 
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.ui.menu.ContabilidadGeneralMenu;
-import com.massoftware.model.Usuario;
+import com.massoftware.frontend.ui.windows.properties.PropertiesFormUi;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser
@@ -39,17 +38,17 @@ public class MasSoftware extends UI {
 	protected void init(VaadinRequest vaadinRequest) {
 
 		try {
-			BackendContext cx = new BackendContext("sqlserver");
-//			BackendContext cx = new BackendContext("Postgresql");
 
-			Usuario usuario = cx.buildUsuarioBO()
-					.findByNombre("Administrador");
-
-			final VerticalLayout layout = new VerticalLayout();
-
-			layout.addComponent(new ContabilidadGeneralMenu(cx, usuario));
-
-			setContent(layout);
+			BackendContext cx = new BackendContext();
+			Window win = new Window("Login");
+			win.setClosable(false);
+			win.setResizable(false);
+			win.setModal(true);
+			PropertiesFormUi ui = new PropertiesFormUi(win, cx, this);
+			win.setContent(ui);
+			getUI().addWindow(win);
+			win.center();
+			win.focus();
 
 		} catch (Exception e) {
 			e.printStackTrace();

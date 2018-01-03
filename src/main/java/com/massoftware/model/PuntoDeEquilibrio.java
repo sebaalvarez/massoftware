@@ -89,8 +89,8 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 
 	@Override
 	public String toString() {
-		return this.getPuntoDeEquilibrio() + " - " + this.getNombre()
-				+ " - " + this.getEjercicioContable();
+		return this.getPuntoDeEquilibrio() + " - " + this.getNombre() + " - "
+				+ this.getEjercicioContable();
 	}
 
 	public boolean validate() {
@@ -109,22 +109,21 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".puntoDeEquilibrio es nulo.");
 		}
-		
+
 		if (this.nombre == null) {
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".nombre es nulo.");
 		}
-		
+
 		if (this.puntoDeEquilibrioTipo == null) {
 
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".puntoDeEquilibrioTipo es nulo.");
-		} else {			
+		} else {
 			this.puntoDeEquilibrioTipo.validate();
 		}
 
-
 		return true;
 	}
-	
+
 }

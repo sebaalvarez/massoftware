@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.form;
+package com.massoftware.frontend.ui.windows.punto_de_equilibrio;
 
 import java.util.ArrayList;
 import java.util.List;

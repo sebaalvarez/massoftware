@@ -32,20 +32,23 @@ import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 
 public class BackendContext extends AbstractContext {
 
+	public final static String MS = "sqlserver";
+	public final static String PG = "Postgresql";
+
 	private DataSourceProperties dataSourceProperties;
 	private DataSource dataSource;
 	private DataSourceWrapper dataSourceWrapper;
 	private Map<String, EntityMetaData> entityMetaDataMap = new HashMap<String, EntityMetaData>();
 
-	public BackendContext(String type) {
-		super();
+	public BackendContext() {
+
+	}
+
+	public void start(String type, Properties properties) {
+
 		try {
-			// init("Postgresql");
-			init(type);
+			init(type, properties);
 			initMetaData();
-
-			// buildPlanDeCuentaBO().findAllOrderByCuentaContable(null, null);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),
@@ -127,11 +130,11 @@ public class BackendContext extends AbstractContext {
 
 		entityMetaDataMap.put(puntoDeEquilibrioTipoMD.getName(),
 				puntoDeEquilibrioTipoMD);
-		
+
 		// --------------------------------------------------
-		
+
 		EntityMetaData planDeCuentaEstadoMD = new EntityMetaData();
-		
+
 		planDeCuentaEstadoMD.setName(PlanDeCuentaEstado.class
 				.getCanonicalName());
 		planDeCuentaEstadoMD.setLabel("Estado");
@@ -142,21 +145,19 @@ public class BackendContext extends AbstractContext {
 
 		entityMetaDataMap.put(planDeCuentaEstadoMD.getName(),
 				planDeCuentaEstadoMD);
-		
+
 		// --------------------------------------------------
-		
+
 		EntityMetaData costoDeVentaMD = new EntityMetaData();
-		
-		costoDeVentaMD.setName(PlanDeCuentaEstado.class
-				.getCanonicalName());
+
+		costoDeVentaMD.setName(PlanDeCuentaEstado.class.getCanonicalName());
 		costoDeVentaMD.setLabel("Costo de venta");
 		costoDeVentaMD.setLabelPlural("Costos de venta");
 
 		costoDeVentaMD.addAtt("codigo", "Codigo");
 		costoDeVentaMD.addAtt("nombre", "Nombre");
 
-		entityMetaDataMap.put(costoDeVentaMD.getName(),
-				costoDeVentaMD);
+		entityMetaDataMap.put(costoDeVentaMD.getName(), costoDeVentaMD);
 
 		// --------------------------------------------------
 
@@ -169,7 +170,8 @@ public class BackendContext extends AbstractContext {
 				ejercicioContableMD.getLabelShort(),
 				ejercicioContableMD.getLabel());
 		planDeCuentaMD.addAtt("codigoCuentaPadre", "Integra");
-		planDeCuentaMD.addAtt("codigoCuenta", "Cta. jerarquia", "Cuenta de jerarquia");
+		planDeCuentaMD.addAtt("codigoCuenta", "Cta. jerarquia",
+				"Cuenta de jerarquia");
 		planDeCuentaMD.addAtt("cuentaContable", "Cta. contable",
 				"Cuenta contable");
 		planDeCuentaMD.addAtt("nombre", "Nombre");
@@ -188,20 +190,19 @@ public class BackendContext extends AbstractContext {
 		planDeCuentaMD.addAtt("puntoDeEquilibrio",
 				puntoDeEquilibrioMD.getLabelShort(),
 				puntoDeEquilibrioMD.getLabel());
-		planDeCuentaMD.addAtt("costoDeVenta",
-				costoDeVentaMD.getLabelShort(),
+		planDeCuentaMD.addAtt("costoDeVenta", costoDeVentaMD.getLabelShort(),
 				costoDeVentaMD.getLabel());
 
 		entityMetaDataMap.put(planDeCuentaMD.getName(), planDeCuentaMD);
 
 	}
 
-	private void init(String dbType) throws Exception {
+	private void init(String dbType, Properties properties) throws Exception {
 
-		if (dbType.equals("Postgresql")) {
-			initContextDbPostgreSql(new LogPrinter());
-		} else if (dbType.equals("sqlserver")) {
-			initContextDbMsSqlServer(new LogPrinter());
+		if (dbType.equals(PG)) {
+			initContextDbPostgreSql(new LogPrinter(), properties);
+		} else if (dbType.equals(MS)) {
+			initContextDbMsSqlServer(new LogPrinter(), properties);
 		}
 
 		String msg = "\n\n[Ok] " + ZonedDateTime.now()
@@ -211,31 +212,21 @@ public class BackendContext extends AbstractContext {
 				LogPrinter.LEVEL_INFO, msg);
 	}
 
-	private void initContextDbMsSqlServer(LogPrinter errorPrinter)
-			throws Exception {
+	private void initContextDbMsSqlServer(LogPrinter errorPrinter,
+			Properties properties) throws Exception {
+
+		String path = "jdbc.";
 
 		SQLServerDataSource ds = new SQLServerDataSource();
 		// ds.setIntegratedSecurity(true);
-		ds.setServerName("localhost");
-		ds.setPortNumber(1433);
-		ds.setDatabaseName("VetaroRep");
-		ds.setUser("sa");
-		ds.setPassword("cordoba");
+		ds.setServerName(properties.getProperty(path + "serverName"));
+		ds.setPortNumber(new Integer(properties
+				.getProperty(path + "portNumber")));
+		ds.setDatabaseName(properties.getProperty(path + "databaseName"));
+		ds.setUser(properties.getProperty(path + "userName"));
+		ds.setPassword(properties.getProperty(path + "userPassword"));
 
-		Properties properties = new Properties();
-
-		properties.put("jdbc.driverClassName",
-				"com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		properties.put("jdbc.userName", "");
-		properties.put("jdbc.userPassword", "");
 		properties.put("jdbc.url", ds.getURL());
-		properties.put("jdbc.maxActive", "10");
-		properties.put("jdbc.initialSize", "5");
-		properties.put("jdbc.maxIdle", "5");
-		properties.put("jdbc.validationQuery", "SELECT 1");
-		properties.put("jdbc.verbose", "true");
-
-		String path = "jdbc.";
 
 		dataSourceProperties = new DataSourceProperties();
 
@@ -262,18 +253,6 @@ public class BackendContext extends AbstractContext {
 		logPrinter.printJson(this.getClass().getName(), LogPrinter.LEVEL_INFO,
 				"", dataSourceProperties, "");
 
-		// BasicDataSource basicDataSource = new BasicDataSource();
-		// basicDataSource.setDriverClassName(dataSourceProperties
-		// .getDriverClassName());
-		// basicDataSource.setUrl(dataSourceProperties.getUrl());
-		// basicDataSource.setUsername(dataSourceProperties.getUserName());
-		// basicDataSource.setPassword(dataSourceProperties.getUserPassword());
-		// basicDataSource.setInitialSize(dataSourceProperties.getInitialSize());
-		// basicDataSource.setMaxActive(dataSourceProperties.getMaxActive());
-		// basicDataSource.setMaxIdle(dataSourceProperties.getMaxIdle());
-		// basicDataSource.setValidationQuery(dataSourceProperties
-		// .getValidationQuery());
-
 		dataSource = ds;
 
 		dataSourceWrapper = new DataSourceWrapper(dataSource,
@@ -281,22 +260,8 @@ public class BackendContext extends AbstractContext {
 
 	}
 
-	private void initContextDbPostgreSql(LogPrinter errorPrinter)
-			throws Exception {
-
-		Properties properties = new Properties();
-
-		properties.put("jdbc.driverClassName", "org.postgresql.Driver");
-		properties.put("jdbc.userName", "postgres");
-		properties.put("jdbc.userPassword", "cordoba");
-		properties
-				.put("jdbc.url",
-						"jdbc:postgresql://localhost:5432/massoftware?searchpath=massoftware");
-		properties.put("jdbc.maxActive", "10");
-		properties.put("jdbc.initialSize", "5");
-		properties.put("jdbc.maxIdle", "5");
-		properties.put("jdbc.validationQuery", "SELECT 1");
-		properties.put("jdbc.verbose", "true");
+	private void initContextDbPostgreSql(LogPrinter errorPrinter,
+			Properties properties) throws Exception {
 
 		String path = "jdbc.";
 

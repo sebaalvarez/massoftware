@@ -18,13 +18,13 @@ public class PuntoDeEquilibrioBO {
 	private final String SQL_PG_2 = "INSERT INTO massoftware.puntodeequilibrio(id, ejerciciocontable, puntodeequilibrio, nombre, puntodeequilibriotipo) VALUES (?, ?, ?, ?, ?);";
 	private final String SQL_PG_3 = "UPDATE massoftware.puntodeequilibrio SET ejerciciocontable=?, puntodeequilibrio=?, nombre=?, puntodeequilibriotipo=? WHERE id=?;";
 	private final String SQL_PG_4 = "DELETE FROM massoftware.puntodeequilibrio WHERE id=?;";
-	private final String SQL_PG_5 = "SELECT	MAX(puntoDeEquilibrio) FROM massoftware.vPuntoDeEquilibrio;";
+	private final String SQL_PG_5 = "SELECT	MAX(puntoDeEquilibrio) FROM massoftware.vPuntoDeEquilibrio";
 
 	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.vPuntoDeEquilibrio";
 	private final String SQL_MS_2 = "INSERT INTO [dbo].[PuntoDeEquilibrio] ([PUNTODEEQUILIBRIO],[NOMBRE] ,[TIPO] ,[EJERCICIO]) VALUES (?, ?, ?, ?)";
 	private final String SQL_MS_3 = "UPDATE [dbo].[PuntoDeEquilibrio] SET [PUNTODEEQUILIBRIO] = ?, [NOMBRE] = ?, [TIPO] = ?, [EJERCICIO] = ?  WHERE [PUNTODEEQUILIBRIO] = ? AND [EJERCICIO] = ?;";
 	private final String SQL_MS_4 = "DELETE FROM [dbo].[PuntoDeEquilibrio] WHERE [PUNTODEEQUILIBRIO] = ? AND [EJERCICIO] = ?;";
-	private final String SQL_MS_5 = "SELECT	MAX(puntoDeEquilibrio) FROM VetaroRep.dbo.vPuntoDeEquilibrio;";
+	private final String SQL_MS_5 = "SELECT	MAX(puntoDeEquilibrio) FROM VetaroRep.dbo.vPuntoDeEquilibrio";
 
 	public PuntoDeEquilibrioBO(DataSourceWrapper dataSourceWrapper) {
 		super();
@@ -129,8 +129,7 @@ public class PuntoDeEquilibrioBO {
 		return findMaxPuntoDeEquilibrio(null);
 	}
 
-	private Integer findMaxPuntoDeEquilibrio(Integer ejercicio)
-			throws Exception {
+	public Integer findMaxPuntoDeEquilibrio(Integer ejercicio) throws Exception {
 
 		String sql = null;
 
@@ -175,6 +174,11 @@ public class PuntoDeEquilibrioBO {
 		return 1;
 	}
 
+	public boolean ifExistsPuntoDeEquilibrio(Integer punto, Integer ejercicio)
+			throws Exception {
+		return findByPuntoDeEquilibrio(punto, ejercicio) != null;
+	}
+
 	public PuntoDeEquilibrio findByPuntoDeEquilibrio(Integer punto,
 			Integer ejercicio) throws Exception {
 
@@ -195,24 +199,29 @@ public class PuntoDeEquilibrioBO {
 						+ " WHERE puntoDeEquilibrio = ? AND ejercicioContable_ejercicio = ?;";
 			}
 
-			Object[][] table = connectionWrapper.findToTable(sql, punto,
-					ejercicio);
+			// Object[][] table = connectionWrapper.findToTable(sql, punto,
+			// ejercicio);
+			//
+			// for (Object[] row : table) {
+			//
+			// puntoDeEquilibrio = new PuntoDeEquilibrio(row);
+			//
+			// break;
+			// }
 
-			for (Object[] row : table) {
+			@SuppressWarnings("unchecked")
+			List<PuntoDeEquilibrio> list = connectionWrapper
+					.findToListByCendraConvention(sql, punto, ejercicio);
 
-				puntoDeEquilibrio = new PuntoDeEquilibrio(row);
-
-				break;
+			if (list.size() > 0) {
+				list.get(0).validate();
+				return list.get(0);
 			}
 
 		} catch (Exception e) {
 			throw e;
 		} finally {
 			connectionWrapper.close(connectionWrapper);
-		}
-
-		if (puntoDeEquilibrio != null) {
-			puntoDeEquilibrio.validate();
 		}
 
 		return puntoDeEquilibrio;
@@ -531,8 +540,8 @@ public class PuntoDeEquilibrioBO {
 			connectionWrapper.close(connectionWrapper);
 		}
 
-		item = this.findByPuntoDeEquilibrio(item.getPuntoDeEquilibrio(), item
-				.getEjercicioContable().getEjercicio());
+		// item = this.findByPuntoDeEquilibrio(item.getPuntoDeEquilibrio(), item
+		// .getEjercicioContable().getEjercicio());
 
 		return item;
 	}

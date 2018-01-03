@@ -22,9 +22,9 @@ public class CentroDeCostoContableBO {
 
 	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.vCentroDeCostoContable";
 	private final String SQL_MS_2 = "INSERT INTO [dbo].[CentrosDeCostoContable] ([CENTRODECOSTOCONTABLE],[NOMBRE] ,[ABREVIATURA] ,[EJERCICIO], [PRUEBA]) VALUES (?, ?, ?, ?, 0)";
-	private final String SQL_MS_3 = "UPDATE [dbo].[CentrosDeCostoContable] SET [NOMBRE] = ?, [ABREVIATURA] = ?, [EJERCICIO] = ? WHERE [CENTRODECOSTOCONTABLE] = ? AND [EJERCICIO] = ? AND [PRUEBA] = 0;";
+	private final String SQL_MS_3 = "UPDATE [dbo].[CentrosDeCostoContable]  SET [CENTRODECOSTOCONTABLE] = ?, [NOMBRE] = ?, [ABREVIATURA] = ?, [EJERCICIO] = ? WHERE [CENTRODECOSTOCONTABLE] = ? AND [EJERCICIO] = ?";
 	private final String SQL_MS_4 = "DELETE FROM [dbo].[CentrosDeCostoContable] WHERE [CENTRODECOSTOCONTABLE] = ? AND [EJERCICIO] = ? AND [PRUEBA] = 0;";
-	private final String SQL_MS_5 = "SELECT	MAX(VetaroRep.dbo.vCentroDeCostoContable.numnero) FROM VetaroRep.dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = ?;";
+	private final String SQL_MS_5 = "SELECT	MAX(VetaroRep.dbo.vCentroDeCostoContable.numero) FROM VetaroRep.dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = ?;";
 
 	public CentroDeCostoContableBO(DataSourceWrapper dataSourceWrapper) {
 		super();
@@ -84,8 +84,8 @@ public class CentroDeCostoContableBO {
 				list = connectionWrapper.findToListByCendraConvention(sql);
 
 			}
-			
-			for(CentroDeCostoContable item : list){
+
+			for (CentroDeCostoContable item : list) {
 				item.validate();
 			}
 
@@ -153,6 +153,13 @@ public class CentroDeCostoContableBO {
 		}
 
 		return 1;
+	}
+
+	public boolean ifExistCentroDeCostoContable(Integer numero,
+			Integer ejercicio) throws Exception {
+
+		return findByCentroDeCostoContable(numero, ejercicio) != null;
+
 	}
 
 	private CentroDeCostoContable findByCentroDeCostoContable(Integer numero,
@@ -381,8 +388,8 @@ public class CentroDeCostoContableBO {
 		}
 	}
 
-	public CentroDeCostoContable update(CentroDeCostoContable item)
-			throws Exception {
+	public CentroDeCostoContable update(CentroDeCostoContable item,
+			Integer ejercicioOriginal, Integer numeroOriginal) throws Exception {
 
 		String sql = null;
 
@@ -450,8 +457,8 @@ public class CentroDeCostoContableBO {
 					ejercicioContable = Integer.class;
 				}
 
-				Object[] args = { nombre, abreviatura, ejercicioContable,
-						numero, ejercicioContable };
+				Object[] args = { numero, nombre, abreviatura,
+						ejercicioContable, numeroOriginal, ejercicioOriginal };
 
 				rows = connectionWrapper.update(sql, args);
 			}

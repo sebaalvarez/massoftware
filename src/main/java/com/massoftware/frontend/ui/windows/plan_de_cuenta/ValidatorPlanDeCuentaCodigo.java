@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.util.plan_de_cuenta;
+package com.massoftware.frontend.ui.windows.plan_de_cuenta;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
@@ -12,6 +12,7 @@ public class ValidatorPlanDeCuentaCodigo extends AbstractStringValidator {
 	 * 
 	 */
 	private static final long serialVersionUID = -2108700714465550165L;
+	
 	private BackendContext cx;
 
 	protected BeanItem<PlanDeCuenta> planDeCuentaBI;

@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.list;
+package com.massoftware.frontend.ui.windows.plan_de_cuenta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,6 @@ import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
 import com.massoftware.frontend.ui.util.YesNoDialog;
-import com.massoftware.frontend.ui.windows.form.PlanDeCuantaFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PlanDeCuenta;
@@ -360,8 +359,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 
 		// .......
 
-		planDeCuentasGRD.getColumn("ejercicioContable").setHidable(true);
-		planDeCuentasGRD.getColumn("ejercicioContable").setHidable(true);
+		planDeCuentasGRD.getColumn("ejercicioContable").setHidable(true);		
 		planDeCuentasGRD.getColumn("codigoCuentaPadre").setHidable(true);
 		planDeCuentasGRD.getColumn("codigoCuenta").setHidable(true);
 		planDeCuentasGRD.getColumn("cuentaContable").setHidable(true);
@@ -610,7 +608,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 				PlanDeCuantaFormUi ui = new PlanDeCuantaFormUi(win, cx, this,
 						planDeCuentaNew);
 
-				win.setCaption("Agragar cuenta contable");
+				win.setCaption("Copiar cuenta contable");
 				win.setImmediate(true);
 				win.setWidth("-1px");
 				win.setHeight("-1px");

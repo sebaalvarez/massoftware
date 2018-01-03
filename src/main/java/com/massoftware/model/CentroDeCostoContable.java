@@ -108,7 +108,7 @@ public class CentroDeCostoContable extends EntityId implements Cloneable,
 
 	public int compareTo(CentroDeCostoContable o) {
 
-		return this.getNumero().compareTo(this.getNumero());
+		return this.getNumero().compareTo(o.getNumero());
 	}
 
 	// @Override

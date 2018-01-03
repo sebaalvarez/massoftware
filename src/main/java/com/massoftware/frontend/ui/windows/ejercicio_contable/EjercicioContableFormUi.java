@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.form;
+package com.massoftware.frontend.ui.windows.ejercicio_contable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

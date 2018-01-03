@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.form;
+package com.massoftware.frontend.ui.windows.plan_de_cuenta;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -11,11 +11,8 @@ import org.vaadin.inputmask.InputMask;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.StringLengthValidatorInputMask;
-import com.massoftware.frontend.ui.util.plan_de_cuenta.FormatPlanDeCuentaCodigoCuenta;
-import com.massoftware.frontend.ui.util.plan_de_cuenta.ValidatorPlanDeCuentaCodigo;
-import com.massoftware.frontend.ui.util.plan_de_cuenta.ValidatorPlanDeCuentaCodigoPadre;
-import com.massoftware.frontend.ui.util.plan_de_cuenta.ValidatorPlanDeCuentaCuentaContable;
-import com.massoftware.frontend.ui.windows.list.PlanDeCuentaTableUi;
+import com.massoftware.frontend.ui.windows.centro_de_costo_contable.CentroDeCostoContableFormUi;
+import com.massoftware.frontend.ui.windows.punto_de_equilibrio.PuntoDeEquilibrioFormUi2;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CostoDeVenta;
 import com.massoftware.model.EjercicioContable;
@@ -40,6 +37,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -82,7 +80,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 	protected CheckBox cuentaConApropiacionCKB;
 
 	protected FormLayout centroDeCostosFL;
-	protected ComboBox centroDeCostoContableCB;
+	protected ComboBox centroDeCostosCB;
 	protected HorizontalLayout cuentaAgrupadoraPorcentajeHL;
 	protected TextField cuentaAgrupadoraTXT;
 	protected TextField porcentajeTXT;
@@ -91,7 +89,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 	protected ComboBox costoDeVentaCB;
 
 	protected Button agregarBTN;
-	protected Button cancelarBTN;
+	// protected Button cancelarBTN;
 
 	// ----------------------------------------------
 	// OPCIONES
@@ -199,10 +197,10 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		planDeCuentaEstadoCB = new ComboBox();
 		cuentaConApropiacionCKB = new CheckBox();
 		agregarBTN = new Button();
-		cancelarBTN = new Button();
+		// cancelarBTN = new Button();
 
 		centroDeCostosFL = new FormLayout();
-		centroDeCostoContableCB = new ComboBox();
+		centroDeCostosCB = new ComboBox();
 		cuentaAgrupadoraPorcentajeHL = new HorizontalLayout();
 		cuentaAgrupadoraTXT = new TextField();
 		porcentajeTXT = new TextField(); // porcentajeTXT = new NumberField ();
@@ -239,7 +237,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 
 	protected void listenersStateViewA() throws Exception {
 		agregarBTN.addClickListener(listener -> agregarBTNClick());
-		cancelarBTN.addClickListener(listener -> exit());
+		// cancelarBTN.addClickListener(listener -> exit());
 
 		codigoCuentaTXT.addTextChangeListener(new TextChangeListener() {
 
@@ -602,78 +600,55 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 
 		// --------------------------------------------------
 
-		centroDeCostoContableCB.setCaption("Centro de costo");
-		centroDeCostoContableCB.addStyleName(ValoTheme.COMBOBOX_TINY);
-		centroDeCostoContableCB.setTabIndex(10);
-		centroDeCostoContableCB.setWidth("100%");
-		centroDeCostoContableCB.setHeight("-1px");
-		centroDeCostoContableCB.setRequired(false);
-		centroDeCostoContableCB.setRequiredError("El campo "
-				+ centroDeCostoContableCB.getCaption()
+		centroDeCostosCB.setCaption("Centro de costo");
+		centroDeCostosCB.addStyleName(ValoTheme.COMBOBOX_TINY);
+		centroDeCostosCB.setTabIndex(10);
+		centroDeCostosCB.setWidth("100%");
+		centroDeCostosCB.setHeight("-1px");
+		centroDeCostosCB.setRequired(false);
+		centroDeCostosCB.setRequiredError("El campo "
+				+ centroDeCostosCB.getCaption()
 				+ " es requerido. Es decir no debe estar vacio.");
-		centroDeCostoContableCB.setValidationVisible(true);
-		centroDeCostoContableCB.setVisible(true);
-		centroDeCostoContableCB.setEnabled(true);
-		centroDeCostoContableCB.setReadOnly(false);
-		centroDeCostoContableCB.setImmediate(true);
-		centroDeCostoContableCB.setNullSelectionAllowed(true);
-		centroDeCostoContableCB.setTextInputAllowed(true);
-		centroDeCostoContableCB
-				.setContainerDataSource(centrosDeCostosContablesBIC);
-		centroDeCostoContableCB.setPropertyDataSource(planDeCuentaBI
+		centroDeCostosCB.setValidationVisible(true);
+		centroDeCostosCB.setVisible(true);
+		centroDeCostosCB.setEnabled(true);
+		centroDeCostosCB.setReadOnly(false);
+		centroDeCostosCB.setImmediate(true);
+		centroDeCostosCB.setNullSelectionAllowed(true);
+		centroDeCostosCB.setTextInputAllowed(true);
+		centroDeCostosCB.setContainerDataSource(centrosDeCostosContablesBIC);
+		centroDeCostosCB.setPropertyDataSource(planDeCuentaBI
 				.getItemProperty("centroDeCostoContable"));
-		centroDeCostoContableCB.setTextInputAllowed(true);
+		centroDeCostosCB.setTextInputAllowed(true);
 
-		centroDeCostoContableCB.addShortcutListener(
-		// pass any KeyCode.A, KeyCode.B, KeyCode.C etc..
+		centroDeCostosCB.addShortcutListener(new ShortcutListener(
+				"Agregar centro de costo contable", KeyCode.ENTER,
+				new int[] { ModifierKey.CTRL }) {
 
-				new ShortcutListener("Agregar centro de costo contable", KeyCode.ENTER, new int[] {ModifierKey.CTRL}) {
+			private static final long serialVersionUID = 1L;
 
-				/**
-				 * 
-				 */
-					private static final long serialVersionUID = 1L;
+			@Override
+			public void handleAction(Object sender, Object target) {
+				if (target.equals(centroDeCostosCB)) {
+					centroDeCostoContableCBXCtrlEnter();
+					// System.out
+					// .println("sender " + sender + " target " + target);
+					// System.out.println("getKeyCode() " + getKeyCode());
+					// if (getModifiers().length > 0) {
+					// System.out.println("modifier " + getModifiers()[0]);
+					// }
+					// if (getKeyCode() == KeyCode.TAB) {
+					//
+					// }
+					// new CentroDeCostoContableFormUi(item, cx, win, this,
+					// usuario);
 
-					@Override
-					public void handleAction(Object sender, Object target) {
-						System.out.println("sender " + sender + " target "
-								+ target);
-						System.out.println("getKeyCode() " + getKeyCode());
-						if (getModifiers().length > 0) {
-							System.out.println("modifier " + getModifiers()[0]);
-						}
-						if (getKeyCode() == KeyCode.TAB) {
+				} else if (target.equals(puntoDeEquilibrioCB)) {
+					puntoDeEquilibrioCBCtrlEnter();
+				}
 
-						}
-					}
-				});
-		// centroDeCostoContableCB.setNewItemHandler(new NewItemHandler() {
-		// /**
-		// *
-		// */
-		// private static final long serialVersionUID = 3864057773228372727L;
-		//
-		// @Override
-		// public void addNewItem(String newItemCaption) {
-		//
-		// System.out.println("newItemCaption " + newItemCaption);
-		//
-		// CentroDeCostoContable centroDeCostoContable = new
-		// CentroDeCostoContable();
-		// centroDeCostoContable.setEjercicioContable(ejercicioContableBI
-		// .getBean());
-		// centroDeCostoContable.setNumero(new Integer(newItemCaption
-		// .split("-")[0].trim()));
-		// centroDeCostoContable.setNombre(newItemCaption.split("-")[1]
-		// .trim());
-		// centrosDeCostosContablesBIC.addBean(centroDeCostoContable);
-		//
-		// // Remember to set the selection to the new item
-		// centroDeCostoContableCB.select(centroDeCostoContable);
-		//
-		// Notification.show("Added new planet called " + newItemCaption);
-		// }
-		// });
+			}
+		});
 
 		// --------------------------------------------------
 
@@ -817,6 +792,29 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 				.getItemProperty("puntoDeEquilibrio"));
 		puntoDeEquilibrioCB.setTextInputAllowed(true);
 
+		// puntoDeEquilibrioCB.addShortcutListener(new ShortcutListener(
+		// "Agregar punto de equilibrio", KeyCode.ENTER,
+		// new int[] { ModifierKey.CTRL }) {
+		//
+		// private static final long serialVersionUID = -3636910245806318027L;
+		//
+		// @Override
+		// public void handleAction(Object sender, Object target) {
+		// System.out.println("sender " + sender + " target " + target);
+		// System.out.println("getKeyCode() " + getKeyCode());
+		// if (getModifiers().length > 0) {
+		// System.out.println("modifier " + getModifiers()[0]);
+		// }
+		// if (getKeyCode() == KeyCode.TAB) {
+		//
+		// }
+		// // new CentroDeCostoContableFormUi(item, cx, win, this, usuario);
+		// if (target.equals(puntoDeEquilibrioCB)) {
+		// puntoDeEquilibrioCBCtrlEnter();
+		// }
+		// }
+		// });
+
 		// --------------------------------------------------
 
 		costoDeVentaCB.setCaption("Costo de venta");
@@ -859,17 +857,17 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 
 		// --------------------------------------------------
 
-		cancelarBTN.setCaption("Cancelar");
-		cancelarBTN.addStyleName(ValoTheme.BUTTON_DANGER);
-		cancelarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-		cancelarBTN.setIcon(FontAwesome.CLOSE);
-		cancelarBTN.setTabIndex(90);
-		cancelarBTN.setWidth("-1px");
-		cancelarBTN.setHeight("-1px");
-		cancelarBTN.setVisible(true);
-		cancelarBTN.setEnabled(true);
-		cancelarBTN.setReadOnly(false);
-		cancelarBTN.setImmediate(true);
+		// cancelarBTN.setCaption("Cancelar");
+		// cancelarBTN.addStyleName(ValoTheme.BUTTON_DANGER);
+		// cancelarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+		// cancelarBTN.setIcon(FontAwesome.CLOSE);
+		// cancelarBTN.setTabIndex(90);
+		// cancelarBTN.setWidth("-1px");
+		// cancelarBTN.setHeight("-1px");
+		// cancelarBTN.setVisible(true);
+		// cancelarBTN.setEnabled(true);
+		// cancelarBTN.setReadOnly(false);
+		// cancelarBTN.setImmediate(true);
 
 		// --------------------------------------------------
 	}
@@ -882,7 +880,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 
 		rootAL.addComponent(pestaniasTBS);
 		rootAL.addComponent(agregarBTN, "top:444.0px;left:10.0px;");
-		rootAL.addComponent(cancelarBTN, "top:444.0px;left:431.0px;");
+		// rootAL.addComponent(cancelarBTN, "top:444.0px;left:431.0px;");
 
 		pestaniasTBS.removeAllComponents();
 		pestaniasTBS.addTab(generalFL, "General");
@@ -908,7 +906,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 				Alignment.TOP_LEFT);
 
 		centroDeCostosFL.removeAllComponents();
-		centroDeCostosFL.addComponent(centroDeCostoContableCB);
+		centroDeCostosFL.addComponent(centroDeCostosCB);
 		centroDeCostosFL.addComponent(cuentaAgrupadoraPorcentajeHL);
 		centroDeCostosFL.addComponent(puntoDeEquilibrioCB);
 		centroDeCostosFL.addComponent(costoDeVentaCB);
@@ -934,33 +932,6 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 	}
 
 	protected void loadOptionsPostLoadModelStateView() throws Exception {
-		// EjercicioContable ejercicioContable = new EjercicioContable();
-		// ejercicioContable.setId("2016");
-		// ejercicioContable.setEjercicio(2016);
-		// ejercicioContable.setComentario("comentario de ejercicio");
-
-		// PlanDeCuentaEstado b = new PlanDeCuentaEstado();
-		// b.setId("2");
-		// b.setCodigo(2);
-		// b.setNombre("bbb");
-
-		// PlanDeCuentaEstado planDeCuentaEstado = estadosBIC.getIdByIndex(0);
-
-		// planDeCuentaBI.getBean().setCodigoCuentaPadre("1111");
-		// planDeCuentaBI.getBean().setCodigoCuenta("11113333");
-		// planDeCuentaBI.getBean().setCuentaContable("efsdafdsf");
-		// planDeCuentaBI.getBean().setNombre("nombre");
-		// planDeCuentaBI.getBean().setAjustaPorInflacion(true);
-		// planDeCuentaBI.getBean().setImputable(true);
-		// planDeCuentaBI.getBean().setEjercicioContable(ejercicioContable);
-		// planDeCuentaBI.getBean().setPlanDeCuentaEstado(planDeCuentaEstado);
-		// planDeCuentaBI.getBean().setPorcentaje(36.9);
-		// planDeCuentaBI.getBean().setCuentaAgrupadora("adasdasd");
-		// planDeCuentaBI.getBean().setCostoDeVenta(
-		// costosDeVentaBIC.getIdByIndex(0));
-		//
-		// ejercicioContableBI.setBean(planDeCuentaBI.getBean()
-		// .getEjercicioContable());
 
 		List<CentroDeCostoContable> centrosDeCostosContables = cx
 				.buildCentroDeCostoContableBO()
@@ -1003,26 +974,43 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 						costosDeVentaBIC.getIdByIndex(0));
 			}
 
-		} else {
-			// planDeCuentaEstadoCB.setValue(planDeCuentaBI.getBean()
-			// .getPlanDeCuentaEstado());
-			//
-			// centroDeCostoContableCB.setValue(planDeCuentaBI.getBean()
-			// .getCentroDeCostoContable());
-			//
-			// puntoDeEquilibrioCB.setValue(planDeCuentaBI.getBean()
-			// .getPuntoDeEquilibrio());
+		}
+	}
 
-			// costoDeVentaCB.setValue(planDeCuentaBI.getBean().getCostoDeVenta());
+	public void loadOptionsCCC(CentroDeCostoContable centroDeCostoContableNew)
+			throws Exception {
 
-			// System.out.println("planDeCuentaBI.getBean().getCostoDeVenta().getId() "
-			// + planDeCuentaBI.getBean().getCostoDeVenta());
-			// System.out.println("costosDeVentaBIC.getIdByIndex(0) " +
-			// costosDeVentaBIC.getIdByIndex(0));
-
-			// planDeCuentaBI.getBean().setCostoDeVenta(planDeCuentaBI.getBean().getCostoDeVenta());
+		List<CentroDeCostoContable> centrosDeCostosContables = cx
+				.buildCentroDeCostoContableBO()
+				.findAllOrderByCentroDeCostoContable(
+						planDeCuentaBI.getBean().getEjercicioContable()
+								.getEjercicio());
+		centrosDeCostosContablesBIC.removeAllItems();
+		for (CentroDeCostoContable centroDeCostoContable : centrosDeCostosContables) {
+			centrosDeCostosContablesBIC.addBean(centroDeCostoContable);
 		}
 
+		if (centrosDeCostosContablesBIC.size() > 0) {
+			planDeCuentaBI.getBean().setCentroDeCostoContable(
+					centroDeCostoContableNew);
+		}
+	}
+
+	public void loadOptionsPE(PuntoDeEquilibrio puntoDeEquilibrioNew)
+			throws Exception {
+
+		List<PuntoDeEquilibrio> puntosDeEquilibrio = cx
+				.buildPuntoDeEquilibrioBO().findAllOrderByPuntoDeEquilibrio(
+						planDeCuentaBI.getBean().getEjercicioContable()
+								.getEjercicio());
+		puntosDeEquilibrioBIC.removeAllItems();
+		for (PuntoDeEquilibrio puntoDeEquilibrio : puntosDeEquilibrio) {
+			puntosDeEquilibrioBIC.addBean(puntoDeEquilibrio);
+		}
+
+		if (puntosDeEquilibrioBIC.size() > 0) {
+			planDeCuentaBI.getBean().setPuntoDeEquilibrio(puntoDeEquilibrioNew);
+		}
 	}
 
 	// TRANSITIONS AAA ==================================================
@@ -1155,6 +1143,71 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 			}
 
 			codigoCuentaPadreTXT.setValue(value2);
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+
+	}
+
+	protected void centroDeCostoContableCBXCtrlEnter() {
+		try {
+
+			EjercicioContable ejercicioContable = this.planDeCuentaBI.getBean()
+					.getEjercicioContable();
+
+			puntoDeEquilibrioCB.select(null);
+
+			Window win = new Window();
+
+			CentroDeCostoContableFormUi ui = new CentroDeCostoContableFormUi(
+					win, cx, this, ejercicioContable);
+
+			win.setCaption("Agragar centro de costo contable");
+			win.setImmediate(true);
+			win.setWidth("-1px");
+			win.setHeight("-1px");
+			win.setClosable(true);
+			win.setResizable(false);
+			win.setModal(true);
+			win.center();
+			// win.addCloseShortcut(KeyCode.ESCAPE, null);
+			win.setContent((Component) ui);
+			getUI().addWindow(win);
+			win.center();
+			win.focus();
+
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
+
+	protected void puntoDeEquilibrioCBCtrlEnter() {
+		try {
+
+			EjercicioContable ejercicioContable = this.planDeCuentaBI.getBean()
+					.getEjercicioContable();
+
+			puntoDeEquilibrioCB.select(null);
+
+			Window win = new Window();
+
+			PuntoDeEquilibrioFormUi2 ui = new PuntoDeEquilibrioFormUi2(win, cx,
+					this, ejercicioContable);
+
+			win.setCaption("Agragar punto de equilibrio");
+			win.setImmediate(true);
+			win.setWidth("-1px");
+			win.setHeight("-1px");
+			win.setClosable(true);
+			win.setResizable(false);
+			win.setModal(true);
+			win.center();
+			// win.addCloseShortcut(KeyCode.ESCAPE, null);
+			win.setContent((Component) ui);
+			getUI().addWindow(win);
+			win.center();
+			win.focus();
+
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}

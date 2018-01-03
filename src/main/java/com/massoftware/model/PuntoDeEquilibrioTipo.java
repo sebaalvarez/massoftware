@@ -113,7 +113,7 @@ public class PuntoDeEquilibrioTipo extends EntityId implements Cloneable,
 
 	public int compareTo(PuntoDeEquilibrioTipo o) {
 
-		return this.getCodigo().compareTo(this.getCodigo());
+		return this.getCodigo().compareTo(o.getCodigo());
 
 	}
 
