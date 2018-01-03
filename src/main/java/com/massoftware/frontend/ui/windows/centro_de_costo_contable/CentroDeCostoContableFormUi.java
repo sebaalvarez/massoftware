@@ -369,7 +369,7 @@ public class CentroDeCostoContableFormUi extends CustomComponent {
 		agregarBTN = new Button();
 		agregarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 		agregarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-		agregarBTN.setIcon(FontAwesome.PLUS);
+		agregarBTN.setIcon(FontAwesome.CHECK);
 		if (isForInsertForm) {
 			agregarBTN.setCaption("Agregar");
 		} else {

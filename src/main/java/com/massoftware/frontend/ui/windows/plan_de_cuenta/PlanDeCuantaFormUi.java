@@ -840,10 +840,10 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		// --------------------------------------------------
 
 		if (isForInsertForm) {
-			agregarBTN.setCaption("Agregar");
+			agregarBTN.setCaption("Agregar");			
 		} else {
-			agregarBTN.setCaption("Modificar");
-		}
+			agregarBTN.setCaption("Modificar");			
+		}	
 		agregarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 		agregarBTN.addStyleName(ValoTheme.BUTTON_TINY);
 		agregarBTN.setIcon(FontAwesome.CHECK);

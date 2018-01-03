@@ -30,7 +30,7 @@ public abstract class FormUi extends CustomComponent {
 	protected FormLayout formLayout;
 	private HorizontalLayout footerHL;
 	protected Button guardarBTN;
-	private Button cancelarBTN;
+//	private Button cancelarBTN;
 
 	protected boolean insert = false;
 	private Window window;
@@ -42,7 +42,7 @@ public abstract class FormUi extends CustomComponent {
 
 	private String guardarBTNCaptionInsert = "Agregar";
 	private String guardarBTNCaptionUpdate = "Modificar";
-	private String cancelarBTNCaption = "Cancelar";
+//	private String cancelarBTNCaption = "Cancelar";
 
 	public FormUi(EntityId item, BackendContext cx, Window window,
 			TableUi tableUi, Usuario usuario) {
@@ -135,24 +135,24 @@ public abstract class FormUi extends CustomComponent {
 		Label footerText = new Label("");
 		footerText.setSizeUndefined();
 
-		cancelarBTN = new Button(cancelarBTNCaption);
-		cancelarBTN = new Button(cancelarBTNCaption);
-		cancelarBTN.addStyleName(ValoTheme.BUTTON_DANGER);
-		cancelarBTN.addStyleName(ValoTheme.BUTTON_SMALL);
-		cancelarBTN.setIcon(FontAwesome.CLOSE);
-		cancelarBTN.addClickListener(new ClickListener() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 5955457044776893082L;
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				exit();
-			}
-		});
-
-		footerHL.addComponents(guardarBTN, footerText, cancelarBTN);
+//		cancelarBTN = new Button(cancelarBTNCaption);
+//		cancelarBTN = new Button(cancelarBTNCaption);
+//		cancelarBTN.addStyleName(ValoTheme.BUTTON_DANGER);
+//		cancelarBTN.addStyleName(ValoTheme.BUTTON_SMALL);
+//		cancelarBTN.setIcon(FontAwesome.CLOSE);
+//		cancelarBTN.addClickListener(new ClickListener() {
+//			/**
+//			 * 
+//			 */
+//			private static final long serialVersionUID = 5955457044776893082L;
+//
+//			@Override
+//			public void buttonClick(ClickEvent event) {
+//				exit();
+//			}
+//		});
+//
+		footerHL.addComponents(guardarBTN, footerText/*, cancelarBTN*/);
 		footerHL.setExpandRatio(footerText, 1);
 	}
 
