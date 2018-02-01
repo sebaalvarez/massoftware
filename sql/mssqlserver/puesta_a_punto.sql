@@ -77,7 +77,7 @@ CREATE VIEW [dbo].[vSeguridadPuerta] AS
 			, CAST([SSECUR_Door].[NO] AS INT) AS codigo -- Integer [ 1 - N ] NOT NULL
 			-----------------------------------------------------------------------------------------------------
 				-- , [DGRPNO] AS seguridadModulo -- Id
-				, [vSeguridadModulo].[id] AS seguridadModulo_id
+				, [vSeguridadModulo].[id] AS seguridadModulo_id -- NOT NULL
 				, [vSeguridadModulo].[codigo] AS seguridadModulo_codigo 
 				, [vSeguridadModulo].[nombre] AS seguridadModulo_nombre 
 				, [vSeguridadModulo].[congelado] AS seguridadModulo_congelado 
@@ -523,18 +523,18 @@ CREATE VIEW [dbo].[vSucursal] AS
 			-----------------------------------------------------------------------------------------------------
 			, CAST([Sucursales].[SUCURSAL] AS VARCHAR) As id			
 			-----------------------------------------------------------------------------------------------------
-			, CAST([Sucursales].[SUCURSAL] AS INT) AS codigo -- Integer
+			, CAST([Sucursales].[SUCURSAL] AS INT) AS codigo -- Integer [ 1 - 99 ] NOT NULL
 			, LTRIM(RTRIM(CAST([Sucursales].[NOMBRE] AS VARCHAR))) AS nombre -- String (35) NOT NULL
 			, LTRIM(RTRIM(CAST([Sucursales].[ABREVIATURA] AS VARCHAR))) AS abreviatura -- String (4) NOT NULL      
 			-----------------------------------------------------------------------------------------------------
 				--, [Sucursales].[TIPOSUCURSAL] AS sucursalTipo -- Id			
-				, vSucursalTipo.id  AS sucursalTipo_id			
+				, vSucursalTipo.id  AS sucursalTipo_id	-- NOT NULL		
 				, vSucursalTipo.codigo AS sucursalTipo_codigo
 				, vSucursalTipo.nombre AS sucursalTipo_nombre
 			-- ---------------------------------------------------------------------
 			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASCLIENTESDESDE] AS VARCHAR))) AS cuentaClientesDesde -- String (6)
 			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASCLIENTESHASTA] AS VARCHAR))) AS cuentaClientesHasta -- String (6)
-			, CAST([Sucursales].[CANTIDADCARACTERESCLIENTES] AS INT) AS cantidadCaracteresClientes -- Integer	[3 | 4 | 5 | 6 ] 
+			, CAST([Sucursales].[CANTIDADCARACTERESCLIENTES] AS INT) AS cantidadCaracteresClientes -- Integer	[3 | 4 | 5 | 6 ]  DEFAULT 6 NOT NULL
 			, CAST([Sucursales].[NUMERICOCLIENTES] AS INT) AS identificacionNumericaClientes -- Boolean 
 			, CAST([Sucursales].[PERMITECAMBIARCLIENTES] AS INT) AS permiteCambiarClientes -- Boolean      
 			-- ---------------------------------------------------------------------
@@ -546,14 +546,14 @@ CREATE VIEW [dbo].[vSucursal] AS
 			-- ---------------------------------------------------------------------
 			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASPROVEEDORESDESDE] AS VARCHAR))) AS proveedoresDesde -- String (6) 
 			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASPROVEEDORESHASTA] AS VARCHAR))) AS proveedoresHasta -- String (6)
-			, CAST([Sucursales].[CANTIDADCARACTERESPROVEEDOR] AS INT) AS cantidadCaracteresProveedor -- Integer [3 | 4 | 5 | 6 ]
+			, CAST([Sucursales].[CANTIDADCARACTERESPROVEEDOR] AS INT) AS cantidadCaracteresProveedor -- Integer [3 | 4 | 5 | 6 ] DEFAULT 6 NOT NULL
 			, CAST([Sucursales].[NUMERICOPROVEEDOR] AS INT) AS identificacionNumericaProveedores -- Boolean	  
 			, CAST([Sucursales].[PERMITECAMBIARPROVEEDOR] AS INT) AS permiteCambiarProveedores -- Boolean      
 			-- ---------------------------------------------------------------------      
   
 		FROM	[dbo].[Sucursales]
 		LEFT JOIN	[dbo].[vSucursalTipo]
-				ON	[dbo].[vSucursalTipo].[codigo] = [dbo].[Sucursales].[TIPOSUCURSAL];
+				ON	[dbo].[vSucursalTipo].[codigo] = CAST([dbo].[Sucursales].[TIPOSUCURSAL] AS INT);
 
 	-- SELECT * FROM dbo.vSucursal;	
 	-- SELECT * FROM dbo.vSucursal ORDER BY codigo, nombre;	
@@ -569,9 +569,9 @@ CREATE VIEW [dbo].[vTalonario] AS
 			-----------------------------------------------------------------------------------------------------
 			, CAST([TablaDeMultiproposito].[MULTIPROPOSITO] AS VARCHAR) As id			
 			-----------------------------------------------------------------------------------------------------
-			, CAST([TablaDeMultiproposito].[MULTIPROPOSITO] AS INT) AS codigo -- Integer Not NULL
-			, LTRIM(RTRIM(CAST([TablaDeMultiproposito].[NOMBRE] AS VARCHAR))) AS nombre -- String (20) NULL
-			, LTRIM(RTRIM(CAST([TablaDeMultiproposito].[LETRA] AS VARCHAR))) AS letra -- String (1) [A | B | C | M | R | X] NOT NULL
+			, CAST([TablaDeMultiproposito].[MULTIPROPOSITO] AS INT) AS codigo -- Integer Not NULL [ 1 - 99999 ] 
+			, LTRIM(RTRIM(CAST([TablaDeMultiproposito].[NOMBRE] AS VARCHAR))) AS nombre -- String (20) NOT NULL 
+			, LTRIM(RTRIM(CAST([TablaDeMultiproposito].[LETRA] AS VARCHAR))) AS letra -- String (1) [A | B | C | M | R | X] NOT NULL DEFAULT X
 			-----------------------------------------------------------------------------------------------------
 				-- , [TablaDeMultiproposito].[SUCURSAL] AS sucursal -- Id  NULL
 				, [vSucursal].id AS sucursal_id  				  
@@ -604,7 +604,7 @@ CREATE VIEW [dbo].[vTalonario] AS
 			, CAST([TablaDeMultiproposito].[AUTONUMERACION] AS INT) AS autonumeracion -- Boolean  
 			, CAST([TablaDeMultiproposito].[NUMERACIONPREIMPRESA] AS INT) AS numeracionPreImpresa -- Boolean
 			, CAST([TablaDeMultiproposito].[RG10098] AS INT) AS asociadoAlRG10098 -- Boolean  				
-			, LTRIM(RTRIM(CAST([TablaDeMultiproposito].[CONTROLFISCAL] AS VARCHAR))) AS asociadoAControladorFiscal -- String (1) NOT NULL [ S | H | E | W | M | X ] 
+			, LTRIM(RTRIM(CAST([TablaDeMultiproposito].[CONTROLFISCAL] AS VARCHAR))) AS asociadoAControladorFiscal -- String (1) NOT NULL [ S | H | E | W | M | X ] DEFAULT S
 			, CAST([TablaDeMultiproposito].[PRIMERNUMERO] AS INT) AS primerNumero -- Integer [0 - 99999999] NOT NULL
 			, CAST([TablaDeMultiproposito].[PROXIMONUMERO] AS INT) AS proximoNumero -- Integer [0 - 99999999] NOT NULL
 			, CAST([TablaDeMultiproposito].[ULTIMONUMERO] AS INT) AS ultimoNumero -- Integer [0 - 99999999] NOT NULL
@@ -627,9 +627,9 @@ CREATE VIEW [dbo].[vTalonario] AS
 			-----------------------------------------------------------------------------------------------------		
 	FROM	[dbo].[TablaDeMultiproposito]
 	LEFT JOIN	[dbo].[vSucursal]
-			ON		[dbo].[vSucursal].[codigo] = [dbo].[TablaDeMultiproposito].[SUCURSAL]
+			ON		[dbo].[vSucursal].[codigo] = CAST([dbo].[TablaDeMultiproposito].[SUCURSAL] AS INT)
 	LEFT JOIN	[dbo].[vSeguridadPuerta]
-			ON		[dbo].[vSeguridadPuerta].[codigo] = [dbo].[TablaDeMultiproposito].[DOORNOCAMBIAR];
+			ON		[dbo].[vSeguridadPuerta].[codigo] = CAST([dbo].[TablaDeMultiproposito].[DOORNOCAMBIAR] AS INT);
 
 	-- SELECT DISTINCT [LETRA] AS letra FROM [dbo].[TablaDeMultiproposito]
 	-- SELECT DISTINCT [CONTROLFISCAL] AS letra FROM [dbo].[TablaDeMultiproposito]
@@ -704,8 +704,8 @@ CREATE VIEW [dbo].[vDeposito] AS
 				, [vSucursal].cantidadCaracteresProveedor AS sucursal_cantidadCaracteresProveedor
 				, [vSucursal].identificacionNumericaProveedores AS sucursal_identificacionNumericaProveedores
 				, [vSucursal].permiteCambiarProveedores AS sucursal_permiteCambiarProveedores       
-			-----------------------------------------------------------------------------------------------------
-			, CAST([Depositos].[CAJA] AS INT) AS caja -- Integer		
+			---------------------------------------------------------- -------------------------------------------
+			, CAST([Depositos].[CAJA] AS INT) AS caja -- Integer		// ???????????????????????????????
 			-----------------------------------------------------------------------------------------------------	
 				-- , [Depositos].[MODULO] AS modulo -- Modulo Id  NOT NULL
 				, [vModulo].[id]  AS modulo_id			
@@ -775,18 +775,18 @@ CREATE VIEW [dbo].[vDeposito] AS
 
 	FROM	[dbo].[Depositos]
 	LEFT JOIN	[dbo].[vSucursal]
-			ON		[dbo].[vSucursal].[codigo] = [dbo].[Depositos].[SUCURSAL]
+			ON		[dbo].[vSucursal].[codigo] = CAST([dbo].[Depositos].[SUCURSAL] AS INT)
 	LEFT JOIN	[dbo].[vSeguridadPuerta] AS [puertaOperativo]
-			ON		[puertaOperativo].[codigo] = [dbo].[Depositos].[DOORNOCONSULTAR]
+			ON		[puertaOperativo].[codigo] = CAST([dbo].[Depositos].[DOORNOCONSULTAR] AS INT)
 	LEFT JOIN	[dbo].[vSeguridadPuerta] AS [puertaConsulta]
-			ON		[puertaConsulta].[codigo] = [dbo].[Depositos].[DOORNOOPERATIVO]
+			ON		[puertaConsulta].[codigo] = CAST([dbo].[Depositos].[DOORNOOPERATIVO] AS INT)
 	LEFT JOIN	[dbo].[vModulo] 
-			ON		[dbo].[vModulo].[codigo] = [dbo].[Depositos].[MODULO]
+			ON		[dbo].[vModulo].[codigo] = CAST([dbo].[Depositos].[MODULO] AS INT)
 	
 	LEFT JOIN	[dbo].[Depositos] AS [depositoAgrupacion] 
-			ON		[depositoAgrupacion].[DEPOSITO] = [dbo].[Depositos].[DEPOSITODONDEAGRUPA]
+			ON		CAST([depositoAgrupacion].[DEPOSITO] AS INT) = CAST([dbo].[Depositos].[DEPOSITODONDEAGRUPA] AS INT)
 	LEFT JOIN	[dbo].[vSucursal] AS [SucursalDepositoAgrupacion]
-			ON		[SucursalDepositoAgrupacion].[codigo] = [depositoAgrupacion].[SUCURSAL];
+			ON		[SucursalDepositoAgrupacion].[codigo] = CAST([depositoAgrupacion].[SUCURSAL] AS INT);
 
 
 	-- SELECT DISTINCT [DEPOSITO] FROM [dbo].[Depositos]
