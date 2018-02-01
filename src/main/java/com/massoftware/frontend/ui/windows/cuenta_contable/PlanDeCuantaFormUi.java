@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.plan_de_cuenta;
+package com.massoftware.frontend.ui.windows.cuenta_contable;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -12,12 +12,12 @@ import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.StringLengthValidatorInputMask;
 import com.massoftware.frontend.ui.windows.centro_de_costo_contable.CentroDeCostoContableFormUi;
-import com.massoftware.frontend.ui.windows.punto_de_equilibrio.PuntoDeEquilibrioFormUi2;
+import com.massoftware.frontend.ui.windows.punto_de_equilibrio.PuntoDeEquilibrioFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CostoDeVenta;
 import com.massoftware.model.EjercicioContable;
-import com.massoftware.model.PlanDeCuenta;
-import com.massoftware.model.PlanDeCuentaEstado;
+import com.massoftware.model.CuentaContable;
+import com.massoftware.model.CuentaContableEstado;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -94,7 +94,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 	// ----------------------------------------------
 	// OPCIONES
 
-	protected BeanItemContainer<PlanDeCuentaEstado> planDeCuentaEstadoBIC;
+	protected BeanItemContainer<CuentaContableEstado> planDeCuentaEstadoBIC;
 	protected BeanItemContainer<CentroDeCostoContable> centrosDeCostosContablesBIC;
 	protected BeanItemContainer<PuntoDeEquilibrio> puntosDeEquilibrioBIC;
 	protected BeanItemContainer<CostoDeVenta> costosDeVentaBIC;
@@ -102,7 +102,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 	// ----------------------------------------------
 	// MODELOS
 
-	protected BeanItem<PlanDeCuenta> planDeCuentaBI;
+	protected BeanItem<CuentaContable> planDeCuentaBI;
 	protected BeanItem<EjercicioContable> ejercicioContableBI;
 
 	protected Integer ejercicioOriginal;
@@ -125,7 +125,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 	}
 
 	public PlanDeCuantaFormUi(Window window, BackendContext cx,
-			PlanDeCuentaTableUi planDeCuentaTableUi, PlanDeCuenta planDeCuenta) {
+			PlanDeCuentaTableUi planDeCuentaTableUi, CuentaContable planDeCuenta) {
 		super();
 		try {
 			this.isForInsertForm = true;
@@ -139,7 +139,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 	}
 
 	public PlanDeCuantaFormUi(Window window, BackendContext cx,
-			PlanDeCuentaTableUi planDeCuentaTableUi, PlanDeCuenta planDeCuenta,
+			PlanDeCuentaTableUi planDeCuentaTableUi, CuentaContable planDeCuenta,
 			boolean isForUpdateForm) {
 		super();
 		try {
@@ -168,7 +168,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 
 	// AAA ................................................................
 
-	protected void buildStateViewA(PlanDeCuenta planDeCuenta,
+	protected void buildStateViewA(CuentaContable planDeCuenta,
 			EjercicioContable ejercicioContable) throws Exception {
 		instanceStateViewA(planDeCuenta, ejercicioContable);
 		listenersStateViewA();
@@ -178,7 +178,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		loadOptionsPostLoadModelStateView();
 	}
 
-	protected void instanceStateViewA(PlanDeCuenta planDeCuenta,
+	protected void instanceStateViewA(CuentaContable planDeCuenta,
 			EjercicioContable ejercicioContable) {
 
 		// CONTROLES
@@ -208,8 +208,8 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		costoDeVentaCB = new ComboBox();
 
 		// OPCIONES
-		planDeCuentaEstadoBIC = new BeanItemContainer<PlanDeCuentaEstado>(
-				PlanDeCuentaEstado.class, new ArrayList<PlanDeCuentaEstado>());
+		planDeCuentaEstadoBIC = new BeanItemContainer<CuentaContableEstado>(
+				CuentaContableEstado.class, new ArrayList<CuentaContableEstado>());
 		centrosDeCostosContablesBIC = new BeanItemContainer<CentroDeCostoContable>(
 				CentroDeCostoContable.class,
 				new ArrayList<CentroDeCostoContable>());
@@ -220,11 +220,11 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 
 		// MODELOS
 		if (planDeCuenta != null) {
-			planDeCuentaBI = new BeanItem<PlanDeCuenta>(planDeCuenta);
+			planDeCuentaBI = new BeanItem<CuentaContable>(planDeCuenta);
 		} else {
-			planDeCuenta = new PlanDeCuenta();
+			planDeCuenta = new CuentaContable();
 			planDeCuenta.setEjercicioContable(ejercicioContable);
-			planDeCuentaBI = new BeanItem<PlanDeCuenta>(planDeCuenta);
+			planDeCuentaBI = new BeanItem<CuentaContable>(planDeCuenta);
 		}
 
 		ejercicioContableBI = new BeanItem<EjercicioContable>(
@@ -273,10 +273,10 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 
 	protected void loadOptionsStateViewA() throws Exception {
 
-		List<PlanDeCuentaEstado> planDeCuentaEstados = cx
+		List<CuentaContableEstado> planDeCuentaEstados = cx
 				.buildPlanDeCuentaEstadoBO().findAll();
 		planDeCuentaEstadoBIC.removeAllItems();
-		for (PlanDeCuentaEstado planDeCuentaEstado : planDeCuentaEstados) {
+		for (CuentaContableEstado planDeCuentaEstado : planDeCuentaEstados) {
 			planDeCuentaEstadoBIC.addBean(planDeCuentaEstado);
 		}
 
@@ -621,35 +621,6 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 				.getItemProperty("centroDeCostoContable"));
 		centroDeCostosCB.setTextInputAllowed(true);
 
-		centroDeCostosCB.addShortcutListener(new ShortcutListener(
-				"Agregar centro de costo contable", KeyCode.ENTER,
-				new int[] { ModifierKey.CTRL }) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void handleAction(Object sender, Object target) {
-				if (target.equals(centroDeCostosCB)) {
-					centroDeCostoContableCBXCtrlEnter();
-					// System.out
-					// .println("sender " + sender + " target " + target);
-					// System.out.println("getKeyCode() " + getKeyCode());
-					// if (getModifiers().length > 0) {
-					// System.out.println("modifier " + getModifiers()[0]);
-					// }
-					// if (getKeyCode() == KeyCode.TAB) {
-					//
-					// }
-					// new CentroDeCostoContableFormUi(item, cx, win, this,
-					// usuario);
-
-				} else if (target.equals(puntoDeEquilibrioCB)) {
-					puntoDeEquilibrioCBCtrlEnter();
-				}
-
-			}
-		});
-
 		// --------------------------------------------------
 
 		cuentaAgrupadoraPorcentajeHL.setMargin(false);
@@ -840,10 +811,10 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		// --------------------------------------------------
 
 		if (isForInsertForm) {
-			agregarBTN.setCaption("Agregar");			
+			agregarBTN.setCaption("Agregar");
 		} else {
-			agregarBTN.setCaption("Modificar");			
-		}	
+			agregarBTN.setCaption("Modificar");
+		}
 		agregarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 		agregarBTN.addStyleName(ValoTheme.BUTTON_TINY);
 		agregarBTN.setIcon(FontAwesome.CHECK);
@@ -870,6 +841,37 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		// cancelarBTN.setImmediate(true);
 
 		// --------------------------------------------------
+
+		this.addShortcutListener(new ShortcutListener("CTRL+ENTER",
+				KeyCode.ENTER, new int[] { ModifierKey.CTRL }) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				if (target.equals(centroDeCostosCB)) {
+					centroDeCostoContableCBXCtrlEnter();
+					// System.out
+					// .println("sender " + sender + " target " + target);
+					// System.out.println("getKeyCode() " + getKeyCode());
+					// if (getModifiers().length > 0) {
+					// System.out.println("modifier " + getModifiers()[0]);
+					// }
+					// if (getKeyCode() == KeyCode.TAB) {
+					//
+					// }
+					// new CentroDeCostoContableFormUi(item, cx, win, this,
+					// usuario);
+
+				} else if (target.equals(puntoDeEquilibrioCB)) {
+					thisCtrlEnter();
+				}
+
+			}
+		});
+
+		// --------------------------------------------------
+
 	}
 
 	protected void treeStateViewA() {
@@ -955,7 +957,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		if (this.isForInsertForm) {
 
 			if (planDeCuentaEstadoBIC.size() > 0) {
-				planDeCuentaBI.getBean().setPlanDeCuentaEstado(
+				planDeCuentaBI.getBean().setCuentaContableEstado(
 						planDeCuentaEstadoBIC.getIdByIndex(1));
 			}
 
@@ -1181,7 +1183,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		}
 	}
 
-	protected void puntoDeEquilibrioCBCtrlEnter() {
+	protected void thisCtrlEnter() {
 		try {
 
 			EjercicioContable ejercicioContable = this.planDeCuentaBI.getBean()
@@ -1191,7 +1193,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 
 			Window win = new Window();
 
-			PuntoDeEquilibrioFormUi2 ui = new PuntoDeEquilibrioFormUi2(win, cx,
+			PuntoDeEquilibrioFormUi ui = new PuntoDeEquilibrioFormUi(win, cx,
 					this, ejercicioContable);
 
 			win.setCaption("Agragar punto de equilibrio");

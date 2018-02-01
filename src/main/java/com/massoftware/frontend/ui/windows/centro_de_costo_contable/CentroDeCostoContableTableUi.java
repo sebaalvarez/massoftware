@@ -15,8 +15,11 @@ import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
@@ -181,8 +184,8 @@ public class CentroDeCostoContableTableUi extends CustomComponent {
 
 		filaFiltro2HL = new HorizontalLayout();
 
-//		rootVL.addComponent(filaFiltro2HL);
-//		rootVL.setComponentAlignment(filaFiltro2HL, Alignment.MIDDLE_CENTER);
+		// rootVL.addComponent(filaFiltro2HL);
+		// rootVL.setComponentAlignment(filaFiltro2HL, Alignment.MIDDLE_CENTER);
 
 		// ----------------------------------------------
 
@@ -320,6 +323,7 @@ public class CentroDeCostoContableTableUi extends CustomComponent {
 		agregarBTN.addStyleName(ValoTheme.BUTTON_TINY);
 		agregarBTN.setIcon(FontAwesome.PLUS);
 		agregarBTN.setCaption("Agregar");
+		agregarBTN.setDescription(agregarBTN.getCaption() + " (Ctrl+A)");
 		agregarBTN.addClickListener(e -> {
 			agregarBTNClick();
 		});
@@ -333,6 +337,7 @@ public class CentroDeCostoContableTableUi extends CustomComponent {
 		modificarBTN.addStyleName(ValoTheme.BUTTON_TINY);
 		modificarBTN.setIcon(FontAwesome.PENCIL);
 		modificarBTN.setCaption("Modificar");
+		modificarBTN.setDescription(modificarBTN.getCaption() + " (Ctrl+M)");
 		modificarBTN.addClickListener(e -> {
 			modificarBTNClick();
 		});
@@ -361,6 +366,47 @@ public class CentroDeCostoContableTableUi extends CustomComponent {
 		});
 
 		barraDeHerramientasFila2.addComponent(eliminarBTN);
+
+		// --------------------------------------------------
+
+		this.addShortcutListener(new ShortcutListener("ENTER", KeyCode.ENTER,
+				new int[] {}) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				if (target.equals(centrosDeCostoContableGRD)) {
+					modificarBTNClick();
+				}
+
+			}
+		});
+
+		// --------------------------------------------------
+
+		this.addShortcutListener(new ShortcutListener("CTRL+A", KeyCode.A,
+				new int[] { ModifierKey.CTRL }) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				agregarBTNClick();
+			}
+		});
+		// --------------------------------------------------
+
+		this.addShortcutListener(new ShortcutListener("CTRL+M", KeyCode.M,
+				new int[] { ModifierKey.CTRL }) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				modificarBTNClick();
+			}
+		});
 
 		// ----------------------------------------------
 
@@ -511,7 +557,7 @@ public class CentroDeCostoContableTableUi extends CustomComponent {
 
 				container.addContainerFilter(new SimpleStringTraslateFilter(
 						pidFiltering, filterValue, true,
-						SimpleStringTraslateFilter.CONTAINS_WORDS));
+						SimpleStringTraslateFilter.CONTAINS_WORDS_AND));
 
 			}
 			centrosDeCostoContableGRD.recalculateColumnWidths();

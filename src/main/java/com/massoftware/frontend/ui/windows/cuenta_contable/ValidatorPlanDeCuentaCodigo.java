@@ -1,8 +1,8 @@
-package com.massoftware.frontend.ui.windows.plan_de_cuenta;
+package com.massoftware.frontend.ui.windows.cuenta_contable;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.model.PlanDeCuenta;
+import com.massoftware.model.CuentaContable;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
 
@@ -15,18 +15,18 @@ public class ValidatorPlanDeCuentaCodigo extends AbstractStringValidator {
 	
 	private BackendContext cx;
 
-	protected BeanItem<PlanDeCuenta> planDeCuentaBI;
+	protected BeanItem<CuentaContable> planDeCuentaBI;
 	protected String codigoCuentaOriginal;
 
 	public ValidatorPlanDeCuentaCodigo(String errorMessage, BackendContext cx,
-			BeanItem<PlanDeCuenta> planDeCuentaBI) {
+			BeanItem<CuentaContable> planDeCuentaBI) {
 		super(errorMessage);
 		this.cx = cx;
 		this.planDeCuentaBI = planDeCuentaBI;
 	}
 
 	public ValidatorPlanDeCuentaCodigo(String errorMessage, BackendContext cx,
-			BeanItem<PlanDeCuenta> planDeCuentaBI, String codigoCuentaOriginal) {
+			BeanItem<CuentaContable> planDeCuentaBI, String codigoCuentaOriginal) {
 		super(errorMessage);
 		this.cx = cx;
 		this.planDeCuentaBI = planDeCuentaBI;

@@ -3,250 +3,443 @@ package com.massoftware.frontend.ui.windows.punto_de_equilibrio;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cendra.common.model.EntityId;
+import org.cendra.ex.crud.InsertDuplicateException;
+import org.vaadin.inputmask.InputMask;
 
-import com.massoftware.backend.bo.EjercicioContableBO;
-import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
-import com.massoftware.backend.bo.PuntoDeEquilibrioTipoBO;
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.ui.util.FormUi;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StringToIntegerConverterUnspecifiedLocale;
-import com.massoftware.frontend.ui.util.TableUi;
+import com.massoftware.frontend.ui.windows.cuenta_contable.PlanDeCuantaFormUi;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.PuntoDeEquilibrioTipo;
-import com.massoftware.model.Usuario;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class PuntoDeEquilibrioFormUi extends FormUi {
+public class PuntoDeEquilibrioFormUi extends CustomComponent {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1215098492704552373L;
+	private static final long serialVersionUID = -2532562154487745403L;
 
-	private TextField ejercicioTXT;
-	private TextField puntoDeEquilibrioTXT;
-	private TextField nombreTXT;
-	private ComboBox tipoCBX;
+	// ----------------------------------------------
 
-	// -------------------------------------------------------------------
+	protected Window window;
+	protected BackendContext cx;
+	protected PuntoDeEquilibrioTableUi puntoDeEquilibrioTableUi;
+	protected PlanDeCuantaFormUi planDeCuantaFormUi;
 
-	private PuntoDeEquilibrioBO puntoDeEquilibrioBO;
-	private PuntoDeEquilibrioTipoBO puntoDeEquilibrioTipoBO;
-	private EjercicioContableBO ejercicioContableBO;
+	private boolean isForInsertForm;
 
-	// -------------------------------------------------------------------
+	// ----------------------------------------------
+	// CONTROLES
 
-	private EntityId itemClone;
+	protected VerticalLayout rootVL;
+	protected FormLayout generalFL;
+	protected TextField ejercicioContableTXT;
+	protected TextField puntoDeEquilibrioTXT;
+	protected TextField nombreTXT;
+	protected ComboBox puntoDeEquilibrioTipoCB;
 
-	// -------------------------------------------------------------------
+	protected HorizontalLayout barraDeHerramientasFila1;
+	protected Button agregarBTN;
 
-	public PuntoDeEquilibrioFormUi(EntityId item, BackendContext cx,
-			Window window, TableUi tableUi, Usuario usuario) {
-		super(item, cx, window, tableUi, usuario);
-		init();
+	// ----------------------------------------------
+	// OPCIONES
+
+	protected BeanItemContainer<PuntoDeEquilibrioTipo> puntoDeEquilibrioTipoBIC;
+
+	// ----------------------------------------------
+	// MODELOS
+
+	protected BeanItem<PuntoDeEquilibrio> puntoDeEquilibrioBI;
+	protected BeanItem<EjercicioContable> ejercicioContableBI;
+
+	protected Integer ejercicioOriginal;
+	protected Integer puntoDeEquilibrioOriginal;
+
+	public PuntoDeEquilibrioFormUi(Window window, BackendContext cx,
+			PlanDeCuantaFormUi planDeCuantaFormUi,
+			EjercicioContable ejercicioContable) {
+		super();
+		try {
+			this.isForInsertForm = true;
+			this.window = window;
+			this.cx = cx;
+			this.planDeCuantaFormUi = planDeCuantaFormUi;
+			viewPort768x1024(null, ejercicioContable);
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
 	}
 
-	// ==============================================================
-
-	protected void initObjectBO() {
-		this.puntoDeEquilibrioBO = cx.buildPuntoDeEquilibrioBO();
-		this.puntoDeEquilibrioTipoBO = cx.buildPuntoDeEquilibrioTipoBO();
-		this.ejercicioContableBO = cx.buildEjercicioContableBO();
+	public PuntoDeEquilibrioFormUi(Window window, BackendContext cx,
+			PuntoDeEquilibrioTableUi puntoDeEquilibrioTableUi,
+			EjercicioContable ejercicioContable) {
+		super();
+		try {
+			this.isForInsertForm = true;
+			this.window = window;
+			this.cx = cx;
+			this.puntoDeEquilibrioTableUi = puntoDeEquilibrioTableUi;
+			viewPort768x1024(null, ejercicioContable);
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
 	}
 
-	@SuppressWarnings("rawtypes")
-	protected Class getClassForm() {
-		return PuntoDeEquilibrio.class;
+	public PuntoDeEquilibrioFormUi(Window window, BackendContext cx,
+			PuntoDeEquilibrioTableUi puntoDeEquilibrioTableUi,
+			PuntoDeEquilibrio puntoDeEquilibrio) {
+		super();
+		try {
+			this.isForInsertForm = true;
+			this.window = window;
+			this.cx = cx;
+			this.puntoDeEquilibrioTableUi = puntoDeEquilibrioTableUi;
+			viewPort768x1024(puntoDeEquilibrio, null);
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
 	}
 
-	protected void buildFormBody() throws Exception {
-		String[] attsName = getEntityAttMetaDataForm().getAttNames();
-		String[] attsName2 = cx.getEntityMetaData(
-				EjercicioContable.class.getCanonicalName()).getAttNames();
+	public PuntoDeEquilibrioFormUi(Window window, BackendContext cx,
+			PuntoDeEquilibrioTableUi puntoDeEquilibrioTableUi,
+			PuntoDeEquilibrio puntoDeEquilibrio, boolean isForUpdateForm) {
+		super();
+		try {
+			this.isForInsertForm = isForUpdateForm;
+			this.window = window;
+			this.cx = cx;
+			this.puntoDeEquilibrioTableUi = puntoDeEquilibrioTableUi;
+			viewPort768x1024(puntoDeEquilibrio, null);
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
 
-		String[] attsLabelShort = getEntityAttMetaDataForm()
-				.getAttShortLabels();
+	protected void exit() {
 
-		String ejercicioTXTMsgError1 = "El campo " + attsName[1]
-				+ " es requerido.";
-		String puntoDeEquilibrioTXTMsgError1 = "El campo " + attsLabelShort[1]
-				+ " es requerido.";
-		String puntoDeEquilibrioTXTMsgError2 = "El punto de equilibrio debe ser un número entero y positivo, mayor o igual a 1 y menor o igual a "
-				+ Short.MAX_VALUE
-				+ ". Usted cargo el valor \"{0}\" y es inválido.";
-		String nombreTXTMsgError1 = "El campo " + attsLabelShort[2]
-				+ " es requerido.";
-		String tipoCBXMsgError1 = "El campo " + attsLabelShort[3]
-				+ " es requerido.";
+		try {
+			window.close();
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
 
-		if (item != null) {
-			item = item.clone();
+	// ESTATE VIEWS ======================================================
 
-			if (((PuntoDeEquilibrio) item).getPuntoDeEquilibrio() == null) {
-				Integer t = puntoDeEquilibrioBO.findMaxPuntoDeEquilibrio();
-				if (t == null || t < 1) {
-					t = 1;
-				}
+	// AAA ................................................................
 
-				((PuntoDeEquilibrio) item).setPuntoDeEquilibrio(t);
+	protected void viewPort768x1024(PuntoDeEquilibrio puntoDeEquilibrio,
+			EjercicioContable ejercicioContable) throws Exception {
 
-				insert = true;
+		// OPCIONES
+		puntoDeEquilibrioTipoBIC = new BeanItemContainer<PuntoDeEquilibrioTipo>(
+				PuntoDeEquilibrioTipo.class,
+				new ArrayList<PuntoDeEquilibrioTipo>());
 
-			}
-
-			itemClone = item.clone();
-
-		} else {
-			item = new PuntoDeEquilibrio();
-
-			EjercicioContable ejercicioContableDefault = usuario
-					.getEjercicioContable();
-			if (ejercicioContableDefault != null
-					&& ejercicioContableDefault.getEjercicio() != null) {
-				((PuntoDeEquilibrio) item)
-						.setEjercicioContable(ejercicioContableDefault);
-
-			} else {
-				((PuntoDeEquilibrio) item)
-						.setEjercicioContable(ejercicioContableBO
-								.findMaxEjercicio());
-			}
-
-			Integer t = puntoDeEquilibrioBO.findMaxPuntoDeEquilibrio();
-			if (t == null || t < 1) {
-				t = 1;
-			}
-
-			((PuntoDeEquilibrio) item).setPuntoDeEquilibrio(t);
+		List<PuntoDeEquilibrioTipo> puntosDeEquilibrioTipo = cx
+				.buildPuntoDeEquilibrioTipoBO().findAll();
+		puntoDeEquilibrioTipoBIC.removeAllItems();
+		for (PuntoDeEquilibrioTipo puntoDeEquilibrioTipo : puntosDeEquilibrioTipo) {
+			puntoDeEquilibrioTipoBIC.addBean(puntoDeEquilibrioTipo);
 		}
 
-		BeanItem<PuntoDeEquilibrio> beanItem = new BeanItem<PuntoDeEquilibrio>(
-				(PuntoDeEquilibrio) item);
+		// MODELOS
+		if (puntoDeEquilibrio != null) {
+			puntoDeEquilibrioBI = new BeanItem<PuntoDeEquilibrio>(
+					puntoDeEquilibrio);
+		} else {
+			puntoDeEquilibrio = new PuntoDeEquilibrio();
+			puntoDeEquilibrio.setEjercicioContable(ejercicioContable);
+			puntoDeEquilibrioBI = new BeanItem<PuntoDeEquilibrio>(
+					puntoDeEquilibrio);
+		}
 
-		BeanItem<EjercicioContable> beanItem2 = new BeanItem<EjercicioContable>(
-				((PuntoDeEquilibrio) item).getEjercicioContable());
+		ejercicioContableBI = new BeanItem<EjercicioContable>(
+				puntoDeEquilibrio.getEjercicioContable());
 
-		// --------------------------------------------------------------------
+		ejercicioOriginal = ejercicioContableBI.getBean().getEjercicio();
+		puntoDeEquilibrioOriginal = puntoDeEquilibrioBI.getBean()
+				.getPuntoDeEquilibrio();
 
-		ejercicioTXT = new TextField(attsLabelShort[0],
-				beanItem2.getItemProperty(attsName2[0]));
-		ejercicioTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-		ejercicioTXT.setRequired(true);
-		ejercicioTXT.setRequiredError(ejercicioTXTMsgError1);
-		ejercicioTXT
-				.setConverter(new StringToIntegerConverterUnspecifiedLocale());
-		ejercicioTXT.setNullRepresentation("");
-		ejercicioTXT.setReadOnly(true);
-		formLayout.addComponent(ejercicioTXT);
+		if (isForInsertForm) {
+			Integer maxNumero = cx.buildPuntoDeEquilibrioBO()
+					.findMaxPuntoDeEquilibrio(
+							puntoDeEquilibrioBI.getBean()
+									.getEjercicioContable().getEjercicio());
+			if (maxNumero == null || maxNumero < 1) {
+				maxNumero = 1;
+			}
 
-		// --------------------------------------------------------------------
+			puntoDeEquilibrioBI.getBean().setPuntoDeEquilibrio(maxNumero);
+		}
 
-		puntoDeEquilibrioTXT = new TextField(attsLabelShort[1],
-				beanItem.getItemProperty(attsName[1]));
-		puntoDeEquilibrioTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+		// ----------------------------------------------
+		// CONTROLES
+
+		// this.setCaption("Plan de cuenta");
+		// this.setImmediate(true);
+		// this.setWidth("-1px");
+		// this.setHeight("-1px");
+		// this.setClosable(true);
+		// this.setResizable(false);
+		// this.center();
+
+		// --------------------------------------------------
+
+		rootVL = new VerticalLayout();
+		rootVL.setMargin(true);
+		rootVL.setSpacing(true);
+		rootVL.setWidth("-1px");
+
+		this.setCompositionRoot(rootVL);
+
+		// --------------------------------------------------
+
+		generalFL = new FormLayout();
+		generalFL.setMargin(true);
+		generalFL.setSpacing(true);
+		generalFL.setWidth("-1px");
+		generalFL.setHeight("-1px");
+		generalFL.setVisible(true);
+		generalFL.setEnabled(true);
+		generalFL.setReadOnly(false);
+		generalFL.setImmediate(true);
+
+		rootVL.addComponent(generalFL);
+
+		// --------------------------------------------------
+
+		ejercicioContableTXT = new TextField();
+		ejercicioContableTXT.setCaption("Ejercicio");
+		ejercicioContableTXT.addStyleName(ValoTheme.TEXTAREA_TINY);
+		ejercicioContableTXT.setTabIndex(-1);
+		ejercicioContableTXT.setWidth("-1px");
+		ejercicioContableTXT.setHeight("-1px");
+		ejercicioContableTXT.setColumns(4);
+		ejercicioContableTXT.setMaxLength(4);
+		ejercicioContableTXT.setRequired(true);
+		ejercicioContableTXT.setRequiredError("El campo "
+				+ ejercicioContableTXT.getCaption()
+				+ " es requerido. Es decir no debe estar vacio.");
+		ejercicioContableTXT.setValidationVisible(true);
+		ejercicioContableTXT.setNullRepresentation("");
+		// ejercicioContableTXT
+		// .setConverter(new StringToIntegerConverterUnspecifiedLocale());
+		// "El ejercicio debe ser un número entero y positivo de 4 cifras, igual a ${maxEjercicio}. Usted cargo el valor \"{0}\" y es inválido.";
+		// ejercicioContableTXT.addValidator(new IntegerRangeValidator("", , );
+		ejercicioContableTXT.setVisible(true);
+		ejercicioContableTXT.setEnabled(true);
+		ejercicioContableTXT.setReadOnly(true);
+		ejercicioContableTXT.setImmediate(true);
+		ejercicioContableTXT.setPropertyDataSource(ejercicioContableBI
+				.getItemProperty("ejercicio"));
+		InputMask ejercicioContableNIM = new InputMask("9999");
+		ejercicioContableNIM.setNumericInput(true);
+		ejercicioContableNIM.setAllowMinus(false);
+		ejercicioContableNIM.setMax("2030");
+		ejercicioContableNIM.setDigitsOptional(false);
+		ejercicioContableNIM.extend(ejercicioContableTXT);
+
+		generalFL.addComponent(ejercicioContableTXT);
+
+		// --------------------------------------------------
+
+		puntoDeEquilibrioTXT = new TextField();
+		puntoDeEquilibrioTXT.setCaption("Número");
+		puntoDeEquilibrioTXT.addStyleName(ValoTheme.TEXTFIELD_TINY);
+		puntoDeEquilibrioTXT.setTabIndex(10);
+		puntoDeEquilibrioTXT.setWidth("-1px");
+		puntoDeEquilibrioTXT.setHeight("-1px");
+		// numeroTXT.setColumns((int) (5 * 0.7));
+		puntoDeEquilibrioTXT.setColumns(5);
+		puntoDeEquilibrioTXT.setMaxLength(5);
 		puntoDeEquilibrioTXT.setRequired(true);
-		puntoDeEquilibrioTXT.setRequiredError(puntoDeEquilibrioTXTMsgError1);
-		puntoDeEquilibrioTXT
-				.setConverter(new StringToIntegerConverterUnspecifiedLocale());
+		puntoDeEquilibrioTXT.setRequiredError("El campo "
+				+ puntoDeEquilibrioTXT.getCaption()
+				+ " es requerido. Es decir no debe estar vacio.");
+		puntoDeEquilibrioTXT.setValidationVisible(true);
 		puntoDeEquilibrioTXT.setNullRepresentation("");
-		puntoDeEquilibrioTXT.addValidator(new IntegerRangeValidator(
-				puntoDeEquilibrioTXTMsgError2, 1, Integer.MAX_VALUE));
-		formLayout.addComponent(puntoDeEquilibrioTXT);
-
-		// --------------------------------------------------------------------
-
-		nombreTXT = new TextField(attsLabelShort[2],
-				beanItem.getItemProperty(attsName[2]));
-		nombreTXT.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-		nombreTXT.setRequired(true);
-		nombreTXT.setRequiredError(nombreTXTMsgError1);
-		nombreTXT.setNullRepresentation("");
-		formLayout.addComponent(nombreTXT);
-
-		// --------------------------------------------------------------------
-
-		tipoCBX = new ComboBox(attsLabelShort[3]);
-		tipoCBX.setPropertyDataSource(beanItem.getItemProperty(attsName[3]));
-		tipoCBX.addStyleName(ValoTheme.COMBOBOX_SMALL);
-		tipoCBX.setNullSelectionAllowed(false);
-		tipoCBX.setRequired(true);
-		tipoCBX.setRequiredError(tipoCBXMsgError1);
-		loadTipoCBX();
-		if (tipoCBX.getContainerDataSource() == null
-				|| tipoCBX.getContainerDataSource().size() == 0) {
-
-			guardarBTN.setEnabled(false);
-
+		puntoDeEquilibrioTXT.setVisible(true);
+		puntoDeEquilibrioTXT.setEnabled(true);
+		puntoDeEquilibrioTXT.setReadOnly(false);
+		puntoDeEquilibrioTXT.setImmediate(true);
+		puntoDeEquilibrioTXT.setPropertyDataSource(puntoDeEquilibrioBI
+				.getItemProperty("puntoDeEquilibrio"));
+		InputMask numeroNIM = new InputMask("99999");
+		numeroNIM.setAutoUnmask(true);
+		numeroNIM.setNumericInput(true);
+		numeroNIM.setAllowMinus(false);
+		numeroNIM.setMax("32767");
+		numeroNIM.setDigitsOptional(false);
+		numeroNIM.extend(puntoDeEquilibrioTXT);
+		ValidatorPuntoDeEquilibrio validatorPuntoDeEquilibrio = null;
+		if (isForInsertForm) {
+			validatorPuntoDeEquilibrio = new ValidatorPuntoDeEquilibrio("", cx,
+					puntoDeEquilibrioBI);
 		} else {
-			if (((PuntoDeEquilibrio) item).getPuntoDeEquilibrioTipo() != null) {
-				tipoCBX.setValue(((PuntoDeEquilibrio) item)
-						.getPuntoDeEquilibrioTipo());
-
-			}
-
+			validatorPuntoDeEquilibrio = new ValidatorPuntoDeEquilibrio("", cx,
+					puntoDeEquilibrioBI, puntoDeEquilibrioBI.getBean()
+							.getPuntoDeEquilibrio());
 		}
+		puntoDeEquilibrioTXT.addValidator(validatorPuntoDeEquilibrio);
 
-		formLayout.addComponent(tipoCBX);
+		generalFL.addComponent(puntoDeEquilibrioTXT);
 
-		// --------------------------------------------------------------------
+		// --------------------------------------------------
+
+		nombreTXT = new TextField();
+		nombreTXT.setCaption("Nombre");
+		nombreTXT.addStyleName(ValoTheme.TEXTFIELD_TINY);
+		nombreTXT.setTabIndex(20);
+		nombreTXT.setWidth("-1px");
+		nombreTXT.setHeight("-1px");
+		// abreviaturaTXT.setColumns((int) (12 * 0.7));
+		nombreTXT.setColumns(40);
+		nombreTXT.setMaxLength(40);
+		nombreTXT.setRequired(true);
+		nombreTXT.setRequiredError("El campo " + nombreTXT.getCaption()
+				+ " es requerido. Es decir no debe estar vacio.");
+		nombreTXT.setValidationVisible(true);
+		nombreTXT.setNullRepresentation("");
+		nombreTXT.setVisible(true);
+		nombreTXT.setEnabled(true);
+		nombreTXT.setReadOnly(false);
+		nombreTXT.setImmediate(true);
+		nombreTXT.setPropertyDataSource(puntoDeEquilibrioBI
+				.getItemProperty("nombre"));
+
+		generalFL.addComponent(nombreTXT);
+
+		// --------------------------------------------------
+
+		puntoDeEquilibrioTipoCB = new ComboBox();
+		puntoDeEquilibrioTipoCB.setCaption("Estado");
+		puntoDeEquilibrioTipoCB.addStyleName(ValoTheme.COMBOBOX_SMALL);
+		puntoDeEquilibrioTipoCB.setTabIndex(80);
+		puntoDeEquilibrioTipoCB.setWidth("100%");
+		puntoDeEquilibrioTipoCB.setHeight("-1px");
+		puntoDeEquilibrioTipoCB.setRequired(true);
+		puntoDeEquilibrioTipoCB.setRequiredError("El campo "
+				+ puntoDeEquilibrioTipoCB.getCaption()
+				+ " es requerido. Es decir no debe estar vacio.");
+		puntoDeEquilibrioTipoCB.setValidationVisible(true);
+		puntoDeEquilibrioTipoCB.setVisible(true);
+		puntoDeEquilibrioTipoCB.setEnabled(true);
+		puntoDeEquilibrioTipoCB.setReadOnly(false);
+		puntoDeEquilibrioTipoCB.setImmediate(true);
+		puntoDeEquilibrioTipoCB.setNullSelectionAllowed(false);
+		puntoDeEquilibrioTipoCB
+				.setContainerDataSource(puntoDeEquilibrioTipoBIC);
+		puntoDeEquilibrioTipoCB.setPropertyDataSource(puntoDeEquilibrioBI
+				.getItemProperty("puntoDeEquilibrioTipo"));
+		puntoDeEquilibrioTipoCB.setTextInputAllowed(false);
+
+		generalFL.addComponent(puntoDeEquilibrioTipoCB);
+
+		// ----------------------------------------------
+
+		barraDeHerramientasFila1 = new HorizontalLayout();
+		barraDeHerramientasFila1.setSpacing(true);
+
+		rootVL.addComponent(barraDeHerramientasFila1);
+		rootVL.setComponentAlignment(barraDeHerramientasFila1,
+				Alignment.MIDDLE_LEFT);
+
+		// ----------------------------------------------
+
+		agregarBTN = new Button();
+		agregarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+		agregarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+		agregarBTN.setIcon(FontAwesome.CHECK);
+		if (isForInsertForm) {
+			agregarBTN.setCaption("Agregar");
+		} else {
+			agregarBTN.setCaption("Modificar");
+		}
+		agregarBTN.addClickListener(e -> {
+			agregarBTNClick();
+		});
+
+		barraDeHerramientasFila1.addComponent(agregarBTN);
+
+		// --------------------------------------------------
+
 	}
 
-	protected void validateControls() {
-		ejercicioTXT.validate();
-		puntoDeEquilibrioTXT.validate();
-		nombreTXT.validate();
-		tipoCBX.validate();
-	}
+	// EVTs LISTENERS ===================================================
 
-	protected void insert() throws Exception {
-
-		puntoDeEquilibrioBO.insert((PuntoDeEquilibrio) item);
-	}
-
-	protected void update() throws Exception {
-
-		puntoDeEquilibrioBO.update((PuntoDeEquilibrio) item,
-				(PuntoDeEquilibrio) itemClone);
-	}
-
-	// --------------------------------------------------------------------
-
-	private void loadTipoCBX() {
+	protected void cancelarBTNClick() {
 		try {
 
-			List<PuntoDeEquilibrioTipo> items = puntoDeEquilibrioTipoBO
-					.findAll();
-
-			// items.add(PuntoDeEquilibrioTipo.TIPO_1);
-			// items.add(PuntoDeEquilibrioTipo.TIPO_2);
-			// items.add(PuntoDeEquilibrioTipo.TIPO_3);
-			// items.add(PuntoDeEquilibrioTipo.TIPO_4);
-			// items.add(PuntoDeEquilibrioTipo.TIPO_5);
-
-			tipoCBX.setContainerDataSource(new BeanItemContainer<>(
-					PuntoDeEquilibrioTipo.class, items));
-
-			if (tipoCBX.getContainerDataSource() == null
-					|| tipoCBX.getContainerDataSource().size() == 0) {
-				guardarBTN.setEnabled(false);
-			}
+			window.close();
 
 		} catch (Exception e) {
-			tipoCBX.setContainerDataSource(new BeanItemContainer<>(
-					PuntoDeEquilibrioTipo.class, new ArrayList<>()));
+			LogAndNotification.print(e);
+		}
+	}
 
+	protected void agregarBTNClick() {
+		try {
+			ejercicioContableTXT.validate();
+			puntoDeEquilibrioTXT.validate();
+			nombreTXT.validate();
+			// nombreTXT.validate();
+
+			String msg = puntoDeEquilibrioBI.getBean().getEjercicioContable()
+					+ " "
+					+ puntoDeEquilibrioBI.getBean().getPuntoDeEquilibrio()
+					+ " " + puntoDeEquilibrioBI.getBean().getNombre();
+
+			if (isForInsertForm) {
+				cx.buildPuntoDeEquilibrioBO().insert(
+						puntoDeEquilibrioBI.getBean());
+
+				msg = "Se agregó con éxito el \"Punto de equilibrio: " + msg
+						+ "\".";
+
+			} else {
+				cx.buildPuntoDeEquilibrioBO().update(
+						puntoDeEquilibrioBI.getBean(),
+						puntoDeEquilibrioBI.getBean().clone());
+
+				msg = "Se modificó con éxito el \"Centro de costo: " + msg
+						+ "\".";
+			}
+
+			LogAndNotification.printSuccessOk(msg);
+
+			if (puntoDeEquilibrioTableUi != null) {
+				puntoDeEquilibrioTableUi.updateModelViewPort768x1024();
+			} else if (planDeCuantaFormUi != null) {
+				this.planDeCuantaFormUi.loadOptionsPE(puntoDeEquilibrioBI
+						.getBean());
+			}
+
+			exit();
+
+		} catch (InvalidValueException e) {
+			LogAndNotification.print(e);
+		} catch (InsertDuplicateException e) {
+			LogAndNotification.print(e);
+		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
 
 	}
 
-}
+} // END CLASS ///////////////////////////////////////////////////////////

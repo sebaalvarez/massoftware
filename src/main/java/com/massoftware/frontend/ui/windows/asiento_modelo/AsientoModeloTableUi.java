@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.punto_de_equilibrio;
+package com.massoftware.frontend.ui.windows.asiento_modelo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,13 +10,16 @@ import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
 import com.massoftware.frontend.ui.util.YesNoDialog;
+import com.massoftware.model.AsientoModelo;
 import com.massoftware.model.EjercicioContable;
-import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutAction.ModifierKey;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
@@ -32,7 +35,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
+public class AsientoModeloTableUi extends CustomComponent {
 
 	/**
 	 * 
@@ -60,13 +63,12 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 	protected Button removerFiltroGenericoBTN;
 
 	// protected Label tituloGrillaLBL;
-	protected Grid puntoDeEquilibrioGRD;
+	protected Grid asientoModeloGRD;
 
 	// protected Label espacioToolBarLBL;
 	protected HorizontalLayout barraDeHerramientasFila1;
 	protected Button agregarBTN;
 	protected Button modificarBTN;
-	protected Button copiarBTN;
 	protected HorizontalLayout barraDeHerramientasFila2;
 	protected Button eliminarBTN;
 
@@ -78,7 +80,7 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 	// ----------------------------------------------
 	// MODELO
 
-	protected BeanItemContainer<PuntoDeEquilibrio> puntosDeEquilibrioBIC;
+	protected BeanItemContainer<AsientoModelo> asientosModeloBIC;
 
 	// ----------------------------------------------
 
@@ -86,7 +88,7 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 
 	// ----------------------------------------------
 
-	public PuntoDeEquilibrioTableUi2(Window window, BackendContext cx,
+	public AsientoModeloTableUi(Window window, BackendContext cx,
 			Usuario usuario) {
 		super();
 		try {
@@ -104,8 +106,8 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 
 		ejerciciosContablesBIC = new BeanItemContainer<EjercicioContable>(
 				EjercicioContable.class, new ArrayList<EjercicioContable>());
-		puntosDeEquilibrioBIC = new BeanItemContainer<PuntoDeEquilibrio>(
-				PuntoDeEquilibrio.class, new ArrayList<PuntoDeEquilibrio>());
+		asientosModeloBIC = new BeanItemContainer<AsientoModelo>(
+				AsientoModelo.class, new ArrayList<AsientoModelo>());
 
 		// ----------------------------------------------
 
@@ -184,7 +186,7 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 
 		// ----------------------------------------------
 
-		pidFiltering = "puntoDeEquilibrio";
+		pidFiltering = "numero";
 
 		filtroGenericoTXT = new TextField();
 		filtroGenericoTXT.addStyleName("tiny");
@@ -233,60 +235,54 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 
 		// ----------------------------------------------
 
-		puntoDeEquilibrioGRD = new Grid();
-		puntoDeEquilibrioGRD.addStyleName("small compact");
-		puntoDeEquilibrioGRD.setWidth("100%");
+		asientoModeloGRD = new Grid();
+		asientoModeloGRD.addStyleName("small compact");
+		asientoModeloGRD.setWidth("100%");
 		// centrosDeCostoContableGRD.setHeight("400px");
-		puntoDeEquilibrioGRD.setSelectionMode(SelectionMode.SINGLE);
-		puntoDeEquilibrioGRD.setImmediate(true);
+		asientoModeloGRD.setSelectionMode(SelectionMode.SINGLE);
+		asientoModeloGRD.setImmediate(true);
 
-		puntoDeEquilibrioGRD.setColumns("ejercicioContable",
-				"puntoDeEquilibrio", "nombre", "puntoDeEquilibrioTipo");
-
-		// .......
-
-		puntoDeEquilibrioGRD.getColumn("ejercicioContable").setWidth(80);
-		puntoDeEquilibrioGRD.getColumn("puntoDeEquilibrio").setWidth(80);
-		puntoDeEquilibrioGRD.getColumn("nombre").setWidth(200);
-		// puntoDeEquilibrioGRD.getColumn("puntoDeEquilibrioTipo").setWidth(100);
-
-		int width = 80 + 80 + 100 + 200;
-		puntoDeEquilibrioGRD.setWidth(width + "px");
+		asientoModeloGRD.setColumns("ejercicioContable", "numero",
+				"denominacion");
 
 		// .......
 
-		puntoDeEquilibrioGRD.getColumn("ejercicioContable").setHidable(true);
-		puntoDeEquilibrioGRD.getColumn("puntoDeEquilibrio").setHidable(true);
-		puntoDeEquilibrioGRD.getColumn("nombre").setHidable(true);
-		puntoDeEquilibrioGRD.getColumn("puntoDeEquilibrioTipo")
-				.setHidable(true);
+		asientoModeloGRD.getColumn("ejercicioContable").setWidth(80);
+		asientoModeloGRD.getColumn("numero").setWidth(80);
+		// asientoModeloGRD.getColumn("denominacion").setWidth(200);
+
+		int width = 80 + 80 + 200;
+		asientoModeloGRD.setWidth(width + "px");
 
 		// .......
 
-		puntoDeEquilibrioGRD.getColumn("ejercicioContable").setHeaderCaption(
+		asientoModeloGRD.getColumn("ejercicioContable").setHidable(true);
+		asientoModeloGRD.getColumn("numero").setHidable(true);
+		asientoModeloGRD.getColumn("denominacion").setHidable(true);
+
+		// .......
+
+		asientoModeloGRD.getColumn("ejercicioContable").setHeaderCaption(
 				"Ejercicio");
-		puntoDeEquilibrioGRD.getColumn("ejercicioContable").setHidden(true);
-		puntoDeEquilibrioGRD.getColumn("puntoDeEquilibrio").setHeaderCaption(
-				"Punto de equ.");
-		puntoDeEquilibrioGRD.getColumn("nombre").setHeaderCaption("Nombre");
-		puntoDeEquilibrioGRD.getColumn("puntoDeEquilibrioTipo")
-				.setHeaderCaption("Tipo");
+		asientoModeloGRD.getColumn("ejercicioContable").setHidden(true);
+		asientoModeloGRD.getColumn("numero").setHeaderCaption("Asiento");
+		asientoModeloGRD.getColumn("denominacion").setHeaderCaption(
+				"Denominación");
 
 		// .......
 
-		puntoDeEquilibrioGRD.setContainerDataSource(puntosDeEquilibrioBIC);
+		asientoModeloGRD.setContainerDataSource(asientosModeloBIC);
 
 		List<SortOrder> order = new ArrayList<SortOrder>();
 		order.add(new SortOrder(pidFiltering, SortDirection.ASCENDING));
-		puntoDeEquilibrioGRD.setSortOrder(order);
+		asientoModeloGRD.setSortOrder(order);
 
-		puntoDeEquilibrioGRD.addSortListener(e -> {
+		asientoModeloGRD.addSortListener(e -> {
 			sort();
 		});
 
-		rootVL.addComponent(puntoDeEquilibrioGRD);
-		rootVL.setComponentAlignment(puntoDeEquilibrioGRD,
-				Alignment.MIDDLE_CENTER);
+		rootVL.addComponent(asientoModeloGRD);
+		rootVL.setComponentAlignment(asientoModeloGRD, Alignment.MIDDLE_CENTER);
 
 		// ----------------------------------------------
 
@@ -310,6 +306,7 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 		agregarBTN.addStyleName(ValoTheme.BUTTON_TINY);
 		agregarBTN.setIcon(FontAwesome.PLUS);
 		agregarBTN.setCaption("Agregar");
+		agregarBTN.setDescription(agregarBTN.getCaption() + " (Ctrl+A)");
 		agregarBTN.addClickListener(e -> {
 			agregarBTNClick();
 		});
@@ -323,24 +320,12 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 		modificarBTN.addStyleName(ValoTheme.BUTTON_TINY);
 		modificarBTN.setIcon(FontAwesome.PENCIL);
 		modificarBTN.setCaption("Modificar");
+		modificarBTN.setDescription(modificarBTN.getCaption() + " (Ctrl+M)");
 		modificarBTN.addClickListener(e -> {
 			modificarBTNClick();
 		});
 
 		barraDeHerramientasFila1.addComponent(modificarBTN);
-
-		// ----------------------------------------------
-
-		copiarBTN = new Button();
-		copiarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-		copiarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-		copiarBTN.setIcon(FontAwesome.PLUS_SQUARE);
-		copiarBTN.setCaption("Copiar");
-		copiarBTN.addClickListener(e -> {
-			copiarBTNClick();
-		});
-
-		barraDeHerramientasFila1.addComponent(copiarBTN);
 
 		// ----------------------------------------------
 
@@ -365,6 +350,59 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 
 		barraDeHerramientasFila2.addComponent(eliminarBTN);
 
+		// --------------------------------------------------
+
+		this.addShortcutListener(new ShortcutListener("ENTER", KeyCode.ENTER,
+				new int[] {}) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				if (target.equals(asientoModeloGRD)) {
+					modificarBTNClick();
+				}
+
+			}
+		});
+
+		// --------------------------------------------------
+
+		this.addShortcutListener(new ShortcutListener("CTRL+A", KeyCode.A,
+				new int[] { ModifierKey.CTRL }) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				agregarBTNClick();
+			}
+		});
+		// --------------------------------------------------
+
+		this.addShortcutListener(new ShortcutListener("CTRL+M", KeyCode.M,
+				new int[] { ModifierKey.CTRL }) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				modificarBTNClick();
+			}
+		});
+		// --------------------------------------------------
+
+		this.addShortcutListener(new ShortcutListener("CTRL+C", KeyCode.C,
+				new int[] { ModifierKey.CTRL }) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				copiarBTNClick();
+			}
+		});
+
 		// ----------------------------------------------
 
 	}
@@ -372,29 +410,31 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 	protected void agregarBTNClick() {
 		try {
 
-			EjercicioContable ejercicioContable = (EjercicioContable) ejercicioContableCBX
-					.getValue();
-
-			puntoDeEquilibrioGRD.select(null);
-
-			Window win = new Window();
-
-			PuntoDeEquilibrioFormUi2 ui = new PuntoDeEquilibrioFormUi2(win, cx,
-					this, ejercicioContable);
-
-			win.setCaption("Agragar punto de equilibrio");
-			win.setImmediate(true);
-			win.setWidth("-1px");
-			win.setHeight("-1px");
-			win.setClosable(true);
-			win.setResizable(false);
-			win.setModal(true);
-			win.center();
-			// win.addCloseShortcut(KeyCode.ESCAPE, null);
-			win.setContent((Component) ui);
-			getUI().addWindow(win);
-			win.center();
-			win.focus();
+			// EjercicioContable ejercicioContable = (EjercicioContable)
+			// ejercicioContableCBX
+			// .getValue();
+			//
+			// puntoDeEquilibrioGRD.select(null);
+			//
+			// Window win = new Window();
+			//
+			// PuntoDeEquilibrioFormUi2 ui = new PuntoDeEquilibrioFormUi2(win,
+			// cx,
+			// this, ejercicioContable);
+			//
+			// win.setCaption("Agragar punto de equilibrio");
+			// win.setImmediate(true);
+			// win.setWidth("-1px");
+			// win.setHeight("-1px");
+			// win.setClosable(true);
+			// win.setResizable(false);
+			// win.setModal(true);
+			// win.center();
+			// // win.addCloseShortcut(KeyCode.ESCAPE, null);
+			// win.setContent((Component) ui);
+			// getUI().addWindow(win);
+			// win.center();
+			// win.focus();
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -404,17 +444,17 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 	protected void modificarBTNClick() {
 		try {
 
-			if (puntoDeEquilibrioGRD.getSelectedRow() != null) {
+			if (asientoModeloGRD.getSelectedRow() != null) {
 
-				PuntoDeEquilibrio puntoDeEquilibrio = (PuntoDeEquilibrio) puntoDeEquilibrioGRD
+				AsientoModelo asientoModelo = (AsientoModelo) asientoModeloGRD
 						.getSelectedRow();
 
 				Window win = new Window();
 
-				PuntoDeEquilibrioFormUi2 ui = new PuntoDeEquilibrioFormUi2(win,
-						cx, this, puntoDeEquilibrio, false);
+				AsientoModeloFormUi ui = new AsientoModeloFormUi(win,
+						cx, this, asientoModelo, false);
 
-				win.setCaption("Modificar punto de equilibrio");
+				win.setCaption("Modificar asiento modelo");
 				win.setImmediate(true);
 				win.setWidth("-1px");
 				win.setHeight("-1px");
@@ -438,36 +478,39 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 	protected void copiarBTNClick() {
 		try {
 
-			if (puntoDeEquilibrioGRD.getSelectedRow() != null) {
+			if (asientoModeloGRD.getSelectedRow() != null) {
 
-				PuntoDeEquilibrio item = (PuntoDeEquilibrio) puntoDeEquilibrioGRD
-						.getSelectedRow();
-
-				PuntoDeEquilibrio puntoDeEquilibrioNew = new PuntoDeEquilibrio();
-				puntoDeEquilibrioNew.setEjercicioContable(item
-						.getEjercicioContable());
-				puntoDeEquilibrioNew.setNombre(item.getNombre());
-				puntoDeEquilibrioNew.setPuntoDeEquilibrioTipo(item.getPuntoDeEquilibrioTipo());
-				
-
-				Window win = new Window();
-
-				PuntoDeEquilibrioFormUi2 ui = new PuntoDeEquilibrioFormUi2(win, cx, this,
-						puntoDeEquilibrioNew);
-
-				win.setCaption("Copiar punto de equilibrio");
-				win.setImmediate(true);
-				win.setWidth("-1px");
-				win.setHeight("-1px");
-				win.setClosable(true);
-				win.setResizable(false);
-				win.setModal(true);
-				win.center();
-				// win.addCloseShortcut(KeyCode.ESCAPE, null);
-				win.setContent((Component) ui);
-				getUI().addWindow(win);
-				win.center();
-				win.focus();
+				// PuntoDeEquilibrio item = (PuntoDeEquilibrio)
+				// puntoDeEquilibrioGRD
+				// .getSelectedRow();
+				//
+				// PuntoDeEquilibrio puntoDeEquilibrioNew = new
+				// PuntoDeEquilibrio();
+				// puntoDeEquilibrioNew.setEjercicioContable(item
+				// .getEjercicioContable());
+				// puntoDeEquilibrioNew.setNombre(item.getNombre());
+				// puntoDeEquilibrioNew.setPuntoDeEquilibrioTipo(item
+				// .getPuntoDeEquilibrioTipo());
+				//
+				// Window win = new Window();
+				//
+				// PuntoDeEquilibrioFormUi2 ui = new
+				// PuntoDeEquilibrioFormUi2(win,
+				// cx, this, puntoDeEquilibrioNew);
+				//
+				// win.setCaption("Copiar punto de equilibrio");
+				// win.setImmediate(true);
+				// win.setWidth("-1px");
+				// win.setHeight("-1px");
+				// win.setClosable(true);
+				// win.setResizable(false);
+				// win.setModal(true);
+				// win.center();
+				// // win.addCloseShortcut(KeyCode.ESCAPE, null);
+				// win.setContent((Component) ui);
+				// getUI().addWindow(win);
+				// win.center();
+				// win.focus();
 			}
 
 		} catch (Exception e) {
@@ -478,14 +521,14 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 	protected void eliminarBTNClick() {
 		try {
 
-			if (puntoDeEquilibrioGRD.getSelectedRow() != null) {
+			if (asientoModeloGRD.getSelectedRow() != null) {
 
-				PuntoDeEquilibrio item = (PuntoDeEquilibrio) puntoDeEquilibrioGRD
+				AsientoModelo item = (AsientoModelo) asientoModeloGRD
 						.getSelectedRow();
 
 				getUI().addWindow(
 						new YesNoDialog("Eliminar",
-								"Esta seguro de eliminar el punto de equilibrio "
+								"Esta seguro de eliminar el asiento modelo "
 										+ item, new YesNoDialog.Callback() {
 									public void onDialogResult(boolean yes) {
 										if (yes) {
@@ -503,23 +546,22 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 	protected void delete() {
 		try {
 
-			if (puntoDeEquilibrioGRD.getSelectedRow() != null) {
+			if (asientoModeloGRD.getSelectedRow() != null) {
 
-				PuntoDeEquilibrio item = (PuntoDeEquilibrio) puntoDeEquilibrioGRD
+				AsientoModelo item = (AsientoModelo) asientoModeloGRD
 						.getSelectedRow();
 				try {
 
-					cx.buildPuntoDeEquilibrioBO().delete(
-							(PuntoDeEquilibrio) item);
+					// cx.buildAsientoModeloBO().delete(
+					// (AsientoModelo) item);
 
 				} catch (DeleteForeingObjectConflictException e) {
 					LogAndNotification.print(e,
-							"Punto de equilibrio " + item.getId());
+							"Asiento modelo " + item.getId());
 					return;
 				}
 
-				String msg = "Se eliminó con éxito el punto de equilibrio "
-						+ item;
+				String msg = "Se eliminó con éxito el asiento modelo " + item;
 
 				LogAndNotification.printSuccessOk(msg);
 
@@ -527,7 +569,7 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 			}
 
 		} catch (DeleteForeingObjectConflictException e) {
-			LogAndNotification.print(e, "Punto de equilibrio");
+			LogAndNotification.print(e, "Asiento modelo");
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -546,7 +588,7 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 		try {
 
 			@SuppressWarnings("unchecked")
-			BeanItemContainer<PuntoDeEquilibrio> container = ((BeanItemContainer<PuntoDeEquilibrio>) puntoDeEquilibrioGRD
+			BeanItemContainer<AsientoModelo> container = ((BeanItemContainer<AsientoModelo>) asientoModeloGRD
 					.getContainerDataSource());
 
 			container.removeAllContainerFilters();
@@ -555,21 +597,20 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 
 				container.addContainerFilter(new SimpleStringTraslateFilter(
 						pidFiltering, filterValue, true,
-						SimpleStringTraslateFilter.CONTAINS_WORDS));
+						SimpleStringTraslateFilter.CONTAINS_WORDS_AND));
 
 			}
-			puntoDeEquilibrioGRD.recalculateColumnWidths();
+			asientoModeloGRD.recalculateColumnWidths();
 
-			boolean enabled = puntosDeEquilibrioBIC.size() > 0;
+			boolean enabled = asientosModeloBIC.size() > 0;
 
 			// planDeCuentasGRD.setEnabled(enabled);
 			// barraDeHerramientasFila1.setEnabled(enabled);
 			// barraDeHerramientasFila2.setEnabled(enabled);
 
-			puntoDeEquilibrioGRD.setEnabled(enabled);
+			asientoModeloGRD.setEnabled(enabled);
 			// agregarBTN.setEnabled(enabled);
 			modificarBTN.setEnabled(enabled);
-			copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
 
 		} catch (Exception e) {
@@ -588,12 +629,12 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 
 	protected void sort() {
 		try {
-			pidFiltering = puntoDeEquilibrioGRD.getSortOrder().get(0)
+			pidFiltering = asientoModeloGRD.getSortOrder().get(0)
 					.getPropertyId().toString();
 
 			// pidFiltering = attName;
 
-			String caption = puntoDeEquilibrioGRD.getColumn(pidFiltering)
+			String caption = asientoModeloGRD.getColumn(pidFiltering)
 					.getHeaderCaption();
 
 			filtroGenericoTXT.setCaption(caption);
@@ -667,7 +708,7 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 			boolean enabled = ejerciciosContablesBIC.size() > 0;
 
 			filaFiltro1HL.setEnabled(enabled);
-			puntoDeEquilibrioGRD.setEnabled(enabled);
+			asientoModeloGRD.setEnabled(enabled);
 			barraDeHerramientasFila1.setEnabled(enabled);
 			barraDeHerramientasFila2.setEnabled(enabled);
 
@@ -685,7 +726,7 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 
 			updateModelViewPort768x1024();
 
-			boolean enabled = puntosDeEquilibrioBIC.size() > 0;
+			boolean enabled = asientosModeloBIC.size() > 0;
 
 			if (enabled) {
 
@@ -703,22 +744,19 @@ public class PuntoDeEquilibrioTableUi2 extends CustomComponent {
 			EjercicioContable ejercicioContable = (EjercicioContable) ejercicioContableCBX
 					.getValue();
 
-			List<PuntoDeEquilibrio> puntosDeEquilibrio = cx
-					.buildPuntoDeEquilibrioBO()
-					.findAllOrderByPuntoDeEquilibrio(
-							ejercicioContable.getEjercicio());
+			List<AsientoModelo> asientosModelo = cx.buildAsientoModeloBO()
+					.findAll(ejercicioContable.getEjercicio());
 
-			puntosDeEquilibrioBIC.removeAllItems();
-			for (PuntoDeEquilibrio puntoDeEquilibrio : puntosDeEquilibrio) {
-				puntosDeEquilibrioBIC.addBean(puntoDeEquilibrio);
+			asientosModeloBIC.removeAllItems();
+			for (AsientoModelo asientoModelo : asientosModelo) {
+				asientosModeloBIC.addBean(asientoModelo);
 			}
 
-			boolean enabled = puntosDeEquilibrioBIC.size() > 0;
+			boolean enabled = asientosModeloBIC.size() > 0;
 
-			puntoDeEquilibrioGRD.setEnabled(enabled);
+			asientoModeloGRD.setEnabled(enabled);
 			// agregarBTN.setEnabled(enabled);
 			modificarBTN.setEnabled(enabled);
-			copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
 			// barraDeHerramientasFila1.setEnabled(enabled);
 			// barraDeHerramientasFila2.setEnabled(enabled);

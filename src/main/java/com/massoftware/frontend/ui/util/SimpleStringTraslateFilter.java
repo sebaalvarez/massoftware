@@ -15,7 +15,8 @@ public class SimpleStringTraslateFilter implements Filter {
 	public static String STARTS_WITCH = "STARTS_WITCH";
 	public static String ENDS_WITCH = "ENDS_WITCH";
 	public static String CONTAINS = "CONTAINS";
-	public static String CONTAINS_WORDS = "CONTAINS_WORDS";
+	public static String CONTAINS_WORDS_OR = "CONTAINS_WORDS_OR";
+	public static String CONTAINS_WORDS_AND = "CONTAINS_WORDS_AND";
 
 	final Object propertyId;
 	final String filterString;
@@ -79,7 +80,7 @@ public class SimpleStringTraslateFilter implements Filter {
 				if (!value.contains(filterString.trim())) {
 					return false;
 				}
-			} else if (matchMode.equalsIgnoreCase(CONTAINS_WORDS)) {
+			} else if (matchMode.equalsIgnoreCase(CONTAINS_WORDS_OR)) {
 				String words[] = filterString.trim().split(" ");
 				boolean b = false;
 
@@ -97,7 +98,29 @@ public class SimpleStringTraslateFilter implements Filter {
 					return false;
 				}
 
+			} else if (matchMode.equalsIgnoreCase(CONTAINS_WORDS_AND)) {
+				String words[] = filterString.trim().split(" ");
+				int b = 0;
+				int cantWords = 0;
+
+				for (String word : words) {
+					word = word.trim();
+
+					if (word.length() > 0) {
+
+						cantWords++;
+
+						if (value.contains(word)) {
+							b++;
+						}
+					}
+
+				}
+
+				return (b == cantWords);
+
 			}
+
 		}
 
 		return true;

@@ -2,8 +2,8 @@ package com.massoftware.model;
 
 import org.cendra.common.model.EntityId;
 
-public class PlanDeCuentaEstado extends EntityId implements Cloneable,
-		Comparable<PlanDeCuentaEstado> {
+public class CuentaContableEstado extends EntityId implements Cloneable,
+		Comparable<CuentaContableEstado> {
 
 	/**
 	 * 
@@ -78,8 +78,8 @@ public class PlanDeCuentaEstado extends EntityId implements Cloneable,
 	}
 
 	@Override
-	public PlanDeCuentaEstado clone() throws CloneNotSupportedException {
-		PlanDeCuentaEstado other = new PlanDeCuentaEstado();
+	public CuentaContableEstado clone() throws CloneNotSupportedException {
+		CuentaContableEstado other = new CuentaContableEstado();
 		other.setId(this.getId());
 		other.setCodigo(getCodigo());
 		other.setNombre(this.getNombre());
@@ -87,7 +87,7 @@ public class PlanDeCuentaEstado extends EntityId implements Cloneable,
 	}
 
 	@Override
-	public int compareTo(PlanDeCuentaEstado o) {
+	public int compareTo(CuentaContableEstado o) {
 
 		return this.getCodigo().compareTo(o.getCodigo());
 	}

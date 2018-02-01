@@ -1,8 +1,8 @@
-package com.massoftware.frontend.ui.windows.plan_de_cuenta;
+package com.massoftware.frontend.ui.windows.cuenta_contable;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.model.PlanDeCuenta;
+import com.massoftware.model.CuentaContable;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
 
@@ -15,10 +15,10 @@ public class ValidatorPlanDeCuentaCodigoCuentaNombre extends
 	private static final long serialVersionUID = -2108700714465550165L;
 	private BackendContext cx;
 
-	protected BeanItem<PlanDeCuenta> planDeCuentaBI;
+	protected BeanItem<CuentaContable> planDeCuentaBI;
 
 	public ValidatorPlanDeCuentaCodigoCuentaNombre(String errorMessage,
-			BackendContext cx, BeanItem<PlanDeCuenta> planDeCuentaBI) {
+			BackendContext cx, BeanItem<CuentaContable> planDeCuentaBI) {
 		super(errorMessage);
 		this.cx = cx;
 		this.planDeCuentaBI = planDeCuentaBI;

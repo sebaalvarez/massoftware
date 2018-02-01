@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.plan_de_cuenta;
+package com.massoftware.frontend.ui.windows.cuenta_contable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
 import com.massoftware.frontend.ui.util.YesNoDialog;
 import com.massoftware.model.CentroDeCostoContable;
+import com.massoftware.model.CuentaContable;
 import com.massoftware.model.EjercicioContable;
-import com.massoftware.model.PlanDeCuenta;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.sort.SortOrder;
@@ -20,6 +20,9 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutAction.ModifierKey;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
@@ -91,7 +94,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 	// ----------------------------------------------
 	// MODELO
 
-	protected BeanItemContainer<PlanDeCuenta> planDeCuentasBIC;
+	protected BeanItemContainer<CuentaContable> planDeCuentasBIC;
 
 	// ----------------------------------------------
 
@@ -121,8 +124,8 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 				new ArrayList<CentroDeCostoContable>());
 		puntosDeEquilibrioBIC = new BeanItemContainer<PuntoDeEquilibrio>(
 				PuntoDeEquilibrio.class, new ArrayList<PuntoDeEquilibrio>());
-		planDeCuentasBIC = new BeanItemContainer<PlanDeCuenta>(
-				PlanDeCuenta.class, new ArrayList<PlanDeCuenta>());
+		planDeCuentasBIC = new BeanItemContainer<CuentaContable>(
+				CuentaContable.class, new ArrayList<CuentaContable>());
 
 		// ----------------------------------------------
 
@@ -343,11 +346,13 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 		planDeCuentasGRD.setWidth("100%");
 		// planDeCuentasGRD.setHeight("600px");
 		planDeCuentasGRD.setSelectionMode(SelectionMode.SINGLE);
+		planDeCuentasGRD.setReadOnly(true);
+		planDeCuentasGRD.setEditorEnabled(false);
 		planDeCuentasGRD.setImmediate(true);
 
 		planDeCuentasGRD.setColumns("ejercicioContable", "codigoCuentaPadre",
 				"codigoCuenta", "cuentaContable", "nombre", "imputable",
-				"ajustaPorInflacion", "planDeCuentaEstado",
+				"ajustaPorInflacion", "cuentaContableEstado",
 				"cuentaConApropiacion", "centroDeCostoContable",
 				"cuentaAgrupadora", "porcentaje", "puntoDeEquilibrio",
 				"costoDeVenta");
@@ -359,14 +364,14 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 
 		// .......
 
-		planDeCuentasGRD.getColumn("ejercicioContable").setHidable(true);		
+		planDeCuentasGRD.getColumn("ejercicioContable").setHidable(true);
 		planDeCuentasGRD.getColumn("codigoCuentaPadre").setHidable(true);
 		planDeCuentasGRD.getColumn("codigoCuenta").setHidable(true);
 		planDeCuentasGRD.getColumn("cuentaContable").setHidable(true);
 		planDeCuentasGRD.getColumn("nombre").setHidable(true);
 		planDeCuentasGRD.getColumn("imputable").setHidable(true);
 		planDeCuentasGRD.getColumn("ajustaPorInflacion").setHidable(true);
-		planDeCuentasGRD.getColumn("planDeCuentaEstado").setHidable(true);
+		planDeCuentasGRD.getColumn("cuentaContableEstado").setHidable(true);
 		planDeCuentasGRD.getColumn("cuentaConApropiacion").setHidable(true);
 		planDeCuentasGRD.getColumn("centroDeCostoContable").setHidable(true);
 		planDeCuentasGRD.getColumn("cuentaAgrupadora").setHidable(true);
@@ -391,9 +396,9 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 		planDeCuentasGRD.getColumn("ajustaPorInflacion").setHeaderCaption(
 				"Ajusta infl.");
 		planDeCuentasGRD.getColumn("ajustaPorInflacion").setHidden(true);
-		planDeCuentasGRD.getColumn("planDeCuentaEstado").setHeaderCaption(
+		planDeCuentasGRD.getColumn("cuentaContableEstado").setHeaderCaption(
 				"Estado");
-		planDeCuentasGRD.getColumn("planDeCuentaEstado").setHidden(true);
+		planDeCuentasGRD.getColumn("cuentaContableEstado").setHidden(true);
 		planDeCuentasGRD.getColumn("cuentaConApropiacion").setHeaderCaption(
 				"Aprop.");
 		planDeCuentasGRD.getColumn("cuentaConApropiacion").setHidden(true);
@@ -458,6 +463,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 		agregarBTN.addStyleName(ValoTheme.BUTTON_TINY);
 		agregarBTN.setIcon(FontAwesome.PLUS);
 		agregarBTN.setCaption("Agregar");
+		agregarBTN.setDescription(agregarBTN.getCaption() + " (Ctrl+A)");
 		agregarBTN.addClickListener(e -> {
 			agregarBTNClick();
 		});
@@ -471,6 +477,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 		modificarBTN.addStyleName(ValoTheme.BUTTON_TINY);
 		modificarBTN.setIcon(FontAwesome.PENCIL);
 		modificarBTN.setCaption("Modificar");
+		modificarBTN.setDescription(modificarBTN.getCaption() + " (Ctrl+M)");
 		modificarBTN.addClickListener(e -> {
 			modificarBTNClick();
 		});
@@ -484,6 +491,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 		copiarBTN.addStyleName(ValoTheme.BUTTON_TINY);
 		copiarBTN.setIcon(FontAwesome.PLUS_SQUARE);
 		copiarBTN.setCaption("Copiar");
+		copiarBTN.setDescription(copiarBTN.getCaption() + " (Ctrl+C)");
 		copiarBTN.addClickListener(e -> {
 			copiarBTNClick();
 		});
@@ -513,7 +521,103 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 
 		barraDeHerramientasFila2.addComponent(eliminarBTN);
 
-		// ----------------------------------------------
+		// --------------------------------------------------
+
+		// this.addShortcutListener(new ShortcutListener("ENTER", KeyCode.ENTER,
+		// new int[] {}) {
+		//
+		// private static final long serialVersionUID = 1L;
+		//
+		// @Override
+		// public void handleAction(Object sender, Object target) {
+		// if (target.equals(planDeCuentasGRD)) {
+		//
+		// PlanDeCuenta itemOld = (PlanDeCuenta) planDeCuentasGRD
+		// .getSelectedRow();
+		//
+		// // planDeCuentasGRD.deselect(itemOld);
+		// List<PlanDeCuenta> items = (List<PlanDeCuenta>) planDeCuentasGRD
+		// .getContainerDataSource().getItemIds();
+		// boolean next = false;
+		// for (PlanDeCuenta item : items) {
+		// if (next) {
+		//
+		// planDeCuentasGRD.select(item);
+		// planDeCuentasGRD.getco
+		// break;
+		// }
+		// if (item.equals(itemOld)) {
+		// next = true;
+		// }
+		//
+		// }
+		// }
+		//
+		// }
+		// });
+
+		// addShortcutListener(new ShortcutListener("up", KeyCode.ARROW_UP,
+		// null) {
+		//
+		// @Override
+		// public void handleAction(Object sender, Object target) {
+		// System.out.println("UP");
+		// }
+		// });
+
+		// --------------------------------------------------
+
+		this.addShortcutListener(new ShortcutListener("ENTER", KeyCode.ENTER,
+				new int[] {}) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				if (target.equals(planDeCuentasGRD)) {
+					modificarBTNClick();
+				}
+
+			}
+		});
+
+		// --------------------------------------------------
+
+		this.addShortcutListener(new ShortcutListener("CTRL+A", KeyCode.A,
+				new int[] { ModifierKey.CTRL }) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				agregarBTNClick();
+			}
+		});
+		// --------------------------------------------------
+
+		this.addShortcutListener(new ShortcutListener("CTRL+M", KeyCode.M,
+				new int[] { ModifierKey.CTRL }) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				modificarBTNClick();
+			}
+		});
+		// --------------------------------------------------
+
+		this.addShortcutListener(new ShortcutListener("CTRL+C", KeyCode.C,
+				new int[] { ModifierKey.CTRL }) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				copiarBTNClick();
+			}
+		});
+
 		// ----------------------------------------------
 
 	}
@@ -555,7 +659,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 
 			if (planDeCuentasGRD.getSelectedRow() != null) {
 
-				PlanDeCuenta planDeCuenta = (PlanDeCuenta) planDeCuentasGRD
+				CuentaContable planDeCuenta = (CuentaContable) planDeCuentasGRD
 						.getSelectedRow();
 
 				Window win = new Window();
@@ -589,10 +693,10 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 
 			if (planDeCuentasGRD.getSelectedRow() != null) {
 
-				PlanDeCuenta planDeCuenta = (PlanDeCuenta) planDeCuentasGRD
+				CuentaContable planDeCuenta = (CuentaContable) planDeCuentasGRD
 						.getSelectedRow();
 
-				PlanDeCuenta planDeCuentaNew = new PlanDeCuenta();
+				CuentaContable planDeCuentaNew = new CuentaContable();
 				planDeCuentaNew.setEjercicioContable(planDeCuenta
 						.getEjercicioContable());
 				planDeCuentaNew.setCodigoCuenta(planDeCuenta
@@ -633,7 +737,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 
 			if (planDeCuentasGRD.getSelectedRow() != null) {
 
-				PlanDeCuenta item = (PlanDeCuenta) planDeCuentasGRD
+				CuentaContable item = (CuentaContable) planDeCuentasGRD
 						.getSelectedRow();
 
 				getUI().addWindow(
@@ -658,7 +762,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 
 			if (planDeCuentasGRD.getSelectedRow() != null) {
 
-				PlanDeCuenta item = (PlanDeCuenta) planDeCuentasGRD
+				CuentaContable item = (CuentaContable) planDeCuentasGRD
 						.getSelectedRow();
 				try {
 
@@ -706,7 +810,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 		try {
 
 			@SuppressWarnings("unchecked")
-			BeanItemContainer<PlanDeCuenta> container = ((BeanItemContainer<PlanDeCuenta>) planDeCuentasGRD
+			BeanItemContainer<CuentaContable> container = ((BeanItemContainer<CuentaContable>) planDeCuentasGRD
 					.getContainerDataSource());
 
 			container.removeAllContainerFilters();
@@ -725,8 +829,10 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 				} else {
 					container
 							.addContainerFilter(new SimpleStringTraslateFilter(
-									pidFiltering, filterValue, true,
-									SimpleStringTraslateFilter.CONTAINS_WORDS));
+									pidFiltering,
+									filterValue,
+									true,
+									SimpleStringTraslateFilter.CONTAINS_WORDS_AND));
 				}
 
 			}
@@ -945,12 +1051,12 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 			PuntoDeEquilibrio puntoDeEquilibrio = (PuntoDeEquilibrio) puntoDeEquilibrioCBX
 					.getValue();
 
-			List<PlanDeCuenta> planDeCuentas = cx.buildPlanDeCuentaBO()
+			List<CuentaContable> planDeCuentas = cx.buildPlanDeCuentaBO()
 					.findAllOrderByCodigoCuenta(ejercicioContable,
 							centroDeCostoContable, puntoDeEquilibrio);
 
 			planDeCuentasBIC.removeAllItems();
-			for (PlanDeCuenta planDeCuenta : planDeCuentas) {
+			for (CuentaContable planDeCuenta : planDeCuentas) {
 				planDeCuentasBIC.addBean(planDeCuenta);
 			}
 
@@ -984,12 +1090,12 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 			PuntoDeEquilibrio puntoDeEquilibrio = (PuntoDeEquilibrio) puntoDeEquilibrioCBX
 					.getValue();
 
-			List<PlanDeCuenta> planDeCuentas = cx.buildPlanDeCuentaBO()
+			List<CuentaContable> planDeCuentas = cx.buildPlanDeCuentaBO()
 					.findAllOrderByCodigoCuenta(ejercicioContable,
 							centroDeCostoContable, puntoDeEquilibrio);
 
 			planDeCuentasBIC.removeAllItems();
-			for (PlanDeCuenta planDeCuenta : planDeCuentas) {
+			for (CuentaContable planDeCuenta : planDeCuentas) {
 				planDeCuentasBIC.addBean(planDeCuenta);
 			}
 

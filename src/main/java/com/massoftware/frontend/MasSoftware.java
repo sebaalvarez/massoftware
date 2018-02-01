@@ -50,6 +50,74 @@ public class MasSoftware extends UI {
 			win.center();
 			win.focus();
 
+			// TextField filter = new TextField();
+			// TwinColSelect selection = new TwinColSelect("TWINCOL NAME");
+			// VerticalLayout ver = new VerticalLayout();
+			// selection.setColumns(8);
+			// filter.setColumns(7);
+			// filter.setImmediate(true);
+			// selection.setImmediate(true);
+			//
+			// List<String> mystrslist = new ArrayList<String>();
+			// mystrslist.add("HARPAL");
+			// mystrslist.add("MUSTAN");
+			// mystrslist.add("SHANMUKHA");
+			// mystrslist.add("HARI");
+			// mystrslist.add("RAVI");
+			// mystrslist.add("RAGHU");
+			// mystrslist.add("KHUN");
+			// mystrslist.add("CHARAN");
+			// mystrslist.add("SAMEER");
+			// mystrslist.add("AMAR");
+			// mystrslist.add("ANANT");
+			//
+			// final BeanItemContainer<String> beans = new
+			// BeanItemContainer<String>(
+			// String.class);
+			//
+			// beans.addAll(mystrslist);
+			//
+			// selection.setContainerDataSource(beans);
+			// selection
+			// .setItemCaptionMode(TwinColSelect.ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID);
+			//
+			// filter.setTextChangeEventMode(TextChangeEventMode.LAZY);
+			//
+			// filter.addTextChangeListener(new TextChangeListener() {
+			//
+			// /**
+			// * addContain
+			// */
+			// private static final long serialVersionUID = 1L;
+			//
+			// public void textChange(final TextChangeEvent event) {
+			// beans.removeAllContainerFilters();
+			// beans.addContainerFilter(new Filter() {
+			//
+			// @Override
+			// public boolean passesFilter(Object itemId, Item item)
+			// throws UnsupportedOperationException {
+			// if (((String) itemId).toLowerCase().contains(
+			// event.getText().toLowerCase())
+			// || ((Collection) selection.getValue())
+			// .contains(itemId))
+			// return true;
+			// else
+			// return false;
+			// }
+			//
+			// @Override
+			// public boolean appliesToProperty(Object propertyId) {
+			// return true;
+			// }
+			// });
+			// }
+			// });
+			//
+			// ver.addComponent(selection);
+			// ver.addComponent(filter);
+			// setContent(ver);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.log(Level.SEVERE, e.toString());

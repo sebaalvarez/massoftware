@@ -2,8 +2,8 @@ package com.massoftware.model;
 
 import org.cendra.common.model.EntityId;
 
-public class PlanDeCuenta extends EntityId implements Cloneable,
-		Comparable<PlanDeCuenta> {
+public class CuentaContable extends EntityId implements Cloneable,
+		Comparable<CuentaContable> {
 
 	
 //	Al crear controlar
@@ -34,7 +34,7 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 	// --------------------------------------------------------------------------
 	private Boolean imputable = false;
 	private Boolean ajustaPorInflacion = false;
-	private PlanDeCuentaEstado planDeCuentaEstado;
+	private CuentaContableEstado cuentaContableEstado;
 	private Boolean cuentaConApropiacion = false;
 	// --------------------------------------------------------------------------
 	private CentroDeCostoContable centroDeCostoContable;
@@ -111,14 +111,14 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 		this.ajustaPorInflacion = ajustaPorInflacion;
 	}
 
-	public PlanDeCuentaEstado getPlanDeCuentaEstado() {
-		return planDeCuentaEstado;
+	public CuentaContableEstado getCuentaContableEstado() {
+		return cuentaContableEstado;
 	}
 
-	public void setPlanDeCuentaEstado(PlanDeCuentaEstado planDeCuentaEstado) {
-		this.planDeCuentaEstado = planDeCuentaEstado;
-		if(this.planDeCuentaEstado != null && this.planDeCuentaEstado.getId() == null){
-			throw new IllegalArgumentException(this.planDeCuentaEstado.getClass().getCanonicalName() + ".id is null");
+	public void setCuentaContableEstado(CuentaContableEstado cuentaContableEstado) {
+		this.cuentaContableEstado = cuentaContableEstado;
+		if(this.cuentaContableEstado != null && this.cuentaContableEstado.getId() == null){
+			throw new IllegalArgumentException(this.cuentaContableEstado.getClass().getCanonicalName() + ".id is null");
 		}
 	}
 
@@ -178,8 +178,8 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 	}
 
 	@Override
-	public PlanDeCuenta clone() throws CloneNotSupportedException {
-		PlanDeCuenta other = new PlanDeCuenta();
+	public CuentaContable clone() throws CloneNotSupportedException {
+		CuentaContable other = new CuentaContable();
 
 		other.setId(this.getId());
 		if (this.getEjercicioContable() != null) {
@@ -193,10 +193,10 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 		other.setNombre(this.getNombre());
 		other.setImputable(this.getImputable());
 		other.setAjustaPorInflacion(this.getAjustaPorInflacion());
-		if (this.getPlanDeCuentaEstado() != null) {
-			other.setPlanDeCuentaEstado(this.getPlanDeCuentaEstado().clone());
+		if (this.getCuentaContableEstado() != null) {
+			other.setCuentaContableEstado(this.getCuentaContableEstado().clone());
 		} else {
-			other.setPlanDeCuentaEstado(null);
+			other.setCuentaContableEstado(null);
 		}
 		other.setCuentaConApropiacion(this.getCuentaConApropiacion());
 		if (this.getCentroDeCostoContable() != null) {
@@ -228,7 +228,7 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 	}
 
 	@Override
-	public int compareTo(PlanDeCuenta o) {
+	public int compareTo(CuentaContable o) {
 
 		return this.getCodigoCuenta().compareTo(o.getCodigoCuenta());
 	}
@@ -275,12 +275,12 @@ public class PlanDeCuenta extends EntityId implements Cloneable,
 					.getCanonicalName() + ".ajustaPorInflacion es nulo.");
 		}
 		
-		if (this.planDeCuentaEstado == null) {
+		if (this.cuentaContableEstado == null) {
 
 			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".planDeCuentaEstado es nulo.");
+					.getCanonicalName() + ".cuentaContableEstado es nulo.");
 		} else {
-			this.planDeCuentaEstado.validate();
+			this.cuentaContableEstado.validate();
 		}
 		
 		if (this.cuentaConApropiacion == null) {

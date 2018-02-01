@@ -14,6 +14,7 @@ import org.cendra.jdbc.DataSourceProperties;
 import org.cendra.jdbc.DataSourceWrapper;
 import org.cendra.log.LogPrinter;
 
+import com.massoftware.backend.bo.AsientoModeloBO;
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.CostoDeVentaBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
@@ -23,9 +24,9 @@ import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioTipoBO;
 import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.model.CentroDeCostoContable;
+import com.massoftware.model.CuentaContable;
+import com.massoftware.model.CuentaContableEstado;
 import com.massoftware.model.EjercicioContable;
-import com.massoftware.model.PlanDeCuenta;
-import com.massoftware.model.PlanDeCuentaEstado;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.PuntoDeEquilibrioTipo;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
@@ -135,7 +136,7 @@ public class BackendContext extends AbstractContext {
 
 		EntityMetaData planDeCuentaEstadoMD = new EntityMetaData();
 
-		planDeCuentaEstadoMD.setName(PlanDeCuentaEstado.class
+		planDeCuentaEstadoMD.setName(CuentaContableEstado.class
 				.getCanonicalName());
 		planDeCuentaEstadoMD.setLabel("Estado");
 		planDeCuentaEstadoMD.setLabelPlural("Estados");
@@ -150,7 +151,7 @@ public class BackendContext extends AbstractContext {
 
 		EntityMetaData costoDeVentaMD = new EntityMetaData();
 
-		costoDeVentaMD.setName(PlanDeCuentaEstado.class.getCanonicalName());
+		costoDeVentaMD.setName(CuentaContableEstado.class.getCanonicalName());
 		costoDeVentaMD.setLabel("Costo de venta");
 		costoDeVentaMD.setLabelPlural("Costos de venta");
 
@@ -162,7 +163,7 @@ public class BackendContext extends AbstractContext {
 		// --------------------------------------------------
 
 		EntityMetaData planDeCuentaMD = new EntityMetaData();
-		planDeCuentaMD.setName(PlanDeCuenta.class.getCanonicalName());
+		planDeCuentaMD.setName(CuentaContable.class.getCanonicalName());
 		planDeCuentaMD.setLabel("Plan de cuenta");
 		planDeCuentaMD.setLabelPlural("Plan de cuentas");
 
@@ -422,6 +423,20 @@ public class BackendContext extends AbstractContext {
 
 		try {
 			return new PlanDeCuentaBO(dataSourceWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+	
+	public AsientoModeloBO buildAsientoModeloBO() {
+
+		try {
+			return new AsientoModeloBO(dataSourceWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),

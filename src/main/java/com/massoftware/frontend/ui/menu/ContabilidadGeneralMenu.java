@@ -7,13 +7,12 @@ import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
+import com.massoftware.frontend.ui.windows.asiento_modelo.AsientoModeloTableUi;
 import com.massoftware.frontend.ui.windows.centro_de_costo_contable.CentroDeCostoContableTableUi;
+import com.massoftware.frontend.ui.windows.cuenta_contable.PlanDeCuentaTableUi;
 import com.massoftware.frontend.ui.windows.ejercicio_contable.EjercicioContableTableUi;
-import com.massoftware.frontend.ui.windows.plan_de_cuenta.PlanDeCuentaTableUi;
 import com.massoftware.frontend.ui.windows.punto_de_equilibrio.PuntoDeEquilibrioTableUi;
-import com.massoftware.frontend.ui.windows.punto_de_equilibrio.PuntoDeEquilibrioTableUi2;
 import com.massoftware.model.EjercicioContable;
-import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
@@ -132,7 +131,19 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 		archivos.addItem("Ejercicios contables ...",
 				openEjercicioContableTableUi);
 
-		archivos.addItem("Modelos de asientos", click);
+		Command openAsientoModeloTableUi = new Command() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 5689416708863299947L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+				openAsientoModeloTableUi();
+			}
+		};
+		archivos.addItem("Modelos de asientos", openAsientoModeloTableUi);
 
 		Command openCentroDeCostoContableTableUi = new Command() {
 
@@ -376,36 +387,36 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 		}
 	}
 
-	private void openPuntoDeEquilibrioTableUi2() {
-		try {
-
-			String title = cx.getEntityMetaData(
-					PuntoDeEquilibrio.class.getCanonicalName())
-					.getLabelPlural();
-
-			PuntoDeEquilibrioTableUi ui = new PuntoDeEquilibrioTableUi(cx,
-					usuario);
-
-			Window win = new Window(title);
-			// win.setWidth((float)(ejerciciosContablesDesing.rootVH.getWidth()
-			// * 1.2),
-			// ejerciciosContablesDesing.grid.getHeightUnits());
-			win.setWidth("660px");
-			win.setClosable(true);
-			win.setResizable(false);
-			win.setContent(ui);
-			// win.addCloseShortcut(KeyCode.ESCAPE, null);
-			getUI().addWindow(win);
-
-			win.center();
-			win.focus();
-
-		} catch (Exception e) {
-
-			LogAndNotification.print(e);
-		}
-
-	}
+	// private void openPuntoDeEquilibrioTableUi2() {
+	// try {
+	//
+	// String title = cx.getEntityMetaData(
+	// PuntoDeEquilibrio.class.getCanonicalName())
+	// .getLabelPlural();
+	//
+	// PuntoDeEquilibrioTableUi ui = new PuntoDeEquilibrioTableUi(cx,
+	// usuario);
+	//
+	// Window win = new Window(title);
+	// // win.setWidth((float)(ejerciciosContablesDesing.rootVH.getWidth()
+	// // * 1.2),
+	// // ejerciciosContablesDesing.grid.getHeightUnits());
+	// win.setWidth("660px");
+	// win.setClosable(true);
+	// win.setResizable(false);
+	// win.setContent(ui);
+	// // win.addCloseShortcut(KeyCode.ESCAPE, null);
+	// getUI().addWindow(win);
+	//
+	// win.center();
+	// win.focus();
+	//
+	// } catch (Exception e) {
+	//
+	// LogAndNotification.print(e);
+	// }
+	//
+	// }
 
 	private void openPuntoDeEquilibrioTableUi() {
 		try {
@@ -414,7 +425,8 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 			Window win = new Window("Puntos de equilibrios");
 			win.setClosable(true);
 			win.setResizable(false);
-			PuntoDeEquilibrioTableUi2 ui = new PuntoDeEquilibrioTableUi2(win, cx, usuario);
+			PuntoDeEquilibrioTableUi ui = new PuntoDeEquilibrioTableUi(win, cx,
+					usuario);
 			win.setContent(ui);
 			getUI().addWindow(win);
 			win.center();
@@ -423,7 +435,7 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 			LogAndNotification.print(e);
 		}
 	}
-	
+
 	private void openPlanDeCuentaTableUi() {
 		try {
 			// PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(cx, usuario);
@@ -432,6 +444,23 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 			win.setClosable(true);
 			win.setResizable(false);
 			PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(win, cx, usuario);
+			win.setContent(ui);
+			getUI().addWindow(win);
+			win.center();
+			win.focus();
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
+
+	private void openAsientoModeloTableUi() {
+		try {
+			// PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(cx, usuario);
+
+			Window win = new Window("Modelos de asientos");
+			win.setClosable(true);
+			win.setResizable(false);
+			AsientoModeloTableUi ui = new AsientoModeloTableUi(win, cx, usuario);
 			win.setContent(ui);
 			getUI().addWindow(win);
 			win.center();

@@ -7,7 +7,7 @@ import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
-import com.massoftware.model.PlanDeCuentaEstado;
+import com.massoftware.model.CuentaContableEstado;
 
 public class PlanDeCuentaEstadoBO {
 
@@ -26,7 +26,7 @@ public class PlanDeCuentaEstadoBO {
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	public List<PlanDeCuentaEstado> findAll() throws Exception {
+	public List<CuentaContableEstado> findAll() throws Exception {
 
 		String sql = null;
 
@@ -41,10 +41,10 @@ public class PlanDeCuentaEstadoBO {
 
 		try {
 
-			List<PlanDeCuentaEstado> list = connectionWrapper
+			List<CuentaContableEstado> list = connectionWrapper
 					.findToListByCendraConvention(sql);
 
-			for (PlanDeCuentaEstado item : list) {
+			for (CuentaContableEstado item : list) {
 				item.validate();
 			}
 
@@ -58,7 +58,7 @@ public class PlanDeCuentaEstadoBO {
 
 	}
 
-	private PlanDeCuentaEstado findByTipo(Integer tipo) throws Exception {
+	private CuentaContableEstado findByTipo(Integer tipo) throws Exception {
 
 		String sql = null;
 
@@ -74,7 +74,7 @@ public class PlanDeCuentaEstadoBO {
 			}
 
 			@SuppressWarnings("unchecked")
-			List<PlanDeCuentaEstado> list = connectionWrapper
+			List<CuentaContableEstado> list = connectionWrapper
 					.findToListByCendraConvention(sql, tipo);
 
 			if (list.size() == 1) {
@@ -95,7 +95,7 @@ public class PlanDeCuentaEstadoBO {
 
 	}
 
-	public PlanDeCuentaEstado insert(PlanDeCuentaEstado item) throws Exception {
+	public CuentaContableEstado insert(CuentaContableEstado item) throws Exception {
 
 		String sql = null;
 
@@ -161,7 +161,7 @@ public class PlanDeCuentaEstadoBO {
 		}
 	}
 
-	public List<PlanDeCuentaEstado> insert(List<PlanDeCuentaEstado> items)
+	public List<CuentaContableEstado> insert(List<CuentaContableEstado> items)
 			throws Exception {
 
 		String sql = null;
@@ -179,7 +179,7 @@ public class PlanDeCuentaEstadoBO {
 
 			connectionWrapper.begin();
 
-			for (PlanDeCuentaEstado item : items) {
+			for (CuentaContableEstado item : items) {
 
 				if (findByTipo(item.getCodigo()) != null) {
 					throw new InsertDuplicateException(item.getCodigo());

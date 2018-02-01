@@ -10,10 +10,10 @@ import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
-import com.massoftware.frontend.ui.windows.plan_de_cuenta.FormatPlanDeCuentaCodigoCuenta;
+import com.massoftware.frontend.ui.windows.cuenta_contable.FormatPlanDeCuentaCodigoCuenta;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
-import com.massoftware.model.PlanDeCuenta;
+import com.massoftware.model.CuentaContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 
 public class PlanDeCuentaBO {
@@ -25,7 +25,7 @@ public class PlanDeCuentaBO {
 	private final String SQL_PG_3 = "UPDATE massoftware.plandecuenta SET ejerciciocontable=?, codigocuentapadre=?, codigocuenta=?, cuentacontable=?, nombre=?, imputable=?, ajustaporinflacion=?, plandecuentaestado=?, cuentaconapropiacion=?, centrodecostocontable=?, cuentaagrupadora=?, porcentaje=?, puntodeequilibrio=?, costodeventa	WHERE id=?;";
 	private final String SQL_PG_4 = "DELETE FROM massoftware.PlanDeCuenta WHERE id = ?";
 
-	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.vPlanDeCuenta";
+	private final String SQL_MS_1 = "SELECT * FROM dbo.vCuentaContable";
 	private final String SQL_MS_2 = "INSERT INTO [dbo].[PlanDeCuentas] ([CUENTACONTABLE],[CUENTAINTEGRADORA],[C1],[C2],[C3],[C4],[C5],[C6],[CUENTADEJERARQUIAIND],[NOMBRE],[IMPUTABLE],[APROPIA],[AJUSTEINF],[DOORNO],[ESTADO],[CENTRODECOSTOCONTABLE],[PUNTODEEQUILIBRIO],[COSTODEVENTA],[CUENTAAGRUPADORA],[PORCENTAJE],[EJERCICIO]) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 	private final String SQL_MS_3 = "UPDATE [dbo].[PlanDeCuentas] SET [CUENTACONTABLE] = ?, [CUENTAINTEGRADORA] = ?, [C1] = ?, [C2] = ?, [C3] = ?, [C4] = ?, [C5] = ?, [C6] = ?, [CUENTADEJERARQUIAIND] = ?, [NOMBRE] = ?, [IMPUTABLE] = ?, [APROPIA] = ?, [AJUSTEINF] = ?, [DOORNO] = ?, [ESTADO] = ?, [CENTRODECOSTOCONTABLE] = ?, [PUNTODEEQUILIBRIO] = ?, [COSTODEVENTA] = ?, [CUENTAAGRUPADORA] = ?, [PORCENTAJE] = ?, [EJERCICIO] = ? WHERE [EJERCICIO] = ? AND [CUENTACONTABLE] = ?;";
 	private final String SQL_MS_4 = "DELETE FROM [dbo].[PlanDeCuentas] WHERE [EJERCICIO] = ? AND [CUENTACONTABLE] = ?";
@@ -35,12 +35,12 @@ public class PlanDeCuentaBO {
 		this.dataSourceWrapper = dataSourceWrapper;
 	}
 
-	public List<PlanDeCuenta> findAll() throws Exception {
+	public List<CuentaContable> findAll() throws Exception {
 
 		return findAllOrderByCodigoCuenta(null, null, null);
 	}
 
-	public List<PlanDeCuenta> findAllOrderByCodigoCuenta(
+	public List<CuentaContable> findAllOrderByCodigoCuenta(
 			EjercicioContable ejercicioContable,
 			CentroDeCostoContable centroDeCostoContable,
 			PuntoDeEquilibrio puntoDeEquilibrio) throws Exception {
@@ -49,7 +49,7 @@ public class PlanDeCuentaBO {
 				centroDeCostoContable, puntoDeEquilibrio);
 	}
 
-	public List<PlanDeCuenta> findAllOrderByCuentaContable(
+	public List<CuentaContable> findAllOrderByCuentaContable(
 			EjercicioContable ejercicioContable,
 			CentroDeCostoContable centroDeCostoContable,
 			PuntoDeEquilibrio puntoDeEquilibrio) throws Exception {
@@ -58,7 +58,7 @@ public class PlanDeCuentaBO {
 				centroDeCostoContable, puntoDeEquilibrio);
 	}
 
-	public List<PlanDeCuenta> findAllOrderByNombre(
+	public List<CuentaContable> findAllOrderByNombre(
 			EjercicioContable ejercicioContable,
 			CentroDeCostoContable centroDeCostoContable,
 			PuntoDeEquilibrio puntoDeEquilibrio) throws Exception {
@@ -67,7 +67,7 @@ public class PlanDeCuentaBO {
 				centroDeCostoContable, puntoDeEquilibrio);
 	}
 
-	public List<PlanDeCuenta> findAllOrderByCuentaAgrupadora(
+	public List<CuentaContable> findAllOrderByCuentaAgrupadora(
 			EjercicioContable ejercicioContable,
 			CentroDeCostoContable centroDeCostoContable,
 			PuntoDeEquilibrio puntoDeEquilibrio) throws Exception {
@@ -77,7 +77,7 @@ public class PlanDeCuentaBO {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<PlanDeCuenta> findAllOrderBy(boolean ordeByCodigoCuenta,
+	private List<CuentaContable> findAllOrderBy(boolean ordeByCodigoCuenta,
 			boolean ordeByCuentaContable, boolean ordeByNombre,
 			boolean ordeByCuentaAgrupadora,
 			EjercicioContable ejercicioContable,
@@ -137,7 +137,7 @@ public class PlanDeCuentaBO {
 
 		try {
 
-			List<PlanDeCuenta> list = null;
+			List<CuentaContable> list = null;
 			List<Object> args = new ArrayList<Object>();
 
 			if (ejercicioContable != null && ejercicioContable.getId() != null) {
@@ -160,7 +160,7 @@ public class PlanDeCuentaBO {
 				list = connectionWrapper.findToListByCendraConvention(sql);
 			}
 
-			for (PlanDeCuenta item : list) {
+			for (CuentaContable item : list) {
 				item.validate();
 			}
 
@@ -404,7 +404,7 @@ public class PlanDeCuentaBO {
 	}
 
 	@SuppressWarnings("unchecked")
-	private PlanDeCuenta findByPlanDeCuenta(PlanDeCuenta planDeCuenta)
+	private CuentaContable findByPlanDeCuenta(CuentaContable planDeCuenta)
 			throws Exception {
 
 		String sql = null;
@@ -424,7 +424,7 @@ public class PlanDeCuentaBO {
 						+ " WHERE codigoCuentaPadre = ? AND codigoCuenta = ? AND ejercicioContable_ejercicio = ?;";
 			}
 
-			List<PlanDeCuenta> list = connectionWrapper
+			List<CuentaContable> list = connectionWrapper
 					.findToListByCendraConvention(sql, planDeCuenta
 							.getCodigoCuentaPadre(), planDeCuenta
 							.getCodigoCuenta(), planDeCuenta
@@ -511,7 +511,7 @@ public class PlanDeCuentaBO {
 
 	}
 
-	public List<PlanDeCuenta> insert(List<PlanDeCuenta> items) throws Exception {
+	public List<CuentaContable> insert(List<CuentaContable> items) throws Exception {
 
 		String sql = null;
 
@@ -528,7 +528,7 @@ public class PlanDeCuentaBO {
 
 			connectionWrapper.begin();
 
-			for (PlanDeCuenta item : items) {
+			for (CuentaContable item : items) {
 
 				if (findByPlanDeCuenta(item) != null) {
 					throw new InsertDuplicateException(item.getCodigoCuenta());
@@ -584,16 +584,16 @@ public class PlanDeCuentaBO {
 					ajustaPorInflacion = Boolean.class;
 				}
 				Object planDeCuentaEstado = null;
-				if (item.getPlanDeCuentaEstado() != null
-						&& item.getPlanDeCuentaEstado().getId() != null) {
-					planDeCuentaEstado = item.getPlanDeCuentaEstado().getId();
+				if (item.getCuentaContableEstado() != null
+						&& item.getCuentaContableEstado().getId() != null) {
+					planDeCuentaEstado = item.getCuentaContableEstado().getId();
 					System.out.println("6666 "
-							+ item.getPlanDeCuentaEstado().getId()
+							+ item.getCuentaContableEstado().getId()
 							+ " 999999999 " + planDeCuentaEstado);
 				} else {
 					planDeCuentaEstado = String.class;
 					System.out.println("6666 "
-							+ item.getPlanDeCuentaEstado().getId()
+							+ item.getCuentaContableEstado().getId()
 							+ " 999999999 99888 " + planDeCuentaEstado);
 				}
 				Object cuentaConApropiacion = null;
@@ -674,7 +674,7 @@ public class PlanDeCuentaBO {
 		}
 	}
 
-	public PlanDeCuenta insert(PlanDeCuenta item) throws Exception {
+	public CuentaContable insert(CuentaContable item) throws Exception {
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
 			return insertPG(item);
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
@@ -683,7 +683,7 @@ public class PlanDeCuentaBO {
 		return null;
 	}
 
-	private PlanDeCuenta insertMS(PlanDeCuenta item) throws Exception {
+	private CuentaContable insertMS(CuentaContable item) throws Exception {
 
 		ConnectionWrapper connectionWrapper = dataSourceWrapper
 				.getConnectionWrapper();
@@ -814,9 +814,9 @@ public class PlanDeCuentaBO {
 
 			// [ESTADO]
 			Object planDeCuentaEstado = null;
-			if (item.getPlanDeCuentaEstado() != null
-					&& item.getPlanDeCuentaEstado().getCodigo() != null) {
-				planDeCuentaEstado = item.getPlanDeCuentaEstado().getCodigo();
+			if (item.getCuentaContableEstado() != null
+					&& item.getCuentaContableEstado().getCodigo() != null) {
+				planDeCuentaEstado = item.getCuentaContableEstado().getCodigo();
 			} else {
 				planDeCuentaEstado = Integer.class;
 			}
@@ -905,7 +905,7 @@ public class PlanDeCuentaBO {
 		}
 	}
 
-	private PlanDeCuenta insertPG(PlanDeCuenta item) throws Exception {
+	private CuentaContable insertPG(CuentaContable item) throws Exception {
 
 		ConnectionWrapper connectionWrapper = dataSourceWrapper
 				.getConnectionWrapper();
@@ -970,9 +970,9 @@ public class PlanDeCuentaBO {
 				ajustaPorInflacion = Boolean.class;
 			}
 			Object planDeCuentaEstado = null;
-			if (item.getPlanDeCuentaEstado() != null
-					&& item.getPlanDeCuentaEstado().getId() != null) {
-				planDeCuentaEstado = item.getPlanDeCuentaEstado().getId();
+			if (item.getCuentaContableEstado() != null
+					&& item.getCuentaContableEstado().getId() != null) {
+				planDeCuentaEstado = item.getCuentaContableEstado().getId();
 			} else {
 				planDeCuentaEstado = String.class;
 			}
@@ -1045,7 +1045,7 @@ public class PlanDeCuentaBO {
 		}
 	}
 
-	public PlanDeCuenta update(PlanDeCuenta item, Integer ejercicioParam,
+	public CuentaContable update(CuentaContable item, Integer ejercicioParam,
 			String cuentaContableParam) throws Exception {
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
 			return updatePG(item);
@@ -1055,7 +1055,7 @@ public class PlanDeCuentaBO {
 		return null;
 	}
 
-	private PlanDeCuenta updateMS(PlanDeCuenta item, Integer ejercicioParam,
+	private CuentaContable updateMS(CuentaContable item, Integer ejercicioParam,
 			String cuentaContableParam) throws Exception {
 
 		ConnectionWrapper connectionWrapper = dataSourceWrapper
@@ -1187,9 +1187,9 @@ public class PlanDeCuentaBO {
 
 			// [ESTADO]
 			Object planDeCuentaEstadoArg = null;
-			if (item.getPlanDeCuentaEstado() != null
-					&& item.getPlanDeCuentaEstado().getCodigo() != null) {
-				planDeCuentaEstadoArg = item.getPlanDeCuentaEstado()
+			if (item.getCuentaContableEstado() != null
+					&& item.getCuentaContableEstado().getCodigo() != null) {
+				planDeCuentaEstadoArg = item.getCuentaContableEstado()
 						.getCodigo();
 			} else {
 				planDeCuentaEstadoArg = Integer.class;
@@ -1280,7 +1280,7 @@ public class PlanDeCuentaBO {
 		}
 	}
 
-	private PlanDeCuenta updatePG(PlanDeCuenta item) throws Exception {
+	private CuentaContable updatePG(CuentaContable item) throws Exception {
 
 		ConnectionWrapper connectionWrapper = dataSourceWrapper
 				.getConnectionWrapper();
@@ -1345,9 +1345,9 @@ public class PlanDeCuentaBO {
 				ajustaPorInflacion = Boolean.class;
 			}
 			Object planDeCuentaEstado = null;
-			if (item.getPlanDeCuentaEstado() != null
-					&& item.getPlanDeCuentaEstado().getId() != null) {
-				planDeCuentaEstado = item.getPlanDeCuentaEstado().getId();
+			if (item.getCuentaContableEstado() != null
+					&& item.getCuentaContableEstado().getId() != null) {
+				planDeCuentaEstado = item.getCuentaContableEstado().getId();
 			} else {
 				planDeCuentaEstado = String.class;
 			}
