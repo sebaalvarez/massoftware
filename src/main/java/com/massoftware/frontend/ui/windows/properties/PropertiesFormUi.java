@@ -6,6 +6,7 @@ import com.massoftware.backend.MigradorMSToPG;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.MasSoftware;
 import com.massoftware.frontend.ui.menu.ContabilidadGeneralMenu;
+import com.massoftware.frontend.ui.menu.FondosMenu;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.model.Usuario;
 import com.vaadin.server.FontAwesome;
@@ -591,6 +592,7 @@ public class PropertiesFormUi extends CustomComponent {
 			VerticalLayout layout = new VerticalLayout();
 
 			layout.addComponent(new ContabilidadGeneralMenu(cx, usuario));
+			layout.addComponent(new FondosMenu(cx, usuario));
 
 			masSoftware.setContent(layout);
 

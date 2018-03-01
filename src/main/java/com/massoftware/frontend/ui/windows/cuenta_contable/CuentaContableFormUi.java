@@ -46,7 +46,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class PlanDeCuantaFormUi extends CustomComponent {
+public class CuentaContableFormUi extends CustomComponent {
 
 	/**
 	 * 
@@ -57,7 +57,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 
 	private Window window;
 	private BackendContext cx;
-	private PlanDeCuentaTableUi planDeCuentaTableUi;
+	private CuentaContableTableUi planDeCuentaTableUi;
 
 	private boolean isForInsertForm;
 
@@ -109,8 +109,8 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 	protected String cuentaContableOriginal;
 	protected String codigoCuentaOriginal;
 
-	public PlanDeCuantaFormUi(Window window, BackendContext cx,
-			PlanDeCuentaTableUi planDeCuentaTableUi,
+	public CuentaContableFormUi(Window window, BackendContext cx,
+			CuentaContableTableUi planDeCuentaTableUi,
 			EjercicioContable ejercicioContable) {
 		super();
 		try {
@@ -124,8 +124,8 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		}
 	}
 
-	public PlanDeCuantaFormUi(Window window, BackendContext cx,
-			PlanDeCuentaTableUi planDeCuentaTableUi, CuentaContable planDeCuenta) {
+	public CuentaContableFormUi(Window window, BackendContext cx,
+			CuentaContableTableUi planDeCuentaTableUi, CuentaContable planDeCuenta) {
 		super();
 		try {
 			this.isForInsertForm = true;
@@ -138,8 +138,8 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		}
 	}
 
-	public PlanDeCuantaFormUi(Window window, BackendContext cx,
-			PlanDeCuentaTableUi planDeCuentaTableUi, CuentaContable planDeCuenta,
+	public CuentaContableFormUi(Window window, BackendContext cx,
+			CuentaContableTableUi planDeCuentaTableUi, CuentaContable planDeCuenta,
 			boolean isForUpdateForm) {
 		super();
 		try {
@@ -398,7 +398,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		codigoCuentaPadreNIM.setDigitsOptional(false);
 		// codigoCuentaNIM.setJitMasking(true);
 		codigoCuentaPadreNIM.extend(codigoCuentaPadreTXT);
-		ValidatorPlanDeCuentaCodigoPadre stringPlanDeCuentaCodigoPadreValidator = new ValidatorPlanDeCuentaCodigoPadre(
+		ValidatorCuentaContableCodigoPadre stringPlanDeCuentaCodigoPadreValidator = new ValidatorCuentaContableCodigoPadre(
 				"", cx, planDeCuentaBI);
 		codigoCuentaPadreTXT
 				.addValidator(stringPlanDeCuentaCodigoPadreValidator);
@@ -440,13 +440,13 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		// codigoCuentaNIM.setJitMasking(true);
 		codigoCuentaNIM.extend(codigoCuentaTXT);
 
-		ValidatorPlanDeCuentaCodigo stringPlanDeCuentaCodigoValidator;
+		ValidatorCuentaContableCodigo stringPlanDeCuentaCodigoValidator;
 
 		if (isForInsertForm) {
-			stringPlanDeCuentaCodigoValidator = new ValidatorPlanDeCuentaCodigo(
+			stringPlanDeCuentaCodigoValidator = new ValidatorCuentaContableCodigo(
 					"", cx, planDeCuentaBI);
 		} else {
-			stringPlanDeCuentaCodigoValidator = new ValidatorPlanDeCuentaCodigo(
+			stringPlanDeCuentaCodigoValidator = new ValidatorCuentaContableCodigo(
 					"", cx, planDeCuentaBI, codigoCuentaOriginal);
 		}
 		codigoCuentaTXT.addValidator(stringPlanDeCuentaCodigoValidator);
@@ -472,13 +472,13 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		cuentaContableTXT.setImmediate(true);
 		cuentaContableTXT.setPropertyDataSource(planDeCuentaBI
 				.getItemProperty("cuentaContable"));
-		ValidatorPlanDeCuentaCuentaContable stringPlanDeCuentaCuentaContableValidator = null;
+		ValidatorCuentaContableCuentaContable stringPlanDeCuentaCuentaContableValidator = null;
 
 		if (isForInsertForm) {
-			stringPlanDeCuentaCuentaContableValidator = new ValidatorPlanDeCuentaCuentaContable(
+			stringPlanDeCuentaCuentaContableValidator = new ValidatorCuentaContableCuentaContable(
 					"", cx, planDeCuentaBI);
 		} else {
-			stringPlanDeCuentaCuentaContableValidator = new ValidatorPlanDeCuentaCuentaContable(
+			stringPlanDeCuentaCuentaContableValidator = new ValidatorCuentaContableCuentaContable(
 					"", cx, planDeCuentaBI, cuentaContableOriginal);
 		}
 		cuentaContableTXT
@@ -657,6 +657,7 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 		// --------------------------------------------------
 
 		porcentajeTXT.setCaption("Porcentaje");
+		porcentajeTXT.addStyleName("align-right");
 		porcentajeTXT.addStyleName(ValoTheme.TEXTFIELD_TINY);
 		porcentajeTXT.setTabIndex(30);
 		porcentajeTXT.setWidth("-1px");
@@ -1062,17 +1063,17 @@ public class PlanDeCuantaFormUi extends CustomComponent {
 
 			String msg = planDeCuentaBI.getBean().getEjercicioContable()
 					+ " "
-					+ FormatPlanDeCuentaCodigoCuenta.format(planDeCuentaBI
+					+ FormatCuentaContableCodigoCuenta.format(planDeCuentaBI
 							.getBean().getCodigoCuenta()) + " "
 					+ planDeCuentaBI.getBean().getNombre();
 
 			if (isForInsertForm) {
-				cx.buildPlanDeCuentaBO().insert(planDeCuentaBI.getBean());
+				cx.buildCuentaContableBO().insert(planDeCuentaBI.getBean());
 
 				msg = "Se agregó con éxito el \"Plan de cuenta: " + msg + "\".";
 
 			} else {
-				cx.buildPlanDeCuentaBO().update(planDeCuentaBI.getBean(),
+				cx.buildCuentaContableBO().update(planDeCuentaBI.getBean(),
 						ejercicioOriginal, cuentaContableOriginal);
 
 				msg = "Se modificó con éxito el \"Plan de cuenta: " + msg

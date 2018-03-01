@@ -36,7 +36,26 @@
 
   // Insert your own theme rules here
   
-  
+  	.v-captiontext {
+		display: inline-block;
+		line-height: inherit;
+		color: #6aaef2;
+		font-size: 12px;
+		font-weight: bold;
+	}
+	
+	.v-window-header {
+		line-height: 36px;
+		padding-left: 12px;
+		margin-right: 74px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		background-color: #6aaef2;
+		color: white;
+	}
+
+	
   
   
 }

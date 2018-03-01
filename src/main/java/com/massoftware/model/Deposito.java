@@ -15,7 +15,7 @@ public class Deposito extends EntityId implements Cloneable,
 	private String abreviatura;
 	private Boolean depositoActivo;
 	private Sucursal sucursal;
-	private Integer caja; // ???????????????????????????????
+	// private Integer caja; // No se usa !!!
 	private Modulo modulo;
 	private Deposito depositoAgrupacion;
 	private SeguridadPuerta puertaOperativo;
@@ -64,22 +64,28 @@ public class Deposito extends EntityId implements Cloneable,
 	}
 
 	public void setSucursal(Sucursal sucursal) {
+		if (sucursal != null && sucursal.getId() == null) {
+			return;
+		}
 		this.sucursal = sucursal;
 	}
 
-	public Integer getCaja() {
-		return caja;
-	}
-
-	public void setCaja(Integer caja) {
-		this.caja = caja;
-	}
+	// public Integer getCaja() {
+	// return caja;
+	// }
+	//
+	// public void setCaja(Integer caja) {
+	// this.caja = caja;
+	// }
 
 	public Modulo getModulo() {
 		return modulo;
 	}
 
 	public void setModulo(Modulo modulo) {
+		if (modulo != null && modulo.getId() == null) {
+			return;
+		}
 		this.modulo = modulo;
 	}
 
@@ -88,6 +94,9 @@ public class Deposito extends EntityId implements Cloneable,
 	}
 
 	public void setDepositoAgrupacion(Deposito depositoAgrupacion) {
+		if (depositoAgrupacion != null && depositoAgrupacion.getId() == null) {
+			return;
+		}
 		this.depositoAgrupacion = depositoAgrupacion;
 	}
 
@@ -96,6 +105,9 @@ public class Deposito extends EntityId implements Cloneable,
 	}
 
 	public void setPuertaOperativo(SeguridadPuerta puertaOperativo) {
+		if (puertaOperativo != null && puertaOperativo.getId() == null) {
+			return;
+		}
 		this.puertaOperativo = puertaOperativo;
 	}
 
@@ -104,6 +116,9 @@ public class Deposito extends EntityId implements Cloneable,
 	}
 
 	public void setPuertaConsulta(SeguridadPuerta puertaConsulta) {
+		if (puertaConsulta != null && puertaConsulta.getId() == null) {
+			return;
+		}
 		this.puertaConsulta = puertaConsulta;
 	}
 
@@ -122,7 +137,7 @@ public class Deposito extends EntityId implements Cloneable,
 		} else {
 			other.setSucursal(null);
 		}
-		other.setCaja(this.getCaja());
+		// other.setCaja(this.getCaja());
 		if (this.getModulo() != null) {
 			other.setModulo(this.getModulo().clone());
 		} else {
@@ -182,7 +197,7 @@ public class Deposito extends EntityId implements Cloneable,
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".sucursal es nulo.");
 		}
-		
+
 		if (this.modulo == null || this.modulo.getId() == null) {
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".modulo es nulo.");

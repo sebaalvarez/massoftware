@@ -8,7 +8,7 @@ import org.vaadin.inputmask.InputMask;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.windows.cuenta_contable.PlanDeCuantaFormUi;
+import com.massoftware.frontend.ui.windows.cuenta_contable.CuentaContableFormUi;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.PuntoDeEquilibrioTipo;
@@ -39,7 +39,7 @@ public class PuntoDeEquilibrioFormUi extends CustomComponent {
 	protected Window window;
 	protected BackendContext cx;
 	protected PuntoDeEquilibrioTableUi puntoDeEquilibrioTableUi;
-	protected PlanDeCuantaFormUi planDeCuantaFormUi;
+	protected CuentaContableFormUi planDeCuantaFormUi;
 
 	private boolean isForInsertForm;
 
@@ -71,7 +71,7 @@ public class PuntoDeEquilibrioFormUi extends CustomComponent {
 	protected Integer puntoDeEquilibrioOriginal;
 
 	public PuntoDeEquilibrioFormUi(Window window, BackendContext cx,
-			PlanDeCuantaFormUi planDeCuantaFormUi,
+			CuentaContableFormUi planDeCuantaFormUi,
 			EjercicioContable ejercicioContable) {
 		super();
 		try {
@@ -417,7 +417,7 @@ public class PuntoDeEquilibrioFormUi extends CustomComponent {
 						puntoDeEquilibrioBI.getBean(),
 						puntoDeEquilibrioBI.getBean().clone());
 
-				msg = "Se modificó con éxito el \"Centro de costo: " + msg
+				msg = "Se modificó con éxito el \"Punto de equilibrio: " + msg
 						+ "\".";
 			}
 

@@ -56,7 +56,7 @@ public class CentroDeCostoContableTableUi extends CustomComponent {
 	// protected Label tituloFiltrosLBL;
 	protected HorizontalLayout filaFiltro1HL;
 	protected HorizontalLayout ejercicioContableHL;
-	protected ComboBox ejercicioContableCBX;
+	protected ComboBox ejercicioContableCB;
 	protected Button removerFiltroEjercicioContableBTN;
 	protected HorizontalLayout filaFiltro2HL;
 	protected HorizontalLayout filtroGenericoHL;
@@ -148,22 +148,22 @@ public class CentroDeCostoContableTableUi extends CustomComponent {
 
 		// ----------------------------------------------
 
-		ejercicioContableCBX = new ComboBox();
-		ejercicioContableCBX.addStyleName("tiny");
-		ejercicioContableCBX.setIcon(FontAwesome.SEARCH);
-		ejercicioContableCBX.setCaption("Ejercicio");
-		ejercicioContableCBX.setRequired(true);
+		ejercicioContableCB = new ComboBox();
+		ejercicioContableCB.addStyleName("tiny");
+		ejercicioContableCB.setIcon(FontAwesome.SEARCH);
+		ejercicioContableCB.setCaption("Ejercicio");
+		ejercicioContableCB.setRequired(true);
 		// ejercicioContableCB.setReadOnly(true);
-		ejercicioContableCBX.setNullSelectionAllowed(false);
-		ejercicioContableCBX
+		ejercicioContableCB.setNullSelectionAllowed(false);
+		ejercicioContableCB
 				.setRequiredError("Se requiere de al menos un ejercicio para poder operar con esta ventana.");
-		ejercicioContableCBX.setImmediate(true);
-		ejercicioContableCBX.setContainerDataSource(ejerciciosContablesBIC);
-		ejercicioContableCBX.addValueChangeListener(e -> {
+		ejercicioContableCB.setImmediate(true);
+		ejercicioContableCB.setContainerDataSource(ejerciciosContablesBIC);
+		ejercicioContableCB.addValueChangeListener(e -> {
 			ejercicioContableCBXValueChange();
 		});
 
-		ejercicioContableHL.addComponent(ejercicioContableCBX);
+		ejercicioContableHL.addComponent(ejercicioContableCB);
 
 		// ----------------------------------------------
 
@@ -415,7 +415,7 @@ public class CentroDeCostoContableTableUi extends CustomComponent {
 	protected void agregarBTNClick() {
 		try {
 
-			EjercicioContable ejercicioContable = (EjercicioContable) ejercicioContableCBX
+			EjercicioContable ejercicioContable = (EjercicioContable) ejercicioContableCB
 					.getValue();
 
 			centrosDeCostoContableGRD.select(null);
@@ -653,7 +653,7 @@ public class CentroDeCostoContableTableUi extends CustomComponent {
 				if (ejercicioContable != null
 						&& ejercicioContable.getEjercicio() != null) {
 
-					ejercicioContableCBX.setValue(ejercicioContable);
+					ejercicioContableCB.setValue(ejercicioContable);
 
 				} else {
 					// EjercicioContable maxEjercicioContable =
@@ -661,7 +661,7 @@ public class CentroDeCostoContableTableUi extends CustomComponent {
 					// .findMaxEjercicio();
 					// ejercicioContableCB.setValue(maxEjercicioContable);
 					ejercicioContable = ejerciciosContablesBIC.getIdByIndex(0);
-					ejercicioContableCBX.setValue(ejercicioContable);
+					ejercicioContableCB.setValue(ejercicioContable);
 				}
 			}
 
@@ -727,7 +727,7 @@ public class CentroDeCostoContableTableUi extends CustomComponent {
 	public void updateModelViewPort768x1024() throws Exception {
 		try {
 
-			EjercicioContable ejercicioContable = (EjercicioContable) ejercicioContableCBX
+			EjercicioContable ejercicioContable = (EjercicioContable) ejercicioContableCB
 					.getValue();
 
 			List<CentroDeCostoContable> centrosDeCostoContable = cx

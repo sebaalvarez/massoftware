@@ -6,7 +6,7 @@ import com.massoftware.model.CuentaContable;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
 
-public class ValidatorPlanDeCuentaCuentaContable extends
+public class ValidatorCuentaContableCuentaContable extends
 		AbstractStringValidator {
 
 	/**
@@ -18,14 +18,14 @@ public class ValidatorPlanDeCuentaCuentaContable extends
 	protected BeanItem<CuentaContable> planDeCuentaBI;
 	protected String cuentaContableOriginal;
 
-	public ValidatorPlanDeCuentaCuentaContable(String errorMessage,
+	public ValidatorCuentaContableCuentaContable(String errorMessage,
 			BackendContext cx, BeanItem<CuentaContable> planDeCuentaBI) {
 		super(errorMessage);
 		this.cx = cx;
 		this.planDeCuentaBI = planDeCuentaBI;
 	}
 
-	public ValidatorPlanDeCuentaCuentaContable(String errorMessage,
+	public ValidatorCuentaContableCuentaContable(String errorMessage,
 			BackendContext cx, BeanItem<CuentaContable> planDeCuentaBI,
 			String cuentaContableOriginal) {
 		super(errorMessage);
@@ -60,7 +60,7 @@ public class ValidatorPlanDeCuentaCuentaContable extends
 						+ planDeCuentaBI.getBean().getEjercicioContable()
 						+ " - " + cuentaContable + ")");
 
-				boolean b = cx.buildPlanDeCuentaBO().ifExistsCuentaContable(
+				boolean b = cx.buildCuentaContableBO().ifExistsCuentaContable(
 						cuentaContable,
 						planDeCuentaBI.getBean().getEjercicioContable()
 								.getEjercicio());

@@ -1,0 +1,132 @@
+{
+  "type": "TabSheet",
+  "components": [
+    {
+      "component": {
+        "type": "VerticalLayout",
+        "caption": "General",
+        "classModel": "com.massoftware.model.Banco",
+        "attsNames": [
+          "codigo", "nombre", "nombreOficial", "cuit", "bloqueado"
+        ]
+      }
+    },
+    {
+      "component": {
+        "type": "VerticalLayout",
+        "caption": "Formato extracto",
+        "components": [
+          {
+            "component": {
+              "type": "GridLayout",
+              "components": [
+                {
+                  "component": {
+                    "type": "ComponentAtt",
+                    "classModel": "com.massoftware.model.Banco",
+                    "attName": "hoja"
+                  },
+                  "column": 0,
+                  "row": 0
+                },
+                {
+                  "component": {
+                    "type": "ComponentAtt",
+                    "classModel": "com.massoftware.model.Banco",
+                    "attName": "primeraFila"
+                  },
+                  "column": 1,
+                  "row": 0
+                },
+                {
+                  "component": {
+                    "type": "ComponentAtt",
+                    "classModel": "com.massoftware.model.Banco",
+                    "attName": "uiltimaFila"
+                  },
+                  "column": 2,
+                  "row": 0
+                }
+              ],
+              "columns": 3,
+              "rows": 1
+            }
+          },
+          {
+            "component": {
+              "type": "Label",
+              "stylesNames": [
+                "h3",
+                "colored"
+              ],
+              "value": "Columnas:"
+            }
+          },
+          {
+            "component": {
+              "type": "GridLayout",
+              "components": [
+                {
+                  "component": {
+                    "type": "ComponentAtt",
+                    "classModel": "com.massoftware.model.Banco",
+                    "attName": "columnaFecha"
+                  },
+                  "column": 0,
+                  "row": 0
+                },
+                {
+                  "component": {
+                    "type": "ComponentAtt",
+                    "classModel": "com.massoftware.model.Banco",
+                    "attName": "columnaDescripcion"
+                  },
+                  "column": 1,
+                  "row": 0
+                },
+                {
+                  "component": {
+                    "type": "ComponentAtt",
+                    "classModel": "com.massoftware.model.Banco",
+                    "attName": "columnaReferencia1"
+                  },
+                  "column": 0,
+                  "row": 1
+                },
+                {
+                  "component": {
+                    "type": "ComponentAtt",
+                    "classModel": "com.massoftware.model.Banco",
+                    "attName": "columnaReferencia2"
+                  },
+                  "column": 1,
+                  "row": 1
+                },
+                {
+                  "component": {
+                    "type": "ComponentAtt",
+                    "classModel": "com.massoftware.model.Banco",
+                    "attName": "columnaImporte"
+                  },
+                  "column": 0,
+                  "row": 2
+                },
+                {
+                  "component": {
+                    "type": "ComponentAtt",
+                    "classModel": "com.massoftware.model.Banco",
+                    "attName": "columnaSaldo"
+                  },
+                  "column": 1,
+                  "row": 2
+                }
+              ],
+              "columns": 3,
+              "rows": 3
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

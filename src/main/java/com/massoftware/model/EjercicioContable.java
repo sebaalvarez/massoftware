@@ -180,7 +180,7 @@ public class EjercicioContable extends EntityId implements Cloneable,
 	@Override
 	public String toString() {
 
-		return this.getEjercicio() + "";
+		return "(" + this.getEjercicio() + ")";
 	}
 
 	public boolean validate() throws IllegalArgumentException {

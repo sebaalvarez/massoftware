@@ -6,7 +6,7 @@ import com.massoftware.model.CuentaContable;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
 
-public class ValidatorPlanDeCuentaCodigoCuentaNombre extends
+public class ValidatorCuentaContableCodigoCuentaNombre extends
 		AbstractStringValidator {
 
 	/**
@@ -17,7 +17,7 @@ public class ValidatorPlanDeCuentaCodigoCuentaNombre extends
 
 	protected BeanItem<CuentaContable> planDeCuentaBI;
 
-	public ValidatorPlanDeCuentaCodigoCuentaNombre(String errorMessage,
+	public ValidatorCuentaContableCodigoCuentaNombre(String errorMessage,
 			BackendContext cx, BeanItem<CuentaContable> planDeCuentaBI) {
 		super(errorMessage);
 		this.cx = cx;
@@ -39,14 +39,14 @@ public class ValidatorPlanDeCuentaCodigoCuentaNombre extends
 
 				nombre = nombre.trim().toLowerCase();
 
-				String codigoCuenta = FormatPlanDeCuentaCodigoCuenta
+				String codigoCuenta = FormatCuentaContableCodigoCuenta
 						.format(planDeCuentaBI.getBean().getCodigoCuenta());
 
 				this.setErrorMessage("El campo Cuenta de jerarquia y nombre son incorrectos, ya existe una cuenta con la misma denominación ("
 						+ planDeCuentaBI.getBean().getEjercicioContable()
 						+ " - " + codigoCuenta + " - " + nombre + ")");
 
-				boolean b = cx.buildPlanDeCuentaBO()
+				boolean b = cx.buildCuentaContableBO()
 						.ifExistsCodigoCuentaYNombre(
 								codigoCuenta,
 								nombre,

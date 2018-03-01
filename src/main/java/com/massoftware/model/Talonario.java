@@ -16,10 +16,10 @@ public class Talonario extends EntityId implements Cloneable,
 	private Integer codigo;
 	private String nombre;
 	private String letra;
-	private Sucursal sucursal;
+	private Sucursal sucursal;	
 	private Boolean autonumeracion;
 	private Boolean numeracionPreImpresa;
-	private Boolean asociadoAlRG10098;
+	private Boolean asociadoAlRG10098;	
 	private String asociadoAControladorFiscal;
 	private Integer primerNumero;
 	private Integer proximoNumero;
@@ -64,6 +64,10 @@ public class Talonario extends EntityId implements Cloneable,
 	}
 
 	public void setSucursal(Sucursal sucursal) {
+		if(sucursal != null && sucursal.getId() == null){
+			return;
+		} 
+		
 		this.sucursal = sucursal;
 	}
 
@@ -213,11 +217,14 @@ public class Talonario extends EntityId implements Cloneable,
 		this.diasAvisoVencimiento = diasAvisoVencimiento;
 	}
 
-	public SeguridadPuerta getPuertaCambiar() {
+	public SeguridadPuerta getPuertaCambiar() {		
 		return puertaCambiar;
 	}
 
 	public void setPuertaCambiar(SeguridadPuerta puertaCambiar) {
+		if(puertaCambiar != null && puertaCambiar.getId() == null){
+			return;
+		}
 		this.puertaCambiar = puertaCambiar;
 	}
 

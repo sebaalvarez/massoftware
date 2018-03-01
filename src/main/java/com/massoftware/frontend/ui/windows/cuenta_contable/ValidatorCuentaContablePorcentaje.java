@@ -3,9 +3,9 @@ package com.massoftware.frontend.ui.windows.cuenta_contable;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.vaadin.data.validator.AbstractStringValidator;
 
-public class ValidatorPlanDeCuentaPorcentaje extends AbstractStringValidator {
+public class ValidatorCuentaContablePorcentaje extends AbstractStringValidator {
 
-	public ValidatorPlanDeCuentaPorcentaje() {
+	public ValidatorCuentaContablePorcentaje() {
 		super("");
 		// TODO Auto-generated constructor stub
 	}

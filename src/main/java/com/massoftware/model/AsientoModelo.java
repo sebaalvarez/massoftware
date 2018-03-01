@@ -80,7 +80,7 @@ public class AsientoModelo extends EntityId implements Cloneable,
 		other.setNumero(getNumero());
 		other.setDenominacion(this.getDenominacion());
 		if (this.getCuentasContables() != null) {
-			for (AsientoModeloItem item : cuentasContables) {
+			for (AsientoModeloItem item : this.getCuentasContables()) {
 				other.addCuentaContable(item.clone());
 			}
 		}

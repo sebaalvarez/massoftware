@@ -5,7 +5,7 @@ import org.vaadin.inputmask.InputMask;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.windows.cuenta_contable.PlanDeCuantaFormUi;
+import com.massoftware.frontend.ui.windows.cuenta_contable.CuentaContableFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -33,7 +33,7 @@ public class CentroDeCostoContableFormUi extends CustomComponent {
 	protected Window window;
 	protected BackendContext cx;
 	protected CentroDeCostoContableTableUi centroDeCostoContableTableUi;
-	protected PlanDeCuantaFormUi planDeCuantaFormUi;
+	protected CuentaContableFormUi planDeCuantaFormUi;
 
 	private boolean isForInsertForm;
 
@@ -62,7 +62,7 @@ public class CentroDeCostoContableFormUi extends CustomComponent {
 	protected Integer numeroOriginal;
 
 	public CentroDeCostoContableFormUi(Window window, BackendContext cx,
-			PlanDeCuantaFormUi planDeCuantaFormUi,
+			CuentaContableFormUi planDeCuantaFormUi,
 			EjercicioContable ejercicioContable) {
 		super();
 		try {

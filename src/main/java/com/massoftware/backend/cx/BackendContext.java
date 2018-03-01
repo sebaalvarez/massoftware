@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import javax.sql.DataSource;
 
@@ -15,14 +16,27 @@ import org.cendra.jdbc.DataSourceWrapper;
 import org.cendra.log.LogPrinter;
 
 import com.massoftware.backend.bo.AsientoModeloBO;
+import com.massoftware.backend.bo.BancoBO;
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.CostoDeVentaBO;
+import com.massoftware.backend.bo.CuentaContableBO;
+import com.massoftware.backend.bo.DepositoBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
-import com.massoftware.backend.bo.PlanDeCuentaBO;
+import com.massoftware.backend.bo.GenericBO;
+import com.massoftware.backend.bo.ModeloCbteFondoBO;
+import com.massoftware.backend.bo.ModeloCbteFondoItemBO;
+import com.massoftware.backend.bo.ModeloCbteFondoItemConceptoBO;
+import com.massoftware.backend.bo.ModuloBO;
 import com.massoftware.backend.bo.PlanDeCuentaEstadoBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioTipoBO;
+import com.massoftware.backend.bo.SucursalBO;
+import com.massoftware.backend.bo.SucursalTipoBO;
+import com.massoftware.backend.bo.TalonarioBO;
+import com.massoftware.backend.bo.TipoCbteAFIPBO;
+import com.massoftware.backend.bo.TipoCbteControlBO;
 import com.massoftware.backend.bo.UsuarioBO;
+import com.massoftware.model.Banco;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaContableEstado;
@@ -36,6 +50,7 @@ public class BackendContext extends AbstractContext {
 	public final static String MS = "sqlserver";
 	public final static String PG = "Postgresql";
 
+	private ResourceBundle messages;
 	private DataSourceProperties dataSourceProperties;
 	private DataSource dataSource;
 	private DataSourceWrapper dataSourceWrapper;
@@ -48,8 +63,10 @@ public class BackendContext extends AbstractContext {
 	public void start(String type, Properties properties) {
 
 		try {
-			init(type, properties);
+			messages = ResourceBundle.getBundle ("MessagesBundle");
+			init(type, properties);			
 			initMetaData();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),
@@ -311,11 +328,37 @@ public class BackendContext extends AbstractContext {
 	}
 
 	// -------------------------------------------------------------
+	
+	public ResourceBundle getMessages(){
+		return messages;
+	}
+	
+	public String getMessage(String key){
+		return messages.getString(key);
+	}
+	
+	// -------------------------------------------------------------
 
+	@Deprecated
 	public EntityMetaData getEntityMetaData(String key) {
 		return entityMetaDataMap.get(key);
 	}
 
+	
+	// ================================================================================
+	
+	@SuppressWarnings("rawtypes")
+	public GenericBO buildBO(Class classModel){
+		
+		if(classModel == Banco.class){
+			return buildBancoBO();
+		}
+		
+		return null;
+	}
+	
+	// ================================================================================
+	
 	public EjercicioContableBO buildEjercicioContableBO() {
 
 		try {
@@ -419,10 +462,10 @@ public class BackendContext extends AbstractContext {
 
 	}
 
-	public PlanDeCuentaBO buildPlanDeCuentaBO() {
+	public CuentaContableBO buildCuentaContableBO() {
 
 		try {
-			return new PlanDeCuentaBO(dataSourceWrapper);
+			return new CuentaContableBO(dataSourceWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),
@@ -432,7 +475,7 @@ public class BackendContext extends AbstractContext {
 		return null;
 
 	}
-	
+
 	public AsientoModeloBO buildAsientoModeloBO() {
 
 		try {
@@ -446,5 +489,161 @@ public class BackendContext extends AbstractContext {
 		return null;
 
 	}
+
+	public SucursalTipoBO buildSucursalTipoBO() {
+
+		try {
+			return new SucursalTipoBO(dataSourceWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+
+	public SucursalBO buildSucursalBO() {
+
+		try {
+			return new SucursalBO(dataSourceWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+
+	public TalonarioBO buildTalonarioBO() {
+
+		try {
+			return new TalonarioBO(dataSourceWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+
+	public ModuloBO buildModuloBO() {
+
+		try {
+			return new ModuloBO(dataSourceWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+	
+	public DepositoBO buildDepositoBO() {
+
+		try {
+			return new DepositoBO(dataSourceWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+	
+	public TipoCbteControlBO buildTipoCbteControlBO() {
+
+		try {
+			return new TipoCbteControlBO(dataSourceWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+	
+	public ModeloCbteFondoBO buildModeloCbteFondoBO() {
+
+		try {
+			return new ModeloCbteFondoBO(dataSourceWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+	
+	public ModeloCbteFondoItemConceptoBO buildModeloCbteFondoItemConceptoBO() {
+
+		try {
+			return new ModeloCbteFondoItemConceptoBO(dataSourceWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+	
+	public ModeloCbteFondoItemBO buildModeloCbteFondoItemBO() {
+
+		try {
+			return new ModeloCbteFondoItemBO(dataSourceWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+
+	public TipoCbteAFIPBO buildTipoCbteAFIPBO() {
+
+		try {
+			return new TipoCbteAFIPBO(dataSourceWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+
+	
+	private BancoBO buildBancoBO() {
+
+		try {
+			return new BancoBO(dataSourceWrapper, this);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new LogPrinter().print(AbstractContext.class.getName(),
+					LogPrinter.LEVEL_FATAL, e);
+		}
+
+		return null;
+
+	}
+
 
 }

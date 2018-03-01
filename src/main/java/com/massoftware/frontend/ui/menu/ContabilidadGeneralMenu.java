@@ -9,7 +9,7 @@ import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.windows.asiento_modelo.AsientoModeloTableUi;
 import com.massoftware.frontend.ui.windows.centro_de_costo_contable.CentroDeCostoContableTableUi;
-import com.massoftware.frontend.ui.windows.cuenta_contable.PlanDeCuentaTableUi;
+import com.massoftware.frontend.ui.windows.cuenta_contable.CuentaContableTableUi;
 import com.massoftware.frontend.ui.windows.ejercicio_contable.EjercicioContableTableUi;
 import com.massoftware.frontend.ui.windows.punto_de_equilibrio.PuntoDeEquilibrioTableUi;
 import com.massoftware.model.EjercicioContable;
@@ -443,7 +443,7 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 			Window win = new Window("Plan de cuentas");
 			win.setClosable(true);
 			win.setResizable(false);
-			PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(win, cx, usuario);
+			CuentaContableTableUi ui = new CuentaContableTableUi(win, cx, usuario);
 			win.setContent(ui);
 			getUI().addWindow(win);
 			win.center();

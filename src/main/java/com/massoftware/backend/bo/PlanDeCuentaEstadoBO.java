@@ -17,8 +17,8 @@ public class PlanDeCuentaEstadoBO {
 	private final String SQL_PG_2 = "SELECT * FROM massoftware.vPlanDeCuentaEstado WHERE codigo = ?";
 	private final String SQL_PG_3 = "INSERT INTO massoftware.PlanDeCuentaEstado(id, codigo, nombre)	VALUES (?, ?, ?);";
 
-	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.[vPlanDeCuentaEstado] ORDER BY codigo, nombre;";
-	private final String SQL_MS_2 = "SELECT * FROM VetaroRep.dbo.[vPlanDeCuentaEstado] WHERE codigo = ?";
+	private final String SQL_MS_1 = "SELECT * FROM dbo.[vCuentaContableEstado] ORDER BY codigo, nombre;";
+	private final String SQL_MS_2 = "SELECT * FROM dbo.[vCuentaContableEstado] WHERE codigo = ?";
 
 	public PlanDeCuentaEstadoBO(DataSourceWrapper dataSourceWrapper) {
 		super();

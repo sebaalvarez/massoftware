@@ -38,7 +38,9 @@ public class SimpleStringTraslateFilter implements Filter {
 		if (p == null) {
 			return false;
 		}
+		
 		Object propertyValue = p.getValue();
+		
 		if (propertyValue == null) {
 			return false;
 		}
@@ -47,6 +49,7 @@ public class SimpleStringTraslateFilter implements Filter {
 		// }
 
 		if (propertyValue instanceof Boolean) {
+			
 			Boolean b = (Boolean) propertyValue;
 
 			if (b == true && filterString.equalsIgnoreCase("si")) {

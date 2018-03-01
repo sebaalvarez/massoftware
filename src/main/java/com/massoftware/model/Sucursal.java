@@ -2,6 +2,8 @@ package com.massoftware.model;
 
 import org.cendra.common.model.EntityId;
 
+import com.massoftware.annotation.model.RequiredAnont;
+
 public class Sucursal extends EntityId implements Cloneable,
 		Comparable<Sucursal> {
 
@@ -10,6 +12,7 @@ public class Sucursal extends EntityId implements Cloneable,
 	 */
 	private static final long serialVersionUID = 3012073096976059386L;
 
+	@RequiredAnont(value = true)
 	private Integer codigo;
 	private String nombre;
 	private String abreviatura;
@@ -67,6 +70,9 @@ public class Sucursal extends EntityId implements Cloneable,
 	}
 
 	public void setSucursalTipo(SucursalTipo sucursalTipo) {
+		if (sucursalTipo != null && sucursalTipo.getId() == null) {
+			return;
+		}
 		this.sucursalTipo = sucursalTipo;
 	}
 
@@ -256,7 +262,17 @@ public class Sucursal extends EntityId implements Cloneable,
 	@Override
 	public int compareTo(Sucursal o) {
 
+		// if (this.getCodigo() == null && o.getCodigo() == null)
+		// return 0;// EQUAL; // make null==null
+		//
+		// if (this.getCodigo() == null)
+		// return -1; // THIS_IS_LESS; // this null < other not null
+		//
+		// if (o.getCodigo() == null)
+		// return 1; // THIS_IS_GREATER; // this not null > other null
+
 		return this.getCodigo().compareTo(o.getCodigo());
+
 	}
 
 	@Override
@@ -284,23 +300,22 @@ public class Sucursal extends EntityId implements Cloneable,
 					.getCanonicalName() + ".abreviatura es nulo.");
 		}
 
-		if (this.sucursalTipo == null
-				|| this.getSucursalTipo().getId() == null) {
+		if (this.sucursalTipo == null || this.getSucursalTipo().getId() == null) {
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".sucursalTipo es nulo.");
 		}
 
-		if (this.cantidadCaracteresClientes == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName()
-					+ ".cantidadCaracteresClientes es nulo.");
-		}
+		// if (this.cantidadCaracteresClientes == null) {
+		// throw new IllegalArgumentException(this.getClass()
+		// .getCanonicalName()
+		// + ".cantidadCaracteresClientes es nulo.");
+		// }
 
-		if (this.cantidadCaracteresProveedor == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName()
-					+ ".cantidadCaracteresProveedor es nulo.");
-		}
+		// if (this.cantidadCaracteresProveedor == null) {
+		// throw new IllegalArgumentException(this.getClass()
+		// .getCanonicalName()
+		// + ".cantidadCaracteresProveedor es nulo.");
+		// }
 
 		return true;
 	}

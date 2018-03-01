@@ -6,7 +6,7 @@ import com.massoftware.model.CuentaContable;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
 
-public class ValidatorPlanDeCuentaCodigo extends AbstractStringValidator {
+public class ValidatorCuentaContableCodigo extends AbstractStringValidator {
 
 	/**
 	 * 
@@ -18,14 +18,14 @@ public class ValidatorPlanDeCuentaCodigo extends AbstractStringValidator {
 	protected BeanItem<CuentaContable> planDeCuentaBI;
 	protected String codigoCuentaOriginal;
 
-	public ValidatorPlanDeCuentaCodigo(String errorMessage, BackendContext cx,
+	public ValidatorCuentaContableCodigo(String errorMessage, BackendContext cx,
 			BeanItem<CuentaContable> planDeCuentaBI) {
 		super(errorMessage);
 		this.cx = cx;
 		this.planDeCuentaBI = planDeCuentaBI;
 	}
 
-	public ValidatorPlanDeCuentaCodigo(String errorMessage, BackendContext cx,
+	public ValidatorCuentaContableCodigo(String errorMessage, BackendContext cx,
 			BeanItem<CuentaContable> planDeCuentaBI, String codigoCuentaOriginal) {
 		super(errorMessage);
 		this.cx = cx;
@@ -53,14 +53,14 @@ public class ValidatorPlanDeCuentaCodigo extends AbstractStringValidator {
 					return true;
 				}
 
-				String codigoCuenta2 = FormatPlanDeCuentaCodigoCuenta
+				String codigoCuenta2 = FormatCuentaContableCodigoCuenta
 						.format(codigoCuenta);
 
 				this.setErrorMessage("El campo Cuenta de jerarqua es incorrecto, ya existe una cuenta con la misma denominación ("
 						+ planDeCuentaBI.getBean().getEjercicioContable()
 						+ " - " + codigoCuenta2 + ")");
 
-				boolean b = cx.buildPlanDeCuentaBO().ifExistsCodigoCuenta(
+				boolean b = cx.buildCuentaContableBO().ifExistsCodigoCuenta(
 						codigoCuenta,
 						planDeCuentaBI.getBean().getEjercicioContable()
 								.getEjercicio());

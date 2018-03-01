@@ -1,11 +1,13 @@
 package com.massoftware.backend.bo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
+import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Usuario;
 
 public class UsuarioBO {
@@ -45,8 +47,8 @@ public class UsuarioBO {
 			@SuppressWarnings({ "unchecked" })
 			List<Usuario> list = connectionWrapper
 					.findToListByCendraConvention(sql);
-			
-			for(Usuario item : list){
+
+			for (Usuario item : list) {
 				item.validate();
 			}
 
@@ -253,6 +255,17 @@ public class UsuarioBO {
 		} finally {
 			connectionWrapper.close(connectionWrapper);
 		}
+
+	}
+
+	// ++--------------------------------------------------------------------
+
+	public List<String> checkRefIntegrity(EjercicioContable objectFK) {
+
+		System.out.println("exeute : " + this.getClass().getCanonicalName()
+				+ ".checkRefIntegrity(EjercicioContable objectFK)");
+
+		return new ArrayList<String>();
 
 	}
 

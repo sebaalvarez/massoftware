@@ -1,6 +1,6 @@
 package com.massoftware.frontend.ui.windows.cuenta_contable;
 
-public class FormatPlanDeCuentaCodigoCuenta {
+public class FormatCuentaContableCodigoCuenta {
 
 	public static String format(String codigoCuenta) {
 

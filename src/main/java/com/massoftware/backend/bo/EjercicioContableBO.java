@@ -725,10 +725,10 @@ public class EjercicioContableBO {
 			connectionWrapper.rollBack();
 
 			if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()
-					&& e.getsQLException().getErrorCode() == 547) {
+					&& e.getSQLException().getErrorCode() == 547) {
 
-				throw new DeleteForeingObjectConflictException(sql + "\nargs:["
-						+ item.getEjercicio() + "]");
+//				throw new DeleteForeingObjectConflictException(sql + "\nargs:["
+//						+ item.getEjercicio() + "]");
 				// } else if (dataSourceWrapper.isDatabasePostgreSql() &&
 				// e.getsQLException().getErrorCode() == ###) {
 			} else {
@@ -741,6 +741,7 @@ public class EjercicioContableBO {
 		} finally {
 			connectionWrapper.close(connectionWrapper);
 		}
+		return item;
 
 	}
 

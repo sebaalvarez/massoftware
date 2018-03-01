@@ -1,12 +1,15 @@
 package com.massoftware.backend.bo;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
 import com.massoftware.model.AsientoModelo;
 import com.massoftware.model.AsientoModeloItem;
+import com.massoftware.model.EjercicioContable;
 
 public class AsientoModeloBO {
 
@@ -64,9 +67,10 @@ public class AsientoModeloBO {
 		}
 
 	}
-	
+
 	@SuppressWarnings({ "unchecked" })
-	public List<AsientoModeloItem> findAllItems(Integer ejercicio, Integer numeroAsientoModelo) throws Exception {
+	public List<AsientoModeloItem> findAllItems(Integer ejercicio,
+			Integer numeroAsientoModelo) throws Exception {
 
 		String sql = null;
 
@@ -89,7 +93,7 @@ public class AsientoModeloBO {
 			} else {
 				ejercicioArg = Integer.class;
 			}
-			
+
 			Object numeroAsientoModeloArg = null;
 			if (numeroAsientoModelo != null) {
 				numeroAsientoModeloArg = numeroAsientoModelo;
@@ -114,7 +118,6 @@ public class AsientoModeloBO {
 
 	}
 
-
 	public Integer findMaxNumero(Integer ejercicio) throws Exception {
 
 		String sql = null;
@@ -125,7 +128,7 @@ public class AsientoModeloBO {
 		try {
 
 			if (dataSourceWrapper.isDatabasePostgreSql()) {
-//				sql = SQL_PG_2;
+				// sql = SQL_PG_2;
 			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
 				sql = SQL_MS_2;
 			}
@@ -149,6 +152,23 @@ public class AsientoModeloBO {
 		}
 
 		return 1;
+	}
+
+	// ++--------------------------------------------------------------------
+
+	public List<Object> checkRefIntegrity(EjercicioContable objectFK) {
+
+		System.out.println("exeute : " + this.getClass().getCanonicalName()
+				+ ".checkRefIntegrity(EjercicioContable objectFK)");
+
+		AsientoModelo asientoModelo = new AsientoModelo();
+		asientoModelo.setDenominacion("xxxxxxxxx");
+		ArrayList<Object> list = new ArrayList<Object>();
+		list.add(asientoModelo);
+				
+		
+		return list;
+
 	}
 
 }

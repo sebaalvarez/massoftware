@@ -495,6 +495,48 @@ CREATE VIEW [dbo].[vAsientoModeloItem] AS
 
 -------------------------------------------------------------
 
+-- DROP VIEW [dbo].[vBanco]
+
+CREATE VIEW [dbo].[vBanco] AS  		
+	
+	SELECT	'com.massoftware.model.Banco' AS ClassBanco
+			-----------------------------------------------------------------------------------------------------
+			, CAST([Bancos].[BANCO] AS VARCHAR)										AS id					-- String NOT NULL PK
+			-----------------------------------------------------------------------------------------------------
+			, CAST([Bancos].[BANCO] AS INTEGER)										AS codigo				-- Integer NOT NULL PK [ 0 - 999 ]
+			, LTRIM(RTRIM(CAST([Bancos].[NOMBRE] AS VARCHAR)))						AS nombre				-- String (40) NOT NULL UN
+			, [Bancos].[CUIT]														AS cuit					-- BigDecimal (13,0) NOT NULL UN
+			, [Bancos].[BLOQUEADO]													AS bloqueado			-- Boolean
+			
+			, CASE    
+
+				WHEN [Bancos].[NOMBRECOMPLETO]										 IS NULL	THEN LTRIM(RTRIM(CAST([Bancos].[NOMBRE] AS VARCHAR)))
+				WHEN LEN(LTRIM(RTRIM(CAST([Bancos].[NOMBRECOMPLETO] AS VARCHAR)))) = 0			THEN LTRIM(RTRIM(CAST([Bancos].[NOMBRE] AS VARCHAR)))
+																								ELSE LTRIM(RTRIM(CAST([Bancos].[NOMBRECOMPLETO] AS VARCHAR))) 
+			  
+			  END																	AS nombreOficial		-- String (40) NOT NULL UN
+
+			-- , [Bancos].[PLANILLA]												AS pathPlanilla			-- SE omite dado que se va a pedir cada vez que se haga la conciliación	
+			, CAST([Bancos].[HOJA] AS INTEGER)										AS hoja					-- Integer [ 0 - 231 ] Default [0]
+			, CAST([Bancos].[PRIMERAFILA] AS INTEGER)								AS primeraFila			-- Integer [ 0 - 999999 ] Default [0]
+			, CAST([Bancos].[ULTIMAFILA] AS INTEGER)								AS uiltimaFila			-- Integer [ 0 - 999999 ] Default [0]
+			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNAFECHA] AS VARCHAR))))			AS columnaFecha			-- String (3) 
+			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNADESCRIPCION] AS VARCHAR))))	AS columnaDescripcion	-- String (3) 
+			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNAREFERENCIA1] AS VARCHAR))))	AS columnaReferencia1	-- String (3) 
+			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNAREFERENCIA2] AS VARCHAR))))	AS columnaReferencia2	-- String (3) 
+			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNAIMPORTE] AS VARCHAR))))		AS columnaImporte		-- String (3) 	
+			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNASALDO] AS VARCHAR))))			AS columnaSaldo			-- String (3) 
+
+	FROM	[dbo].[Bancos];	
+
+	-- SELECT * FROM dbo.vBanco;	
+	-- SELECT * FROM dbo.vBanco ORDER BY codigo, nombre;	
+	-- SELECT * FROM dbo.vBanco ORDER BY codigo;	
+	-- SELECT * FROM dbo.vBanco ORDER BY nombre;	
+	-- SELECT * FROM dbo.vBanco ORDER BY nombreOficial;	
+
+-------------------------------------------------------------
+
 	-- DROP VIEW [dbo].[vSucursalTipo]
 
 CREATE VIEW [dbo].[vSucursalTipo] AS  
@@ -534,7 +576,7 @@ CREATE VIEW [dbo].[vSucursal] AS
 			-- ---------------------------------------------------------------------
 			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASCLIENTESDESDE] AS VARCHAR))) AS cuentaClientesDesde -- String (6)
 			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASCLIENTESHASTA] AS VARCHAR))) AS cuentaClientesHasta -- String (6)
-			, CAST([Sucursales].[CANTIDADCARACTERESCLIENTES] AS INT) AS cantidadCaracteresClientes -- Integer	[3 | 4 | 5 | 6 ]  DEFAULT 6 NOT NULL
+			, CAST([Sucursales].[CANTIDADCARACTERESCLIENTES] AS INT) AS cantidadCaracteresClientes -- Integer	[ 3 | 4 | 5 | 6 ]  DEFAULT 6 NOT NULL
 			, CAST([Sucursales].[NUMERICOCLIENTES] AS INT) AS identificacionNumericaClientes -- Boolean 
 			, CAST([Sucursales].[PERMITECAMBIARCLIENTES] AS INT) AS permiteCambiarClientes -- Boolean      
 			-- ---------------------------------------------------------------------
@@ -557,7 +599,8 @@ CREATE VIEW [dbo].[vSucursal] AS
 
 	-- SELECT * FROM dbo.vSucursal;	
 	-- SELECT * FROM dbo.vSucursal ORDER BY codigo, nombre;	
-
+	
+	
 -------------------------------------------------------------
 
 -- DROP VIEW [dbo].[vTalonario]
@@ -642,7 +685,8 @@ CREATE VIEW [dbo].[vTalonario] AS
 
  	-- SELECT * FROM dbo.vTalonario;	
 	-- SELECT * FROM dbo.vTalonario ORDER BY codigo, nombre;	
-
+	-- SELECT * FROM dbo.vTalonario WHERE codigo = 113 ORDER BY codigo, nombre;	
+	
 -------------------------------------------------------------
 
 	-- DROP VIEW [dbo].[vModulo]
@@ -705,7 +749,7 @@ CREATE VIEW [dbo].[vDeposito] AS
 				, [vSucursal].identificacionNumericaProveedores AS sucursal_identificacionNumericaProveedores
 				, [vSucursal].permiteCambiarProveedores AS sucursal_permiteCambiarProveedores       
 			---------------------------------------------------------- -------------------------------------------
-			, CAST([Depositos].[CAJA] AS INT) AS caja -- Integer		// ???????????????????????????????
+			-- , CAST([Depositos].[CAJA] AS INT) AS caja -- Integer		// No se usa !!!!!!!!!!!!!!!!!!!!!
 			-----------------------------------------------------------------------------------------------------	
 				-- , [Depositos].[MODULO] AS modulo -- Modulo Id  NOT NULL
 				, [vModulo].[id]  AS modulo_id			
@@ -793,6 +837,7 @@ CREATE VIEW [dbo].[vDeposito] AS
 
 	-- SELECT * FROM dbo.vDeposito;	
 	-- SELECT * FROM dbo.vDeposito ORDER BY codigo, nombre;	
+	-- SELECT * FROM dbo.vDeposito WHERE sucursal_codigo = 4 ORDER BY codigo, nombre;
 
 
 -------------------------------------------------------------
@@ -807,9 +852,9 @@ CREATE VIEW [dbo].[vTipoCbteControl] AS
 			, CAST([TablaDeStock].[TIPOCBTECONTROL] AS VARCHAR) As id			
 			-----------------------------------------------------------------------------------------------------
 			, CAST([TablaDeStock].[TIPOCBTECONTROL] AS INT) AS codigo -- Integer NOT NULL
-			, LTRIM(RTRIM(CAST([TablaDeStock].[NOMBRE] AS VARCHAR))) AS nombre -- String (30)			 
-			, LTRIM(RTRIM(CAST([TablaDeStock].[ABREVIATURA] AS VARCHAR))) AS abreviatura -- String (5)
-			, CAST([TablaDeStock].[COLUMNAINFORME] AS INT) AS columnaInforme -- Integer [ 0 - 999 ]
+			, LTRIM(RTRIM(CAST([TablaDeStock].[NOMBRE] AS VARCHAR))) AS nombre -- String (30) NOT NULL			 
+			, LTRIM(RTRIM(CAST([TablaDeStock].[ABREVIATURA] AS VARCHAR))) AS abreviatura -- String (5) NOT NULL
+			, CAST([TablaDeStock].[COLUMNAINFORME] AS INT) AS columnaInforme -- Integer [ 0 - 999 ] NOT NULL
 
 	FROM	[dbo].[TablaDeStock];
 
@@ -866,7 +911,7 @@ CREATE VIEW [dbo].[vModeloCbteFondoItem] AS
 				, [vModeloCbteFondo].codigo AS modeloCbteFondo_codigo
 				, [vModeloCbteFondo].nombre AS modeloCbteFondo_nombre
 			-----------------------------------------------------------------------------------------------------
-			, LTRIM(RTRIM(CAST([CUENTA]  AS VARCHAR))) AS cuenta -- String (11) NOT NULL
+			-- , LTRIM(RTRIM(CAST([CUENTA]  AS VARCHAR))) AS cuenta -- String (11) NOT NULL -- CuentaFondo Id !!!!!!!! Falta hacer la vista !!!!!!!!!!!!!!!!!!
 			-----------------------------------------------------------------------------------------------------
 				-- , [CONCEPTO]
 				, [vModeloCbteFondoItemConcepto].[id]  AS modeloCbteFondoItemConcepto_id			
@@ -884,6 +929,7 @@ CREATE VIEW [dbo].[vModeloCbteFondoItem] AS
 
 	-- SELECT * FROM dbo.vModeloCbteFondoItem;	
 	-- SELECT * FROM dbo.vModeloCbteFondoItem ORDER BY modeloCbteFondo_codigo, ajustaSaldo;
+	-- SELECT * FROM dbo.vModeloCbteFondoItem WHERE modeloCbteFondo_codigo = 3 ORDER BY modeloCbteFondo_codigo, ajustaSaldo;
 	
 -------------------------------------------------------------
 
@@ -897,11 +943,65 @@ CREATE VIEW [dbo].[vTipoCbteAFIP] AS
 			, CAST([AfipTiposCbtes].[TIPO] AS VARCHAR) AS id			
 			-----------------------------------------------------------------------------------------------------
 			, CAST([AfipTiposCbtes].[TIPO] AS INT) AS codigo -- Integer [ 1 - 99999] NOT NULL
-			, LTRIM(RTRIM(CAST([AfipTiposCbtes].[DESCRIPCION] AS VARCHAR))) AS descripcion -- String (80) NOT NULL
+			, LTRIM(RTRIM(CAST([AfipTiposCbtes].[DESCRIPCION] AS VARCHAR))) AS nombre -- String (80) NOT NULL
   
 	FROM	[dbo].[AfipTiposCbtes];
 
 
 	-- SELECT * FROM dbo.vTipoCbteAFIP;	
-	-- SELECT * FROM dbo.vTipoCbteAFIP ORDER BY codigo, descripcion;	
+	-- SELECT * FROM dbo.vTipoCbteAFIP ORDER BY codigo, nombre;	
 		
+
+
+
+
+
+
+	SELECT	'com.massoftware.model.CuentaFondo' AS ClassCuentaFondo
+			-----------------------------------------------------------------------------------------------------
+			, LTRIM(RTRIM(CAST([CuentasDeFondos].[CUENTA] AS VARCHAR))) AS id			
+			-----------------------------------------------------------------------------------------------------
+			, [CuentasDeFondos].[RUBRO] -- Integer 
+			, [CuentasDeFondos].[GRUPO] -- Integer 
+			, [CuentasDeFondos].[CUENTA] -- String (11) NOT NULL PK
+			, [CuentasDeFondos].[NOMBRE] -- String (40) NOT NULL UN
+			, [CuentasDeFondos].[DOORNO] -- Integer 
+			, [CuentasDeFondos].[CUENTACONTABLE] -- String (11)  FK
+			, [CuentasDeFondos].[TIPO] -- Integer
+			, [CuentasDeFondos].[CAJA] -- Integer FK ?
+			, [CuentasDeFondos].[UNIDADMONETARIA] -- String (4) FK ?
+			, [CuentasDeFondos].[COTIZACION] -- BigDecimal (9,3)
+			, [CuentasDeFondos].[TIPOBANCO] -- Integer FK?
+			, [CuentasDeFondos].[BANCO] -- Integer FK?
+			, [CuentasDeFondos].[CARTERARECHAZADOS]
+			, [CuentasDeFondos].[LIMITEDESCUBIERTO]
+			, [CuentasDeFondos].[CUENTADIFERIDOS]
+			, [CuentasDeFondos].[CUENTACAUCION]
+			, [CuentasDeFondos].[CONCILIACION]
+			, [CuentasDeFondos].[CBU]
+			, [CuentasDeFondos].[CUENTABANCARIA]
+			, [CuentasDeFondos].[DESTINOIMPRESIONTRANSF]
+			, [CuentasDeFondos].[FORMATOTRANSF]
+			, [CuentasDeFondos].[COPIASTRANSF]
+			, [CuentasDeFondos].[VENTAS]
+			, [CuentasDeFondos].[FONDOS]
+			, [CuentasDeFondos].[COMPRAS]
+			, [CuentasDeFondos].[OBSOLETA]
+			, [CuentasDeFondos].[LIMITEOPERACIONINDIVIDUAL]
+			, [CuentasDeFondos].[DOORNOLIMITE]
+			, [CuentasDeFondos].[FECHACIERRESQL]
+			, [CuentasDeFondos].[SALDOCIERRE]
+			, [CuentasDeFondos].[FECHADEPURACIONSQL]
+			, [CuentasDeFondos].[SALDODEPURADO]
+			, [CuentasDeFondos].[SALDOCONCILIADO]
+			, [CuentasDeFondos].[SALDOACTUAL]
+			, [CuentasDeFondos].[NOMBRECOMPROBANTE]
+			, [CuentasDeFondos].[DOORNOCONSULTA]
+			, [CuentasDeFondos].[EJERCICIO]
+			, [CuentasDeFondos].[CUENTACONCILIACIONPENDIENTE]
+			, [CuentasDeFondos].[CANTIDADCONCILIACIONPENDIENTE]
+			, [CuentasDeFondos].[ARRASTRASALDOSCONCILIACION]
+			, [CuentasDeFondos].[NOIMPRIMECAJA]
+			, [CuentasDeFondos].[MONEDA]
+
+	FROM	[dbo].[CuentasDeFondos]

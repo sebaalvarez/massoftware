@@ -1,5 +1,6 @@
 package com.massoftware.backend.bo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,6 +9,7 @@ import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
+import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 
 public class PuntoDeEquilibrioBO {
@@ -20,7 +22,7 @@ public class PuntoDeEquilibrioBO {
 	private final String SQL_PG_4 = "DELETE FROM massoftware.puntodeequilibrio WHERE id=?;";
 	private final String SQL_PG_5 = "SELECT	MAX(puntoDeEquilibrio) FROM massoftware.vPuntoDeEquilibrio";
 
-	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.vPuntoDeEquilibrio";
+	private final String SQL_MS_1 = "SELECT * FROM dbo.vPuntoDeEquilibrio";
 	private final String SQL_MS_2 = "INSERT INTO [dbo].[PuntoDeEquilibrio] ([PUNTODEEQUILIBRIO],[NOMBRE] ,[TIPO] ,[EJERCICIO]) VALUES (?, ?, ?, ?)";
 	private final String SQL_MS_3 = "UPDATE [dbo].[PuntoDeEquilibrio] SET [PUNTODEEQUILIBRIO] = ?, [NOMBRE] = ?, [TIPO] = ?, [EJERCICIO] = ?  WHERE [PUNTODEEQUILIBRIO] = ? AND [EJERCICIO] = ?;";
 	private final String SQL_MS_4 = "DELETE FROM [dbo].[PuntoDeEquilibrio] WHERE [PUNTODEEQUILIBRIO] = ? AND [EJERCICIO] = ?;";
@@ -615,4 +617,16 @@ public class PuntoDeEquilibrioBO {
 		}
 
 	}
+
+	// ++--------------------------------------------------------------------
+
+	public List<String> checkRefIntegrity(EjercicioContable objectFK) {
+
+		System.out.println("exeute : " + this.getClass().getCanonicalName()
+				+ ".checkRefIntegrity(EjercicioContable objectFK)");
+
+		return new ArrayList<String>();
+
+	}
+
 }

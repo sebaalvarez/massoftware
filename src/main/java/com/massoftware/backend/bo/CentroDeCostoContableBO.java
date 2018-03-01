@@ -1,5 +1,6 @@
 package com.massoftware.backend.bo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
 import com.massoftware.model.CentroDeCostoContable;
+import com.massoftware.model.EjercicioContable;
 
 public class CentroDeCostoContableBO {
 
@@ -551,6 +553,17 @@ public class CentroDeCostoContableBO {
 		} finally {
 			connectionWrapper.close(connectionWrapper);
 		}
+
+	}
+
+	// ++--------------------------------------------------------------------
+
+	public List<String> checkRefIntegrity(EjercicioContable objectFK) {
+
+		System.out.println("exeute : " + this.getClass().getCanonicalName()
+				+ ".checkRefIntegrity(EjercicioContable objectFK)");
+
+		return new ArrayList<String>();
 
 	}
 

@@ -39,7 +39,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class PlanDeCuentaTableUi extends CustomComponent {
+public class CuentaContableTableUi extends CustomComponent {
 
 	/**
 	 * 
@@ -102,7 +102,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 
 	// ----------------------------------------------
 
-	public PlanDeCuentaTableUi(Window window, BackendContext cx, Usuario usuario) {
+	public CuentaContableTableUi(Window window, BackendContext cx, Usuario usuario) {
 		super();
 		try {
 			this.window = window;
@@ -632,7 +632,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 
 			Window win = new Window();
 
-			PlanDeCuantaFormUi ui = new PlanDeCuantaFormUi(win, cx, this,
+			CuentaContableFormUi ui = new CuentaContableFormUi(win, cx, this,
 					ejercicioContable);
 
 			win.setCaption("Agragar cuenta contable");
@@ -664,7 +664,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 
 				Window win = new Window();
 
-				PlanDeCuantaFormUi ui = new PlanDeCuantaFormUi(win, cx, this,
+				CuentaContableFormUi ui = new CuentaContableFormUi(win, cx, this,
 						planDeCuenta, false);
 
 				win.setCaption("Modificar cuenta contable");
@@ -709,7 +709,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 
 				Window win = new Window();
 
-				PlanDeCuantaFormUi ui = new PlanDeCuantaFormUi(win, cx, this,
+				CuentaContableFormUi ui = new CuentaContableFormUi(win, cx, this,
 						planDeCuentaNew);
 
 				win.setCaption("Copiar cuenta contable");
@@ -773,7 +773,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 						ejercicio = ejercicioContable.getEjercicio();
 					}
 
-					cx.buildPlanDeCuentaBO().delete(item.getId(),
+					cx.buildCuentaContableBO().delete(item.getId(),
 							item.getCodigoCuenta(), ejercicio,
 							item.getCuentaContable());
 
@@ -1051,7 +1051,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 			PuntoDeEquilibrio puntoDeEquilibrio = (PuntoDeEquilibrio) puntoDeEquilibrioCBX
 					.getValue();
 
-			List<CuentaContable> planDeCuentas = cx.buildPlanDeCuentaBO()
+			List<CuentaContable> planDeCuentas = cx.buildCuentaContableBO()
 					.findAllOrderByCodigoCuenta(ejercicioContable,
 							centroDeCostoContable, puntoDeEquilibrio);
 
@@ -1090,7 +1090,7 @@ public class PlanDeCuentaTableUi extends CustomComponent {
 			PuntoDeEquilibrio puntoDeEquilibrio = (PuntoDeEquilibrio) puntoDeEquilibrioCBX
 					.getValue();
 
-			List<CuentaContable> planDeCuentas = cx.buildPlanDeCuentaBO()
+			List<CuentaContable> planDeCuentas = cx.buildCuentaContableBO()
 					.findAllOrderByCodigoCuenta(ejercicioContable,
 							centroDeCostoContable, puntoDeEquilibrio);
 

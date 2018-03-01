@@ -10,13 +10,13 @@ import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
-import com.massoftware.frontend.ui.windows.cuenta_contable.FormatPlanDeCuentaCodigoCuenta;
+import com.massoftware.frontend.ui.windows.cuenta_contable.FormatCuentaContableCodigoCuenta;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 
-public class PlanDeCuentaBO {
+public class CuentaContableBO {
 
 	private DataSourceWrapper dataSourceWrapper;
 
@@ -30,7 +30,7 @@ public class PlanDeCuentaBO {
 	private final String SQL_MS_3 = "UPDATE [dbo].[PlanDeCuentas] SET [CUENTACONTABLE] = ?, [CUENTAINTEGRADORA] = ?, [C1] = ?, [C2] = ?, [C3] = ?, [C4] = ?, [C5] = ?, [C6] = ?, [CUENTADEJERARQUIAIND] = ?, [NOMBRE] = ?, [IMPUTABLE] = ?, [APROPIA] = ?, [AJUSTEINF] = ?, [DOORNO] = ?, [ESTADO] = ?, [CENTRODECOSTOCONTABLE] = ?, [PUNTODEEQUILIBRIO] = ?, [COSTODEVENTA] = ?, [CUENTAAGRUPADORA] = ?, [PORCENTAJE] = ?, [EJERCICIO] = ? WHERE [EJERCICIO] = ? AND [CUENTACONTABLE] = ?;";
 	private final String SQL_MS_4 = "DELETE FROM [dbo].[PlanDeCuentas] WHERE [EJERCICIO] = ? AND [CUENTACONTABLE] = ?";
 
-	public PlanDeCuentaBO(DataSourceWrapper dataSourceWrapper) {
+	public CuentaContableBO(DataSourceWrapper dataSourceWrapper) {
 		super();
 		this.dataSourceWrapper = dataSourceWrapper;
 	}
@@ -511,7 +511,8 @@ public class PlanDeCuentaBO {
 
 	}
 
-	public List<CuentaContable> insert(List<CuentaContable> items) throws Exception {
+	public List<CuentaContable> insert(List<CuentaContable> items)
+			throws Exception {
 
 		String sql = null;
 
@@ -1055,8 +1056,9 @@ public class PlanDeCuentaBO {
 		return null;
 	}
 
-	private CuentaContable updateMS(CuentaContable item, Integer ejercicioParam,
-			String cuentaContableParam) throws Exception {
+	private CuentaContable updateMS(CuentaContable item,
+			Integer ejercicioParam, String cuentaContableParam)
+			throws Exception {
 
 		ConnectionWrapper connectionWrapper = dataSourceWrapper
 				.getConnectionWrapper();
@@ -1065,9 +1067,9 @@ public class PlanDeCuentaBO {
 
 			connectionWrapper.begin();
 
-//			if (findByPlanDeCuenta(item) != null) {
-//				throw new InsertDuplicateException(item.getCodigoCuenta());
-//			}
+			// if (findByPlanDeCuenta(item) != null) {
+			// throw new InsertDuplicateException(item.getCodigoCuenta());
+			// }
 
 			// ------------------------------------------------------
 
@@ -1234,7 +1236,7 @@ public class PlanDeCuentaBO {
 
 			// [PORCENTAJE]
 			Object porcentajeArg = null;
-			if (item.getPorcentaje() != null) {				
+			if (item.getPorcentaje() != null) {
 				porcentajeArg = new BigDecimal(item.getPorcentaje().toString());
 			} else {
 				porcentajeArg = BigDecimal.class;
@@ -1289,9 +1291,9 @@ public class PlanDeCuentaBO {
 
 			connectionWrapper.begin();
 
-//			if (findByPlanDeCuenta(item) != null) {
-//				throw new InsertDuplicateException(item.getCodigoCuenta());
-//			}
+			// if (findByPlanDeCuenta(item) != null) {
+			// throw new InsertDuplicateException(item.getCodigoCuenta());
+			// }
 
 			// ------------------------------------------------------
 
@@ -1432,11 +1434,11 @@ public class PlanDeCuentaBO {
 
 			if (ifExistsCodigosCuentaHijos(codigoCuenta, ejercicio) == true) {
 				String msg = "No se puede borrar la cuenta. La cuenta "
-						+ FormatPlanDeCuentaCodigoCuenta.format(codigoCuenta)
+						+ FormatCuentaContableCodigoCuenta.format(codigoCuenta)
 						+ "  - " + cuentaContable + " del ejercicio "
 						+ ejercicio + ", tiene otras cuentas asociadas.";
 
-				throw new DeleteForeingObjectConflictException(msg);
+//				throw new DeleteForeingObjectConflictException(msg);
 			}
 
 			int rows = -1;
@@ -1488,6 +1490,17 @@ public class PlanDeCuentaBO {
 		} finally {
 			connectionWrapper.close(connectionWrapper);
 		}
+
+	}
+
+	// ++--------------------------------------------------------------------
+
+	public List<String> checkRefIntegrity(EjercicioContable objectFK) {
+
+		System.out.println("exeute : " + this.getClass().getCanonicalName()
+				+ ".checkRefIntegrity(EjercicioContable objectFK)");
+
+		return new ArrayList<String>();
 
 	}
 

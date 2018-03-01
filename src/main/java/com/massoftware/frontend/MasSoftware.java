@@ -24,6 +24,7 @@ import com.vaadin.ui.Window;
  * initialize non-component functionality.
  */
 @Theme("mytheme")
+//@Theme("material")
 public class MasSoftware extends UI {
 
 	/**

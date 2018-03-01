@@ -6,7 +6,7 @@ import com.massoftware.model.CuentaContable;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
 
-public class ValidatorPlanDeCuentaCodigoPadre extends
+public class ValidatorCuentaContableCodigoPadre extends
 		AbstractStringValidator {
 
 	/**
@@ -17,7 +17,7 @@ public class ValidatorPlanDeCuentaCodigoPadre extends
 
 	protected BeanItem<CuentaContable> planDeCuentaBI;
 
-	public ValidatorPlanDeCuentaCodigoPadre(String errorMessage,
+	public ValidatorCuentaContableCodigoPadre(String errorMessage,
 			BackendContext cx, BeanItem<CuentaContable> planDeCuentaBI) {
 		super(errorMessage);
 		this.cx = cx;
@@ -48,14 +48,14 @@ public class ValidatorPlanDeCuentaCodigoPadre extends
 				// chars[2], chars[3], chars[4], chars[5], chars[6],
 				// chars[7], chars[8], chars[9], chars[10]);
 
-				String codigoCuentaPadre2 = FormatPlanDeCuentaCodigoCuenta
+				String codigoCuentaPadre2 = FormatCuentaContableCodigoCuenta
 						.format(codigoCuentaPadre);
 
 				this.setErrorMessage("El campo Integra es incorrecto, no existe una cuenta padre con la denominación ("
 						+ planDeCuentaBI.getBean().getEjercicioContable()
 						+ " - " + codigoCuentaPadre2 + ")");
 
-				return cx.buildPlanDeCuentaBO().ifExistsCodigoCuenta(
+				return cx.buildCuentaContableBO().ifExistsCodigoCuenta(
 						codigoCuentaPadre,
 						planDeCuentaBI.getBean().getEjercicioContable()
 								.getEjercicio());

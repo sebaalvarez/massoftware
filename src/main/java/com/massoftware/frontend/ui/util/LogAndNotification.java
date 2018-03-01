@@ -37,7 +37,7 @@ public class LogAndNotification {
 	public static void print(DeleteForeingObjectConflictException e,
 			String humanObject) {
 		Notification notification = new Notification("Objeto no borrable",
-				e.getHumanMsg(), Type.WARNING_MESSAGE);
+				e.getMessage(), Type.WARNING_MESSAGE);
 		// notification.setStyleName("warning failure");
 		notification.setStyleName("tray failure");
 		notification.setPosition(Position.BOTTOM_LEFT);
