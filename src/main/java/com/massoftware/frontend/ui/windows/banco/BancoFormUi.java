@@ -26,7 +26,7 @@ public class BancoFormUi extends StandardFormUi<Banco> {
 
 	public BancoFormUi(String mode, BackendContext cx, Banco banco,
 			BancoTableUi tableUi) {
-		super(Banco.class, mode, cx, tableUi, banco);
+		super(null, Banco.class, mode, cx, tableUi, banco);
 	}
 
 	// ======================================================

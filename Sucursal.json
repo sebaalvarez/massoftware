@@ -1,0 +1,316 @@
+{
+  "type": "VerticalLayout",
+  "width": "100%",
+  "margin": false,
+  "spacing": true,
+  "components": [
+    {
+      "component": {
+        "type": "GridLayout",
+        "margin": false,
+        "spacing": true,
+        "columns": 2,
+        "rows": 2,
+        "components": [
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "codigo"
+            },
+            "column": 0,
+            "row": 0
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "nombre"
+            },
+            "column": 1,
+            "row": 0
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "abreviatura"
+            },
+            "column": 0,
+            "row": 1
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "sucursalTipo"
+            },
+            "column": 1,
+            "row": 1
+          }
+        ]
+      }
+    },
+    {
+      "component": {
+        "type": "GridLayout",
+        "margin": false,
+        "spacing": true,
+        "columns": 7,
+        "rows": 5,
+        "components": [
+          {
+            "component": {
+              "type": "Label",
+              "stylesNames": [
+                "h3",
+                "colored"
+              ],
+              "value": ""
+            },
+            "column": 0,
+            "row": 0
+          },
+          {
+            "component": {
+              "type": "Label",
+              "stylesNames": [
+                "h3",
+                "colored"
+              ],
+              "value": "Desde"
+            },
+            "column": 1,
+            "row": 0
+          },
+          {
+            "component": {
+              "type": "Label",
+              "stylesNames": [
+                "h3",
+                "colored"
+              ],
+              "value": "Hasta"
+            },
+            "column": 2,
+            "row": 0
+          },
+          {
+            "component": {
+              "type": "Label",
+              "stylesNames": [
+                "h3",
+                "colored"
+              ],
+              "value": "Cantidad caracteres"
+            },
+            "column": 3,
+            "row": 0
+          },
+          {
+            "component": {
+              "type": "Label",
+              "stylesNames": [
+                "h3",
+                "colored"
+              ],
+              "value": ""
+            },
+            "column": 4,
+            "row": 0
+          },
+          {
+            "component": {
+              "type": "Label",
+              "stylesNames": [
+                "h3",
+                "colored"
+              ],
+              "value": ""
+            },
+            "column": 5,
+            "row": 0
+          },
+          {
+            "component": {
+              "type": "Label",
+              "height": "-1px",
+              "stylesNames": [
+                "h3",
+                "colored"
+              ],
+              "value": "Cuenta clientes"
+            },
+            "column": 0,
+            "row": 1
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "cuentaClientesDesde"
+            },
+            "column": 1,
+            "row": 1
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "cuentaClientesHasta"
+            },
+            "column": 2,
+            "row": 1
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "cantidadCaracteresClientes"
+            },
+            "column": 3,
+            "row": 1
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "identificacionNumericaClientes"
+            },
+            "column": 4,
+            "row": 1
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "permiteCambiarClientes"
+            },
+            "column": 5,
+            "row": 1
+          },
+          {
+            "component": {
+              "type": "Label",
+              "height": "-1px",
+              "stylesNames": [
+                "h3",
+                "colored"
+              ],
+              "value": "Clientes ocacionales"
+            },
+            "column": 0,
+            "row": 2
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "clientesOcasionalesDesde"
+            },
+            "column": 1,
+            "row": 2
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "clientesOcasionalesHasta"
+            },
+            "column": 2,
+            "row": 2
+          },
+          {
+            "component": {
+              "type": "Label",
+              "height": "-1px",
+              "stylesNames": [
+                "h3",
+                "colored"
+              ],
+              "value": "Nro. cobranza"
+            },
+            "column": 0,
+            "row": 3
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "nroCobranzaDesde"
+            },
+            "column": 1,
+            "row": 3
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "nroCobranzaHasta"
+            },
+            "column": 2,
+            "row": 3
+          },
+          {
+            "component": {
+              "type": "Label",
+              "height": "-1px",
+              "stylesNames": [
+                "h3",
+                "colored"
+              ],
+              "value": "Proveedores"
+            },
+            "column": 0,
+            "row": 4
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "proveedoresDesde"
+            },
+            "column": 1,
+            "row": 4
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "proveedoresHasta"
+            },
+            "column": 2,
+            "row": 4
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "cantidadCaracteresProveedor"
+            },
+            "column": 3,
+            "row": 4
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "identificacionNumericaProveedores"
+            },
+            "column": 4,
+            "row": 4
+          },
+          {
+            "component": {
+              "type": "ComponentAtt",
+              "classModel": "com.massoftware.model.Sucursal",
+              "attName": "permiteCambiarProveedores"
+            },
+            "column": 5,
+            "row": 4
+          }
+        ]
+      }
+    }
+  ]
+}

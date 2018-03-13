@@ -2,34 +2,39 @@ package com.massoftware.model;
 
 import org.cendra.common.model.EntityId;
 
+import com.massoftware.annotation.model.FieldLabelAnont;
+
+@SuppressWarnings("serial")
 public class CuentaContable extends EntityId implements Cloneable,
 		Comparable<CuentaContable> {
 
-	
-//	Al crear controlar
-//		1 que tenga un padre que existe
-//		2 que no exista otra cuenta con el mismo código
-	
+	// Al crear controlar
+	// 1 que tenga un padre que existe
+	// 2 que no exista otra cuenta con el mismo código
+
 	/*
-	 *  
-	 *  
-	 *  Al actualizar controlar 1 que no tenga cuentas
-	 * hijas 2 que tenga un padre que exista Al borrar controlar 1 que no
-	 * tengacuentas hijas
+	 * 
+	 * 
+	 * Al actualizar controlar 1 que no tenga cuentas hijas 2 que tenga un padre
+	 * que exista Al borrar controlar 1 que no tengacuentas hijas
 	 */
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6146349571117309204L;
+	// private static final long serialVersionUID = -6146349571117309204L;
 
 	// --------------------------------------------------------------------------
 	private EjercicioContable ejercicioContable;
 
 	private String codigoCuentaPadre; // integra; // cuenta padre
 										// 6.40.00.00.00.00
+
 	private String codigoCuenta; // cuentaDeJerarquia; 6.40.00.00.00.01
+
+	@FieldLabelAnont(value = "Cta. contable")
 	private String cuentaContable; // texto libre
+
 	private String nombre; // texto libre
 	// --------------------------------------------------------------------------
 	private Boolean imputable = false;
@@ -115,10 +120,13 @@ public class CuentaContable extends EntityId implements Cloneable,
 		return cuentaContableEstado;
 	}
 
-	public void setCuentaContableEstado(CuentaContableEstado cuentaContableEstado) {
+	public void setCuentaContableEstado(
+			CuentaContableEstado cuentaContableEstado) {
 		this.cuentaContableEstado = cuentaContableEstado;
-		if(this.cuentaContableEstado != null && this.cuentaContableEstado.getId() == null){
-			throw new IllegalArgumentException(this.cuentaContableEstado.getClass().getCanonicalName() + ".id is null");
+		if (this.cuentaContableEstado != null
+				&& this.cuentaContableEstado.getId() == null) {
+			throw new IllegalArgumentException(this.cuentaContableEstado
+					.getClass().getCanonicalName() + ".id is null");
 		}
 	}
 
@@ -194,7 +202,8 @@ public class CuentaContable extends EntityId implements Cloneable,
 		other.setImputable(this.getImputable());
 		other.setAjustaPorInflacion(this.getAjustaPorInflacion());
 		if (this.getCuentaContableEstado() != null) {
-			other.setCuentaContableEstado(this.getCuentaContableEstado().clone());
+			other.setCuentaContableEstado(this.getCuentaContableEstado()
+					.clone());
 		} else {
 			other.setCuentaContableEstado(null);
 		}
@@ -223,7 +232,7 @@ public class CuentaContable extends EntityId implements Cloneable,
 
 	@Override
 	public String toString() {
-		return this.getEjercicioContable() + " " + this.getCodigoCuenta() + " "
+		return this.getEjercicioContable() + " " + this.getCuentaContable() + " "
 				+ this.getNombre();
 	}
 
@@ -232,7 +241,7 @@ public class CuentaContable extends EntityId implements Cloneable,
 
 		return this.getCodigoCuenta().compareTo(o.getCodigoCuenta());
 	}
-	
+
 	public boolean validate() {
 
 		super.validate();
@@ -249,32 +258,32 @@ public class CuentaContable extends EntityId implements Cloneable,
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".codigoCuentaPadre es nulo.");
 		}
-		
+
 		if (this.codigoCuenta == null) {
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".codigoCuenta es nulo.");
 		}
-		
+
 		if (this.cuentaContable == null) {
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".cuentaContable es nulo.");
 		}
-		
+
 		if (this.nombre == null) {
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".nombre es nulo.");
 		}
-		
+
 		if (this.imputable == null) {
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".imputable es nulo.");
 		}
-		
+
 		if (this.ajustaPorInflacion == null) {
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".ajustaPorInflacion es nulo.");
 		}
-		
+
 		if (this.cuentaContableEstado == null) {
 
 			throw new IllegalArgumentException(this.getClass()
@@ -282,12 +291,12 @@ public class CuentaContable extends EntityId implements Cloneable,
 		} else {
 			this.cuentaContableEstado.validate();
 		}
-		
+
 		if (this.cuentaConApropiacion == null) {
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".cuentaConApropiacion es nulo.");
 		}
-		
+
 		if (this.porcentaje == null) {
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".porcentaje es nulo.");

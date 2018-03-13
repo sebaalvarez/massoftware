@@ -621,8 +621,7 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 	public void updateModelViewPort768x1024() throws Exception {
 		try {
 
-			List<TipoCbteAFIP> items = cx.buildTipoCbteAFIPBO().findAll();
-			;
+			List<TipoCbteAFIP> items = cx.buildBO(TipoCbteAFIP.class).findAll();
 
 			tipoCbteAFIPBIC.removeAllItems();
 			for (TipoCbteAFIP item : items) {

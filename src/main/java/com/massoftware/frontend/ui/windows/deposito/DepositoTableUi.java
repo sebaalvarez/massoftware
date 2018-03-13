@@ -660,10 +660,10 @@ public class DepositoTableUi extends CustomComponent {
 			List<Deposito> items = null;
 
 			if (sucursal != null && sucursal.getCodigo() != null) {
-				items = cx.buildDepositoBO().findAllBySucursal(
-						sucursal.getCodigo());
+//				items = cx.buildDepositoBO().findAllBySucursal(
+//						sucursal.getCodigo());
 			} else {
-				items = cx.buildDepositoBO().findAll();
+				items = cx.buildBO(Deposito.class).findAll();
 			}
 
 			depositoBIC.removeAllItems();

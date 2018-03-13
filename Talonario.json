@@ -1,0 +1,85 @@
+{
+  "type": "VerticalLayout",
+  "margin": false,
+  "spacing": true,
+  "components": [
+    {
+      "component": {
+        "type": "HorizontalLayout",
+        "margin": false,
+        "spacing": true,
+        "components": [
+          {
+            "component": {
+              "type": "VerticalLayout",
+              "margin": false,
+              "spacing": true,
+              "components": [],
+              "classModel": "com.massoftware.model.Talonario",
+              "attsNames": [
+                "codigo",
+                "nombre",
+                "letra",
+                "sucursal"
+              ]
+            }
+          },
+          {
+            "component": {
+              "type": "VerticalLayout",
+              "margin": false,
+              "spacing": true,
+              "components": [],
+              "classModel": "com.massoftware.model.Talonario",
+              "attsNames": [
+                "autonumeracion",
+                "numeracionPreImpresa",
+                "asociadoAlRG10098",
+                "asociadoAControladorFiscal"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "component": {
+        "type": "HorizontalLayout",
+        "margin": true,
+        "spacing": true,
+        "components": [
+          {
+            "component": {
+              "type": "VerticalLayout",
+              "margin": false,
+              "spacing": true,
+              "components": [],
+              "classModel": "com.massoftware.model.Talonario",
+              "attsNames": [
+                "primerNumero",
+                "proximoNumero",
+                "ultimoNumero",
+                "cantidadMinimaComprobantes",
+                "ultimaFecha"
+              ]
+            }
+          },
+          {
+            "component": {
+              "type": "VerticalLayout",
+              "margin": false,
+              "spacing": true,
+              "components": [],
+              "classModel": "com.massoftware.model.Talonario",
+              "attsNames": [
+                "numeroCAI",
+                "vencimientoCAI",
+                "diasAvisoVencimiento"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

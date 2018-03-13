@@ -3,6 +3,7 @@ package com.massoftware.frontend.ui.windows.properties;
 import java.util.Properties;
 
 import com.massoftware.backend.MigradorMSToPG;
+import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.MasSoftware;
 import com.massoftware.frontend.ui.menu.ContabilidadGeneralMenu;
@@ -524,8 +525,7 @@ public class PropertiesFormUi extends CustomComponent {
 //				cx.start(BackendContext.MS, propertiesMS);
 //			}
 
-			Usuario usuario = cx.buildUsuarioBO().findByNombre(
-					userTXT.getValue());
+			Usuario usuario = ((UsuarioBO)cx.buildBO(Usuario.class)).findByNombre(userTXT.getValue());
 
 			VerticalLayout layout = new VerticalLayout();
 
@@ -586,7 +586,7 @@ public class PropertiesFormUi extends CustomComponent {
 				cx.start(BackendContext.MS, propertiesMS);
 			}
 
-			Usuario usuario = cx.buildUsuarioBO().findByNombre(
+			Usuario usuario = ((UsuarioBO)cx.buildBO(Usuario.class)).findByNombre(
 					userTXT.getValue());
 
 			VerticalLayout layout = new VerticalLayout();

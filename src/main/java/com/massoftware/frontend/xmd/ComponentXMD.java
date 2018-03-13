@@ -37,6 +37,7 @@ public class ComponentXMD {
 	private Boolean visible = true;
 
 	private String width = "-1px";
+//	private String width = "100%";
 	private String height = "-1px";
 
 	private String locale = "es_AR";

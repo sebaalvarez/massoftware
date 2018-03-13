@@ -2,95 +2,95 @@ package com.massoftware.backend.bo;
 
 import java.util.List;
 
-import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
+import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.backend.util.bo.GenericBO;
 import com.massoftware.model.Deposito;
+import com.massoftware.model.Usuario;
 
-public class DepositoBO {
+public class DepositoBO extends GenericBO<Deposito> {
 
-	private DataSourceWrapper dataSourceWrapper;
+	private final String ATT_NAME_CODIGO = "codigo";
+	private final String ATT_NAME_NOMBRE = "nombre";
+	private final String ATT_NAME_ABREVIATURA = "abreviatura";	
 
-	private final String SQL_MS_1 = "SELECT * FROM dbo.vDeposito ORDER BY codigo, nombre;";
-	private final String SQL_MS_2 = "SELECT * FROM dbo.vDeposito WHERE sucursal_codigo = ? ORDER BY codigo, nombre;";
-
-	public DepositoBO(DataSourceWrapper dataSourceWrapper) {
-		super();
-		this.dataSourceWrapper = dataSourceWrapper;
+	public DepositoBO(DataSourceWrapper dataSourceWrapper, BackendContext cx) {
+		super(Deposito.class, dataSourceWrapper, cx);
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	public List<Deposito> findAll() throws Exception {
-
-		String sql = null;
-
-		if (dataSourceWrapper.isDatabasePostgreSql()) {
-			// sql = SQL_PG_1;
-		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-			sql = SQL_MS_1;
-		}
-
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
-
-		try {
-
-			List<Deposito> list = null;
-
-			list = connectionWrapper.findToListByCendraConvention(sql);
-
-			for (Deposito item : list) {
-				item.validate();
-			}
-
-			return list;
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
-		}
+		return findAll("codigo, nombre");
 	}
 
-	@SuppressWarnings({ "unchecked" })
-	public List<Deposito> findAllBySucursal(Integer codigo) throws Exception {
+	@Override
+	public void checkUnique(String attName, Object value) throws Exception {
 
-		String sql = null;
+		if (attName.equalsIgnoreCase(ATT_NAME_CODIGO)) {
+
+			checkUnique(attName, ATT_NAME_CODIGO + " = ?", value);
+
+		} else if (attName.equalsIgnoreCase(ATT_NAME_NOMBRE)) {
+
+			checkUnique(attName, "LOWER(" + ATT_NAME_NOMBRE + ") = ?", value
+					.toString().toLowerCase());
+
+		} else if (attName.equalsIgnoreCase(ATT_NAME_ABREVIATURA)) {
+
+			checkUnique(attName, "LOWER(" + ATT_NAME_ABREVIATURA + ") = ?",
+					value.toString().toLowerCase());
+		} 
+	}
+
+	public boolean delete(Deposito dto) throws Exception {
+
+		Object codigoArg = null;
+
+		if (dto.getCodigo() != null) {
+			codigoArg = dto.getCodigo();
+		} else {
+			codigoArg = Integer.class;
+		}
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
-			// sql = SQL_PG_1;
+			return delete(ATT_NAME_CODIGO + " = ?", codigoArg);
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-			sql = SQL_MS_2;
+
+			return delete(
+					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_CODIGO))
+							+ " = ?", codigoArg);
 		}
 
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
+		return false;
 
-		try {
+	}
 
-			Object codigoArg = null;
-			if (codigo != null) {
-				codigoArg = codigo;
-			} else {
-				codigoArg = Integer.class;
-			}
+	public Deposito insert(Deposito dto, Usuario usuario) throws Exception {
 
-			List<Deposito> list = null;
+		return insertByReflection(dto, usuario);
+	}
 
-			list = connectionWrapper.findToListByCendraConvention(sql,
-					codigoArg);
+	public Deposito update(Deposito dto, Deposito dtoOriginal, Usuario usuario) throws Exception {
 
-			for (Deposito item : list) {
-				item.validate();
-			}
+		Object codigoArg = null;
 
-			return list;
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
+		if (dtoOriginal.getCodigo() != null) {
+			codigoArg = dtoOriginal.getCodigo();
+		} else {
+			codigoArg = Integer.class;
 		}
+
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+			return updateByReflection(
+					dto, usuario,
+					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_CODIGO))
+							+ " = ?", codigoArg);
+		}
+
+		return null;
 	}
 
 }

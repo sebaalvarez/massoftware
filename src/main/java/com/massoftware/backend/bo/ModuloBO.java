@@ -2,53 +2,25 @@ package com.massoftware.backend.bo;
 
 import java.util.List;
 
-import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
+import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.backend.util.bo.GenericBO;
 import com.massoftware.model.Modulo;
+import com.massoftware.model.Usuario;
 
-public class ModuloBO {
+public class ModuloBO extends GenericBO<Modulo> {
 
-	private DataSourceWrapper dataSourceWrapper;
-
-	private final String SQL_MS_1 = "SELECT * FROM dbo.vModulo ORDER BY codigo, nombre;";
-
-	public ModuloBO(DataSourceWrapper dataSourceWrapper) {
-		super();
-		this.dataSourceWrapper = dataSourceWrapper;
+	public ModuloBO(DataSourceWrapper dataSourceWrapper, BackendContext cx) {
+		super(Modulo.class, dataSourceWrapper, cx);
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	public List<Modulo> findAll() throws Exception {
+		return findAll("codigo, nombre");
+	}
 
-		String sql = null;
-
-		if (dataSourceWrapper.isDatabasePostgreSql()) {
-			// sql = SQL_PG_1;
-		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-			sql = SQL_MS_1;
-		}
-
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
-
-		try {
-
-			List<Modulo> list = null;
-
-			list = connectionWrapper.findToListByCendraConvention(sql);
-
-			for (Modulo item : list) {
-				item.validate();
-			}
-
-			return list;
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
-		}
+	@Override
+	public void checkUnique(String attName, Object value) throws Exception {
 
 	}
 

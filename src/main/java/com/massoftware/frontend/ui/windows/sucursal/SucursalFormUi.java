@@ -81,7 +81,7 @@ public class SucursalFormUi extends StandardFormUi<Sucursal> {
 
 	public SucursalFormUi(String mode, BackendContext cx, Sucursal sucursal,
 			SucursalTableUi sucursalTableUi) {
-		super(Sucursal.class, mode, cx, null, sucursal);
+		super(null, Sucursal.class, mode, cx, null, sucursal);
 		try {
 			this.sucursalTableUi = sucursalTableUi;
 		} catch (Exception e) {

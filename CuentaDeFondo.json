@@ -1,0 +1,119 @@
+{
+  "type": "TabSheet",
+   "id": "Pestanias",
+  "components": [
+    {
+      "component": {
+        "type": "VerticalLayout",       
+        "caption": "General",
+        "width":"800px",
+        "components": [
+          {
+            "component": {
+              "type": "HorizontalLayout",              
+              "margin": false,
+              "spacing": true,
+              "components": [
+                {
+                  "component": {
+                    "type": "VerticalLayout",
+                    "margin": false,
+                    "spacing": true,
+                    "components": [],
+                    "classModel": "com.massoftware.model.CuentaDeFondo",
+                    "attsNames": [
+                      "codigo",
+                      "nombre",
+                      "cuentaDeFondoGrupo",
+                      "cuentaDeFondoTipo",                                           
+                      "caja",
+                      "cuentaDeFondoTipoBanco",
+                      "rechazados",
+                      "conciliacion"
+                    ]
+                  }
+                },
+                {
+                  "component": {
+                    "type": "VerticalLayout",
+                    "margin": false,
+                    "spacing": true,
+                    "classModel": "com.massoftware.model.CuentaDeFondo",
+                    "attsNames": [
+                      "obsoleta",
+                      "noImprimeCaja",
+                       "moneda"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "component": {
+              "type": "HorizontalLayout",
+              "width":"100%",
+              "margin": false,
+              "spacing": true,
+              "caption": "Participa en los módulos de:",
+              "components": [],
+              "classModel": "com.massoftware.model.CuentaDeFondo",
+              "attsNames": [
+                "moduloVentas",
+                "moduloFondos",
+                "moduloCompras"
+              ]
+            }
+          },
+          {
+            "component": {
+              "type": "VerticalLayout",
+              "margin": false,
+              "spacing": false,
+              "components": [],
+              "classModel": "com.massoftware.model.CuentaDeFondo",
+              "attsNames": [
+                "cuentaContable"                 
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "component": {
+      	"id": "bancosTS",
+        "type": "VerticalLayout",
+        "width":"800px",
+        "caption": "Bancos",
+        "margin": true,
+        "spacing": true,
+        "classModel": "com.massoftware.model.CuentaDeFondo",
+        "attsNames": [
+         "cuentaDiferidos",
+         "cuentaCaucion",
+         "limiteDescubierto",
+         "banco",
+         "cuentaBancaria",
+         "cbu"
+        ]
+      }
+    },
+    {
+      "component": {
+        "type": "VerticalLayout",
+        "caption": "Seguridad",
+        "width":"800px",
+        "margin": true,
+        "spacing": true,
+        "classModel": "com.massoftware.model.CuentaDeFondo",
+        "attsNames": [
+          "seguridadPuerta",
+          "puertaConsulta",
+          "limiteOperacionIndividual",
+          "puertaLimite"
+        ]
+      }
+    }
+  ]
+}

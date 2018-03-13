@@ -43,7 +43,7 @@ public class TipoCbteControlFormUi extends StandardFormUi<TipoCbteControl> {
 	public TipoCbteControlFormUi(String mode, BackendContext cx,
 			TipoCbteControl tipoCbteControl,
 			TipoCbteControlTableUi TipoCbteControlTableUi) {
-		super(TipoCbteControl.class, mode, cx, null, tipoCbteControl);
+		super(null, TipoCbteControl.class, mode, cx, null, tipoCbteControl);
 		try {
 			this.tipoCbteControlTableUi = TipoCbteControlTableUi;
 		} catch (Exception e) {

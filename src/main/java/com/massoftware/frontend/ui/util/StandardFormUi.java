@@ -1,19 +1,25 @@
 package com.massoftware.frontend.ui.util;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.cendra.common.model.EntityId;
 import org.cendra.ex.crud.InsertDuplicateException;
+import org.cendra.ex.crud.UniqueException;
 
-import com.massoftware.annotation.model.FormSourceAnont;
-import com.massoftware.annotation.model.LabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassFormSourceAnont;
+import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.build.BuildComponentsUtil;
 import com.massoftware.frontend.xmd.BuilderXMD;
 import com.massoftware.frontend.xmd.ComponentXMD;
+import com.massoftware.model.Usuario;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
@@ -46,8 +52,12 @@ public class StandardFormUi<T> extends CustomComponent {
 	protected Object originalDTO;
 	protected BeanItem<T> dtoBI;
 	protected Class<T> classModel;
+	protected Usuario usuario;
 
-	protected StandardTableUi<T> tableUi;
+	@SuppressWarnings("rawtypes")
+	protected StandardTableUi tableUi;
+
+	protected Map<String, Component> controls = new HashMap<String, Component>();
 
 	// ----------------------------------------------
 	// CONTROLES
@@ -58,22 +68,40 @@ public class StandardFormUi<T> extends CustomComponent {
 
 	// ----------------------------------------------
 
-	public StandardFormUi(Class<T> classModel, String mode, BackendContext cx,
-			StandardTableUi<T> tableUi) {
+	@SuppressWarnings("rawtypes")
+	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
+			BackendContext cx, StandardTableUi tableUi) {
 		super();
-		init(classModel, mode, cx, tableUi, null);
+		init(usuario, classModel, mode, cx, tableUi, null);
 	}
 
-	public StandardFormUi(Class<T> classModel, String mode, BackendContext cx,
-			StandardTableUi<T> tableUi, T object) {
+	@SuppressWarnings("rawtypes")
+	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
+			BackendContext cx, StandardTableUi tableUi, T object) {
 		super();
-		init(classModel, mode, cx, tableUi, object);
+		init(usuario, classModel, mode, cx, tableUi, object);
 	}
 
-	private void init(Class<T> classModel, String mode, BackendContext cx,
-			StandardTableUi<T> tableUi, T object) {
+	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
+			BackendContext cx) {
+		super();
+		init(usuario, classModel, mode, cx, null, null);
+	}
+
+	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
+			BackendContext cx, T object) {
+		super();
+		init(usuario, classModel, mode, cx, null, object);
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void init(Usuario usuario, Class<T> classModel, String mode,
+			BackendContext cx, StandardTableUi tableUi, T object) {
 		try {
+			this.tableUi = tableUi;
+
 			this.classModel = classModel;
+			this.usuario = usuario;
 
 			this.mode = mode;
 			this.dtoLabel = getLabel();
@@ -100,9 +128,29 @@ public class StandardFormUi<T> extends CustomComponent {
 			buildContainers(object);
 			buildControls();
 
+			window.addShortcutListener(new ShortcutListener("ENTER",
+					KeyCode.ENTER, new int[] {}) {
+
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 5722660719827796039L;
+
+				@Override
+				public void handleAction(Object sender, Object target) {
+
+					shortcutListener(target);
+
+				}
+
+			});
+
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
+	}
+
+	protected void shortcutListener(Object target) {
 	}
 
 	private void exit() {
@@ -152,7 +200,7 @@ public class StandardFormUi<T> extends CustomComponent {
 		// 768x1024
 		// --------------------------------------------------
 
-		rootVL = BuildComponentsUtil.buildVL();
+		rootVL = BuilderXMD.buildVL();
 
 		this.setCompositionRoot(rootVL);
 
@@ -188,9 +236,9 @@ public class StandardFormUi<T> extends CustomComponent {
 		String formSource = getFormSource();
 		if (formSource != null && formSource.trim().length() > 0) {
 
-			rootVL.addComponent(BuilderXMD.loadModel(formSource.trim(), dtoBI));
+			rootVL.addComponent(BuilderXMD.loadModel(window, controls, usuario,
+					cx, formSource.trim(), dtoBI, originalDTO, mode));
 		} else {
-
 			ComponentXMD rootVLXMD = new ComponentXMD(ComponentXMD.VL);
 			rootVLXMD.setClassModel(classModel);
 
@@ -198,7 +246,8 @@ public class StandardFormUi<T> extends CustomComponent {
 			for (Field field : fields) {
 				rootVLXMD.addAttName(field.getName());
 			}
-			rootVL.addComponent(BuilderXMD.loadModel(rootVLXMD, dtoBI));
+			rootVL.addComponent(BuilderXMD.loadModel(window, controls, usuario,
+					cx, rootVLXMD, dtoBI, originalDTO, mode));
 		}
 
 	}
@@ -214,20 +263,28 @@ public class StandardFormUi<T> extends CustomComponent {
 					|| COPY_MODE.equalsIgnoreCase(mode)) {
 
 				preInsert();
+
+				insert();
+
 				if (INSERT_MODE.equalsIgnoreCase(mode)) {
 					LogAndNotification
 							.printSuccessOk("El item se agregó con éxito, "
 									+ dtoLabel + " : " + dtoBI.getBean() + ".");
 
 				} else {
+
 					LogAndNotification
 							.printSuccessOk("El item se copió con éxito, "
 									+ dtoLabel + " : " + dtoBI.getBean() + ".");
 				}
+
 				postInsert();
 
 			} else {
 				preUpdate();
+
+				update();
+
 				LogAndNotification
 						.printSuccessOk("El item se modificó con éxito, "
 								+ dtoLabel + " : " + dtoBI.getBean() + ".");
@@ -242,6 +299,8 @@ public class StandardFormUi<T> extends CustomComponent {
 			LogAndNotification.print(e);
 		} catch (InsertDuplicateException e) {
 			LogAndNotification.print(e);
+		} catch (UniqueException e) {
+			LogAndNotification.print(e);
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -254,9 +313,33 @@ public class StandardFormUi<T> extends CustomComponent {
 
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void validateAllFields(AbstractComponentContainer componentContainer)
 			throws Exception {
+
+		// Iterator<Component> itr = componentContainer.iterator();
+		//
+		// while (itr.hasNext()) {
+		// Component component = itr.next();
+		// if (component instanceof AbstractField) {
+		//
+		// ((AbstractField) component)
+		// .addValidator(new GenericUniqueDTOValidator(
+		// String.class, cx.buildBO(classModel), dtoBI
+		// .getBean()));
+		//
+		// } else if (component instanceof ComponentContainer) {
+		//
+		// validateAllFields((AbstractComponentContainer) component);
+		// }
+		// }
+
+		// try {
+		cx.buildBO(classModel).checkUnique(dtoBI.getBean());
+		// } catch (UniqueException ue) {
+		// this.setErrorMessage(ue.getMessage());
+		//
+		// }
 
 		Iterator<Component> itr = componentContainer.iterator();
 
@@ -289,12 +372,12 @@ public class StandardFormUi<T> extends CustomComponent {
 
 	@SuppressWarnings("unchecked")
 	protected void insert() throws Exception {
-		cx.buildBO(classModel).insert(dtoBI.getBean());
+		cx.buildBO(classModel).insert(dtoBI.getBean(), usuario);
 	}
 
 	@SuppressWarnings("unchecked")
 	protected void update() throws Exception {
-		cx.buildBO(classModel).update(dtoBI.getBean());
+		cx.buildBO(classModel).update(dtoBI.getBean(), originalDTO, usuario);
 	}
 
 	protected void postInsert() throws Exception {
@@ -315,8 +398,8 @@ public class StandardFormUi<T> extends CustomComponent {
 
 	private String getLabel() {
 
-		LabelInTheSingularAnont[] a = classModel
-				.getAnnotationsByType(LabelInTheSingularAnont.class);
+		ClassLabelInTheSingularAnont[] a = classModel
+				.getAnnotationsByType(ClassLabelInTheSingularAnont.class);
 		if (a != null && a.length > 0) {
 			return a[0].value();
 		}
@@ -326,13 +409,61 @@ public class StandardFormUi<T> extends CustomComponent {
 
 	private String getFormSource() {
 
-		FormSourceAnont[] a = classModel
-				.getAnnotationsByType(FormSourceAnont.class);
+		ClassFormSourceAnont[] a = classModel
+				.getAnnotationsByType(ClassFormSourceAnont.class);
 		if (a != null && a.length > 0) {
 			return a[0].value();
 		}
 
 		return null;
 	}
+
+	// protected Component getComponentByCaption(String caption){
+	// return getComponentByCaption(rootVL, caption);
+	// }
+	//
+	// protected Component getComponentByCaption(AbstractComponentContainer
+	// componentContainer, String caption){
+	// Iterator<Component> itr = componentContainer.iterator();
+	//
+	// while (itr.hasNext()) {
+	// Component component = itr.next();
+	// if(component.getCaption() != null &&
+	// component.getCaption().equals(caption)){
+	// return component;
+	// }
+	// if (component instanceof ComponentContainer) {
+	// return getComponentByCaption((AbstractComponentContainer) component,
+	// caption);
+	// }
+	// }
+	//
+	// return null;
+	// }
+
+	protected Component getComponentById(String id) {
+		// return getComponentById(rootVL, id);
+		
+		return controls.get(id);
+	}
+
+	// protected Component getComponentById(AbstractComponentContainer
+	// componentContainer, String id){
+	// Iterator<Component> itr = componentContainer.iterator();
+	//
+	// while (itr.hasNext()) {
+	// Component component = itr.next();
+	// System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX " +
+	// component.getId());
+	// if(component.getId() != null && component.getId().equals(id)){
+	// return component;
+	// }
+	// if (component instanceof ComponentContainer) {
+	// return getComponentById((AbstractComponentContainer) component, id);
+	// }
+	// }
+	//
+	// return null;
+	// }
 
 } // END CLASS ///////////////////////////////////////////////////////////

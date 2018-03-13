@@ -58,7 +58,7 @@ public class DepositoFormUi extends StandardFormUi<Deposito> {
 
 	public DepositoFormUi(String mode, BackendContext cx, Deposito deposito,
 			DepositoTableUi depositoTableUi) {
-		super(Deposito.class, mode, cx, null, deposito);
+		super(null, Deposito.class, mode, cx, null, deposito);
 		try {
 			this.depositoTableUi = depositoTableUi;
 		} catch (Exception e) {

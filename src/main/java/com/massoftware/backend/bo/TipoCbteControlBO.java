@@ -2,54 +2,97 @@ package com.massoftware.backend.bo;
 
 import java.util.List;
 
-import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
+import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.backend.util.bo.GenericBO;
 import com.massoftware.model.TipoCbteControl;
+import com.massoftware.model.Usuario;
 
-public class TipoCbteControlBO {
+public class TipoCbteControlBO extends GenericBO<TipoCbteControl> {
 
-	private DataSourceWrapper dataSourceWrapper;
+	private final String ATT_NAME_CODIGO = "codigo";
+	private final String ATT_NAME_NOMBRE = "nombre";
+	private final String ATT_NAME_ABREVIATURA = "abreviatura";
 
-	private final String SQL_MS_1 = "SELECT * FROM dbo.vTipoCbteControl ORDER BY codigo, nombre;";
-
-	public TipoCbteControlBO(DataSourceWrapper dataSourceWrapper) {
-		super();
-		this.dataSourceWrapper = dataSourceWrapper;
+	public TipoCbteControlBO(DataSourceWrapper dataSourceWrapper,
+			BackendContext cx) {
+		super(TipoCbteControl.class, dataSourceWrapper, cx);
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	public List<TipoCbteControl> findAll() throws Exception {
+		return findAll(ATT_NAME_CODIGO + ", " + ATT_NAME_NOMBRE);
+	}
 
-		String sql = null;
+	@Override
+	public void checkUnique(String attName, Object value) throws Exception {
+
+		if (attName.equalsIgnoreCase(ATT_NAME_CODIGO)) {
+
+			checkUnique(attName, ATT_NAME_CODIGO + " = ?", value);
+
+		} else if (attName.equalsIgnoreCase(ATT_NAME_NOMBRE)) {
+
+			checkUnique(attName, "LOWER(" + ATT_NAME_NOMBRE + ") = ?", value
+					.toString().toLowerCase());
+
+		} else if (attName.equalsIgnoreCase(ATT_NAME_ABREVIATURA)) {
+
+			checkUnique(attName, "LOWER(" + ATT_NAME_ABREVIATURA + ") = ?",
+					value.toString().toLowerCase());
+		}
+	}
+
+	public boolean delete(TipoCbteControl dto) throws Exception {
+
+		Object codigoArg = null;
+
+		if (dto.getCodigo() != null) {
+			codigoArg = dto.getCodigo();
+		} else {
+			codigoArg = Integer.class;
+		}
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
-			// sql = SQL_PG_1;
+			return delete(ATT_NAME_CODIGO + " = ?", codigoArg);
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-			sql = SQL_MS_1;
+
+			return delete(
+					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_CODIGO))
+							+ " = ?", codigoArg);
 		}
 
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
+		return false;
 
-		try {
+	}
 
-			List<TipoCbteControl> list = null;
+	public TipoCbteControl insert(TipoCbteControl dto, Usuario usuario) throws Exception {
 
-			list = connectionWrapper.findToListByCendraConvention(sql);
+		return insertByReflection(dto, usuario);
+	}
 
-			for (TipoCbteControl item : list) {
-				item.validate();
-			}
+	public TipoCbteControl update(TipoCbteControl dto,
+			TipoCbteControl dtoOriginal, Usuario usuario) throws Exception {
 
-			return list;
+		Object codigoArg = null;
 
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
+		if (dtoOriginal.getCodigo() != null) {
+			codigoArg = dtoOriginal.getCodigo();
+		} else {
+			codigoArg = Integer.class;
 		}
 
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+
+			return updateByReflection(
+					dto, usuario,
+					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_CODIGO))
+							+ " = ?", codigoArg);
+		}
+
+		return null;
 	}
 
 }

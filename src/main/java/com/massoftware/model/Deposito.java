@@ -2,23 +2,102 @@ package com.massoftware.model;
 
 import org.cendra.common.model.EntityId;
 
+import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
+import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassPluralLabelAnont;
+import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
+import com.massoftware.annotation.model.FieldColumnsAnont;
+import com.massoftware.annotation.model.FieldLabelAnont;
+import com.massoftware.annotation.model.FieldMaxLengthAnont;
+import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
+import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
+import com.massoftware.annotation.model.FieldNameMSAnont;
+import com.massoftware.annotation.model.FieldRequiredAnont;
+import com.massoftware.annotation.model.FieldSubNameFKAnont;
+import com.massoftware.annotation.model.FieldUniqueAnont;
+
+@SuppressWarnings("serial")
+@ClassLabelInTheSingularAnont(value = "Depósito")
+@ClassPluralLabelAnont(value = "Depósitos")
+@ClassArticleLabelInTheSingularAnont(value = "el")
+@ClassArticleLabelInPluralAnont(value = "los")
+//@ClassFormSourceAnont(value = "Deposito")
+@ClassTableMSAnont(nameTableDB = "[Depositos]")
 public class Deposito extends EntityId implements Cloneable,
 		Comparable<Deposito> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4128467535250155436L;
 
+	@FieldLabelAnont(value = "Depósito")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 3)
+	@FieldColumnsAnont(value = 5)
+	@FieldMinValueIntegerAnont(value = 1)
+	@FieldMaxValueIntegerAnont(value = 255)
+	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[DEPOSITO]", classAttDB = Integer.class)
 	private Integer codigo;
+	
+	@FieldLabelAnont(value = "Nombre")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 35)
+	@FieldColumnsAnont(value = 35)
+	@FieldColumnMetaDataAnont(attSize = 250)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[NOMBRE]", classAttDB = String.class)
 	private String nombre;
+	
+	@FieldLabelAnont(value = "Abreviatura")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 4)
+	@FieldColumnsAnont(value = 4)
+	@FieldColumnMetaDataAnont(attSize = 80)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[ABREVIATURA]", classAttDB = String.class)
 	private String abreviatura;
+	
+	@FieldLabelAnont(value = "Depósito activo")
+	@FieldColumnMetaDataAnont(attSize = 80)
+	@FieldNameMSAnont(nameAttDB = "[DEPOSITOACTIVO]", classAttDB = Boolean.class)
 	private Boolean depositoActivo;
+	
+	@FieldLabelAnont(value = "Sucursal")
+//	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(attSize = 200)
+	@FieldSubNameFKAnont(value = "codigo")
+	@FieldNameMSAnont(nameAttDB = "[SUCURSAL]", classAttDB = Integer.class)
 	private Sucursal sucursal;
+	
 	// private Integer caja; // No se usa !!!
+	
+	@FieldLabelAnont(value = "Módulo")
+	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(attSize = 200)
+	@FieldSubNameFKAnont(value = "codigo")
+	@FieldNameMSAnont(nameAttDB = "[MODULO]", classAttDB = Integer.class)
 	private Modulo modulo;
-	private Deposito depositoAgrupacion;
+	
+//	@FieldLabelAnont(value = "Depósito agrupación")
+////	@FieldRequiredAnont()
+//	@FieldColumnMetaDataAnont(hidden = true)
+//	@FieldSubNameFKAnont(value = "codigo")
+//	@FieldNameMSAnont(nameAttDB = "[DEPOSITO]", classAttDB = Integer.class)
+//	private Deposito depositoAgrupacion;
+	
+	@FieldLabelAnont(value = "Puerta operativo")
+//	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldSubNameFKAnont(value = "codigo")
+	@FieldNameMSAnont(nameAttDB = "[DOORNOCONSULTAR]", classAttDB = Integer.class)
 	private SeguridadPuerta puertaOperativo;
+	
+	@FieldLabelAnont(value = "Puerta consulta")
+//	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldSubNameFKAnont(value = "codigo")
+	@FieldNameMSAnont(nameAttDB = "[DOORNOOPERATIVO]", classAttDB = Integer.class)
 	private SeguridadPuerta puertaConsulta;
 
 	public Integer getCodigo() {
@@ -89,16 +168,16 @@ public class Deposito extends EntityId implements Cloneable,
 		this.modulo = modulo;
 	}
 
-	public Deposito getDepositoAgrupacion() {
-		return depositoAgrupacion;
-	}
-
-	public void setDepositoAgrupacion(Deposito depositoAgrupacion) {
-		if (depositoAgrupacion != null && depositoAgrupacion.getId() == null) {
-			return;
-		}
-		this.depositoAgrupacion = depositoAgrupacion;
-	}
+//	public Deposito getDepositoAgrupacion() {
+//		return depositoAgrupacion;
+//	}
+//
+//	public void setDepositoAgrupacion(Deposito depositoAgrupacion) {
+//		if (depositoAgrupacion != null && depositoAgrupacion.getId() == null) {
+//			return;
+//		}
+//		this.depositoAgrupacion = depositoAgrupacion;
+//	}
 
 	public SeguridadPuerta getPuertaOperativo() {
 		return puertaOperativo;
@@ -143,11 +222,11 @@ public class Deposito extends EntityId implements Cloneable,
 		} else {
 			other.setModulo(null);
 		}
-		if (this.getDepositoAgrupacion() != null) {
-			other.setDepositoAgrupacion(this.getDepositoAgrupacion().clone());
-		} else {
-			other.setDepositoAgrupacion(null);
-		}
+//		if (this.getDepositoAgrupacion() != null) {
+//			other.setDepositoAgrupacion(this.getDepositoAgrupacion().clone());
+//		} else {
+//			other.setDepositoAgrupacion(null);
+//		}
 		if (this.getPuertaOperativo() != null) {
 			other.setPuertaOperativo(this.getPuertaOperativo().clone());
 		} else {

@@ -6,12 +6,14 @@ import java.util.List;
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.cx.FrontendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.windows.asiento_modelo.AsientoModeloTableUi;
 import com.massoftware.frontend.ui.windows.centro_de_costo_contable.CentroDeCostoContableTableUi;
 import com.massoftware.frontend.ui.windows.cuenta_contable.CuentaContableTableUi;
 import com.massoftware.frontend.ui.windows.ejercicio_contable.EjercicioContableTableUi;
 import com.massoftware.frontend.ui.windows.punto_de_equilibrio.PuntoDeEquilibrioTableUi;
+import com.massoftware.model.CuentaContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.util.BeanItemContainer;
@@ -21,6 +23,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
@@ -75,7 +78,7 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 	}
 
 	private void initObjectBO() {
-		this.usuarioBO = cx.buildUsuarioBO();
+		this.usuarioBO = (UsuarioBO) cx.buildBO(Usuario.class);
 		this.ejercicioContableBO = cx.buildEjercicioContableBO();
 	}
 
@@ -102,19 +105,7 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 		archivos.addItem("Plan de cuentas (orden -> cta de jerarquía) ...",
 				click);
 
-		Command openPlanDeCuentaTableUi = new Command() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 3890088916049691923L;
-
-			@Override
-			public void menuSelected(MenuItem selectedItem) {
-				openPlanDeCuentaTableUi();
-			}
-		};
-		archivos.addItem("Plan de cuentas ...", openPlanDeCuentaTableUi);
+		archivos.addItem("Plan de cuentas ...", open(CuentaContable.class));
 
 		Command openEjercicioContableTableUi = new Command() {
 
@@ -307,7 +298,7 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 
 			usuario.setEjercicioContable(ejercicioContableDefault);
 
-			usuarioBO.update(usuario);
+			usuarioBO.update(usuario, usuario.clone(), usuario);
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -436,23 +427,6 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 		}
 	}
 
-	private void openPlanDeCuentaTableUi() {
-		try {
-			// PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(cx, usuario);
-
-			Window win = new Window("Plan de cuentas");
-			win.setClosable(true);
-			win.setResizable(false);
-			CuentaContableTableUi ui = new CuentaContableTableUi(win, cx, usuario);
-			win.setContent(ui);
-			getUI().addWindow(win);
-			win.center();
-			win.focus();
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-	}
-
 	private void openAsientoModeloTableUi() {
 		try {
 			// PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(cx, usuario);
@@ -474,6 +448,27 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 	public void enter(ViewChangeEvent event) {
 		// TODO Auto-generated method stub
 
+	}
+
+	private Component getThis() {
+		return this;
+	}
+
+	@SuppressWarnings("rawtypes")
+	private Command open(Class classModel) {
+
+		return new Command() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 4645387020070455569L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+				FrontendContext.openWindows(true, true,  true, true, getThis(), classModel, cx, usuario, null, null, null);
+
+			}
+		};
 	}
 
 }

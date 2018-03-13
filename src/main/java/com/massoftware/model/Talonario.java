@@ -5,30 +5,170 @@ import java.util.Date;
 
 import org.cendra.common.model.EntityId;
 
+import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
+import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassFormSourceAnont;
+import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassPluralLabelAnont;
+import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
+import com.massoftware.annotation.model.FieldColumnsAnont;
+import com.massoftware.annotation.model.FieldLabelAnont;
+import com.massoftware.annotation.model.FieldMaxLengthAnont;
+import com.massoftware.annotation.model.FieldMaxValueBigDecimalAnont;
+import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
+import com.massoftware.annotation.model.FieldMinValueBigDecimalAnont;
+import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
+import com.massoftware.annotation.model.FieldNameMSAnont;
+import com.massoftware.annotation.model.FieldOptionsStringAnont;
+import com.massoftware.annotation.model.FieldRequiredAnont;
+import com.massoftware.annotation.model.FieldSubNameFKAnont;
+import com.massoftware.annotation.model.FieldUniqueAnont;
+
+@SuppressWarnings("serial")
+@ClassLabelInTheSingularAnont(value = "Talonario")
+@ClassPluralLabelAnont(value = "Talonarios")
+@ClassArticleLabelInTheSingularAnont(value = "el")
+@ClassArticleLabelInPluralAnont(value = "los")
+@ClassFormSourceAnont(value = "Talonario")
+@ClassTableMSAnont(nameTableDB = "[TablaDeMultiproposito]")
 public class Talonario extends EntityId implements Cloneable,
 		Comparable<Talonario> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4650121042857255795L;
-
+	@FieldLabelAnont(value = "Número")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 5)
+	@FieldColumnsAnont(value = 5)
+	@FieldMinValueIntegerAnont(value = 1)
+	@FieldMaxValueIntegerAnont(value = 99999)
+	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[MULTIPROPOSITO]", classAttDB = Integer.class)
 	private Integer codigo;
+
+	@FieldLabelAnont(value = "Nombre")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 20)
+	@FieldColumnsAnont(value = 20)
+	@FieldColumnMetaDataAnont(attSize = 250)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[NOMBRE]", classAttDB = String.class)
 	private String nombre;
+
+	@FieldLabelAnont(value = "Letra")
+	@FieldRequiredAnont()
+	@FieldOptionsStringAnont(values = { "A", "B", "C", "M", "R", "X" }, defaultValue = "X")
+	@FieldColumnMetaDataAnont(attSize = 80)
+	@FieldNameMSAnont(nameAttDB = "[LETRA]", classAttDB = String.class)
 	private String letra;
-	private Sucursal sucursal;	
+
+	@FieldLabelAnont(value = "Sucursal")
+//	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(attSize = 200)
+	@FieldSubNameFKAnont(value = "codigo")
+	@FieldNameMSAnont(nameAttDB = "[SUCURSAL]", classAttDB = Integer.class)
+	private Sucursal sucursal;
+
+	@FieldLabelAnont(value = "Auto numeración")
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[AUTONUMERACION]", classAttDB = Boolean.class)
 	private Boolean autonumeracion;
+
+	@FieldLabelAnont(value = "Numeración pre-impresa")
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[NUMERACIONPREIMPRESA]", classAttDB = Boolean.class)
 	private Boolean numeracionPreImpresa;
-	private Boolean asociadoAlRG10098;	
+
+	@FieldLabelAnont(value = "Asociado al RG 100/98")
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[RG10098]", classAttDB = Boolean.class)
+	private Boolean asociadoAlRG10098;
+
+	@FieldLabelAnont(value = "Asociado a controlador fiscal")
+	@FieldRequiredAnont()	
+	@FieldOptionsStringAnont(values = { "S", "H", "E", "W", "M", "X" }, captions = { "Sin controlador", "Hasar SMH/P614F", "Epson TM-300A/F", "WSFE", "WSMTXCA", "WSFEX" }, defaultValue = "S", horizontal = false)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[CONTROLFISCAL]", classAttDB = String.class)
 	private String asociadoAControladorFiscal;
+
+	@FieldLabelAnont(value = "Primer número")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 8)
+	@FieldColumnsAnont(value = 8)
+	@FieldMinValueIntegerAnont(value = 0)
+	@FieldMaxValueIntegerAnont(value = 99999999)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[PRIMERNUMERO]", classAttDB = Integer.class)
 	private Integer primerNumero;
+	
+	@FieldLabelAnont(value = "Próximo número")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 8)
+	@FieldColumnsAnont(value = 8)
+	@FieldMinValueIntegerAnont(value = 0)
+	@FieldMaxValueIntegerAnont(value = 99999999)
+	@FieldColumnMetaDataAnont(attSize = 100)
+	@FieldNameMSAnont(nameAttDB = "[PROXIMONUMERO]", classAttDB = Integer.class)
 	private Integer proximoNumero;
+	
+	@FieldLabelAnont(value = "Último número")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 8)
+	@FieldColumnsAnont(value = 8)
+	@FieldMinValueIntegerAnont(value = 0)
+	@FieldMaxValueIntegerAnont(value = 99999999)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[ULTIMONUMERO]", classAttDB = Integer.class)
 	private Integer ultimoNumero;
+	
+	@FieldLabelAnont(value = "Cant. min. cbtes.")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 5)
+	@FieldColumnsAnont(value = 5)
+	@FieldMinValueIntegerAnont(value = 0)
+	@FieldMaxValueIntegerAnont(value = 99999)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[ALERTACANTIDADMINIMADECBTES]", classAttDB = Integer.class)
 	private Integer cantidadMinimaComprobantes;
+	
+	@FieldLabelAnont(value = "Fecha")
+	@FieldRequiredAnont()	
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[ULTIMAFECHASQL]", classAttDB = Date.class)
 	private Date ultimaFecha;
+	
+	@FieldLabelAnont(value = "Número C.A.I")
+	@FieldRequiredAnont()		
+	@FieldMaxLengthAnont(value = 14)
+	@FieldColumnsAnont(value = 14)
+	@FieldMinValueBigDecimalAnont(value = "0")
+	@FieldMaxValueBigDecimalAnont(value = "99999999999999")
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[CAI]", classAttDB = BigDecimal.class)
 	private BigDecimal numeroCAI;
+	
+	@FieldLabelAnont(value = "Fecha")
+	@FieldRequiredAnont()	
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[VENCIMIENTOCAISQL]", classAttDB = Date.class)
 	private Date vencimientoCAI;
+	
+	@FieldLabelAnont(value = "Días aviso vto.")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 3)
+	@FieldColumnsAnont(value = 5)
+	@FieldMinValueIntegerAnont(value = 0)
+	@FieldMaxValueIntegerAnont(value = 255)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[DIASAVISOVENCIMIENTO]", classAttDB = Integer.class)
 	private Integer diasAvisoVencimiento;
+	
+	@FieldLabelAnont(value = "Puerta")
+//	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldSubNameFKAnont(value = "codigo")
+	@FieldNameMSAnont(nameAttDB = "[DOORNOCAMBIAR]", classAttDB = Integer.class)
 	private SeguridadPuerta puertaCambiar;
 
 	public Integer getCodigo() {
@@ -64,10 +204,10 @@ public class Talonario extends EntityId implements Cloneable,
 	}
 
 	public void setSucursal(Sucursal sucursal) {
-		if(sucursal != null && sucursal.getId() == null){
+		if (sucursal != null && sucursal.getId() == null) {
 			return;
-		} 
-		
+		}
+
 		this.sucursal = sucursal;
 	}
 
@@ -217,12 +357,12 @@ public class Talonario extends EntityId implements Cloneable,
 		this.diasAvisoVencimiento = diasAvisoVencimiento;
 	}
 
-	public SeguridadPuerta getPuertaCambiar() {		
+	public SeguridadPuerta getPuertaCambiar() {
 		return puertaCambiar;
 	}
 
 	public void setPuertaCambiar(SeguridadPuerta puertaCambiar) {
-		if(puertaCambiar != null && puertaCambiar.getId() == null){
+		if (puertaCambiar != null && puertaCambiar.getId() == null) {
 			return;
 		}
 		this.puertaCambiar = puertaCambiar;

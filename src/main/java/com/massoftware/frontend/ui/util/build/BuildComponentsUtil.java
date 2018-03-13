@@ -6,20 +6,20 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
-import com.massoftware.annotation.model.AllowDecimalAnont;
-import com.massoftware.annotation.model.ColumnsAnont;
-import com.massoftware.annotation.model.LabelAnont;
-import com.massoftware.annotation.model.MaxLengthAnont;
-import com.massoftware.annotation.model.MaxValueBigDecimalAnont;
-import com.massoftware.annotation.model.MaxValueIntegerAnont;
-import com.massoftware.annotation.model.MinValueBigDecimalAnont;
-import com.massoftware.annotation.model.MinValueIntegerAnont;
-import com.massoftware.annotation.model.RequiredAnont;
+import com.massoftware.annotation.model.FieldAllowDecimalAnont;
+import com.massoftware.annotation.model.FieldColumnsAnont;
+import com.massoftware.annotation.model.FieldLabelAnont;
+import com.massoftware.annotation.model.FieldMaxLengthAnont;
+import com.massoftware.annotation.model.FieldMaxValueBigDecimalAnont;
+import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
+import com.massoftware.annotation.model.FieldMinValueBigDecimalAnont;
+import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
+import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.StandardFormUi;
-import com.massoftware.frontend.ui.util.StringToBigDecimalConverterUnspecifiedLocale;
-import com.massoftware.frontend.ui.util.StringToIntegerConverterUnspecifiedLocale;
 import com.massoftware.frontend.ui.util.UtilDate;
+import com.massoftware.frontend.ui.util.validator.StringToBigDecimalConverterUnspecifiedLocale;
+import com.massoftware.frontend.ui.util.validator.StringToIntegerConverterUnspecifiedLocale;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
@@ -395,7 +395,7 @@ public class BuildComponentsUtil {
 	}
 
 	private static String getLabel(Field field) {
-		LabelAnont[] a = field.getAnnotationsByType(LabelAnont.class);
+		FieldLabelAnont[] a = field.getAnnotationsByType(FieldLabelAnont.class);
 		if (a != null && a.length > 0) {
 			return a[0].value();
 		}
@@ -404,7 +404,7 @@ public class BuildComponentsUtil {
 	}
 
 	private static boolean getRequired(Field field) {
-		RequiredAnont[] a = field.getAnnotationsByType(RequiredAnont.class);
+		FieldRequiredAnont[] a = field.getAnnotationsByType(FieldRequiredAnont.class);
 		if (a != null && a.length > 0) {
 			return a[0].value();
 		}
@@ -414,7 +414,7 @@ public class BuildComponentsUtil {
 	}
 
 	private static int getColumns(Field field) {
-		ColumnsAnont[] a = field.getAnnotationsByType(ColumnsAnont.class);
+		FieldColumnsAnont[] a = field.getAnnotationsByType(FieldColumnsAnont.class);
 		if (a != null && a.length > 0) {
 			return a[0].value();
 		}
@@ -424,7 +424,7 @@ public class BuildComponentsUtil {
 	}
 
 	private static int getMaxLength(Field field) {
-		MaxLengthAnont[] a = field.getAnnotationsByType(MaxLengthAnont.class);
+		FieldMaxLengthAnont[] a = field.getAnnotationsByType(FieldMaxLengthAnont.class);
 		if (a != null && a.length > 0) {
 			return a[0].value();
 		}
@@ -434,7 +434,7 @@ public class BuildComponentsUtil {
 	}
 
 	private static int getMinValueInteger(Field field) {
-		MinValueIntegerAnont[] a = field.getAnnotationsByType(MinValueIntegerAnont.class);
+		FieldMinValueIntegerAnont[] a = field.getAnnotationsByType(FieldMinValueIntegerAnont.class);
 		if (a != null && a.length > 0) {
 			return a[0].value();
 		}
@@ -444,7 +444,7 @@ public class BuildComponentsUtil {
 	}
 
 	private static int getMaxValueInteger(Field field) {
-		MaxValueIntegerAnont[] a = field.getAnnotationsByType(MaxValueIntegerAnont.class);
+		FieldMaxValueIntegerAnont[] a = field.getAnnotationsByType(FieldMaxValueIntegerAnont.class);
 		if (a != null && a.length > 0) {
 			return a[0].value();
 		}
@@ -454,8 +454,8 @@ public class BuildComponentsUtil {
 	}
 
 	private static BigDecimal getMinValueBigDecimal(Field field) {
-		MinValueBigDecimalAnont[] a = field
-				.getAnnotationsByType(MinValueBigDecimalAnont.class);
+		FieldMinValueBigDecimalAnont[] a = field
+				.getAnnotationsByType(FieldMinValueBigDecimalAnont.class);
 		if (a != null && a.length > 0) {
 			return new BigDecimal(a[0].value());
 		}
@@ -465,8 +465,8 @@ public class BuildComponentsUtil {
 	}
 
 	private static BigDecimal getMaxValueBigDecimal(Field field) {
-		MaxValueBigDecimalAnont[] a = field
-				.getAnnotationsByType(MaxValueBigDecimalAnont.class);
+		FieldMaxValueBigDecimalAnont[] a = field
+				.getAnnotationsByType(FieldMaxValueBigDecimalAnont.class);
 		if (a != null && a.length > 0) {
 			return new BigDecimal(a[0].value());
 		}
@@ -476,7 +476,7 @@ public class BuildComponentsUtil {
 	}
 
 	private static boolean getAllowDecimal(Field field) {
-		AllowDecimalAnont[] a = field.getAnnotationsByType(AllowDecimalAnont.class);
+		FieldAllowDecimalAnont[] a = field.getAnnotationsByType(FieldAllowDecimalAnont.class);
 		if (a != null && a.length > 0) {
 			return a[0].value();
 		}

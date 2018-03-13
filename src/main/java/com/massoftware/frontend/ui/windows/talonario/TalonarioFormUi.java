@@ -85,7 +85,7 @@ public class TalonarioFormUi extends StandardFormUi<Talonario> {
 
 	public TalonarioFormUi(String mode, BackendContext cx, Talonario talonario,
 			TalonarioTableUi talonarioTableUi) {
-		super(Talonario.class, mode, cx, null, talonario);
+		super(null, Talonario.class, mode, cx, null, talonario);
 		try {
 			this.talonarioTableUi = talonarioTableUi;
 		} catch (Exception e) {

@@ -580,7 +580,7 @@ public class TipoCbteControlTableUi extends CustomComponent {
 	public void updateModelViewPort768x1024() throws Exception {
 		try {
 
-			List<TipoCbteControl> items = cx.buildTipoCbteControlBO().findAll();
+			List<TipoCbteControl> items = cx.buildBO(TipoCbteControl.class).findAll();
 
 			tipoCbteControlBIC.removeAllItems();
 			for (TipoCbteControl item : items) {

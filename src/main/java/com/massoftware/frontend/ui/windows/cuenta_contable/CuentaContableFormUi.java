@@ -10,7 +10,7 @@ import org.vaadin.inputmask.InputMask;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StringLengthValidatorInputMask;
+import com.massoftware.frontend.ui.util.validator.StringLengthValidatorInputMask;
 import com.massoftware.frontend.ui.windows.centro_de_costo_contable.CentroDeCostoContableFormUi;
 import com.massoftware.frontend.ui.windows.punto_de_equilibrio.PuntoDeEquilibrioFormUi;
 import com.massoftware.model.CentroDeCostoContable;

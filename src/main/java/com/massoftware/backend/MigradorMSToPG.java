@@ -157,14 +157,13 @@ public class MigradorMSToPG {
 		List<Modulo> moduloList = cxMSSQL.buildModuloBO().findAll();
 		System.out.println(moduloList);
 
-		List<Deposito> depositoList = cxMSSQL.buildDepositoBO().findAll();
+		List<Deposito> depositoList = cxMSSQL.buildBO(Deposito.class).findAll();
 		System.out.println(depositoList);
 
-		depositoList = cxMSSQL.buildDepositoBO().findAllBySucursal(4);
-		System.out.println(depositoList);
+		
 
 		List<TipoCbteControl> tipoCbteControlList = cxMSSQL
-				.buildTipoCbteControlBO().findAll();
+				.buildBO(TipoCbteControl.class).findAll();
 		System.out.println(tipoCbteControlList);
 
 		List<ModeloCbteFondo> modeloCbteFondoList = cxMSSQL
@@ -183,7 +182,7 @@ public class MigradorMSToPG {
 				.findAllByModeloCbteFondo(3);
 		System.out.println(modeloCbteFondoItemList);
 
-		List<TipoCbteAFIP> tipoCbteAFIPList = cxMSSQL.buildTipoCbteAFIPBO()
+		List<TipoCbteAFIP> tipoCbteAFIPList = cxMSSQL.buildBO(TipoCbteAFIP.class)
 				.findAll();
 		System.out.println(tipoCbteAFIPList);
 

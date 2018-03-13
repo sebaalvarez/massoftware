@@ -2,6 +2,7 @@ package com.massoftware.frontend.ui.util;
 
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 import org.cendra.ex.crud.InsertDuplicateException;
+import org.cendra.ex.crud.UniqueException;
 
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.server.Page;
@@ -60,7 +61,19 @@ public class LogAndNotification {
 	}
 
 	public static void print(InsertDuplicateException e) {
-		Notification notification = new Notification("Duplicación de Datos",
+		Notification notification = new Notification("Duplicación de datos",
+				e.getMessage(), Type.WARNING_MESSAGE);
+		// notification.setStyleName("warning failure");
+		notification.setStyleName("tray failure");
+		notification.setPosition(Position.BOTTOM_LEFT);
+		// notification.setDelayMsec(10000);
+		notification.show(Page.getCurrent());
+
+		// e.printStackTrace();
+	}
+	
+	public static void print(UniqueException e) {
+		Notification notification = new Notification("Duplicación de datos",
 				e.getMessage(), Type.WARNING_MESSAGE);
 		// notification.setStyleName("warning failure");
 		notification.setStyleName("tray failure");

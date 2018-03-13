@@ -1,18 +1,22 @@
 package com.massoftware.frontend.ui.util;
 
 import java.lang.reflect.Field;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.cendra.common.model.EntityId;
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
-import com.massoftware.annotation.model.ColumnMetaDataAnont;
-import com.massoftware.annotation.model.LabelAnont;
-import com.massoftware.annotation.model.PluralLabelAnont;
+import com.massoftware.annotation.model.ClassPluralLabelAnont;
+import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
+import com.massoftware.annotation.model.FieldLabelAnont;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.Usuario;
+import com.vaadin.data.Property;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.StringToBooleanConverter;
@@ -34,6 +38,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -53,9 +58,9 @@ public class StandardTableUi<T> extends CustomComponent {
 	// ----------------------------------------------
 	// CONTROLES
 
-	private VerticalLayout rootVL;
+	protected VerticalLayout rootVL;
 
-	private HorizontalLayout filaFiltro1HL;
+	protected HorizontalLayout filaFiltro1HL;
 
 	private HorizontalLayout filtroGenericoHL;
 	private TextField filtroGenericoTXT;
@@ -69,6 +74,14 @@ public class StandardTableUi<T> extends CustomComponent {
 	private Button copiarBTN;
 	private HorizontalLayout barraDeHerramientasFila2;
 	private Button eliminarBTN;
+
+	protected HorizontalLayout barraDeHerramientasFila3;
+	protected Button seleccionarBTN;
+
+	private boolean agregar;
+	private boolean modificar;
+	private boolean copiar;
+	private boolean eliminar;
 
 	// ----------------------------------------------
 	// OPCIONES
@@ -86,18 +99,34 @@ public class StandardTableUi<T> extends CustomComponent {
 
 	// ----------------------------------------------
 
-	private Class<T> classModel;
+	protected Class<T> classModel;
 	private List<ColumnMetaData> columnsMetaData = new ArrayList<ColumnMetaData>();
 
 	// ----------------------------------------------
 
-	public StandardTableUi(Window window, BackendContext cx, Usuario usuario,
-			Class<T> classModel) {
+	private Object searchFilter;
+	@SuppressWarnings("rawtypes")
+	private Property searchProperty;
+
+	// ----------------------------------------------
+
+	public StandardTableUi(boolean agregar, boolean modificar, boolean copiar,
+			boolean eliminar, Window window, BackendContext cx,
+			Usuario usuario, Class<T> classModel, String pidFiltering,
+			Object searchFilter,
+			@SuppressWarnings("rawtypes") Property searchProperty) {
 		super();
 		try {
+			this.agregar = agregar;
+			this.modificar = modificar;
+			this.copiar = copiar;
+			this.eliminar = eliminar;
+
 			this.classModel = classModel;
 			this.cx = cx;
 			this.usuario = usuario;
+			this.searchFilter = searchFilter;
+			this.searchProperty = searchProperty;
 
 			this.window = window;
 			window.setCaption(getLabel());
@@ -112,11 +141,22 @@ public class StandardTableUi<T> extends CustomComponent {
 			// getUI().addWindow(window);
 			window.center();
 
+			if (this.searchFilter != null) {
+				window.setModal(true);
+				this.pidFiltering = pidFiltering;
+			}
+
 			columnsMetaData = buildColumnsMetaData();
 			buildContainersOptions();
 			buildContainersItems();
 			buildControls();
 			loadData();
+
+			if (this.searchFilter != null) {
+				filtroGenericoTXT.setValue(this.searchFilter.toString());
+				filtroGenericoTXTTextChange(filtroGenericoTXT.getValue());
+			}
+
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -130,8 +170,8 @@ public class StandardTableUi<T> extends CustomComponent {
 		Field[] fields = classModel.getDeclaredFields();
 		for (Field field : fields) {
 
-			ColumnMetaDataAnont[] a = field
-					.getAnnotationsByType(ColumnMetaDataAnont.class);
+			FieldColumnMetaDataAnont[] a = field
+					.getAnnotationsByType(FieldColumnMetaDataAnont.class);
 
 			if (a != null && a.length > 0) {
 
@@ -157,6 +197,11 @@ public class StandardTableUi<T> extends CustomComponent {
 		itemsBIC = new BeanItemContainer<T>(classModel, new ArrayList<T>());
 	}
 
+	protected void addControlsFilters() throws Exception {
+
+	}
+
+	@SuppressWarnings("unchecked")
 	private void buildControls() throws Exception {
 
 		// 768x1024
@@ -193,7 +238,8 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		for (ColumnMetaData columnMetaData : columnsMetaData) {
 
-			if (columnMetaData.isPidFilteringStart() == true) {
+			if (columnMetaData.isPidFilteringStart() == true
+					&& searchFilter == null) {
 
 				pidFiltering = columnMetaData.getAttName();
 				filtroGenericoTXT.setCaption(columnMetaData.getAttLabel());
@@ -226,6 +272,10 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		// ----------------------------------------------
 
+		addControlsFilters();
+
+		// ----------------------------------------------
+
 		removerFiltroGenericoBTN = new Button();
 		removerFiltroGenericoBTN.addStyleName("borderless tiny");
 		removerFiltroGenericoBTN.setIcon(FontAwesome.TIMES);
@@ -243,7 +293,12 @@ public class StandardTableUi<T> extends CustomComponent {
 		// ----------------------------------------------
 
 		itemsGRD = new Grid();
-		itemsGRD.addStyleName("small compact");
+
+		itemsGRD.removeAllColumns();
+
+		// itemsGRD.addStyleName("small compact");
+		itemsGRD.addStyleName("small");
+		itemsGRD.addStyleName("compact");
 		itemsGRD.setWidth("100%");
 		// centrosDeCostoContableGRD.setHeight("400px");
 		itemsGRD.setSelectionMode(SelectionMode.SINGLE);
@@ -278,6 +333,7 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		// .......
 
+		// itemsGRD.removeAllColumns();
 		itemsGRD.setContainerDataSource(itemsBIC);
 
 		// .......
@@ -292,7 +348,25 @@ public class StandardTableUi<T> extends CustomComponent {
 								new StringToBooleanConverter(
 										FontAwesome.CHECK_SQUARE_O.getHtml(),
 										FontAwesome.SQUARE_O.getHtml()));
+
+			} else if (this.columnsMetaData.get(i).getAttClass() == Date.class) {
+
+				String format = "dd/MM/yyyy";
+
+				itemsGRD.getColumn(this.columnsMetaData.get(i).getAttName())
+						.setRenderer(
+								new DateRenderer(new SimpleDateFormat(format)));
+
+			} else if (this.columnsMetaData.get(i).getAttClass() == Timestamp.class) {
+
+				String format = "dd/MM/yyyy HH:mm:ss";
+
+				itemsGRD.getColumn(this.columnsMetaData.get(i).getAttName())
+						.setRenderer(
+								new DateRenderer(new SimpleDateFormat(format)));
+
 			}
+
 		}
 
 		// .......
@@ -319,45 +393,52 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		// ----------------------------------------------
 
-		agregarBTN = new Button();
-		agregarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-		agregarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-		agregarBTN.setIcon(FontAwesome.PLUS);
-		agregarBTN.setCaption("Agregar");
-		agregarBTN.setDescription(agregarBTN.getCaption() + " (Ctrl+A)");
-		agregarBTN.addClickListener(e -> {
-			agregarBTNClick();
-		});
+		if (agregar) {
+			agregarBTN = new Button();
+			agregarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+			agregarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+			agregarBTN.setIcon(FontAwesome.PLUS);
+			agregarBTN.setCaption("Agregar");
+			agregarBTN.setDescription(agregarBTN.getCaption() + " (Ctrl+A)");
+			agregarBTN.addClickListener(e -> {
+				agregarBTNClick();
+			});
 
-		barraDeHerramientasFila1.addComponent(agregarBTN);
-
-		// ----------------------------------------------
-
-		modificarBTN = new Button();
-		modificarBTN.addStyleName(ValoTheme.BUTTON_PRIMARY);
-		modificarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-		modificarBTN.setIcon(FontAwesome.PENCIL);
-		modificarBTN.setCaption("Modificar");
-		modificarBTN.setDescription(modificarBTN.getCaption() + " (Ctrl+M)");
-		modificarBTN.addClickListener(e -> {
-			modificarBTNClick();
-		});
-
-		barraDeHerramientasFila1.addComponent(modificarBTN);
+			barraDeHerramientasFila1.addComponent(agregarBTN);
+		}
 
 		// ----------------------------------------------
 
-		copiarBTN = new Button();
-		copiarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-		copiarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-		copiarBTN.setIcon(FontAwesome.PLUS_SQUARE);
-		copiarBTN.setCaption("Copiar");
-		copiarBTN.setDescription(copiarBTN.getCaption() + " (Ctrl+C)");
-		copiarBTN.addClickListener(e -> {
-			copiarBTNClick();
-		});
+		if (modificar) {
+			modificarBTN = new Button();
+			modificarBTN.addStyleName(ValoTheme.BUTTON_PRIMARY);
+			modificarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+			modificarBTN.setIcon(FontAwesome.PENCIL);
+			modificarBTN.setCaption("Modificar");
+			modificarBTN
+					.setDescription(modificarBTN.getCaption() + " (Ctrl+M)");
+			modificarBTN.addClickListener(e -> {
+				modificarBTNClick();
+			});
 
-		barraDeHerramientasFila1.addComponent(copiarBTN);
+			barraDeHerramientasFila1.addComponent(modificarBTN);
+		}
+
+		// ----------------------------------------------
+
+		if (copiar) {
+			copiarBTN = new Button();
+			copiarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+			copiarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+			copiarBTN.setIcon(FontAwesome.PLUS_SQUARE);
+			copiarBTN.setCaption("Copiar");
+			copiarBTN.setDescription(copiarBTN.getCaption() + " (Ctrl+C)");
+			copiarBTN.addClickListener(e -> {
+				copiarBTNClick();
+			});
+
+			barraDeHerramientasFila1.addComponent(copiarBTN);
+		}
 
 		// ----------------------------------------------
 
@@ -370,17 +451,20 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		// ----------------------------------------------
 
-		eliminarBTN = new Button();
-		eliminarBTN.addStyleName(ValoTheme.BUTTON_DANGER);
-		eliminarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-		eliminarBTN.setIcon(FontAwesome.TRASH);
-		eliminarBTN.setCaption("Eliminar");
+		if (eliminar) {
+			eliminarBTN = new Button();
+			eliminarBTN.addStyleName(ValoTheme.BUTTON_DANGER);
+			eliminarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+			eliminarBTN.setIcon(FontAwesome.TRASH);
+			eliminarBTN.setCaption("Eliminar");
 
-		eliminarBTN.addClickListener(e -> {
-			eliminarBTNClick();
-		});
+			eliminarBTN.addClickListener(e -> {
+				eliminarBTNClick();
+			});
 
-		barraDeHerramientasFila2.addComponent(eliminarBTN);
+			barraDeHerramientasFila2.addComponent(eliminarBTN);
+
+		}
 
 		// --------------------------------------------------
 
@@ -437,13 +521,52 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		// ----------------------------------------------
 
+		if (this.searchFilter != null) {
+
+			barraDeHerramientasFila3 = new HorizontalLayout();
+			barraDeHerramientasFila3.setSpacing(true);
+
+			rootVL.addComponent(barraDeHerramientasFila3);
+			rootVL.setComponentAlignment(barraDeHerramientasFila3,
+					Alignment.MIDDLE_CENTER);
+
+			// ----------------------------------------------
+
+			seleccionarBTN = new Button();
+			seleccionarBTN.addStyleName(ValoTheme.BUTTON_PRIMARY);
+			seleccionarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+			seleccionarBTN.setIcon(FontAwesome.CHECK_SQUARE_O);
+			seleccionarBTN.setCaption("Seleccionar");
+
+			seleccionarBTN.addClickListener(e -> {
+
+				try {
+
+					if (itemsGRD.getSelectedRow() != null) {
+
+						T item = (T) itemsGRD.getSelectedRow();
+						searchProperty.setValue(item);
+						window.close();
+					}
+
+				} catch (Exception ex) {
+					LogAndNotification.print(ex);
+				}
+			});
+
+			barraDeHerramientasFila3.addComponent(seleccionarBTN);
+
+		}
+
 	}
 
 	private void agregarBTNClick() {
 		try {
 
-			itemsGRD.select(null);
-			getUI().addWindow(openFormAgregar().getWindow());
+			if (agregar) {
+				itemsGRD.select(null);
+				getUI().addWindow(openFormAgregar().getWindow());
+			}
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -454,15 +577,15 @@ public class StandardTableUi<T> extends CustomComponent {
 		// DepositoFormUi ui = new DepositoFormUi(StandardFormUi.INSERT_MODE,
 		// cx, null, this);
 
-		return new StandardFormUi<T>(classModel, StandardFormUi.INSERT_MODE,
-				cx, this, classModel.newInstance());
+		return new StandardFormUi<T>(usuario, classModel,
+				StandardFormUi.INSERT_MODE, cx, this, classModel.newInstance());
 	}
 
 	@SuppressWarnings("unchecked")
 	private void modificarBTNClick() {
 		try {
 
-			if (itemsGRD.getSelectedRow() != null) {
+			if (modificar && itemsGRD.getSelectedRow() != null) {
 
 				getUI().addWindow(
 						openFormModificar((T) itemsGRD.getSelectedRow())
@@ -474,19 +597,19 @@ public class StandardTableUi<T> extends CustomComponent {
 		}
 	}
 
-	protected StandardFormUi<T> openFormModificar(T item) {
+	protected StandardFormUi<T> openFormModificar(T item) throws Exception {
 		// DepositoFormUi ui = new DepositoFormUi(StandardFormUi.UPDATE_MODE,
 		// cx, item, this);
 
-		return new StandardFormUi<T>(classModel, StandardFormUi.UPDATE_MODE,
-				cx, this, item);
+		return new StandardFormUi<T>(usuario, classModel,
+				StandardFormUi.UPDATE_MODE, cx, this, item);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void copiarBTNClick() {
 		try {
 
-			if (itemsGRD.getSelectedRow() != null) {
+			if (copiar && itemsGRD.getSelectedRow() != null) {
 
 				getUI().addWindow(
 						openFormCopiar((T) itemsGRD.getSelectedRow())
@@ -506,14 +629,14 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		T o = (T) ((EntityId) item).clone();
 
-		return new StandardFormUi<T>(classModel, StandardFormUi.COPY_MODE, cx,
-				this, o);
+		return new StandardFormUi<T>(usuario, classModel,
+				StandardFormUi.COPY_MODE, cx, this, o);
 	}
 
 	private void eliminarBTNClick() {
 		try {
 
-			if (itemsGRD.getSelectedRow() != null) {
+			if (eliminar && itemsGRD.getSelectedRow() != null) {
 
 				getUI().addWindow(
 						new YesNoDialog("Eliminar",
@@ -667,9 +790,16 @@ public class StandardTableUi<T> extends CustomComponent {
 			boolean enabled = itemsBIC.size() > 0;
 
 			itemsGRD.setEnabled(enabled);
-			modificarBTN.setEnabled(enabled);
-			copiarBTN.setEnabled(enabled);
-			eliminarBTN.setEnabled(enabled);
+
+			if (modificar) {
+				modificarBTN.setEnabled(enabled);
+			}
+			if (modificar) {
+				copiarBTN.setEnabled(enabled);
+			}
+			if (modificar) {
+				eliminarBTN.setEnabled(enabled);
+			}
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -756,7 +886,7 @@ public class StandardTableUi<T> extends CustomComponent {
 	// }
 	// }
 
-	private void loadData() throws Exception {
+	protected void loadData() throws Exception {
 		try {
 
 			loadDataOptions();
@@ -800,9 +930,15 @@ public class StandardTableUi<T> extends CustomComponent {
 			boolean enabled = itemsBIC.size() > 0;
 
 			itemsGRD.setEnabled(enabled);
-			modificarBTN.setEnabled(enabled);
-			copiarBTN.setEnabled(enabled);
-			eliminarBTN.setEnabled(enabled);
+			if (modificar) {
+				modificarBTN.setEnabled(enabled);
+			}
+			if (modificar) {
+				copiarBTN.setEnabled(enabled);
+			}
+			if (modificar) {
+				eliminarBTN.setEnabled(enabled);
+			}
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -854,8 +990,8 @@ public class StandardTableUi<T> extends CustomComponent {
 
 	private String getLabel() {
 
-		PluralLabelAnont[] a = classModel
-				.getAnnotationsByType(PluralLabelAnont.class);
+		ClassPluralLabelAnont[] a = classModel
+				.getAnnotationsByType(ClassPluralLabelAnont.class);
 		if (a != null && a.length > 0) {
 			return a[0].value();
 		}
@@ -865,7 +1001,7 @@ public class StandardTableUi<T> extends CustomComponent {
 
 	private String getLabel(Field field) {
 
-		LabelAnont[] a = field.getAnnotationsByType(LabelAnont.class);
+		FieldLabelAnont[] a = field.getAnnotationsByType(FieldLabelAnont.class);
 		if (a != null && a.length > 0) {
 			return a[0].value();
 		}

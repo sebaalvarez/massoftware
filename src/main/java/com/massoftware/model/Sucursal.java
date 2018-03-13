@@ -2,39 +2,163 @@ package com.massoftware.model;
 
 import org.cendra.common.model.EntityId;
 
-import com.massoftware.annotation.model.RequiredAnont;
+import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
+import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassFormSourceAnont;
+import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassPluralLabelAnont;
+import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
+import com.massoftware.annotation.model.FieldColumnsAnont;
+import com.massoftware.annotation.model.FieldLabelAnont;
+import com.massoftware.annotation.model.FieldMaxLengthAnont;
+import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
+import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
+import com.massoftware.annotation.model.FieldNameMSAnont;
+import com.massoftware.annotation.model.FieldOptionsIntegerAnont;
+import com.massoftware.annotation.model.FieldRequiredAnont;
+import com.massoftware.annotation.model.FieldSubNameFKAnont;
+import com.massoftware.annotation.model.FieldUniqueAnont;
 
+@SuppressWarnings("serial")
+@ClassLabelInTheSingularAnont(value = "Sucursal")
+@ClassPluralLabelAnont(value = "Sucursales")
+@ClassArticleLabelInTheSingularAnont(value = "la")
+@ClassArticleLabelInPluralAnont(value = "las")
+@ClassFormSourceAnont(value = "Sucursal")
+@ClassTableMSAnont(nameTableDB = "[Sucursales]")
 public class Sucursal extends EntityId implements Cloneable,
 		Comparable<Sucursal> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3012073096976059386L;
-
-	@RequiredAnont(value = true)
+	@FieldLabelAnont(value = "Sucursal")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 2)
+	@FieldColumnsAnont(value = 5)
+	@FieldMinValueIntegerAnont(value = 1)
+	@FieldMaxValueIntegerAnont(value = 99)
+	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[SUCURSAL]", classAttDB = Integer.class)
 	private Integer codigo;
+
+	@FieldLabelAnont(value = "Nombre")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 35)
+	@FieldColumnsAnont(value = 35)
+	@FieldColumnMetaDataAnont(attSize = 350)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[NOMBRE]", classAttDB = String.class)
 	private String nombre;
+
+	@FieldLabelAnont(value = "Abreviatura")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 4)
+	@FieldColumnsAnont(value = 5)
+	@FieldColumnMetaDataAnont(attSize = 80)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[ABREVIATURA]", classAttDB = String.class)
 	private String abreviatura;
 
+	@FieldLabelAnont(value = "Tipo")
+	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(attSize = 200)
+	@FieldSubNameFKAnont(value = "codigo")
+	@FieldNameMSAnont(nameAttDB = "[TIPOSUCURSAL]", classAttDB = Integer.class)
 	private SucursalTipo sucursalTipo;
 
+	@FieldLabelAnont(value = "Cuenta clientes - Desde", visible = false)
+	@FieldMaxLengthAnont(value = 6)
+	@FieldColumnsAnont(value = 6)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[CUENTASCLIENTESDESDE]", classAttDB = String.class)
 	private String cuentaClientesDesde;
+
+	@FieldLabelAnont(value = "Cuenta clientes - Hasta", visible = false)
+	@FieldMaxLengthAnont(value = 6)
+	@FieldColumnsAnont(value = 6)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[CUENTASCLIENTESHASTA]", classAttDB = String.class)
 	private String cuentaClientesHasta;
+
+	@FieldLabelAnont(value = "Cuenta clientes - Cant. caracteres", visible = false)	
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldOptionsIntegerAnont(values = { 3, 4, 5, 6 }, defaultValue = 6)
+	@FieldNameMSAnont(nameAttDB = "[CANTIDADCARACTERESCLIENTES]", classAttDB = Integer.class)
 	private Integer cantidadCaracteresClientes;
+
+	@FieldLabelAnont(value = "Identificación numérica", visible = true)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[NUMERICOCLIENTES]", classAttDB = Boolean.class)
 	private Boolean identificacionNumericaClientes;
+
+	@FieldLabelAnont(value = "Permite cambiar", visible = true)
+	@FieldNameMSAnont(nameAttDB = "[PERMITECAMBIARCLIENTES]", classAttDB = Boolean.class)
 	private Boolean permiteCambiarClientes;
 
+	@FieldLabelAnont(value = "Clientes ocacionales - Desde", visible = false)
+	@FieldMaxLengthAnont(value = 9)
+	@FieldColumnsAnont(value = 9)
+	@FieldMinValueIntegerAnont(value = -99999999)
+	@FieldMaxValueIntegerAnont(value = Integer.MAX_VALUE)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[CUENTASCLIENTESOCASIONALESDESDE]", classAttDB = Integer.class)
 	private Integer clientesOcasionalesDesde;
+
+	@FieldLabelAnont(value = "Clientes ocacionales - Hasta", visible = false)
+	@FieldMaxLengthAnont(value = 9)
+	@FieldColumnsAnont(value = 9)
+	@FieldMinValueIntegerAnont(value = -99999999)
+	@FieldMaxValueIntegerAnont(value = Integer.MAX_VALUE)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[CUENTASCLIENTESOCASIONALESHASTA]", classAttDB = Integer.class)
 	private Integer clientesOcasionalesHasta;
 
+	@FieldLabelAnont(value = "Nro. cobranza - Desde", visible = false)
+	@FieldMaxLengthAnont(value = 6)
+	@FieldColumnsAnont(value = 6)
+	@FieldMinValueIntegerAnont(value = Short.MIN_VALUE)
+	@FieldMaxValueIntegerAnont(value = Short.MAX_VALUE)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[NROCOBRANZADESDE]", classAttDB = Integer.class)
 	private Integer nroCobranzaDesde;
+
+	@FieldLabelAnont(value = "Nro. cobranza - Hasta", visible = false)
+	@FieldMaxLengthAnont(value = 6)
+	@FieldColumnsAnont(value = 6)
+	@FieldMinValueIntegerAnont(value = Short.MIN_VALUE)
+	@FieldMaxValueIntegerAnont(value = Short.MAX_VALUE)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[NROCOBRANZAHASTA]", classAttDB = Integer.class)
 	private Integer nroCobranzaHasta;
 
+	@FieldLabelAnont(value = "Proveedores - Desde", visible = false)
+	@FieldMaxLengthAnont(value = 6)
+	@FieldColumnsAnont(value = 6)
+	@FieldUniqueAnont(value = false)
+	@FieldNameMSAnont(nameAttDB = "[CUENTASPROVEEDORESDESDE]", classAttDB = String.class)
 	private String proveedoresDesde;
+
+	@FieldLabelAnont(value = "Proveedores - Hasta", visible = false)
+	@FieldMaxLengthAnont(value = 6)
+	@FieldColumnsAnont(value = 6)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[CUENTASPROVEEDORESHASTA]", classAttDB = String.class)
 	private String proveedoresHasta;
+
+	@FieldLabelAnont(value = "Proveedores - Cant. caracteres", visible = false)
+	@FieldOptionsIntegerAnont(values = { 3, 4, 5, 6 }, defaultValue = 6)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[CANTIDADCARACTERESPROVEEDOR]", classAttDB = Integer.class)
 	private Integer cantidadCaracteresProveedor;
+
+	@FieldLabelAnont(value = "Identificación numérica", visible = true)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[NUMERICOPROVEEDOR]", classAttDB = Boolean.class)
 	private Boolean identificacionNumericaProveedores;
+
+	@FieldLabelAnont(value = "Permite cambiar", visible = true)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[PERMITECAMBIARPROVEEDOR]", classAttDB = Boolean.class)
 	private Boolean permiteCambiarProveedores;
 
 	public Integer getCodigo() {

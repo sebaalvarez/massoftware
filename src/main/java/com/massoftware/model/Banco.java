@@ -4,126 +4,150 @@ import java.math.BigDecimal;
 
 import org.cendra.common.model.EntityId;
 
-import com.massoftware.annotation.model.AllowDecimalAnont;
-import com.massoftware.annotation.model.ArticleLabelInPluralAnont;
-import com.massoftware.annotation.model.ArticleLabelInTheSingularAnont;
-import com.massoftware.annotation.model.ColumnMetaDataAnont;
-import com.massoftware.annotation.model.ColumnsAnont;
-import com.massoftware.annotation.model.FormSourceAnont;
-import com.massoftware.annotation.model.InputMaskAnont;
-import com.massoftware.annotation.model.LabelAnont;
-import com.massoftware.annotation.model.LabelInTheSingularAnont;
-import com.massoftware.annotation.model.MaxLengthAnont;
-import com.massoftware.annotation.model.MaxValueBigDecimalAnont;
-import com.massoftware.annotation.model.MaxValueIntegerAnont;
-import com.massoftware.annotation.model.MinValueBigDecimalAnont;
-import com.massoftware.annotation.model.MinValueIntegerAnont;
-import com.massoftware.annotation.model.PluralLabelAnont;
-import com.massoftware.annotation.model.RequiredAnont;
+import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
+import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassFormSourceAnont;
+import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.ClassPluralLabelAnont;
+import com.massoftware.annotation.model.FieldAllowDecimalAnont;
+import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
+import com.massoftware.annotation.model.FieldColumnsAnont;
+import com.massoftware.annotation.model.FieldInputMaskAnont;
+import com.massoftware.annotation.model.FieldLabelAnont;
+import com.massoftware.annotation.model.FieldMaxLengthAnont;
+import com.massoftware.annotation.model.FieldMaxValueBigDecimalAnont;
+import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
+import com.massoftware.annotation.model.FieldMinLengthAnont;
+import com.massoftware.annotation.model.FieldMinValueBigDecimalAnont;
+import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
+import com.massoftware.annotation.model.FieldNameMSAnont;
+import com.massoftware.annotation.model.FieldRequiredAnont;
+import com.massoftware.annotation.model.FieldUniqueAnont;
 
 @SuppressWarnings("serial")
-@LabelInTheSingularAnont(value = "Banco")
-@PluralLabelAnont(value = "Bancos")
-@ArticleLabelInTheSingularAnont(value = "el")
-@ArticleLabelInPluralAnont(value = "los")
-@FormSourceAnont(value = "Banco")
+@ClassLabelInTheSingularAnont(value = "Banco")
+@ClassPluralLabelAnont(value = "Bancos")
+@ClassArticleLabelInTheSingularAnont(value = "el")
+@ClassArticleLabelInPluralAnont(value = "los")
+@ClassFormSourceAnont(value = "Banco")
+@ClassTableMSAnont(nameTableDB = "[Bancos]")
 public class Banco extends EntityId implements Cloneable, Comparable<Banco> {
 
-	@LabelAnont(value = "Banco")
-	@RequiredAnont(value = true)
-	@ColumnsAnont(value = 5)
-	@MaxLengthAnont(value = 3)
-	@MinValueIntegerAnont(value = 0)
-	@MaxValueIntegerAnont(value = 999)
-	@ColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
+	@FieldLabelAnont(value = "Banco")
+	@FieldRequiredAnont(value = true)
+	@FieldColumnsAnont(value = 5)
+	@FieldMaxLengthAnont(value = 3)
+	@FieldMinValueIntegerAnont(value = 0)
+	@FieldMaxValueIntegerAnont(value = 999)
+	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[BANCO]", classAttDB = Integer.class)
 	private Integer codigo;
 
-	@LabelAnont(value = "Nombre")
-	@RequiredAnont(value = true)
-	@ColumnsAnont(value = 40)
-	@MaxLengthAnont(value = 40)
-	@ColumnMetaDataAnont(attSize = 350)
+	@FieldLabelAnont(value = "Nombre")
+	@FieldRequiredAnont(value = true)
+	@FieldColumnsAnont(value = 40)
+	@FieldMaxLengthAnont(value = 40)
+	@FieldColumnMetaDataAnont(attSize = 350)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[NOMBRE]", classAttDB = String.class)
 	private String nombre;
 
-	@LabelAnont(value = "CUIT")
-	@RequiredAnont(value = true)
-	@ColumnsAnont(value = 11)
-	@MaxLengthAnont(value = 11)
-	@MinValueBigDecimalAnont(value = "0")
-	@MaxValueBigDecimalAnont(value = "99999999999")
-	@AllowDecimalAnont(value = false)
-	@InputMaskAnont(mask = "99-99999999-9")
-	@ColumnMetaDataAnont(attSize = 100)
+	@FieldLabelAnont(value = "CUIT")
+	@FieldRequiredAnont(value = true)
+	@FieldColumnsAnont(value = 11)
+	@FieldMinLengthAnont(value = 11)
+	@FieldMaxLengthAnont(value = 11)
+	@FieldMinValueBigDecimalAnont(value = "0")
+	@FieldMaxValueBigDecimalAnont(value = "99999999999")
+	@FieldAllowDecimalAnont(value = false)
+	@FieldInputMaskAnont(mask = "99-99999999-9")
+	@FieldColumnMetaDataAnont(attSize = 100)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[CUIT]", classAttDB = BigDecimal.class)
 	private BigDecimal cuit;
 
-	@LabelAnont(value = "Bloqueado")
+	@FieldLabelAnont(value = "Bloqueado")
+	@FieldNameMSAnont(nameAttDB = "[BLOQUEADO]", classAttDB = Boolean.class)
 	private Boolean bloqueado;
 
-	@LabelAnont(value = "Nombre oficial")
-	@RequiredAnont(value = true)
-	@ColumnsAnont(value = 40)
-	@MaxLengthAnont(value = 40)
-	@ColumnMetaDataAnont(attSize = 350)
+	@FieldLabelAnont(value = "Nombre oficial")
+	@FieldRequiredAnont(value = true)
+	@FieldColumnsAnont(value = 40)
+	@FieldMaxLengthAnont(value = 40)
+	@FieldColumnMetaDataAnont(attSize = 350)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[NOMBRECOMPLETO]", classAttDB = String.class)
 	private String nombreOficial;
 
-	@LabelAnont(value = "Hoja")
-	@ColumnsAnont(value = 5)
-	@MaxLengthAnont(value = 3)
-	@MinValueIntegerAnont(value = 0)
-	@MaxValueIntegerAnont(value = 231)
-	@ColumnMetaDataAnont(hidden = true)
+	@FieldLabelAnont(value = "Hoja")
+	@FieldColumnsAnont(value = 5)
+	@FieldMaxLengthAnont(value = 3)
+	@FieldMinValueIntegerAnont(value = 0)
+	@FieldMaxValueIntegerAnont(value = 231)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[HOJA]", classAttDB = Short.class)
 	private Integer hoja;
 
-	@LabelAnont(value = "Primera fila")
-	@ColumnsAnont(value = 6)
-	@MaxLengthAnont(value = 6)
-	@MinValueIntegerAnont(value = 0)
-	@MaxValueIntegerAnont(value = 999999)
-	@ColumnMetaDataAnont(hidden = true)
+	@FieldLabelAnont(value = "Primera fila")
+	@FieldColumnsAnont(value = 6)
+	@FieldMaxLengthAnont(value = 6)
+	@FieldMinValueIntegerAnont(value = 0)
+	@FieldMaxValueIntegerAnont(value = 999999)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[PRIMERAFILA]", classAttDB = Integer.class)
 	private Integer primeraFila;
 
-	@LabelAnont(value = "Última fila")
-	@ColumnsAnont(value = 6)
-	@MaxLengthAnont(value = 6)
-	@MinValueIntegerAnont(value = 0)
-	@MaxValueIntegerAnont(value = 999999)
-	@ColumnMetaDataAnont(hidden = true)
+	@FieldLabelAnont(value = "Última fila")
+	@FieldColumnsAnont(value = 6)
+	@FieldMaxLengthAnont(value = 6)
+	@FieldMinValueIntegerAnont(value = 0)
+	@FieldMaxValueIntegerAnont(value = 999999)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[ULTIMAFILA]", classAttDB = Integer.class)
 	private Integer uiltimaFila;
 
-	@LabelAnont(value = "Fecha")
-	@ColumnsAnont(value = 5)
-	@MaxLengthAnont(value = 3)
-	@ColumnMetaDataAnont(hidden = true)
+	@FieldLabelAnont(value = "Fecha")
+	@FieldColumnsAnont(value = 5)
+	@FieldMaxLengthAnont(value = 3)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[COLUMNAFECHA]", classAttDB = String.class)
 	private String columnaFecha;
 
-	@LabelAnont(value = "Descripción")
-	@ColumnsAnont(value = 5)
-	@MaxLengthAnont(value = 3)
-	@ColumnMetaDataAnont(hidden = true)
+	@FieldLabelAnont(value = "Descripción")
+	@FieldColumnsAnont(value = 5)
+	@FieldMaxLengthAnont(value = 3)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[COLUMNADESCRIPCION]", classAttDB = String.class)
 	private String columnaDescripcion;
 
-	@LabelAnont(value = "Referencia 1")
-	@ColumnsAnont(value = 5)
-	@MaxLengthAnont(value = 3)
-	@ColumnMetaDataAnont(hidden = true)
+	@FieldLabelAnont(value = "Referencia 1")
+	@FieldColumnsAnont(value = 5)
+	@FieldMaxLengthAnont(value = 3)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[COLUMNAREFERENCIA1]", classAttDB = String.class)
 	private String columnaReferencia1;
 
-	@LabelAnont(value = "Referencia 2")
-	@ColumnsAnont(value = 5)
-	@MaxLengthAnont(value = 3)
-	@ColumnMetaDataAnont(hidden = true)
+	@FieldLabelAnont(value = "Referencia 2")
+	@FieldColumnsAnont(value = 5)
+	@FieldMaxLengthAnont(value = 3)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[COLUMNAREFERENCIA2]", classAttDB = String.class)
 	private String columnaReferencia2;
 
-	@LabelAnont(value = "Importe")
-	@ColumnsAnont(value = 5)
-	@MaxLengthAnont(value = 3)
-	@ColumnMetaDataAnont(hidden = true)
+	@FieldLabelAnont(value = "Importe")
+	@FieldColumnsAnont(value = 5)
+	@FieldMaxLengthAnont(value = 3)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[COLUMNAIMPORTE]", classAttDB = String.class)
 	private String columnaImporte;
 
-	@LabelAnont(value = "Saldo")
-	@ColumnsAnont(value = 5)
-	@MaxLengthAnont(value = 3)
-	@ColumnMetaDataAnont(hidden = true)
+	@FieldLabelAnont(value = "Saldo")
+	@FieldColumnsAnont(value = 5)
+	@FieldMaxLengthAnont(value = 3)
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldNameMSAnont(nameAttDB = "[COLUMNASALDO]", classAttDB = String.class)
 	private String columnaSaldo;
 
 	public Integer getCodigo() {

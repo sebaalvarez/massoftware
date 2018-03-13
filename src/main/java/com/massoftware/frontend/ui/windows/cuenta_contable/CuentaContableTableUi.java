@@ -15,6 +15,7 @@ import com.massoftware.model.CuentaContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.Usuario;
+import com.vaadin.data.Property;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.StringToBooleanConverter;
@@ -84,6 +85,9 @@ public class CuentaContableTableUi extends CustomComponent {
 	protected HorizontalLayout barraDeHerramientasFila2;
 	protected Button eliminarBTN;
 
+	protected HorizontalLayout barraDeHerramientasFila3;
+	protected Button seleccionarBTN;
+
 	// ----------------------------------------------
 	// OPCIONES
 
@@ -102,19 +106,55 @@ public class CuentaContableTableUi extends CustomComponent {
 
 	// ----------------------------------------------
 
-	public CuentaContableTableUi(Window window, BackendContext cx, Usuario usuario) {
+	private Object searchFilter;
+	@SuppressWarnings("rawtypes")
+	private Property searchProperty;
+
+	// ----------------------------------------------
+
+	public CuentaContableTableUi(Window window, BackendContext cx,
+			Usuario usuario, String pidFiltering, Object searchFilter,
+			@SuppressWarnings("rawtypes") Property searchProperty) {
 		super();
 		try {
 			this.window = window;
 			this.cx = cx;
 			this.usuario = usuario;
+			this.searchFilter = searchFilter;
+			this.searchProperty = searchProperty;
+
+			this.window = window;
+			window.setCaption("Plan de cuentas");
+			window.setImmediate(true);
+			window.setWidth("-1px");
+			window.setHeight("-1px");
+			window.setClosable(true);
+			window.setResizable(false);
+			window.setModal(false);
+			window.center();
+			window.setContent((Component) this);
+			// getUI().addWindow(window);
+			window.center();
+
+			if (this.searchFilter != null) {
+				window.setModal(true);
+				this.pidFiltering = pidFiltering;
+			}
+
 			viewPort768x1024();
 			loadOptionsViewPort768x1024();
+
+			if (this.searchFilter != null) {
+				filtroGenericoTXT.setValue(this.searchFilter.toString());
+				filtroGenericoTXTTextChange(filtroGenericoTXT.getValue());
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void viewPort768x1024() throws Exception {
 
 		ejerciciosContablesBIC = new BeanItemContainer<EjercicioContable>(
@@ -283,7 +323,9 @@ public class CuentaContableTableUi extends CustomComponent {
 
 		// ----------------------------------------------
 
-		pidFiltering = "codigoCuenta";
+		if (searchFilter == null) {
+			pidFiltering = "codigoCuenta";
+		}
 
 		filtroGenericoTXT = new TextField();
 		filtroGenericoTXT.addStyleName("tiny");
@@ -521,6 +563,46 @@ public class CuentaContableTableUi extends CustomComponent {
 
 		barraDeHerramientasFila2.addComponent(eliminarBTN);
 
+		// ----------------------------------------------
+
+		if (this.searchFilter != null) {
+			barraDeHerramientasFila3 = new HorizontalLayout();
+			barraDeHerramientasFila3.setSpacing(true);
+
+			rootVL.addComponent(barraDeHerramientasFila3);
+			rootVL.setComponentAlignment(barraDeHerramientasFila3,
+					Alignment.MIDDLE_CENTER);
+
+			// ----------------------------------------------
+
+			seleccionarBTN = new Button();
+			seleccionarBTN.addStyleName(ValoTheme.BUTTON_PRIMARY);
+			seleccionarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+			seleccionarBTN.setIcon(FontAwesome.CHECK_SQUARE_O);
+			seleccionarBTN.setCaption("Seleccionar");
+
+			seleccionarBTN.addClickListener(e -> {
+
+				try {
+
+					if (planDeCuentasGRD.getSelectedRow() != null) {
+
+						CuentaContable item = (CuentaContable) planDeCuentasGRD
+								.getSelectedRow();
+						searchProperty.setValue(item);
+//						System.out.println(item.toString());
+						window.close();
+					}
+
+				} catch (Exception ex) {
+					LogAndNotification.print(ex);
+				}
+			});
+
+			barraDeHerramientasFila3.addComponent(seleccionarBTN);
+
+		}
+
 		// --------------------------------------------------
 
 		// this.addShortcutListener(new ShortcutListener("ENTER", KeyCode.ENTER,
@@ -664,8 +746,8 @@ public class CuentaContableTableUi extends CustomComponent {
 
 				Window win = new Window();
 
-				CuentaContableFormUi ui = new CuentaContableFormUi(win, cx, this,
-						planDeCuenta, false);
+				CuentaContableFormUi ui = new CuentaContableFormUi(win, cx,
+						this, planDeCuenta, false);
 
 				win.setCaption("Modificar cuenta contable");
 				win.setImmediate(true);
@@ -709,8 +791,8 @@ public class CuentaContableTableUi extends CustomComponent {
 
 				Window win = new Window();
 
-				CuentaContableFormUi ui = new CuentaContableFormUi(win, cx, this,
-						planDeCuentaNew);
+				CuentaContableFormUi ui = new CuentaContableFormUi(win, cx,
+						this, planDeCuentaNew);
 
 				win.setCaption("Copiar cuenta contable");
 				win.setImmediate(true);
@@ -849,6 +931,9 @@ public class CuentaContableTableUi extends CustomComponent {
 			modificarBTN.setEnabled(enabled);
 			copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
+			if(seleccionarBTN != null){
+				seleccionarBTN.setEnabled(enabled);	
+			}
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -1031,6 +1116,9 @@ public class CuentaContableTableUi extends CustomComponent {
 			planDeCuentasGRD.setEnabled(enabled);
 			barraDeHerramientasFila1.setEnabled(enabled);
 			barraDeHerramientasFila2.setEnabled(enabled);
+			if(seleccionarBTN != null){
+				seleccionarBTN.setEnabled(enabled);	
+			}
 
 			if (enabled) {
 				loadModelViewPort768x1024();
@@ -1069,6 +1157,10 @@ public class CuentaContableTableUi extends CustomComponent {
 			eliminarBTN.setEnabled(enabled);
 			// barraDeHerramientasFila1.setEnabled(enabled);
 			// barraDeHerramientasFila2.setEnabled(enabled);
+			
+			if(seleccionarBTN != null){
+				seleccionarBTN.setEnabled(enabled);	
+			}
 
 			if (enabled) {
 
@@ -1112,6 +1204,10 @@ public class CuentaContableTableUi extends CustomComponent {
 			eliminarBTN.setEnabled(enabled);
 			// barraDeHerramientasFila1.setEnabled(enabled);
 			// barraDeHerramientasFila2.setEnabled(enabled);
+			if(seleccionarBTN != null){
+				seleccionarBTN.setEnabled(enabled);	
+			}
+			
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
