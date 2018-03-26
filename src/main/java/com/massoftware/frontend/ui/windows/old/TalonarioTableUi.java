@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.tipo_cbte_control;
+package com.massoftware.frontend.ui.windows.old;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +10,12 @@ import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
 import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.frontend.ui.util.YesNoDialog;
-import com.massoftware.frontend.ui.windows.deposito.DepositoFormUi;
-import com.massoftware.model.Deposito;
-import com.massoftware.model.TipoCbteControl;
+import com.massoftware.model.Sucursal;
+import com.massoftware.model.Talonario;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -33,16 +33,17 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class TipoCbteControlTableUi extends CustomComponent {
+class TalonarioTableUi extends CustomComponent {
 
 	// ----------------------------------------------
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6282458747672426781L;
+	private static final long serialVersionUID = -6282458147672426781L;
 
 	private Window window;
 	private BackendContext cx;
@@ -59,24 +60,24 @@ public class TipoCbteControlTableUi extends CustomComponent {
 	private TextField filtroGenericoTXT;
 	private Button removerFiltroGenericoBTN;
 
-	private Grid tipoCbteControlGRD;
+	private Grid talonarioGRD;
 
 	private HorizontalLayout barraDeHerramientasFila1;
 	private Button agregarBTN;
 	private Button modificarBTN;
-	// private Button copiarBTN;
+	private Button copiarBTN;
 	private HorizontalLayout barraDeHerramientasFila2;
 	private Button eliminarBTN;
 
 	// ----------------------------------------------
 	// OPCIONES
 
-	// sin opciones !!
+	// No hay opciones (por je. ComboBox)
 
 	// ----------------------------------------------
 	// MODELO
 
-	private BeanItemContainer<TipoCbteControl> tipoCbteControlBIC;
+	private BeanItemContainer<Talonario> talonarioBIC;
 
 	// ----------------------------------------------
 
@@ -84,8 +85,7 @@ public class TipoCbteControlTableUi extends CustomComponent {
 
 	// ----------------------------------------------
 
-	public TipoCbteControlTableUi(Window window, BackendContext cx,
-			Usuario usuario) {
+	public TalonarioTableUi(Window window, BackendContext cx, Usuario usuario) {
 		super();
 		try {
 			this.window = window;
@@ -100,8 +100,8 @@ public class TipoCbteControlTableUi extends CustomComponent {
 
 	private void viewPort768x1024() throws Exception {
 
-		tipoCbteControlBIC = new BeanItemContainer<TipoCbteControl>(
-				TipoCbteControl.class, new ArrayList<TipoCbteControl>());
+		talonarioBIC = new BeanItemContainer<Talonario>(Talonario.class,
+				new ArrayList<Talonario>());
 
 		// ----------------------------------------------
 
@@ -133,8 +133,8 @@ public class TipoCbteControlTableUi extends CustomComponent {
 		filtroGenericoTXT = new TextField();
 		filtroGenericoTXT.addStyleName("tiny");
 		filtroGenericoTXT.setIcon(FontAwesome.SEARCH);
-		filtroGenericoTXT.setCaption("Tipo cbte.");
-		filtroGenericoTXT.setInputPrompt("Tipo cbte.");
+		filtroGenericoTXT.setCaption("Número");
+		filtroGenericoTXT.setInputPrompt("Número");
 		filtroGenericoTXT.setImmediate(true);
 		filtroGenericoTXT.setNullRepresentation("");
 
@@ -168,28 +168,33 @@ public class TipoCbteControlTableUi extends CustomComponent {
 
 		// ----------------------------------------------
 
-		tipoCbteControlGRD = new Grid();
-		tipoCbteControlGRD.addStyleName("small compact");
-		tipoCbteControlGRD.setWidth("100%");
+		talonarioGRD = new Grid();
+		talonarioGRD.addStyleName("small compact");
+		talonarioGRD.setWidth("100%");
 		// centrosDeCostoContableGRD.setHeight("400px");
-		tipoCbteControlGRD.setSelectionMode(SelectionMode.SINGLE);
-		tipoCbteControlGRD.setImmediate(true);
+		talonarioGRD.setSelectionMode(SelectionMode.SINGLE);
+		talonarioGRD.setImmediate(true);
 
-		String[] attNames = { "codigo", "nombre", "abreviatura",
-				"columnaInforme" };
+		String[] attNames = { "codigo", "nombre", "letra", "sucursal",
+				"autonumeracion", "numeracionPreImpresa", "asociadoAlRG10098",
+				"asociadoAControladorFiscal", "primerNumero", "proximoNumero",
+				"ultimoNumero", "cantidadMinimaComprobantes", "ultimaFecha",
+				"numeroCAI", "vencimientoCAI", "diasAvisoVencimiento" };
 
-		String[] attLabels = { "Tipo cbte.", "Nombre", "Abrev.", "Columna" };
+		String[] attLabels = { "Nro.", "Nombre", "Letra", "Sucursal",
+				"Autonumeracion", "Num. Pre-Impresa", "RG10098",
+				"Ctrl. Fiscal", "1er numero", "Prox. nro.", "Último nro.",
+				"Cant. min. compr.", "Fecha", "CAI", "Venc. CAI",
+				"Dias aviso venc." };
 
-		tipoCbteControlGRD.setColumns((Object[]) attNames);
+		talonarioGRD.setColumns((Object[]) attNames);
 
 		// .......
-
-		int width = 0;
 
 		for (int i = 0; i < attNames.length; i++) {
 			String attName = attNames[i];
 			String attLabel = attLabels[i];
-			Column column = tipoCbteControlGRD.getColumn(attName);
+			Column column = talonarioGRD.getColumn(attName);
 			column.setHidable(true);
 			column.setHeaderCaption(attLabel);
 
@@ -200,44 +205,51 @@ public class TipoCbteControlTableUi extends CustomComponent {
 			} else if (i == 2) {
 				column.setWidth(80);
 			} else if (i == 3) {
-				column.setWidth(80);
-			} else if (i == 4) {
+				column.setWidth(150);
+			} else if (i == 9) {
 				column.setWidth(80);
 			} else {
-				// column.setHidden(true);
+				column.setHidden(true);
 			}
-
-			width += column.getWidth();
 
 		}
 
-		tipoCbteControlGRD.setWidth(width + "px");
+		int width = 80 + 150 + 80 + 150 + 80;
+		talonarioGRD.setWidth(width + "px");
 
 		// .......
 
-		tipoCbteControlGRD.setContainerDataSource(tipoCbteControlBIC);
+		talonarioGRD.setContainerDataSource(talonarioBIC);
 
 		// .......
 
-		// PARA EL CASO DE COLUMNAS BOOLEAN
-		// tipoCbteControlGRD.getColumn("depositoActivo").setRenderer(
-		// new HtmlRenderer(),
-		// new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
-		// .getHtml(), FontAwesome.SQUARE_O.getHtml()));
+		talonarioGRD.getColumn("autonumeracion").setRenderer(
+				new HtmlRenderer(),
+				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+
+		talonarioGRD.getColumn("numeracionPreImpresa").setRenderer(
+				new HtmlRenderer(),
+				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+
+		talonarioGRD.getColumn("asociadoAlRG10098").setRenderer(
+				new HtmlRenderer(),
+				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
 
 		// .......
 
 		List<SortOrder> order = new ArrayList<SortOrder>();
 		order.add(new SortOrder(pidFiltering, SortDirection.ASCENDING));
-		tipoCbteControlGRD.setSortOrder(order);
+		talonarioGRD.setSortOrder(order);
 
-		tipoCbteControlGRD.addSortListener(e -> {
+		talonarioGRD.addSortListener(e -> {
 			sort();
 		});
 
-		rootVL.addComponent(tipoCbteControlGRD);
-		rootVL.setComponentAlignment(tipoCbteControlGRD,
-				Alignment.MIDDLE_CENTER);
+		rootVL.addComponent(talonarioGRD);
+		rootVL.setComponentAlignment(talonarioGRD, Alignment.MIDDLE_CENTER);
 
 		// ----------------------------------------------
 
@@ -278,17 +290,17 @@ public class TipoCbteControlTableUi extends CustomComponent {
 
 		// ----------------------------------------------
 
-		// copiarBTN = new Button();
-		// copiarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-		// copiarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-		// copiarBTN.setIcon(FontAwesome.PLUS_SQUARE);
-		// copiarBTN.setCaption("Copiar");
-		// copiarBTN.setDescription(copiarBTN.getCaption() + " (Ctrl+C)");
-		// copiarBTN.addClickListener(e -> {
-		// copiarBTNClick();
-		// });
-		//
-		// barraDeHerramientasFila1.addComponent(copiarBTN);
+		copiarBTN = new Button();
+		copiarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+		copiarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+		copiarBTN.setIcon(FontAwesome.PLUS_SQUARE);
+		copiarBTN.setCaption("Copiar");
+		copiarBTN.setDescription(copiarBTN.getCaption() + " (Ctrl+C)");
+		copiarBTN.addClickListener(e -> {
+			copiarBTNClick();
+		});
+
+		barraDeHerramientasFila1.addComponent(copiarBTN);
 
 		// ----------------------------------------------
 
@@ -322,7 +334,7 @@ public class TipoCbteControlTableUi extends CustomComponent {
 
 			@Override
 			public void handleAction(Object sender, Object target) {
-				if (target.equals(tipoCbteControlGRD)) {
+				if (target.equals(talonarioGRD)) {
 					modificarBTNClick();
 				}
 
@@ -355,16 +367,16 @@ public class TipoCbteControlTableUi extends CustomComponent {
 		});
 		// --------------------------------------------------
 
-		// this.addShortcutListener(new ShortcutListener("CTRL+C", KeyCode.C,
-		// new int[] { ModifierKey.CTRL }) {
-		//
-		// private static final long serialVersionUID = 1L;
-		//
-		// @Override
-		// public void handleAction(Object sender, Object target) {
-		// copiarBTNClick();
-		// }
-		// });
+		this.addShortcutListener(new ShortcutListener("CTRL+C", KeyCode.C,
+				new int[] { ModifierKey.CTRL }) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				copiarBTNClick();
+			}
+		});
 
 		// ----------------------------------------------
 
@@ -373,10 +385,10 @@ public class TipoCbteControlTableUi extends CustomComponent {
 	private void agregarBTNClick() {
 		try {
 
-			tipoCbteControlGRD.select(null);
+			talonarioGRD.select(null);
 
-			TipoCbteControlFormUi ui = new TipoCbteControlFormUi(StandardFormUi.INSERT_MODE,
-					cx, null, this);
+			TalonarioFormUi ui = new TalonarioFormUi(
+					StandardFormUi.INSERT_MODE, cx, null, this);
 			getUI().addWindow(ui.getWindow());
 
 		} catch (Exception e) {
@@ -387,11 +399,11 @@ public class TipoCbteControlTableUi extends CustomComponent {
 	private void modificarBTNClick() {
 		try {
 
-			if (tipoCbteControlGRD.getSelectedRow() != null) {
+			if (talonarioGRD.getSelectedRow() != null) {
 
-				TipoCbteControl item = (TipoCbteControl) tipoCbteControlGRD.getSelectedRow();
+				Talonario item = (Talonario) talonarioGRD.getSelectedRow();
 
-				TipoCbteControlFormUi ui = new TipoCbteControlFormUi(
+				TalonarioFormUi ui = new TalonarioFormUi(
 						StandardFormUi.UPDATE_MODE, cx, item, this);
 				getUI().addWindow(ui.getWindow());
 
@@ -402,37 +414,36 @@ public class TipoCbteControlTableUi extends CustomComponent {
 		}
 	}
 
-	// private void copiarBTNClick() {
-	// try {
-	//
-	// if (tipoCbteControlGRD.getSelectedRow() != null) {
-	//
-	// Deposito item = (Deposito) depositoGRD.getSelectedRow();
+	private void copiarBTNClick() {
+		try {
 
-	// Deposito itemNew = item.clone();
-	//
-	// DepositoFormUi ui = new DepositoFormUi(
-	// StandardFormUi.COPY_MODE, cx, itemNew, this);
-	// getUI().addWindow(ui.getWindow());
-	// }
-	//
-	// } catch (Exception e) {
-	// LogAndNotification.print(e);
-	// }
-	// }
+			if (talonarioGRD.getSelectedRow() != null) {
+
+				Talonario item = (Talonario) talonarioGRD.getSelectedRow();
+
+				Talonario itemNew = item.clone();
+
+				TalonarioFormUi ui = new TalonarioFormUi(
+						StandardFormUi.COPY_MODE, cx, itemNew, this);
+				getUI().addWindow(ui.getWindow());
+			}
+
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
 
 	private void eliminarBTNClick() {
 		try {
 
-			if (tipoCbteControlGRD.getSelectedRow() != null) {
+			if (talonarioGRD.getSelectedRow() != null) {
 
-				TipoCbteControl item = (TipoCbteControl) tipoCbteControlGRD
-						.getSelectedRow();
+				Talonario item = (Talonario) talonarioGRD.getSelectedRow();
 
 				getUI().addWindow(
 						new YesNoDialog("Eliminar",
-								"Esta seguro de eliminar el Tipo cbte. control - Stock "
-										+ item, new YesNoDialog.Callback() {
+								"Esta seguro de eliminar el talonario " + item,
+								new YesNoDialog.Callback() {
 									public void onDialogResult(boolean yes) {
 										if (yes) {
 											delete();
@@ -449,22 +460,19 @@ public class TipoCbteControlTableUi extends CustomComponent {
 	private void delete() {
 		try {
 
-			if (tipoCbteControlGRD.getSelectedRow() != null) {
+			if (talonarioGRD.getSelectedRow() != null) {
 
-				TipoCbteControl item = (TipoCbteControl) tipoCbteControlGRD
-						.getSelectedRow();
+				Talonario item = (Talonario) talonarioGRD.getSelectedRow();
 				try {
 
 					// cx.buildPuntoDeEquilibrioBO().delete((Sucursal) item);
 
 				} catch (DeleteForeingObjectConflictException e) {
-					LogAndNotification.print(e, "Tipo cbte. control - Stock "
-							+ item.getId());
+					LogAndNotification.print(e, "Talonario " + item.getId());
 					return;
 				}
 
-				String msg = "Se eliminó con éxito el Tipo cbte. control - Stock "
-						+ item;
+				String msg = "Se eliminó con éxito el talonario " + item;
 
 				LogAndNotification.printSuccessOk(msg);
 
@@ -472,7 +480,7 @@ public class TipoCbteControlTableUi extends CustomComponent {
 			}
 
 		} catch (DeleteForeingObjectConflictException e) {
-			LogAndNotification.print(e, "Tipo cbte. control - Stock");
+			LogAndNotification.print(e, "Talonario");
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -491,7 +499,7 @@ public class TipoCbteControlTableUi extends CustomComponent {
 		try {
 
 			@SuppressWarnings("unchecked")
-			BeanItemContainer<TipoCbteControl> container = ((BeanItemContainer<TipoCbteControl>) tipoCbteControlGRD
+			BeanItemContainer<Talonario> container = ((BeanItemContainer<Talonario>) talonarioGRD
 					.getContainerDataSource());
 
 			container.removeAllContainerFilters();
@@ -503,13 +511,13 @@ public class TipoCbteControlTableUi extends CustomComponent {
 						SimpleStringTraslateFilter.CONTAINS_WORDS_AND));
 
 			}
-			tipoCbteControlGRD.recalculateColumnWidths();
+			talonarioGRD.recalculateColumnWidths();
 
-			boolean enabled = tipoCbteControlBIC.size() > 0;
+			boolean enabled = talonarioBIC.size() > 0;
 
-			tipoCbteControlGRD.setEnabled(enabled);
+			talonarioGRD.setEnabled(enabled);
 			modificarBTN.setEnabled(enabled);
-			// copiarBTN.setEnabled(enabled);
+			copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
 
 		} catch (Exception e) {
@@ -528,16 +536,24 @@ public class TipoCbteControlTableUi extends CustomComponent {
 
 	private void sort() {
 		try {
-			pidFiltering = tipoCbteControlGRD.getSortOrder().get(0)
-					.getPropertyId().toString();
+			pidFiltering = talonarioGRD.getSortOrder().get(0).getPropertyId()
+					.toString();
 
 			// pidFiltering = attName;
 
-			String caption = tipoCbteControlGRD.getColumn(pidFiltering)
+			String caption = talonarioGRD.getColumn(pidFiltering)
 					.getHeaderCaption();
 
 			filtroGenericoTXT.setCaption(caption);
-			filtroGenericoTXT.setInputPrompt("contiene ..");
+			if (pidFiltering.equals("autonumeracion")
+					|| pidFiltering.equals("numeracionPreImpresa")
+					|| pidFiltering.equals("asociadoAlRG10098")) {
+
+				filtroGenericoTXT
+						.setInputPrompt("s/n o vacio para ver todos ..");
+			} else {
+				filtroGenericoTXT.setInputPrompt("contiene ..");
+			}
 
 			filtroGenericoTXT
 					.setDescription(filtroGenericoTXT.getInputPrompt());
@@ -565,7 +581,7 @@ public class TipoCbteControlTableUi extends CustomComponent {
 
 			updateModelViewPort768x1024();
 
-			boolean enabled = tipoCbteControlBIC.size() > 0;
+			boolean enabled = talonarioBIC.size() > 0;
 
 			if (enabled) {
 
@@ -580,18 +596,18 @@ public class TipoCbteControlTableUi extends CustomComponent {
 	public void updateModelViewPort768x1024() throws Exception {
 		try {
 
-			List<TipoCbteControl> items = cx.buildBO(TipoCbteControl.class).findAll();
+			List<Talonario> items = cx.buildTalonarioBO().findAll();
 
-			tipoCbteControlBIC.removeAllItems();
-			for (TipoCbteControl item : items) {
-				tipoCbteControlBIC.addBean(item);
+			talonarioBIC.removeAllItems();
+			for (Talonario item : items) {
+				talonarioBIC.addBean(item);
 			}
 
-			boolean enabled = tipoCbteControlBIC.size() > 0;
+			boolean enabled = talonarioBIC.size() > 0;
 
-			tipoCbteControlGRD.setEnabled(enabled);
+			talonarioGRD.setEnabled(enabled);
 			modificarBTN.setEnabled(enabled);
-			// copiarBTN.setEnabled(enabled);
+			copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
 
 		} catch (Exception e) {

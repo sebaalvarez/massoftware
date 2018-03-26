@@ -14,6 +14,7 @@ import com.massoftware.annotation.model.ClassPluralLabelAnont;
 import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
 import com.massoftware.annotation.model.FieldLabelAnont;
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.xmd.BuilderXMD;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
@@ -35,6 +36,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -66,7 +68,7 @@ public class StandardTableUi<T> extends CustomComponent {
 	private TextField filtroGenericoTXT;
 	private Button removerFiltroGenericoBTN;
 
-	private Grid itemsGRD;
+	public Grid itemsGRD;
 
 	private HorizontalLayout barraDeHerramientasFila1;
 	private Button agregarBTN;
@@ -78,10 +80,14 @@ public class StandardTableUi<T> extends CustomComponent {
 	protected HorizontalLayout barraDeHerramientasFila3;
 	protected Button seleccionarBTN;
 
+	protected Label cantItemsLBL;
+
 	private boolean agregar;
 	private boolean modificar;
 	private boolean copiar;
 	private boolean eliminar;
+
+	private boolean shortcut = true;
 
 	// ----------------------------------------------
 	// OPCIONES
@@ -110,13 +116,14 @@ public class StandardTableUi<T> extends CustomComponent {
 
 	// ----------------------------------------------
 
-	public StandardTableUi(boolean agregar, boolean modificar, boolean copiar,
-			boolean eliminar, Window window, BackendContext cx,
-			Usuario usuario, Class<T> classModel, String pidFiltering,
-			Object searchFilter,
+	public StandardTableUi(boolean shortcut, boolean agregar,
+			boolean modificar, boolean copiar, boolean eliminar, Window window,
+			BackendContext cx, Usuario usuario, Class<T> classModel,
+			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 		super();
 		try {
+			this.shortcut = shortcut;
 			this.agregar = agregar;
 			this.modificar = modificar;
 			this.copiar = copiar;
@@ -129,20 +136,25 @@ public class StandardTableUi<T> extends CustomComponent {
 			this.searchProperty = searchProperty;
 
 			this.window = window;
-			window.setCaption(getLabel());
-			window.setImmediate(true);
-			window.setWidth("-1px");
-			window.setHeight("-1px");
-			window.setClosable(true);
-			window.setResizable(false);
-			window.setModal(false);
-			window.center();
-			window.setContent((Component) this);
-			// getUI().addWindow(window);
-			window.center();
+			if (this.window != null) {
+				this.window.setCaption(getLabel());
+				this.window.setImmediate(true);
+				this.window.setWidth("-1px");
+				this.window.setHeight("-1px");
+				this.window.setClosable(true);
+				this.window.setResizable(false);
+				this.window.setModal(false);
+				this.window.center();
+				this.window.setContent((Component) this);
+				// getUI().addWindow(window);
+				this.window.center();
+			}
 
 			if (this.searchFilter != null) {
-				window.setModal(true);
+				if (this.window != null) {
+					this.window.setModal(true);
+				}
+
 				this.pidFiltering = pidFiltering;
 			}
 
@@ -382,6 +394,12 @@ public class StandardTableUi<T> extends CustomComponent {
 		rootVL.addComponent(itemsGRD);
 		rootVL.setComponentAlignment(itemsGRD, Alignment.MIDDLE_CENTER);
 
+		cantItemsLBL = BuilderXMD.buildLBL();
+		cantItemsLBL.setCaption("Cantidad de items: 0");
+
+		rootVL.addComponent(cantItemsLBL);
+		rootVL.setComponentAlignment(cantItemsLBL, Alignment.MIDDLE_RIGHT);
+
 		// ----------------------------------------------
 
 		barraDeHerramientasFila1 = new HorizontalLayout();
@@ -468,56 +486,61 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		// --------------------------------------------------
 
-		this.addShortcutListener(new ShortcutListener("ENTER", KeyCode.ENTER,
-				new int[] {}) {
+		if (shortcut) {
 
-			private static final long serialVersionUID = 1L;
+			// --------------------------------------------------
+			this.addShortcutListener(new ShortcutListener("ENTER",
+					KeyCode.ENTER, new int[] {}) {
 
-			@Override
-			public void handleAction(Object sender, Object target) {
-				if (target.equals(itemsGRD)) {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void handleAction(Object sender, Object target) {
+					if (target.equals(itemsGRD)) {
+						modificarBTNClick();
+					}
+
+				}
+			});
+
+			// --------------------------------------------------
+
+			this.addShortcutListener(new ShortcutListener("CTRL+A", KeyCode.A,
+					new int[] { ModifierKey.CTRL }) {
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void handleAction(Object sender, Object target) {
+					agregarBTNClick();
+				}
+			});
+			// --------------------------------------------------
+
+			this.addShortcutListener(new ShortcutListener("CTRL+M", KeyCode.M,
+					new int[] { ModifierKey.CTRL }) {
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void handleAction(Object sender, Object target) {
 					modificarBTNClick();
 				}
+			});
+			// --------------------------------------------------
 
-			}
-		});
+			this.addShortcutListener(new ShortcutListener("CTRL+C", KeyCode.C,
+					new int[] { ModifierKey.CTRL }) {
 
-		// --------------------------------------------------
+				private static final long serialVersionUID = 1L;
 
-		this.addShortcutListener(new ShortcutListener("CTRL+A", KeyCode.A,
-				new int[] { ModifierKey.CTRL }) {
+				@Override
+				public void handleAction(Object sender, Object target) {
+					copiarBTNClick();
+				}
+			});
 
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void handleAction(Object sender, Object target) {
-				agregarBTNClick();
-			}
-		});
-		// --------------------------------------------------
-
-		this.addShortcutListener(new ShortcutListener("CTRL+M", KeyCode.M,
-				new int[] { ModifierKey.CTRL }) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void handleAction(Object sender, Object target) {
-				modificarBTNClick();
-			}
-		});
-		// --------------------------------------------------
-
-		this.addShortcutListener(new ShortcutListener("CTRL+C", KeyCode.C,
-				new int[] { ModifierKey.CTRL }) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void handleAction(Object sender, Object target) {
-				copiarBTNClick();
-			}
-		});
+		}
 
 		// ----------------------------------------------
 
@@ -545,7 +568,14 @@ public class StandardTableUi<T> extends CustomComponent {
 					if (itemsGRD.getSelectedRow() != null) {
 
 						T item = (T) itemsGRD.getSelectedRow();
-						searchProperty.setValue(item);
+
+						if (item != null && item instanceof EntityId) {
+							EntityId originalDTO = ((EntityId) item).clone();
+							searchProperty.setValue(originalDTO);
+						} else {
+							searchProperty.setValue(item);
+						}
+
 						window.close();
 					}
 
@@ -787,6 +817,8 @@ public class StandardTableUi<T> extends CustomComponent {
 			}
 			itemsGRD.recalculateColumnWidths();
 
+			cantItemsLBL.setCaption("Cantidad de items: " + itemsBIC.size());
+
 			boolean enabled = itemsBIC.size() > 0;
 
 			itemsGRD.setEnabled(enabled);
@@ -832,33 +864,6 @@ public class StandardTableUi<T> extends CustomComponent {
 				if (columnMetaData.getAttName().equals(pidFiltering)) {
 
 					setInputPromptFiltroGenericoTXT(columnMetaData);
-
-					// if (columnMetaData.getAttClass() == Boolean.class) {
-					// filtroGenericoTXT
-					// .setInputPrompt("s/n o vacio para ver todos ..");
-					// } else if (SimpleStringTraslateFilter.CONTAINS
-					// .equals(columnMetaData
-					// .getSimpleStringTraslateFilterMode())) {
-					// filtroGenericoTXT.setInputPrompt("contiene ..");
-					// } else if (SimpleStringTraslateFilter.CONTAINS_WORDS_AND
-					// .equals(columnMetaData
-					// .getSimpleStringTraslateFilterMode())) {
-					// filtroGenericoTXT
-					// .setInputPrompt("contiene las palabras ..");
-					// } else if (SimpleStringTraslateFilter.CONTAINS_WORDS_OR
-					// .equals(columnMetaData
-					// .getSimpleStringTraslateFilterMode())) {
-					// filtroGenericoTXT
-					// .setInputPrompt("contiene las palabras opcionales ..");
-					// } else if (SimpleStringTraslateFilter.STARTS_WITCH
-					// .equals(columnMetaData
-					// .getSimpleStringTraslateFilterMode())) {
-					// filtroGenericoTXT.setInputPrompt("comienza con ..");
-					// } else if (SimpleStringTraslateFilter.ENDS_WITCH
-					// .equals(columnMetaData
-					// .getSimpleStringTraslateFilterMode())) {
-					// filtroGenericoTXT.setInputPrompt("termina con ..");
-					// }
 
 					break;
 
@@ -926,6 +931,8 @@ public class StandardTableUi<T> extends CustomComponent {
 			for (T item : items) {
 				itemsBIC.addBean(item);
 			}
+
+			cantItemsLBL.setCaption("Cantidad de items: " + itemsBIC.size());
 
 			boolean enabled = itemsBIC.size() > 0;
 

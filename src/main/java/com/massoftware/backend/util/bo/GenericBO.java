@@ -22,6 +22,7 @@ import com.massoftware.annotation.model.FieldNowTimestampForInsertUpdate;
 import com.massoftware.annotation.model.FieldSubNameFKAnont;
 import com.massoftware.annotation.model.FieldUserForInsertUpdate;
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.ui.util.Traslate;
 import com.massoftware.model.Usuario;
 
 public abstract class GenericBO<T> {
@@ -65,9 +66,9 @@ public abstract class GenericBO<T> {
 			args = new Object[0];
 		}
 
-		String tableName = getViewName();
+		String viewName = getViewName();
 
-		String sql = "SELECT * FROM " + tableName;
+		String sql = "SELECT * FROM " + viewName;
 
 		if (where != null && where.trim().length() > 0) {
 			sql += " WHERE " + where;
@@ -132,7 +133,35 @@ public abstract class GenericBO<T> {
 
 	}
 
-	public void checkUnique(T dto) throws Exception {
+	public Integer maxValue(String attName) throws Exception {
+		return maxValueInteger(attName);
+	}
+
+	protected Integer maxValueInteger(String attName) throws Exception {
+
+		String viewName = getViewName();
+		String sql = "SELECT MAX(" + attName + ") + 1 FROM " + viewName;
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			Object[][] table = connectionWrapper.findToTable(sql);
+
+			return (Integer) table[0][0];
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
+	}
+
+	
+	
+	public void checkUnique(T dto, T dtoOriginal) throws Exception {
 
 	}
 
@@ -347,7 +376,7 @@ public abstract class GenericBO<T> {
 						String newFieldName = getSubNameFK(fields[i]);
 
 						System.out.println("XXXXXXXXXXXXXX " + newFieldName);
-						
+
 						methodName = "get"
 								+ newFieldName.substring(0, 1).toUpperCase()
 								+ newFieldName.substring(1,
@@ -627,6 +656,41 @@ public abstract class GenericBO<T> {
 
 		return (a != null && a.length > 0);
 
+	}
+
+	@SuppressWarnings("rawtypes")
+	protected boolean fullEquals(Class type, boolean ignoreCaseTraslate,
+			boolean ignoreCase, Object value, Object originalValue) {
+
+		if (type == String.class) {
+
+			value = value.toString().trim();
+
+			if (ignoreCaseTraslate
+					&& Traslate.translate(value.toString(), true)
+							.equalsIgnoreCase(
+									Traslate.translate(originalValue.toString()
+											.trim(), true))) {
+				return true;
+
+			}
+
+			if (ignoreCase
+					&& value.toString().equalsIgnoreCase(
+							originalValue.toString().trim())) {
+
+				return true;
+
+			}
+
+			if (value.equals(originalValue.toString().trim())) {
+
+				return true;
+			}
+
+		}
+
+		return value.equals(originalValue);
 	}
 
 }

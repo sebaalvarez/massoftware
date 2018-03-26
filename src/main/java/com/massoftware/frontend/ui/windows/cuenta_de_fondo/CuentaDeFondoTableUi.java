@@ -13,6 +13,7 @@ import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.frontend.ui.util.StandardTableUi;
 import com.massoftware.frontend.ui.util.YesNoDialog;
+import com.massoftware.frontend.ui.windows.chequera.ChequeraTableUi;
 import com.massoftware.frontend.xmd.BuilderXMD;
 import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.CuentaDeFondoA;
@@ -51,14 +52,41 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 	private HorizontalLayout treeBarraDeHerramientasFila2;
 	private Button treeEliminarBTN;
 
-	public CuentaDeFondoTableUi(boolean agregar, boolean modificar,
+	public CuentaDeFondoTableUi(boolean shortcut, boolean agregar, boolean modificar,
 			boolean copiar, boolean eliminar, Window window, BackendContext cx,
 			Usuario usuario, Class<CuentaDeFondoA> classModel,
 			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(agregar, modificar, copiar, eliminar, window, cx, usuario,
+		super(shortcut, agregar, modificar, copiar, eliminar, window, cx, usuario,
 				classModel, pidFiltering, searchFilter, searchProperty);
+
+		init(agregar, modificar, copiar, eliminar, window, cx, usuario,
+				classModel, pidFiltering, searchFilter, searchProperty, null);
+
+	}
+
+	public CuentaDeFondoTableUi(boolean shortcut, boolean agregar, boolean modificar,
+			boolean copiar, boolean eliminar, Window window, BackendContext cx,
+			Usuario usuario, Class<CuentaDeFondoA> classModel,
+			String pidFiltering, Object searchFilter,
+			@SuppressWarnings("rawtypes") Property searchProperty,
+			ChequeraTableUi chequeraTableUi) {
+
+		super(shortcut, agregar, modificar, copiar, eliminar, window, cx, usuario,
+				classModel, pidFiltering, searchFilter, searchProperty);
+
+		init(agregar, modificar, copiar, eliminar, window, cx, usuario,
+				classModel, pidFiltering, searchFilter, searchProperty, chequeraTableUi);
+
+	}
+
+	public void init(boolean agregar, boolean modificar, boolean copiar,
+			boolean eliminar, Window window, BackendContext cx,
+			Usuario usuario, Class<CuentaDeFondoA> classModel,
+			String pidFiltering, Object searchFilter,
+			@SuppressWarnings("rawtypes") Property searchProperty,
+			ChequeraTableUi chequeraTableUi) {
 
 		window.setWidth("1300px");
 
@@ -318,18 +346,18 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 				.findAll();
 
 		tree.addItem("Todos");
-		
+
 		int c = 0;
 
 		for (CuentaDeFondoRubro rubro : rubros) {
-			
+
 			tree.addItem(rubro);
 			tree.setParent(rubro, "Todos");
 
 			List<CuentaDeFondoGrupo> grupos = ((CuentaDeFondoGrupoBO) cx
 					.buildBO(CuentaDeFondoGrupo.class)).findByRubro(rubro
 					.getCodigo());
-			
+
 			for (CuentaDeFondoGrupo grupo : grupos) {
 				grupo._setfullToString(false);
 				tree.addItem(grupo);
@@ -347,7 +375,7 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 			tree.expandItem(rubro);
 
 		}
-		
+
 		tree.expandItem("Todos");
 
 	}
@@ -391,9 +419,13 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 						.findActivas((CuentaDeFondoRubro) item);
 			}
 		} else if (item.equals("Todos")) {
+
 			if (filtroTodasCHK.getValue() == true) {
-				return cx.buildBO(CuentaDeFondo.class).findAll();
+
+				return cx.buildBO(CuentaDeFondoA.class).findAll();
+
 			} else {
+
 				return ((CuentaDeFondoABO) cx.buildBO(CuentaDeFondoA.class))
 						.findActivas();
 			}

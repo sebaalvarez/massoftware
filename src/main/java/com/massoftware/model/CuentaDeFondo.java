@@ -11,13 +11,16 @@ import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassPluralLabelAnont;
 import com.massoftware.annotation.model.ClassTableMSAnont;
 import com.massoftware.annotation.model.FieldAllowDecimalAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
 import com.massoftware.annotation.model.FieldCBBox;
 import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
 import com.massoftware.annotation.model.FieldColumnsAnont;
 import com.massoftware.annotation.model.FieldLabelAnont;
 import com.massoftware.annotation.model.FieldMaxLengthAnont;
 import com.massoftware.annotation.model.FieldMaxValueBigDecimalAnont;
+import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
 import com.massoftware.annotation.model.FieldMinValueBigDecimalAnont;
+import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
 import com.massoftware.annotation.model.FieldNameMSAnont;
 import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.annotation.model.FieldSubNameFKAnont;
@@ -35,12 +38,15 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 
 	@FieldLabelAnont(value = "Cuenta")
 	@FieldRequiredAnont()
-	@FieldMaxLengthAnont(value = 11)
-	@FieldColumnsAnont(value = 11)
+	@FieldMaxLengthAnont(value = 10)
+	@FieldColumnsAnont(value = 10)
+	@FieldMinValueIntegerAnont(value = 1)
+	@FieldMaxValueIntegerAnont(value = Integer.MAX_VALUE)
 	@FieldColumnMetaDataAnont(attSize = 100, pidFilteringStart = true, simpleStringTraslateFilterMode = "STARTS_WITCH")
 	@FieldUniqueAnont()
-	@FieldNameMSAnont(nameAttDB = "[CUENTA]", classAttDB = String.class)
-	private String codigo;
+	@FieldAutoMaxValueAnont()
+	@FieldNameMSAnont(nameAttDB = "[CUENTA]", classAttDB = Integer.class)
+	private Integer codigo;
 
 	@FieldLabelAnont(value = "Nombre")
 	@FieldRequiredAnont()
@@ -180,7 +186,7 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldNameMSAnont(nameAttDB = "[CONCILIACION]", classAttDB = Boolean.class)
 	private Boolean conciliacion;
-	
+
 	@FieldLabelAnont(value = "Rechazados")
 	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldNameMSAnont(nameAttDB = "[CARTERARECHAZADOS]", classAttDB = Boolean.class)
@@ -189,15 +195,17 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	@FieldLabelAnont(value = "Puerta para uso de cta.")
 	// @FieldRequiredAnont()
 	@FieldColumnMetaDataAnont(hidden = true)
-	@FieldSubNameFKAnont(value = "codigo")
-	@FieldNameMSAnont(nameAttDB = "[DOORNO]", classAttDB = Integer.class)
+//	@FieldSubNameFKAnont(value = "codigo")
+//	@FieldNameMSAnont(nameAttDB = "[DOORNO]", classAttDB = Integer.class)
+	@FieldCBBox(attName = "codigo")
 	private SeguridadPuerta seguridadPuerta;
 
 	@FieldLabelAnont(value = "Puerta para consulta")
 	// @FieldRequiredAnont()
 	@FieldColumnMetaDataAnont(hidden = true)
-	@FieldSubNameFKAnont(value = "codigo")
-	@FieldNameMSAnont(nameAttDB = "[DOORNOCONSULTA]", classAttDB = Integer.class)
+//	@FieldSubNameFKAnont(value = "codigo")
+//	@FieldNameMSAnont(nameAttDB = "[DOORNOCONSULTA]", classAttDB = Integer.class)
+	@FieldCBBox(attName = "codigo")
 	private SeguridadPuerta puertaConsulta;
 
 	@FieldLabelAnont(value = "Límite operacion individual")
@@ -213,23 +221,27 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	@FieldLabelAnont(value = "Puerta, derecho para superar límite")
 	// @FieldRequiredAnont()
 	@FieldColumnMetaDataAnont(hidden = true)
-	@FieldSubNameFKAnont(value = "codigo")
-	@FieldNameMSAnont(nameAttDB = "[DOORNOLIMITE]", classAttDB = Integer.class)
+	// @FieldSubNameFKAnont(value = "codigo")
+	// @FieldNameMSAnont(nameAttDB = "[DOORNOLIMITE]", classAttDB =
+	// Integer.class)
+	@FieldCBBox(attName = "codigo")
 	private SeguridadPuerta puertaLimite;
 
-	public String getCodigo() {
+	public Integer getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(String codigo) {
+	public void setCodigo(Integer codigo) {
 		this.codigo = codigo;
 	}
 
 	public String getNombre() {
+		nombre = this.formatValue(nombre);
 		return nombre;
 	}
 
 	public void setNombre(String nombre) {
+		nombre = this.formatValue(nombre);
 		this.nombre = nombre;
 	}
 
@@ -238,6 +250,9 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	}
 
 	public void setCuentaDeFondoGrupo(CuentaDeFondoGrupo cuentaDeFondoGrupo) {
+		if (cuentaDeFondoGrupo != null && cuentaDeFondoGrupo.getId() == null) {
+			return;
+		}
 		this.cuentaDeFondoGrupo = cuentaDeFondoGrupo;
 	}
 
@@ -246,6 +261,9 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	}
 
 	public void setCuentaDeFondoTipo(CuentaDeFondoTipo cuentaDeFondoTipo) {
+		if (cuentaDeFondoTipo != null && cuentaDeFondoTipo.getId() == null) {
+			return;
+		}
 		this.cuentaDeFondoTipo = cuentaDeFondoTipo;
 	}
 
@@ -254,6 +272,9 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	}
 
 	public void setMoneda(Moneda moneda) {
+		if (moneda != null && moneda.getId() == null) {
+			return;
+		}
 		this.moneda = moneda;
 	}
 
@@ -262,6 +283,9 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	}
 
 	public void setCaja(Caja caja) {
+		if (caja != null && caja.getId() == null) {
+			return;
+		}
 		this.caja = caja;
 	}
 
@@ -271,6 +295,10 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 
 	public void setCuentaDeFondoTipoBanco(
 			CuentaDeFondoTipoBanco cuentaDeFondoTipoBanco) {
+		if (cuentaDeFondoTipoBanco != null
+				&& cuentaDeFondoTipoBanco.getId() == null) {
+			return;
+		}
 		this.cuentaDeFondoTipoBanco = cuentaDeFondoTipoBanco;
 	}
 
@@ -285,34 +313,42 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	}
 
 	public Boolean getNoImprimeCaja() {
+		noImprimeCaja = this.nullIsFalse(noImprimeCaja);
 		return noImprimeCaja;
 	}
 
 	public void setNoImprimeCaja(Boolean noImprimeCaja) {
+		noImprimeCaja = this.nullIsFalse(noImprimeCaja);
 		this.noImprimeCaja = noImprimeCaja;
 	}
 
 	public Boolean getModuloVentas() {
+		moduloVentas = this.nullIsFalse(moduloVentas);
 		return moduloVentas;
 	}
 
 	public void setModuloVentas(Boolean moduloVentas) {
+		moduloVentas = this.nullIsFalse(moduloVentas);
 		this.moduloVentas = moduloVentas;
 	}
 
 	public Boolean getModuloFondos() {
+		moduloFondos = this.nullIsFalse(moduloFondos);
 		return moduloFondos;
 	}
 
 	public void setModuloFondos(Boolean moduloFondos) {
+		moduloFondos = this.nullIsFalse(moduloFondos);
 		this.moduloFondos = moduloFondos;
 	}
 
 	public Boolean getModuloCompras() {
+		moduloCompras = this.nullIsFalse(moduloCompras);
 		return moduloCompras;
 	}
 
 	public void setModuloCompras(Boolean moduloCompras) {
+		moduloCompras = this.nullIsFalse(moduloCompras);
 		this.moduloCompras = moduloCompras;
 	}
 
@@ -321,6 +357,9 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	}
 
 	public void setCuentaContable(CuentaContable cuentaContable) {
+		if (cuentaContable != null && cuentaContable.getId() == null) {
+			return;
+		}
 		this.cuentaContable = cuentaContable;
 	}
 
@@ -331,6 +370,9 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	}
 
 	public void setCuentaDiferidos(CuentaDeFondoA cuentaDiferidos) {
+		if (cuentaDiferidos != null && cuentaDiferidos.getId() == null) {
+			return;
+		}
 		this.cuentaDiferidos = cuentaDiferidos;
 	}
 
@@ -339,6 +381,9 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	}
 
 	public void setCuentaCaucion(CuentaDeFondoA cuentaCaucion) {
+		if (cuentaCaucion != null && cuentaCaucion.getId() == null) {
+			return;
+		}
 		this.cuentaCaucion = cuentaCaucion;
 	}
 
@@ -355,42 +400,51 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	}
 
 	public void setBanco(Banco banco) {
+		if (banco != null && banco.getId() == null) {
+			return;
+		}
 		this.banco = banco;
 	}
 
 	public String getCuentaBancaria() {
+		cuentaBancaria = this.formatValue(cuentaBancaria);
 		return cuentaBancaria;
 	}
 
 	public void setCuentaBancaria(String cuentaBancaria) {
+		cuentaBancaria = this.formatValue(cuentaBancaria);
 		this.cuentaBancaria = cuentaBancaria;
 	}
 
 	public String getCbu() {
+		cbu = this.formatValue(cbu);
 		return cbu;
 	}
 
 	public void setCbu(String cbu) {
+		cbu = this.formatValue(cbu);
 		this.cbu = cbu;
 	}
 
 	public Boolean getConciliacion() {
+		conciliacion = this.nullIsFalse(conciliacion);
 		return conciliacion;
 	}
 
 	public void setConciliacion(Boolean conciliacion) {
+		conciliacion = this.nullIsFalse(conciliacion);
 		this.conciliacion = conciliacion;
 	}
-	
-	
 
 	// --------------------------------------------------------------------------
 
 	public Boolean getRechazados() {
+		rechazados = this.nullIsFalse(rechazados);
 		return rechazados;
 	}
 
 	public void setRechazados(Boolean rechazados) {
+		rechazados = this.nullIsFalse(rechazados);
 		this.rechazados = rechazados;
 	}
 
@@ -399,6 +453,9 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	}
 
 	public void setSeguridadPuerta(SeguridadPuerta seguridadPuerta) {
+		if (seguridadPuerta != null && seguridadPuerta.getId() == null) {
+			return;
+		}
 		this.seguridadPuerta = seguridadPuerta;
 	}
 
@@ -407,6 +464,9 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	}
 
 	public void setPuertaConsulta(SeguridadPuerta puertaConsulta) {
+		if (puertaConsulta != null && puertaConsulta.getId() == null) {
+			return;
+		}
 		this.puertaConsulta = puertaConsulta;
 	}
 
@@ -424,6 +484,9 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 	}
 
 	public void setPuertaLimite(SeguridadPuerta puertaLimite) {
+		if (puertaLimite != null && puertaLimite.getId() == null) {
+			return;
+		}
 		this.puertaLimite = puertaLimite;
 	}
 

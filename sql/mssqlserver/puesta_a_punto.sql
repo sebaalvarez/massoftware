@@ -74,18 +74,20 @@ CREATE VIEW [dbo].[vSeguridadPuerta] AS
 			-----------------------------------------------------------------------------------------------------
 			, CAST([SSECUR_Door].[NO] AS VARCHAR)										AS id			
 			-----------------------------------------------------------------------------------------------------
-			, CAST([SSECUR_Door].[NO] AS INTEGER)										AS codigo -- Integer [ 1 - N ] NOT NULL
+			, CAST([SSECUR_Door].[NO] AS INTEGER)										AS codigo -- Integer  NOT NULL UN [ 1 - Short.MAX_VALUE ]
 			-----------------------------------------------------------------------------------------------------
-				-- , [DGRPNO]															AS seguridadModulo			-- Id
-				, [vSeguridadModulo].[id]												AS seguridadModulo_id -- NOT NULL
+				-- , [DGRPNO]															AS seguridadModulo			-- NOT NULL
+				, [vSeguridadModulo].[id]												AS seguridadModulo_id		
 				, [vSeguridadModulo].[codigo]											AS seguridadModulo_codigo 
 				, [vSeguridadModulo].[nombre]											AS seguridadModulo_nombre 
 				, [vSeguridadModulo].[congelado]										AS seguridadModulo_congelado 
 			-----------------------------------------------------------------------------------------------------
-			, LTRIM(RTRIM(CAST([EQUATE] AS VARCHAR)))									AS igualacionID -- String (30) NOT NULL
-			, LTRIM(RTRIM(CAST([DESCRIPTION] AS VARCHAR)))								AS nombre -- String (60) NOT NULL
+			, LTRIM(RTRIM(CAST([EQUATE] AS VARCHAR)))									AS igualacionID -- String (30) NOT NULL UN
+			, LTRIM(RTRIM(CAST([DESCRIPTION] AS VARCHAR)))								AS nombre -- String (60) NOT NULL UN
 			, [SSECUR_Door].[FREEZE]													AS congelado -- Boolean  	
+
 	FROM	[dbo].[SSECUR_Door]
+
 	LEFT JOIN	[dbo].[vSeguridadModulo] 
 		ON [dbo].[vSeguridadModulo].[codigo] = CAST([dbo].[SSECUR_Door].[DGRPNO] AS INTEGER);
 
@@ -1149,7 +1151,7 @@ CREATE VIEW [dbo].[vCuentaDeFondo] AS
 			-----------------------------------------------------------------------------------------------------
 			, LTRIM(RTRIM(CAST([CuentasDeFondos].[CUENTA] AS VARCHAR)))												AS id	-- String NOT NULL PK			
 			-----------------------------------------------------------------------------------------------------			
-			, LTRIM(RTRIM(CAST([CuentasDeFondos].[CUENTA] AS VARCHAR)))												AS codigo	 -- String (11) NOT NULL UN 			
+			, CAST([CuentasDeFondos].[CUENTA] AS INTEGER)															AS codigo	 -- Integer NOT NULL UN  [1 - Integer.MAX_VALUE]				
 			, LTRIM(RTRIM(CAST([CuentasDeFondos].[NOMBRE] AS VARCHAR)))												AS nombre -- String (40) NOT NULL UN 			
 			-----------------------------------------------------------------------------------------------------			
 			/*
@@ -1208,12 +1210,12 @@ CREATE VIEW [dbo].[vCuentaDeFondo] AS
 			-----------------------------------------------------------------------------------------------------
 				--, [CuentasDeFondos].[CUENTADIFERIDOS]																AS cuentaDiferidos
 				, LTRIM(RTRIM(CAST([cuentaDiferidos].[CUENTA] AS VARCHAR)))											AS cuentaDiferidos_id	-- String NOT NULL PK	
-				, LTRIM(RTRIM(CAST([cuentaDiferidos].[CUENTA] AS VARCHAR)))											AS cuentaDiferidos_codigo	 -- String (11) NOT NULL UN 			
+				, CAST([CuentasDeFondos].[CUENTA] AS INTEGER)														AS cuentaDiferidos_codigo	 -- String (11) NOT NULL UN 			
 				, LTRIM(RTRIM(CAST([cuentaDiferidos].[NOMBRE] AS VARCHAR)))											AS cuentaDiferidos_nombre -- String (40) NOT NULL UN 	
 			-----------------------------------------------------------------------------------------------------
 				--, [CuentasDeFondos].[CUENTACAUCION]
 				, LTRIM(RTRIM(CAST([cuentaCaucion].[CUENTA] AS VARCHAR)))											AS cuentaCaucion_id	-- String NOT NULL PK	
-				, LTRIM(RTRIM(CAST([cuentaCaucion].[CUENTA] AS VARCHAR)))											AS cuentaCaucion_codigo	 -- String (11) NOT NULL UN 			
+				, CAST([CuentasDeFondos].[CUENTA] AS INTEGER)														AS cuentaCaucion_codigo	 -- String (11) NOT NULL UN 			
 				, LTRIM(RTRIM(CAST([cuentaCaucion].[NOMBRE] AS VARCHAR)))											AS cuentaCaucion_nombre -- String (40) NOT NULL UN 	
 			-----------------------------------------------------------------------------------------------------
 			, [CuentasDeFondos].[LIMITEDESCUBIERTO]																	AS limiteDescubierto -- BigDecimal (11,2) [ -999999.99 - 9999999.99] 
@@ -1317,24 +1319,14 @@ CREATE VIEW [dbo].[vCuentaDeFondo] AS
 				, [puertaLimite].igualacionID																	AS puertaLimite_igualacionID
 				, [puertaLimite].nombre																			AS puertaLimite_nombre
 				, [puertaLimite].congelado																		AS puertaLimite_congelado
-			-----------------------------------------------------------------------------------------------------			
-			
-
-
+			-----------------------------------------------------------------------------------------------------				
 
 			--, [CuentasDeFondos].[UNIDADMONETARIA] -- String (4) FK ?
-			--, [CuentasDeFondos].[COTIZACION] -- BigDecimal (9,3)
-			
-			
-			
-			
+			--, [CuentasDeFondos].[COTIZACION] -- BigDecimal (9,3)												
 			
 			--, [CuentasDeFondos].[DESTINOIMPRESIONTRANSF]
 			--, [CuentasDeFondos].[FORMATOTRANSF]
-			--, [CuentasDeFondos].[COPIASTRANSF]
-			
-			
-			
+			--, [CuentasDeFondos].[COPIASTRANSF]									
 			
 			--, [CuentasDeFondos].[FECHACIERRESQL]
 			--, [CuentasDeFondos].[SALDOCIERRE]
@@ -1342,8 +1334,7 @@ CREATE VIEW [dbo].[vCuentaDeFondo] AS
 			--, [CuentasDeFondos].[SALDODEPURADO]
 			--, [CuentasDeFondos].[SALDOCONCILIADO]
 			--, [CuentasDeFondos].[SALDOACTUAL]
-			--, [CuentasDeFondos].[NOMBRECOMPROBANTE]
-			
+			--, [CuentasDeFondos].[NOMBRECOMPROBANTE]			
 			
 			--, [CuentasDeFondos].[CUENTACONCILIACIONPENDIENTE]
 			--, [CuentasDeFondos].[CANTIDADCONCILIACIONPENDIENTE]
@@ -1379,11 +1370,11 @@ CREATE VIEW [dbo].[vCuentaDeFondo] AS
 
 
 	LEFT JOIN	[dbo].[CuentasDeFondos] AS [cuentaDiferidos]
-		ON  LTRIM(RTRIM(CAST([cuentaDiferidos].[CUENTA] AS VARCHAR))) = LTRIM(RTRIM(CAST([CuentasDeFondos].[CUENTA] AS VARCHAR)))
+		ON  CAST([cuentaDiferidos].[CUENTA] AS INTEGER) = CAST([CuentasDeFondos].[CUENTADIFERIDOS] AS INTEGER)
 
 
 	LEFT JOIN	[dbo].[CuentasDeFondos] AS [cuentaCaucion]
-		ON  LTRIM(RTRIM(CAST([cuentaCaucion].[CUENTA] AS VARCHAR))) = LTRIM(RTRIM(CAST([CuentasDeFondos].[CUENTA] AS VARCHAR)))
+		ON  CAST([cuentaCaucion].[CUENTA] AS INTEGER) = CAST([CuentasDeFondos].[CUENTACAUCION] AS INTEGER)
 
 	LEFT JOIN	[dbo].[vBanco] 
 			ON		[vBanco].[codigo] = CAST([dbo].[CuentasDeFondos].[BANCO] AS INTEGER)
@@ -1414,28 +1405,7 @@ CREATE VIEW [dbo].[vCuentaDeFondo] AS
 
 	-- SELECT * FROM dbo.vCuentaDeFondo WHERE (obsoleta = 0 OR obsoleta IS NULL) AND cuentaDeFondoGrupo_cuentaDeFondoRubro_codigo = 1 AND cuentaDeFondoGrupo_codigo = 1 AND cuentaDeFondoTipo_codigo = 1 ORDER BY codigo, nombre;;
 
--------------------------------------------------------------
-
--- DROP VIEW [dbo].[vCuentaDeFondoA]
-
-CREATE VIEW [dbo].[vCuentaDeFondoA] AS  
-
-	SELECT	'com.massoftware.model.CuentaDeFondoA' AS ClassCuentaDeFondoA
-		
-			-----------------------------------------------------------------------------------------------------
-			, LTRIM(RTRIM(CAST([CuentasDeFondos].[CUENTA] AS VARCHAR)))												AS id	-- String NOT NULL PK			
-			-----------------------------------------------------------------------------------------------------			
-			, LTRIM(RTRIM(CAST([CuentasDeFondos].[CUENTA] AS VARCHAR)))												AS codigo	 -- String (11) NOT NULL UN 			
-			, LTRIM(RTRIM(CAST([CuentasDeFondos].[NOMBRE] AS VARCHAR)))												AS nombre -- String (40) NOT NULL UN 							
-			-----------------------------------------------------------------------------------------------------
-			, [CuentasDeFondos].[OBSOLETA]																			AS obsoleta -- Boolean
-
-	FROM	[dbo].[CuentasDeFondos];
-
-	-- SELECT COUNT(*) FROM [dbo].[CuentasDeFondos]
-	-- SELECT COUNT(*) FROM dbo.vCuentaDeFondoA;		
-	-- SELECT * FROM dbo.vCuentaDeFondoA;		
-	-- SELECT * FROM dbo.vCuentaDeFondoA ORDER BY codigo, nombre;
+	-- SELECT cuentaDiferidos_id, cuentaCaucion_id, * FROM dbo.vCuentaDeFondo WHERE codigo = 666
 	
 -------------------------------------------------------------
 
@@ -1448,7 +1418,7 @@ CREATE VIEW [dbo].[vCuentaDeFondoA] AS
 			-----------------------------------------------------------------------------------------------------
 			, LTRIM(RTRIM(CAST([CuentasDeFondos].[CUENTA] AS VARCHAR)))												AS id	-- String NOT NULL PK			
 			-----------------------------------------------------------------------------------------------------			
-			, LTRIM(RTRIM(CAST([CuentasDeFondos].[CUENTA] AS VARCHAR)))												AS codigo	 -- String (11) NOT NULL UN 			
+			, CAST(LTRIM(RTRIM(CAST([CuentasDeFondos].[CUENTA] AS VARCHAR))) AS INTEGER)							AS codigo	 -- Integer NOT NULL UN  [1 - Integer.MAX_VALUE]				
 			, LTRIM(RTRIM(CAST([CuentasDeFondos].[NOMBRE] AS VARCHAR)))												AS nombre -- String (40) NOT NULL UN 							
 			-----------------------------------------------------------------------------------------------------
 			, [CuentasDeFondos].[OBSOLETA]																			AS obsoleta -- Boolean
@@ -1522,6 +1492,44 @@ CREATE VIEW [dbo].[vJurisdiccionConvenioMultilateral] AS
 	-- SELECT * FROM dbo.vJurisdiccionConvenioMultilateral;	
 	-- SELECT * FROM dbo.vJurisdiccionConvenioMultilateral ORDER BY codigo, nombre;
 
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vChequera]
+
+CREATE VIEW [dbo].[vChequera] AS  
+
+	SELECT	'com.massoftware.model.Chequera'												AS ClassChequera
+			-----------------------------------------------------------------------------------------------------			
+			, CONCAT (  LTRIM(RTRIM(CAST([Chequeras].[CUENTA] AS VARCHAR))), '-',  LTRIM(RTRIM(CAST([Chequeras].[CHEQUERA] AS VARCHAR))) )	AS id	-- String NOT NULL PK	
+			-----------------------------------------------------------------------------------------------------
+				--, [Chequeras].[CUENTA]																AS cuentaDeFondo
+				, [vCuentaDeFondo].id																	AS cuentaDeFondo_id
+				, [vCuentaDeFondo].codigo																AS cuentaDeFondo_codigo
+				, [vCuentaDeFondo].nombre																AS cuentaDeFondo_nombre
+				, [vCuentaDeFondo].cuentaDeFondoGrupo_id												AS cuentaDeFondo_cuentaDeFondoGrupo_id
+					, [vCuentaDeFondo].cuentaDeFondoGrupo_cuentaDeFondoRubro_id							AS cuentaDeFondo_cuentaDeFondoGrupo_cuentaDeFondoRubro_id	
+					, [vCuentaDeFondo].cuentaDeFondoGrupo_cuentaDeFondoRubro_codigo						AS cuentaDeFondo_cuentaDeFondoGrupo_cuentaDeFondoRubro_codigo
+					, [vCuentaDeFondo].cuentaDeFondoGrupo_cuentaDeFondoRubro_nombre						AS cuentaDeFondo_cuentaDeFondoGrupo_cuentaDeFondoRubro_nombre
+					, [vCuentaDeFondo].cuentaDeFondoGrupo_cuentaDeFondoRubro_esCuentaDeFondo			AS cuentaDeFondo_cuentaDeFondoGrupo_cuentaDeFondoRubro_esCuentaDeFondo	
+				, [vCuentaDeFondo].cuentaDeFondoGrupo_codigo											AS cuentaDeFondo_cuentaDeFondoGrupo_codigo
+				, [vCuentaDeFondo].cuentaDeFondoGrupo_nombre											AS cuentaDeFondo_cuentaDeFondoGrupo_nombre
+			-----------------------------------------------------------------------------------------------------
+			, CAST([Chequeras].[CHEQUERA]  AS INTEGER)										AS codigo				-- Integer NOT NULL UN [ 1 - Short.MAX_VALUE]
+			, CAST([Chequeras].[PRIMERNRO]  AS INTEGER)										AS primerNumero			-- Integer NOT NULL [ 1 - Integer.MAX_VALUE]
+			, CAST([Chequeras].[ULTIMONRO]  AS INTEGER)										AS ultimoNumero			-- Integer NOT NULL [ 1 - Integer.MAX_VALUE]
+			, CAST([Chequeras].[PROXIMONRO]  AS INTEGER)									AS proximoNumero		-- Integer NOT NULL [ 1 - Integer.MAX_VALUE]
+			, [Chequeras].[BLOQUEADO]														AS bloqueado			-- Boolean
+			, [Chequeras].[IMPRESIONDIFERIDA]												AS impresionDiferida	-- Boolean
+			, LTRIM(RTRIM(CAST([Chequeras].[DESTINOIMPRESION] AS VARCHAR)))					AS destinoImpresion		-- String (40)
+			, LTRIM(RTRIM(CAST([Chequeras].[FORMATO] AS VARCHAR)))							AS formato				-- String (30)
+	
+  
+	FROM	[dbo].[Chequeras]
+	LEFT JOIN	[dbo].[vCuentaDeFondo] 
+		ON  [vCuentaDeFondo].[codigo] = CAST([Chequeras].[CUENTA] AS INTEGER);
+
+	-- SELECT * FROM dbo.vChequera;	
+	-- SELECT * FROM dbo.vChequera ORDER BY cuentaDeFondo_codigo, codigo;
 
 -------------------------------------------------------------
 

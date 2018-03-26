@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.tipo_cbte_afip;
+package com.massoftware.frontend.ui.windows.old;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +8,13 @@ import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
+import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.frontend.ui.util.YesNoDialog;
-import com.massoftware.model.TipoCbteAFIP;
+import com.massoftware.model.Sucursal;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -30,16 +32,17 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class TipoCbteAFIPTableUi extends CustomComponent {
+class SucursalTableUi extends CustomComponent {
 
 	// ----------------------------------------------
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6282458747672426781L;
+	private static final long serialVersionUID = -6282458147672456781L;
 
 	private Window window;
 	private BackendContext cx;
@@ -56,22 +59,24 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 	private TextField filtroGenericoTXT;
 	private Button removerFiltroGenericoBTN;
 
-	private Grid tipoCbteAFIPGRD;
+	private Grid sucursalGRD;
 
 	private HorizontalLayout barraDeHerramientasFila1;
 	private Button agregarBTN;
 	private Button modificarBTN;
-	// private Button copiarBTN;
+	private Button copiarBTN;
 	private HorizontalLayout barraDeHerramientasFila2;
 	private Button eliminarBTN;
 
 	// ----------------------------------------------
 	// OPCIONES
 
+	// No hay opciones (por je. ComboBox)
+
 	// ----------------------------------------------
 	// MODELO
 
-	private BeanItemContainer<TipoCbteAFIP> tipoCbteAFIPBIC;
+	private BeanItemContainer<Sucursal> sucursalBIC;
 
 	// ----------------------------------------------
 
@@ -79,7 +84,7 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 
 	// ----------------------------------------------
 
-	public TipoCbteAFIPTableUi(Window window, BackendContext cx, Usuario usuario) {
+	public SucursalTableUi(Window window, BackendContext cx, Usuario usuario) {
 		super();
 		try {
 			this.window = window;
@@ -94,8 +99,8 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 
 	private void viewPort768x1024() throws Exception {
 
-		tipoCbteAFIPBIC = new BeanItemContainer<TipoCbteAFIP>(
-				TipoCbteAFIP.class, new ArrayList<TipoCbteAFIP>());
+		sucursalBIC = new BeanItemContainer<Sucursal>(Sucursal.class,
+				new ArrayList<Sucursal>());
 
 		// ----------------------------------------------
 
@@ -127,8 +132,8 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 		filtroGenericoTXT = new TextField();
 		filtroGenericoTXT.addStyleName("tiny");
 		filtroGenericoTXT.setIcon(FontAwesome.SEARCH);
-		filtroGenericoTXT.setCaption("Tipo");
-		filtroGenericoTXT.setInputPrompt("Tipo");
+		filtroGenericoTXT.setCaption("Sucursal");
+		filtroGenericoTXT.setInputPrompt("Sucursal");
 		filtroGenericoTXT.setImmediate(true);
 		filtroGenericoTXT.setNullRepresentation("");
 
@@ -162,68 +167,101 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 
 		// ----------------------------------------------
 
-		tipoCbteAFIPGRD = new Grid();
-		tipoCbteAFIPGRD.addStyleName("small compact");
-		tipoCbteAFIPGRD.setWidth("100%");
+		sucursalGRD = new Grid();
+		sucursalGRD.addStyleName("small compact");
+		sucursalGRD.setWidth("100%");
 		// centrosDeCostoContableGRD.setHeight("400px");
-		tipoCbteAFIPGRD.setSelectionMode(SelectionMode.SINGLE);
-		tipoCbteAFIPGRD.setImmediate(true);
+		sucursalGRD.setSelectionMode(SelectionMode.SINGLE);
+		sucursalGRD.setImmediate(true);
 
-		String[] attNames = { "codigo", "nombre" };
+		String[] attNames = { "codigo", "nombre", "abreviatura",
+				"sucursalTipo", "cuentaClientesDesde", "cuentaClientesHasta",
+				"cantidadCaracteresClientes", "identificacionNumericaClientes",
+				"permiteCambiarClientes", "clientesOcasionalesDesde",
+				"clientesOcasionalesHasta", "nroCobranzaDesde",
+				"nroCobranzaHasta", "proveedoresDesde", "proveedoresHasta",
+				"cantidadCaracteresProveedor",
+				"identificacionNumericaProveedores",
+				"permiteCambiarProveedores" };
 
-		String[] attLabels = { "Tipo", "Descripción" };
+		String[] attLabels = { "Sucursal", "Nombre", "Abr.", "Tipo",
+				"Cta. cli desde", "Cta. cli hasta", "Caracteres cli.",
+				"Ident. num. cli.", "Permite cambiar cli",
+				"Cli. ocasionales desde", "Cli. ocasionales hasta",
+				"Nro. cobranza desde", "Nro. cobranza hasta", "Prov. desde",
+				"Prov. hasta", "Caracteres Prov.", "Ident. num. prov.",
+				"Permite cambiar prov." };
 
-		tipoCbteAFIPGRD.setColumns((Object[]) attNames);
+		sucursalGRD.setColumns((Object[]) attNames);
 
 		// .......
 
 		int width = 0;
-
+		
 		for (int i = 0; i < attNames.length; i++) {
 			String attName = attNames[i];
 			String attLabel = attLabels[i];
-			Column column = tipoCbteAFIPGRD.getColumn(attName);
+			Column column = sucursalGRD.getColumn(attName);
 			column.setHidable(true);
 			column.setHeaderCaption(attLabel);
 
 			if (i == 0) {
 				column.setWidth(80);
 			} else if (i == 1) {
-				column.setWidth(400);
+				column.setWidth(150);
+			} else if (i == 2) {
+				column.setWidth(80);
+			} else if (i == 3) {
+				column.setWidth(150);
 			} else {
-				// column.setHidden(true);
+				column.setHidden(true);
 			}
-
+			
 			width += column.getWidth();
 
 		}
 
-		tipoCbteAFIPGRD.setWidth(width + "px");
+		
+		sucursalGRD.setWidth(width + "px");
 
 		// .......
 
-		tipoCbteAFIPGRD.setContainerDataSource(tipoCbteAFIPBIC);
+		sucursalGRD.setContainerDataSource(sucursalBIC);
 
 		// .......
 
-		// SOLO PARA ATTS BOOLEAN !!!
-		// tipoCbteAFIPGRD.getColumn("depositoActivo").setRenderer(
-		// new HtmlRenderer(),
-		// new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
-		// .getHtml(), FontAwesome.SQUARE_O.getHtml()));
+		sucursalGRD.getColumn("identificacionNumericaClientes").setRenderer(
+				new HtmlRenderer(),
+				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+
+		sucursalGRD.getColumn("permiteCambiarClientes").setRenderer(
+				new HtmlRenderer(),
+				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+
+		sucursalGRD.getColumn("identificacionNumericaProveedores").setRenderer(
+				new HtmlRenderer(),
+				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+
+		sucursalGRD.getColumn("permiteCambiarProveedores").setRenderer(
+				new HtmlRenderer(),
+				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
 
 		// .......
 
 		List<SortOrder> order = new ArrayList<SortOrder>();
 		order.add(new SortOrder(pidFiltering, SortDirection.ASCENDING));
-		tipoCbteAFIPGRD.setSortOrder(order);
+		sucursalGRD.setSortOrder(order);
 
-		tipoCbteAFIPGRD.addSortListener(e -> {
+		sucursalGRD.addSortListener(e -> {
 			sort();
 		});
 
-		rootVL.addComponent(tipoCbteAFIPGRD);
-		rootVL.setComponentAlignment(tipoCbteAFIPGRD, Alignment.MIDDLE_CENTER);
+		rootVL.addComponent(sucursalGRD);
+		rootVL.setComponentAlignment(sucursalGRD, Alignment.MIDDLE_CENTER);
 
 		// ----------------------------------------------
 
@@ -264,17 +302,17 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 
 		// ----------------------------------------------
 
-		// copiarBTN = new Button();
-		// copiarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-		// copiarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-		// copiarBTN.setIcon(FontAwesome.PLUS_SQUARE);
-		// copiarBTN.setCaption("Copiar");
-		// copiarBTN.setDescription(copiarBTN.getCaption() + " (Ctrl+C)");
-		// copiarBTN.addClickListener(e -> {
-		// copiarBTNClick();
-		// });
-		//
-		// barraDeHerramientasFila1.addComponent(copiarBTN);
+		copiarBTN = new Button();
+		copiarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+		copiarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+		copiarBTN.setIcon(FontAwesome.PLUS_SQUARE);
+		copiarBTN.setCaption("Copiar");
+		copiarBTN.setDescription(copiarBTN.getCaption() + " (Ctrl+C)");
+		copiarBTN.addClickListener(e -> {
+			copiarBTNClick();
+		});
+
+		barraDeHerramientasFila1.addComponent(copiarBTN);
 
 		// ----------------------------------------------
 
@@ -308,7 +346,7 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 
 			@Override
 			public void handleAction(Object sender, Object target) {
-				if (target.equals(tipoCbteAFIPGRD)) {
+				if (target.equals(sucursalGRD)) {
 					modificarBTNClick();
 				}
 
@@ -341,16 +379,16 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 		});
 		// --------------------------------------------------
 
-		// this.addShortcutListener(new ShortcutListener("CTRL+C", KeyCode.C,
-		// new int[] { ModifierKey.CTRL }) {
-		//
-		// private static final long serialVersionUID = 1L;
-		//
-		// @Override
-		// public void handleAction(Object sender, Object target) {
-		// copiarBTNClick();
-		// }
-		// });
+		this.addShortcutListener(new ShortcutListener("CTRL+C", KeyCode.C,
+				new int[] { ModifierKey.CTRL }) {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				copiarBTNClick();
+			}
+		});
 
 		// ----------------------------------------------
 
@@ -359,25 +397,11 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 	private void agregarBTNClick() {
 		try {
 
-			tipoCbteAFIPGRD.select(null);
+			sucursalGRD.select(null);
 
-			Window win = new Window();
-
-			// PuntoDeEquilibrioFormUi ui = new PuntoDeEquilibrioFormUi(win, cx,
-			// this, ejercicioContable);
-
-			win.setCaption("Agragar depósito");
-			win.setImmediate(true);
-			win.setWidth("-1px");
-			win.setHeight("-1px");
-			win.setClosable(true);
-			win.setResizable(false);
-			win.setModal(true);
-			win.center();
-			// win.setContent((Component) ui);
-			getUI().addWindow(win);
-			win.center();
-			win.focus();
+			SucursalFormUi ui = new SucursalFormUi(StandardFormUi.INSERT_MODE,
+					cx, null, this);
+			getUI().addWindow(ui.getWindow());
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -387,28 +411,32 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 	private void modificarBTNClick() {
 		try {
 
-			if (tipoCbteAFIPGRD.getSelectedRow() != null) {
+			if (sucursalGRD.getSelectedRow() != null) {
 
-				TipoCbteAFIP item = (TipoCbteAFIP) tipoCbteAFIPGRD
-						.getSelectedRow();
+				Sucursal item = (Sucursal) sucursalGRD.getSelectedRow();
 
-				Window win = new Window();
+				SucursalFormUi ui = new SucursalFormUi(
+						StandardFormUi.UPDATE_MODE, cx, item, this);
+				getUI().addWindow(ui.getWindow());
+			}
 
-				// PuntoDeEquilibrioFormUi ui = new PuntoDeEquilibrioFormUi(win,
-				// cx, this, puntoDeEquilibrio, false);
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
 
-				win.setCaption("Modificar tipo de comprobante AFIP");
-				win.setImmediate(true);
-				win.setWidth("-1px");
-				win.setHeight("-1px");
-				win.setClosable(true);
-				win.setResizable(false);
-				win.setModal(true);
-				win.center();
-				// win.setContent((Component) ui);
-				getUI().addWindow(win);
-				win.center();
-				win.focus();
+	private void copiarBTNClick() {
+		try {
+
+			if (sucursalGRD.getSelectedRow() != null) {
+
+				Sucursal item = (Sucursal) sucursalGRD.getSelectedRow();
+
+				Sucursal itemNew = item.clone();
+
+				SucursalFormUi ui = new SucursalFormUi(
+						StandardFormUi.COPY_MODE, cx, itemNew, this);
+				getUI().addWindow(ui.getWindow());
 
 			}
 
@@ -417,57 +445,17 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 		}
 	}
 
-	// private void copiarBTNClick() {
-	// try {
-	//
-	// if (tipoCbteAFIPGRD.getSelectedRow() != null) {
-	//
-	// TipoCbteAFIP item = (TipoCbteAFIP) tipoCbteAFIPGRD.getSelectedRow();
-	//
-	// // PuntoDeEquilibrio puntoDeEquilibrioNew = new
-	// // PuntoDeEquilibrio();
-	// // puntoDeEquilibrioNew.setEjercicioContable(item
-	// // .getEjercicioContable());
-	// // puntoDeEquilibrioNew.setNombre(item.getNombre());
-	// // puntoDeEquilibrioNew.setPuntoDeEquilibrioTipo(item
-	// // .getPuntoDeEquilibrioTipo());
-	//
-	// Window win = new Window();
-	//
-	// // PuntoDeEquilibrioFormUi ui = new PuntoDeEquilibrioFormUi(win,
-	// // cx, this, puntoDeEquilibrioNew);
-	//
-	// win.setCaption("Copiar tipo de comprobante AFIP");
-	// win.setImmediate(true);
-	// win.setWidth("-1px");
-	// win.setHeight("-1px");
-	// win.setClosable(true);
-	// win.setResizable(false);
-	// win.setModal(true);
-	// win.center();
-	// // win.setContent((Component) ui);
-	// getUI().addWindow(win);
-	// win.center();
-	// win.focus();
-	// }
-	//
-	// } catch (Exception e) {
-	// LogAndNotification.print(e);
-	// }
-	// }
-
 	private void eliminarBTNClick() {
 		try {
 
-			if (tipoCbteAFIPGRD.getSelectedRow() != null) {
+			if (sucursalGRD.getSelectedRow() != null) {
 
-				TipoCbteAFIP item = (TipoCbteAFIP) tipoCbteAFIPGRD
-						.getSelectedRow();
+				Sucursal item = (Sucursal) sucursalGRD.getSelectedRow();
 
 				getUI().addWindow(
 						new YesNoDialog("Eliminar",
-								"Esta seguro de eliminar el tipo de comprobante AFIP "
-										+ item, new YesNoDialog.Callback() {
+								"Esta seguro de eliminar la sucursal " + item,
+								new YesNoDialog.Callback() {
 									public void onDialogResult(boolean yes) {
 										if (yes) {
 											delete();
@@ -484,22 +472,20 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 	private void delete() {
 		try {
 
-			if (tipoCbteAFIPGRD.getSelectedRow() != null) {
+			if (sucursalGRD.getSelectedRow() != null) {
 
-				TipoCbteAFIP item = (TipoCbteAFIP) tipoCbteAFIPGRD
-						.getSelectedRow();
+				Sucursal item = (Sucursal) sucursalGRD.getSelectedRow();
 				try {
 
 					// cx.buildPuntoDeEquilibrioBO().delete((Sucursal) item);
 
 				} catch (DeleteForeingObjectConflictException e) {
-					LogAndNotification.print(e, "Tipo de comprobante AFIP "
-							+ item.getId());
+					LogAndNotification.print(e,
+							"Punto de equilibrio " + item.getId());
 					return;
 				}
 
-				String msg = "Se eliminó con éxito el tipo de comprobante AFIP "
-						+ item;
+				String msg = "Se eliminó con éxito la sucursal " + item;
 
 				LogAndNotification.printSuccessOk(msg);
 
@@ -507,7 +493,7 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 			}
 
 		} catch (DeleteForeingObjectConflictException e) {
-			LogAndNotification.print(e, "Tipo de comprobante AFIP");
+			LogAndNotification.print(e, "Punto de equilibrio");
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -526,7 +512,7 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 		try {
 
 			@SuppressWarnings("unchecked")
-			BeanItemContainer<TipoCbteAFIP> container = ((BeanItemContainer<TipoCbteAFIP>) tipoCbteAFIPGRD
+			BeanItemContainer<Sucursal> container = ((BeanItemContainer<Sucursal>) sucursalGRD
 					.getContainerDataSource());
 
 			container.removeAllContainerFilters();
@@ -538,13 +524,13 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 						SimpleStringTraslateFilter.CONTAINS_WORDS_AND));
 
 			}
-			tipoCbteAFIPGRD.recalculateColumnWidths();
+			sucursalGRD.recalculateColumnWidths();
 
-			boolean enabled = tipoCbteAFIPBIC.size() > 0;
+			boolean enabled = sucursalBIC.size() > 0;
 
-			tipoCbteAFIPGRD.setEnabled(enabled);
+			sucursalGRD.setEnabled(enabled);
 			modificarBTN.setEnabled(enabled);
-			// copiarBTN.setEnabled(enabled);
+			copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
 
 		} catch (Exception e) {
@@ -563,16 +549,19 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 
 	private void sort() {
 		try {
-			pidFiltering = tipoCbteAFIPGRD.getSortOrder().get(0)
-					.getPropertyId().toString();
+			pidFiltering = sucursalGRD.getSortOrder().get(0).getPropertyId()
+					.toString();
 
 			// pidFiltering = attName;
 
-			String caption = tipoCbteAFIPGRD.getColumn(pidFiltering)
+			String caption = sucursalGRD.getColumn(pidFiltering)
 					.getHeaderCaption();
 
 			filtroGenericoTXT.setCaption(caption);
-			if (pidFiltering.equals("depositoActivo")) {
+			if (pidFiltering.equals("identificacionNumericaClientes")
+					|| pidFiltering.equals("permiteCambiarClientes")
+					|| pidFiltering.equals("identificacionNumericaProveedores")
+					|| pidFiltering.equals("permiteCambiarProveedores")) {
 
 				filtroGenericoTXT
 						.setInputPrompt("s/n o vacio para ver todos ..");
@@ -606,7 +595,7 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 
 			updateModelViewPort768x1024();
 
-			boolean enabled = tipoCbteAFIPBIC.size() > 0;
+			boolean enabled = sucursalBIC.size() > 0;
 
 			if (enabled) {
 
@@ -621,18 +610,18 @@ public class TipoCbteAFIPTableUi extends CustomComponent {
 	public void updateModelViewPort768x1024() throws Exception {
 		try {
 
-			List<TipoCbteAFIP> items = cx.buildBO(TipoCbteAFIP.class).findAll();
+			List<Sucursal> items = cx.buildSucursalBO().findAll();
 
-			tipoCbteAFIPBIC.removeAllItems();
-			for (TipoCbteAFIP item : items) {
-				tipoCbteAFIPBIC.addBean(item);
+			sucursalBIC.removeAllItems();
+			for (Sucursal item : items) {
+				sucursalBIC.addBean(item);
 			}
 
-			boolean enabled = tipoCbteAFIPBIC.size() > 0;
+			boolean enabled = sucursalBIC.size() > 0;
 
-			tipoCbteAFIPGRD.setEnabled(enabled);
+			sucursalGRD.setEnabled(enabled);
 			modificarBTN.setEnabled(enabled);
-			// copiarBTN.setEnabled(enabled);
+			copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
 
 		} catch (Exception e) {

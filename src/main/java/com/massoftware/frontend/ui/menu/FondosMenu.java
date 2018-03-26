@@ -8,12 +8,14 @@ import com.massoftware.frontend.ui.windows.modelo_cbte_fondo.ModeloCbteFondoTabl
 import com.massoftware.model.Banco;
 import com.massoftware.model.BancoFirmante;
 import com.massoftware.model.Caja;
+import com.massoftware.model.Chequera;
 import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.JurisdiccionConvenioMultilateral;
 import com.massoftware.model.Moneda;
 import com.massoftware.model.MonedaAFIP;
 import com.massoftware.model.MonedaCotizacion;
+import com.massoftware.model.SeguridadPuerta;
 import com.massoftware.model.Sucursal;
 import com.massoftware.model.Talonario;
 import com.massoftware.model.Ticket;
@@ -116,7 +118,7 @@ public class FondosMenu extends VerticalLayout implements View {
 		archivos.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class));
 //		archivos.addItem("Rubros y grupos de cuentas ...", open(CuentaDeFondo.class));
 		archivos.addItem("Cobranzas ...", click);
-		archivos.addItem("Chequeras ...", click);
+		archivos.addItem("Chequeras ...", open(Chequera.class));
 		archivos.addItem("Bancos ...", open(Banco.class));
 		archivos.addItem("Firmantes (cheques propios) ...",
 				open(BancoFirmante.class));
@@ -144,6 +146,7 @@ public class FondosMenu extends VerticalLayout implements View {
 		archivos.addItem("Prueba Tipo de comprobante AFIP",
 				open(TipoCbteAFIP.class));
 		archivos.addItem("Prueba Moneda AFIP", open(MonedaAFIP.class));
+		archivos.addItem("Prueba Mantenimiento de módulos y puertas", open(SeguridadPuerta.class));
 
 		return menubar;
 	}
@@ -233,7 +236,7 @@ public class FondosMenu extends VerticalLayout implements View {
 
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				FrontendContext.openWindows(true, true,  true, true, getThis(), classModel, cx, usuario, null, null, null);
+				FrontendContext.openWindows(true, true, true,  true, true, getThis(), classModel, cx, usuario, null, null, null);
 
 			}
 		};

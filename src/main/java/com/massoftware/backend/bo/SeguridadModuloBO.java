@@ -1,6 +1,5 @@
 package com.massoftware.backend.bo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.cendra.jdbc.DataSourceWrapper;
@@ -8,35 +7,19 @@ import org.cendra.jdbc.DataSourceWrapper;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.backend.util.bo.GenericBO;
 import com.massoftware.model.SeguridadModulo;
-import com.massoftware.model.SeguridadPuerta;
 import com.massoftware.model.Usuario;
 
-public class SeguridadPuertaBO extends GenericBO<SeguridadPuerta> {
+public class SeguridadModuloBO extends GenericBO<SeguridadModulo> {
 
 	private final String ATT_NAME_CODIGO = "codigo";
 	private final String ATT_NAME_NOMBRE = "nombre";
-	private final String ATT_NAME_IGUALACION_ID = "igualacionID";
 
-	public SeguridadPuertaBO(DataSourceWrapper dataSourceWrapper,
-			BackendContext cx) {
-		super(SeguridadPuerta.class, dataSourceWrapper, cx);
+	public SeguridadModuloBO(DataSourceWrapper dataSourceWrapper, BackendContext cx) {
+		super(SeguridadModulo.class, dataSourceWrapper, cx);
 	}
 
-	public List<SeguridadPuerta> findAll() throws Exception {
+	public List<SeguridadModulo> findAll() throws Exception {
 		return findAll("codigo, nombre");
-	}
-
-	public List<SeguridadPuerta> findAll(SeguridadModulo seguridadModulo)
-			throws Exception {
-
-		if(seguridadModulo != null){
-			return find("codigo, nombre", "seguridadModulo_codigo = ?",
-					seguridadModulo.getCodigo());	
-		}
-		
-		return new ArrayList<SeguridadPuerta>();
-		
-		
 	}
 
 	@Override
@@ -51,21 +34,15 @@ public class SeguridadPuertaBO extends GenericBO<SeguridadPuerta> {
 			checkUnique(attName, "LOWER(" + ATT_NAME_NOMBRE + ") = ?", value
 					.toString().toLowerCase());
 
-		} else if (attName.equalsIgnoreCase(ATT_NAME_IGUALACION_ID)) {
-
-			checkUnique(attName, "LOWER(" + ATT_NAME_IGUALACION_ID + ") = ?",
-					value.toString().toLowerCase());
-
 		}
-
 	}
 
-	public boolean delete(SeguridadPuerta seguridadPuerta) throws Exception {
+	public boolean delete(SeguridadModulo dto) throws Exception {
 
 		Object codigoArg = null;
 
-		if (seguridadPuerta.getCodigo() != null) {
-			codigoArg = seguridadPuerta.getCodigo();
+		if (dto.getCodigo() != null) {
+			codigoArg = dto.getCodigo();
 		} else {
 			codigoArg = Integer.class;
 		}
@@ -83,20 +60,18 @@ public class SeguridadPuertaBO extends GenericBO<SeguridadPuerta> {
 
 	}
 
-	public SeguridadPuerta insert(SeguridadPuerta seguridadPuerta,
-			Usuario usuario) throws Exception {
+	public SeguridadModulo insert(SeguridadModulo dto, Usuario usuario) throws Exception {
 
-		return insertByReflection(seguridadPuerta, usuario);
+		return insertByReflection(dto, usuario);
 	}
 
-	public SeguridadPuerta update(SeguridadPuerta seguridadPuerta,
-			SeguridadPuerta seguridadPuertaOriginal, Usuario usuario)
+	public SeguridadModulo update(SeguridadModulo dto, SeguridadModulo dtoOriginal, Usuario usuario)
 			throws Exception {
 
 		Object codigoArg = null;
 
-		if (seguridadPuertaOriginal.getCodigo() != null) {
-			codigoArg = seguridadPuertaOriginal.getCodigo();
+		if (dtoOriginal.getCodigo() != null) {
+			codigoArg = dtoOriginal.getCodigo();
 		} else {
 			codigoArg = Integer.class;
 		}
@@ -106,8 +81,7 @@ public class SeguridadPuertaBO extends GenericBO<SeguridadPuerta> {
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
 
 			return updateByReflection(
-					seguridadPuerta,
-					usuario,
+					dto, usuario,
 					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_CODIGO))
 							+ " = ?", codigoArg);
 		}

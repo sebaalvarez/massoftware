@@ -7,7 +7,6 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -35,7 +34,6 @@ import com.massoftware.annotation.model.FieldReadOnly;
 import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.annotation.model.FieldUniqueAnont;
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.cx.FrontendContext;
 import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.frontend.ui.util.UtilDate;
 import com.massoftware.frontend.ui.util.validator.GenericMinLengthValidator;
@@ -48,8 +46,6 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.validator.BigDecimalRangeValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
-import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -286,7 +282,7 @@ public class BuilderXMD {
 
 	private static TabSheet buildTS(Map<String, Component> controls,
 			ComponentXMD componentXMD) {
-		TabSheet ts = new TabSheet();
+		TabSheet ts = new TabSheet();		
 		ts = (TabSheet) buildComponent(controls, componentXMD, ts);
 		ts = (TabSheet) buildAbstractComponent(componentXMD, ts);
 
@@ -469,15 +465,14 @@ public class BuilderXMD {
 	//
 	// }
 
-	// private static Label buildLBL() throws SecurityException,
-	// ClassNotFoundException, NoSuchFieldException {
-	//
-	// Label df = new Label();
-	// df.addStyleName(ValoTheme.LABEL_TINY);
-	//
-	// return df;
-	//
-	// }
+	public static Label buildLBL() {
+
+		Label df = new Label();
+		df.addStyleName(ValoTheme.LABEL_TINY);
+
+		return df;
+
+	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static HorizontalLayout buildFieldCBBox(Window window,
@@ -489,13 +484,13 @@ public class BuilderXMD {
 		Field field2 = getField(field.getType(), getCBBoxAttName(field));
 
 		HorizontalLayout filtroGenericoHL = new HorizontalLayout();
-		filtroGenericoHL.setWidth("-1px");
+		// filtroGenericoHL.setWidth("-1px");
 		filtroGenericoHL.setMargin(false);
 		filtroGenericoHL.setSpacing(false);
 
-		// if (getLabelVisible(field)) {
-		// filtroGenericoHL.setCaption(getLabel(field));
-		// }
+		if (getLabelVisible(field)) {
+			filtroGenericoHL.setCaption(getLabel(field));
+		}
 
 		// ----------------------------------------------
 
@@ -524,7 +519,7 @@ public class BuilderXMD {
 		// valueCB.setTextInputAllowed(false);
 		valueCB.setReadOnly(true);
 		if (getLabelVisible(field)) {
-			valueCB.setCaption(" ");
+			// valueCB.setCaption(" ");
 		}
 		valueCB.setRequiredError("El campo '" + getLabel(field)
 				+ "' es requerido. Es decir no debe estar vacio.");
@@ -545,7 +540,8 @@ public class BuilderXMD {
 		searchTXT.setInputPrompt(searchFor);
 		// searchTXT.setRequired(getRequired(field));
 		if (getLabelVisible(field)) {
-			searchTXT.setCaption(getLabel(field));
+			// searchTXT.setCaption(getLabel(field));
+			searchTXT.setDescription(getLabel(field));
 		}
 
 		// Object value = dtoBI.getItemProperty(attName).getValue();
@@ -564,56 +560,59 @@ public class BuilderXMD {
 		//
 		// }
 
-//		MyShortcutListener myShortcutListener = new MyShortcutListener(attName, KeyCode.ENTER,
-//				new int[] {}, searchTXT);
-//		
-//		window.addShortcutListener(myShortcutListener);
-//		
-//		Collection list  = window.getListeners(MyShortcutListener.class);
-//		
-//		System.out.println(list);
-//		
-		
-		
-//		
-//		window.addShortcutListener(new ShortcutListener(attName, KeyCode.ENTER,
-//				new int[] {}) {
-//
-//			/**
-//					 * 
-//					 */
-//			private static final long serialVersionUID = 5722660719827796039L;
-//
-//			@Override
-//			public void handleAction(Object sender, Object target) {
-//
-//				if (target instanceof TextField) {
-//
-//					System.out.println(sender + "CCCCCCCCCCCCCCCCCCCCCCCCCC "
-//							+ ((TextField) target).getCaption() + " == "
-//							+ getLabel(field2));
-//
-//					if (((TextField) target).getCaption().equals(
-//							getLabel(field2))) {
-//
-//						FrontendContext.openWindows(filtroGenericoHL,
-//								field.getType(), cx, usuario,
-//								getCBBoxAttName(field),
-//								((TextField) target).getValue(),
-//								dtoBI.getItemProperty(attName));
-//					}
-//
-//				}
-//
-//			}
-//		});
+		// MyShortcutListener myShortcutListener = new
+		// MyShortcutListener(attName, KeyCode.ENTER,
+		// new int[] {}, searchTXT);
+		//
+		// window.addShortcutListener(myShortcutListener);
+		//
+		// Collection list = window.getListeners(MyShortcutListener.class);
+		//
+		// System.out.println(list);
+		//
+
+		//
+		// window.addShortcutListener(new ShortcutListener(attName,
+		// KeyCode.ENTER,
+		// new int[] {}) {
+		//
+		// /**
+		// *
+		// */
+		// private static final long serialVersionUID = 5722660719827796039L;
+		//
+		// @Override
+		// public void handleAction(Object sender, Object target) {
+		//
+		// if (target instanceof TextField) {
+		//
+		// System.out.println(sender + "CCCCCCCCCCCCCCCCCCCCCCCCCC "
+		// + ((TextField) target).getCaption() + " == "
+		// + getLabel(field2));
+		//
+		// if (((TextField) target).getCaption().equals(
+		// getLabel(field2))) {
+		//
+		// FrontendContext.openWindows(filtroGenericoHL,
+		// field.getType(), cx, usuario,
+		// getCBBoxAttName(field),
+		// ((TextField) target).getValue(),
+		// dtoBI.getItemProperty(attName));
+		// }
+		//
+		// }
+		//
+		// }
+		// });
 
 		filtroGenericoHL.addComponent(searchTXT);
-
+		filtroGenericoHL
+				.setComponentAlignment(searchTXT, Alignment.MIDDLE_LEFT);
 		// filtroGenericoHL.addComponent(valueTXT);
 
 		// filtroGenericoHL.addComponent(valueXCB);
 		filtroGenericoHL.addComponent(valueCB);
+		filtroGenericoHL.setComponentAlignment(valueCB, Alignment.MIDDLE_LEFT);
 
 		// ----------------------------------------------
 
@@ -625,7 +624,7 @@ public class BuilderXMD {
 		removeFilterBTN.setDescription("Borrar valor");
 
 		removeFilterBTN.addClickListener(e -> {
-			searchTXT.setValue("");
+			searchTXT.setValue(null);
 			dtoBI.getItemProperty(attName).setValue(null);
 			valueCB.setValue(null);
 		});

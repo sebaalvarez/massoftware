@@ -7,6 +7,7 @@ import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassPluralLabelAnont;
 import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
 import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
 import com.massoftware.annotation.model.FieldColumnsAnont;
 import com.massoftware.annotation.model.FieldLabelAnont;
@@ -28,25 +29,26 @@ import com.massoftware.annotation.model.FieldUniqueAnont;
 public class SeguridadPuerta extends EntityId implements Cloneable,
 		Comparable<SeguridadPuerta> {
 
-	@FieldLabelAnont(value = "Número")
+	@FieldLabelAnont(value = "Puerta")
 	@FieldRequiredAnont()
 	@FieldMaxLengthAnont(value = 5)
 	@FieldColumnsAnont(value = 5)
 	@FieldMinValueIntegerAnont(value = 1)
-	@FieldMaxValueIntegerAnont(value = Integer.MAX_VALUE)
+	@FieldMaxValueIntegerAnont(value = Short.MAX_VALUE)
 	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
 	@FieldUniqueAnont()
+	@FieldAutoMaxValueAnont()
 	@FieldNameMSAnont(nameAttDB = "[NO]", classAttDB = Integer.class)
 	private Integer codigo;
 	
 	@FieldLabelAnont(value = "Módulo")
 	@FieldRequiredAnont()
-	@FieldColumnMetaDataAnont(attSize = 200)
+	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldSubNameFKAnont(value = "codigo")
 	@FieldNameMSAnont(nameAttDB = "[DGRPNO]", classAttDB = Integer.class)
 	private SeguridadModulo seguridadModulo;
 	
-	@FieldLabelAnont(value = "igualacionID")
+	@FieldLabelAnont(value = "ID")
 	@FieldRequiredAnont()
 	@FieldMaxLengthAnont(value = 30)
 	@FieldColumnsAnont(value = 30)
@@ -59,13 +61,13 @@ public class SeguridadPuerta extends EntityId implements Cloneable,
 	@FieldRequiredAnont()
 	@FieldMaxLengthAnont(value = 60)
 	@FieldColumnsAnont(value = 60)
-	@FieldColumnMetaDataAnont(attSize = 250)
+	@FieldColumnMetaDataAnont(attSize = 350)
 	@FieldUniqueAnont()
-	@FieldNameMSAnont(nameAttDB = "[NOMBRE]", classAttDB = String.class)
+	@FieldNameMSAnont(nameAttDB = "[DESCRIPTION]", classAttDB = String.class)
 	private String nombre;
 	
 	@FieldLabelAnont(value = "Congelado")
-	@FieldColumnMetaDataAnont(attSize = 80)
+	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldNameMSAnont(nameAttDB = "[FREEZE]", classAttDB = Boolean.class)
 	private Boolean congelado;
 
@@ -82,6 +84,9 @@ public class SeguridadPuerta extends EntityId implements Cloneable,
 	}
 
 	public void setSeguridadModulo(SeguridadModulo seguridadModulo) {
+		if (seguridadModulo != null && seguridadModulo.getId() == null) {
+			return;
+		}
 		this.seguridadModulo = seguridadModulo;
 	}
 

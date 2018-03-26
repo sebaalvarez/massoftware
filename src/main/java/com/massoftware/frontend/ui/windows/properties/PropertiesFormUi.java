@@ -591,7 +591,7 @@ public class PropertiesFormUi extends CustomComponent {
 
 			VerticalLayout layout = new VerticalLayout();
 
-			layout.addComponent(new ContabilidadGeneralMenu(cx, usuario));
+//			layout.addComponent(new ContabilidadGeneralMenu(cx, usuario));
 			layout.addComponent(new FondosMenu(cx, usuario));
 
 			masSoftware.setContent(layout);

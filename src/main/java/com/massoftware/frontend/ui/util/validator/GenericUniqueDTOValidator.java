@@ -17,12 +17,14 @@ public class GenericUniqueDTOValidator extends AbstractValidator {
 	private Class type;
 	private GenericBO genericBO;
 	private Object dto;
+	private Object originalDto;
 
-	public GenericUniqueDTOValidator(Class type, GenericBO genericBO, Object dto) {
+	public GenericUniqueDTOValidator(Class type, GenericBO genericBO, Object dto, Object originalDto) {
 		super("");
 		this.type = type;
 		this.genericBO = genericBO;
 		this.dto = dto;
+		this.originalDto = originalDto;
 
 	}
 
@@ -38,7 +40,7 @@ public class GenericUniqueDTOValidator extends AbstractValidator {
 
 		try {
 			try {
-				genericBO.checkUnique(dto);
+				genericBO.checkUnique(dto, originalDto);
 				return true;
 			} catch (UniqueException ue) {
 				this.setErrorMessage(ue.getMessage());

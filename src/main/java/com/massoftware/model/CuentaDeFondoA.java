@@ -8,10 +8,13 @@ import com.massoftware.annotation.model.ClassFormSourceAnont;
 import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassPluralLabelAnont;
 import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
 import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
 import com.massoftware.annotation.model.FieldColumnsAnont;
 import com.massoftware.annotation.model.FieldLabelAnont;
 import com.massoftware.annotation.model.FieldMaxLengthAnont;
+import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
+import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
 import com.massoftware.annotation.model.FieldNameMSAnont;
 import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.annotation.model.FieldSubNameFKAnont;
@@ -29,12 +32,15 @@ public class CuentaDeFondoA extends EntityId implements Cloneable,
 
 	@FieldLabelAnont(value = "Cuenta")
 	@FieldRequiredAnont()
-	@FieldMaxLengthAnont(value = 11)
-	@FieldColumnsAnont(value = 11)
+	@FieldMaxLengthAnont(value = 10)
+	@FieldColumnsAnont(value = 10)
+	@FieldMinValueIntegerAnont(value = 1)
+	@FieldMaxValueIntegerAnont(value = Integer.MAX_VALUE)
 	@FieldColumnMetaDataAnont(attSize = 100, pidFilteringStart = true, simpleStringTraslateFilterMode = "STARTS_WITCH")
 	@FieldUniqueAnont()
-	@FieldNameMSAnont(nameAttDB = "[CUENTA]", classAttDB = String.class)
-	private String codigo;
+	@FieldAutoMaxValueAnont()
+	@FieldNameMSAnont(nameAttDB = "[CUENTA]", classAttDB = Integer.class)
+	private Integer codigo;
 
 	@FieldLabelAnont(value = "Nombre")
 	@FieldRequiredAnont()
@@ -67,11 +73,11 @@ public class CuentaDeFondoA extends EntityId implements Cloneable,
 	@FieldNameMSAnont(nameAttDB = "[TIPO]", classAttDB = Integer.class)
 	private CuentaDeFondoTipo cuentaDeFondoTipo;
 
-	public String getCodigo() {
+	public Integer getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(String codigo) {
+	public void setCodigo(Integer codigo) {
 		this.codigo = codigo;
 	}
 

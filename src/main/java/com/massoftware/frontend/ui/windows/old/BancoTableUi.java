@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.banco;
+package com.massoftware.frontend.ui.windows.old;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.StandardTableUi;
@@ -7,7 +7,7 @@ import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Window;
 
-public class BancoTableUi extends StandardTableUi<Banco> {
+class BancoTableUi extends StandardTableUi<Banco> {
 
 	// ----------------------------------------------
 
@@ -30,7 +30,7 @@ public class BancoTableUi extends StandardTableUi<Banco> {
 	public BancoTableUi(Window window, BackendContext cx, Usuario usuario,
 			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
-		super(true, true,  true, true, window, cx, usuario, Banco.class, pidFiltering, searchFilter,
+		super(true, true, true,  true, true, window, cx, usuario, Banco.class, pidFiltering, searchFilter,
 				searchProperty);
 	}
 

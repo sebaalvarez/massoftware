@@ -20,6 +20,7 @@ import com.massoftware.backend.bo.BancoBO;
 import com.massoftware.backend.bo.BancoFirmanteBO;
 import com.massoftware.backend.bo.CajaBO;
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
+import com.massoftware.backend.bo.ChequeraBO;
 import com.massoftware.backend.bo.CostoDeVentaBO;
 import com.massoftware.backend.bo.CuentaContableBO;
 import com.massoftware.backend.bo.CuentaContableOldBO;
@@ -42,6 +43,7 @@ import com.massoftware.backend.bo.MonedaCotizacionBO;
 import com.massoftware.backend.bo.PlanDeCuentaEstadoBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioTipoBO;
+import com.massoftware.backend.bo.SeguridadModuloBO;
 import com.massoftware.backend.bo.SeguridadPuertaBO;
 import com.massoftware.backend.bo.SucursalBO;
 import com.massoftware.backend.bo.SucursalTipoBO;
@@ -55,6 +57,7 @@ import com.massoftware.model.Banco;
 import com.massoftware.model.BancoFirmante;
 import com.massoftware.model.Caja;
 import com.massoftware.model.CentroDeCostoContable;
+import com.massoftware.model.Chequera;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaContableEstado;
 import com.massoftware.model.CuentaDeFondo;
@@ -72,6 +75,7 @@ import com.massoftware.model.MonedaAFIP;
 import com.massoftware.model.MonedaCotizacion;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.PuntoDeEquilibrioTipo;
+import com.massoftware.model.SeguridadModulo;
 import com.massoftware.model.SeguridadPuerta;
 import com.massoftware.model.Sucursal;
 import com.massoftware.model.SucursalTipo;
@@ -389,103 +393,112 @@ public class BackendContext extends AbstractContext {
 		try {
 
 			if (classModel == Banco.class) {
-				
+
 				return new BancoBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == BancoFirmante.class) {
-				
+
 				return new BancoFirmanteBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == SucursalTipo.class) {
-				
+
 				return new SucursalTipoBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == Sucursal.class) {
-				
+
 				return new SucursalBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == Talonario.class) {
-				
+
 				return new TalonarioBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == SeguridadPuerta.class) {
-				
+
 				return new SeguridadPuertaBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == Modulo.class) {
-				
+
 				return new ModuloBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == Deposito.class) {
-				
+
 				return new DepositoBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == TipoCbteControl.class) {
-				
+
 				return new TipoCbteControlBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == TipoCbteAFIP.class) {
-				
+
 				return new TipoCbteAFIPBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == MonedaAFIP.class) {
-				
+
 				return new MonedaAFIPBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == Moneda.class) {
-				
+
 				return new MonedaBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == Caja.class) {
-				
+
 				return new CajaBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == MonedaCotizacion.class) {
-				
+
 				return new MonedaCotizacionBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == Usuario.class) {
-				
+
 				return new UsuarioBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == CuentaDeFondoRubro.class) {
-				
+
 				return new CuentaDeFondoRubroBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == CuentaDeFondoGrupo.class) {
-				
+
 				return new CuentaDeFondoGrupoBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == CuentaDeFondoTipo.class) {
-				
+
 				return new CuentaDeFondoTipoBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == CuentaDeFondo.class) {
-				
+
 				return new CuentaDeFondoBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == CuentaDeFondoA.class) {
-				
+
 				return new CuentaDeFondoABO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == CuentaContable.class) {
-				
+
 				return new CuentaContableBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == JurisdiccionConvenioMultilateral.class) {
-				
-				return new JurisdiccionConvenioMultilateralBO(dataSourceWrapper, this);
-				
+
+				return new JurisdiccionConvenioMultilateralBO(
+						dataSourceWrapper, this);
+
 			} else if (classModel == Ticket.class) {
-				
+
 				return new TicketBO(dataSourceWrapper, this);
-				
+
 			} else if (classModel == CuentaDeFondoTipoBanco.class) {
-				
+
 				return new CuentaDeFondoTipoBancoBO(dataSourceWrapper, this);
-				
+
+			} else if (classModel == SeguridadModulo.class) {
+
+				return new SeguridadModuloBO(dataSourceWrapper, this);
+
+			} else if (classModel == Chequera.class) {
+
+				return new ChequeraBO(dataSourceWrapper, this);
+
 			} else {
-				
+
 				throw new IllegalArgumentException(classModel + " not found");
 			}
 
@@ -588,20 +601,6 @@ public class BackendContext extends AbstractContext {
 		return null;
 
 	}
-
-//	public UsuarioBO buildUsuarioBO() {
-//
-//		try {
-//			return new UsuarioBO(dataSourceWrapper);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			new LogPrinter().print(AbstractContext.class.getName(),
-//					LogPrinter.LEVEL_FATAL, e);
-//		}
-//
-//		return null;
-//
-//	}
 
 	public CuentaContableOldBO buildCuentaContableBO() {
 

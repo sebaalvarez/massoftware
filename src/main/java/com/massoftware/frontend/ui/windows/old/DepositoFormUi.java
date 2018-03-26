@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.deposito;
+package com.massoftware.frontend.ui.windows.old;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 
-public class DepositoFormUi extends StandardFormUi<Deposito> {
+class DepositoFormUi extends StandardFormUi<Deposito> {
 
 	/**
 	 * 

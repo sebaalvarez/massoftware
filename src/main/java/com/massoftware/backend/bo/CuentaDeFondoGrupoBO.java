@@ -49,7 +49,16 @@ public class CuentaDeFondoGrupoBO extends GenericBO<CuentaDeFondoGrupo> {
 	// }
 	// }
 
-	public void checkUnique(CuentaDeFondoGrupo dto) throws Exception {
+	public void checkUnique(CuentaDeFondoGrupo dto,
+			CuentaDeFondoGrupo dtoOriginal) throws Exception {
+
+		if (dtoOriginal != null && dto.getCuentaDeFondoRubro().getCodigo()
+				.equals(dtoOriginal.getCuentaDeFondoRubro().getCodigo())
+				&& dto.getCodigo().equals(dtoOriginal.getCodigo())) {
+
+			return;
+
+		}
 
 		String where = "cuentaDeFondoRubro_codigo = ? AND codigo = ?";
 
@@ -69,7 +78,8 @@ public class CuentaDeFondoGrupoBO extends GenericBO<CuentaDeFondoGrupo> {
 
 			Field fieldRubro = CuentaDeFondoGrupo.class
 					.getDeclaredField("cuentaDeFondoRubro");
-			Field fieldCodigo = CuentaDeFondoGrupo.class.getDeclaredField("codigo");
+			Field fieldCodigo = CuentaDeFondoGrupo.class
+					.getDeclaredField("codigo");
 
 			throw new UniqueException(getLabel(fieldRubro),
 					getLabel(fieldCodigo));

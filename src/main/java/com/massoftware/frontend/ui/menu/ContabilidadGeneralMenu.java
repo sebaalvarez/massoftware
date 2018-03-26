@@ -465,7 +465,7 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				FrontendContext.openWindows(true, true,  true, true, getThis(), classModel, cx, usuario, null, null, null);
+				FrontendContext.openWindows(true, true, true,  true, true, getThis(), classModel, cx, usuario, null, null, null);
 
 			}
 		};

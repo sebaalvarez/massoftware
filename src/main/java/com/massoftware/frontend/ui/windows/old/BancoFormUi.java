@@ -1,10 +1,10 @@
-package com.massoftware.frontend.ui.windows.banco;
+package com.massoftware.frontend.ui.windows.old;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.model.Banco;
 
-public class BancoFormUi extends StandardFormUi<Banco> {
+class BancoFormUi extends StandardFormUi<Banco> {
 
 	/**
 	 * 

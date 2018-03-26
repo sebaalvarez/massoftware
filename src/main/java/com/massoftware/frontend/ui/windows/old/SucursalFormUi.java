@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.sucursal;
+package com.massoftware.frontend.ui.windows.old;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class SucursalFormUi extends StandardFormUi<Sucursal> {
+class SucursalFormUi extends StandardFormUi<Sucursal> {
 
 	/**
 	 * 

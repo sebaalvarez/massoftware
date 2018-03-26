@@ -1,24 +1,18 @@
-package com.massoftware.frontend.ui.windows.deposito;
+package com.massoftware.frontend.ui.windows.old;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
-import com.massoftware.backend.bo.SucursalBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
-import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.frontend.ui.util.YesNoDialog;
-import com.massoftware.frontend.ui.windows.talonario.TalonarioFormUi;
-import com.massoftware.model.Deposito;
-import com.massoftware.model.Sucursal;
-import com.massoftware.model.Talonario;
+import com.massoftware.model.TipoCbteAFIP;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -28,7 +22,6 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
@@ -37,10 +30,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class DepositoTableUi extends CustomComponent {
+class TipoCbteAFIPTableUi extends CustomComponent {
 
 	// ----------------------------------------------
 
@@ -60,32 +52,26 @@ public class DepositoTableUi extends CustomComponent {
 
 	private HorizontalLayout filaFiltro1HL;
 
-	private HorizontalLayout sucursalHL;
-	private ComboBox sucursalesCBX;
-	private Button removerFiltroSucursalesBTN;
-
 	private HorizontalLayout filtroGenericoHL;
 	private TextField filtroGenericoTXT;
 	private Button removerFiltroGenericoBTN;
 
-	private Grid depositoGRD;
+	private Grid tipoCbteAFIPGRD;
 
 	private HorizontalLayout barraDeHerramientasFila1;
 	private Button agregarBTN;
 	private Button modificarBTN;
-	private Button copiarBTN;
+	// private Button copiarBTN;
 	private HorizontalLayout barraDeHerramientasFila2;
 	private Button eliminarBTN;
 
 	// ----------------------------------------------
 	// OPCIONES
 
-	private BeanItemContainer<Sucursal> sucursalesBIC;
-
 	// ----------------------------------------------
 	// MODELO
 
-	private BeanItemContainer<Deposito> depositoBIC;
+	private BeanItemContainer<TipoCbteAFIP> tipoCbteAFIPBIC;
 
 	// ----------------------------------------------
 
@@ -93,7 +79,7 @@ public class DepositoTableUi extends CustomComponent {
 
 	// ----------------------------------------------
 
-	public DepositoTableUi(Window window, BackendContext cx, Usuario usuario) {
+	public TipoCbteAFIPTableUi(Window window, BackendContext cx, Usuario usuario) {
 		super();
 		try {
 			this.window = window;
@@ -108,10 +94,8 @@ public class DepositoTableUi extends CustomComponent {
 
 	private void viewPort768x1024() throws Exception {
 
-		sucursalesBIC = new BeanItemContainer<Sucursal>(Sucursal.class,
-				new ArrayList<Sucursal>());
-		depositoBIC = new BeanItemContainer<Deposito>(Deposito.class,
-				new ArrayList<Deposito>());
+		tipoCbteAFIPBIC = new BeanItemContainer<TipoCbteAFIP>(
+				TipoCbteAFIP.class, new ArrayList<TipoCbteAFIP>());
 
 		// ----------------------------------------------
 
@@ -132,42 +116,6 @@ public class DepositoTableUi extends CustomComponent {
 
 		// ----------------------------------------------
 
-		sucursalHL = new HorizontalLayout();
-
-		filaFiltro1HL.addComponent(sucursalHL);
-
-		// ----------------------------------------------
-
-		sucursalesCBX = new ComboBox();
-		sucursalesCBX.addStyleName("tiny");
-		sucursalesCBX.setIcon(FontAwesome.SEARCH);
-		sucursalesCBX.setCaption("Sucursal");
-		sucursalesCBX.setNullSelectionAllowed(true);
-		sucursalesCBX.setImmediate(true);
-		sucursalesCBX.setContainerDataSource(sucursalesBIC);
-		sucursalesCBX.addValueChangeListener(e -> {
-			sucursalesCBXValueChange();
-		});
-
-		sucursalHL.addComponent(sucursalesCBX);
-
-		// ----------------------------------------------
-
-		removerFiltroSucursalesBTN = new Button();
-		removerFiltroSucursalesBTN.addStyleName("borderless tiny");
-		removerFiltroSucursalesBTN.setIcon(FontAwesome.TIMES);
-		removerFiltroSucursalesBTN
-				.setDescription("Quitar filtro ejercicio contable, y reestablecer su valor por defecto");
-		removerFiltroSucursalesBTN.addClickListener(e -> {
-			removerFiltroSucursalesBTNClick();
-		});
-
-		sucursalHL.addComponent(removerFiltroSucursalesBTN);
-		sucursalHL.setComponentAlignment(removerFiltroSucursalesBTN,
-				Alignment.BOTTOM_LEFT);
-
-		// ----------------------------------------------
-
 		filtroGenericoHL = new HorizontalLayout();
 
 		filaFiltro1HL.addComponent(filtroGenericoHL);
@@ -179,8 +127,8 @@ public class DepositoTableUi extends CustomComponent {
 		filtroGenericoTXT = new TextField();
 		filtroGenericoTXT.addStyleName("tiny");
 		filtroGenericoTXT.setIcon(FontAwesome.SEARCH);
-		filtroGenericoTXT.setCaption("Depósito");
-		filtroGenericoTXT.setInputPrompt("Depósito");
+		filtroGenericoTXT.setCaption("Tipo");
+		filtroGenericoTXT.setInputPrompt("Tipo");
 		filtroGenericoTXT.setImmediate(true);
 		filtroGenericoTXT.setNullRepresentation("");
 
@@ -214,20 +162,18 @@ public class DepositoTableUi extends CustomComponent {
 
 		// ----------------------------------------------
 
-		depositoGRD = new Grid();
-		depositoGRD.addStyleName("small compact");
-		depositoGRD.setWidth("100%");
+		tipoCbteAFIPGRD = new Grid();
+		tipoCbteAFIPGRD.addStyleName("small compact");
+		tipoCbteAFIPGRD.setWidth("100%");
 		// centrosDeCostoContableGRD.setHeight("400px");
-		depositoGRD.setSelectionMode(SelectionMode.SINGLE);
-		depositoGRD.setImmediate(true);
+		tipoCbteAFIPGRD.setSelectionMode(SelectionMode.SINGLE);
+		tipoCbteAFIPGRD.setImmediate(true);
 
-		String[] attNames = { "codigo", "nombre", "abreviatura",
-				"depositoActivo", "sucursal", "modulo", "depositoAgrupacion" };
+		String[] attNames = { "codigo", "nombre" };
 
-		String[] attLabels = { "Depósito", "Nombre", "Abrev.", "Activo",
-				"Sucursal", "Modulo", "Agrupación" };
+		String[] attLabels = { "Tipo", "Descripción" };
 
-		depositoGRD.setColumns((Object[]) attNames);
+		tipoCbteAFIPGRD.setColumns((Object[]) attNames);
 
 		// .......
 
@@ -236,24 +182,14 @@ public class DepositoTableUi extends CustomComponent {
 		for (int i = 0; i < attNames.length; i++) {
 			String attName = attNames[i];
 			String attLabel = attLabels[i];
-			Column column = depositoGRD.getColumn(attName);
+			Column column = tipoCbteAFIPGRD.getColumn(attName);
 			column.setHidable(true);
 			column.setHeaderCaption(attLabel);
 
 			if (i == 0) {
 				column.setWidth(80);
 			} else if (i == 1) {
-				column.setWidth(150);
-			} else if (i == 2) {
-				column.setWidth(80);
-			} else if (i == 3) {
-				column.setWidth(80);
-			} else if (i == 4) {
-				column.setWidth(150);
-			} else if (i == 5) {
-				column.setWidth(150);
-			} else if (i == 6) {
-				column.setWidth(150);
+				column.setWidth(400);
 			} else {
 				// column.setHidden(true);
 			}
@@ -262,31 +198,32 @@ public class DepositoTableUi extends CustomComponent {
 
 		}
 
-		depositoGRD.setWidth(width + "px");
+		tipoCbteAFIPGRD.setWidth(width + "px");
 
 		// .......
 
-		depositoGRD.setContainerDataSource(depositoBIC);
+		tipoCbteAFIPGRD.setContainerDataSource(tipoCbteAFIPBIC);
 
 		// .......
 
-		depositoGRD.getColumn("depositoActivo").setRenderer(
-				new HtmlRenderer(),
-				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
-						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+		// SOLO PARA ATTS BOOLEAN !!!
+		// tipoCbteAFIPGRD.getColumn("depositoActivo").setRenderer(
+		// new HtmlRenderer(),
+		// new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+		// .getHtml(), FontAwesome.SQUARE_O.getHtml()));
 
 		// .......
 
 		List<SortOrder> order = new ArrayList<SortOrder>();
 		order.add(new SortOrder(pidFiltering, SortDirection.ASCENDING));
-		depositoGRD.setSortOrder(order);
+		tipoCbteAFIPGRD.setSortOrder(order);
 
-		depositoGRD.addSortListener(e -> {
+		tipoCbteAFIPGRD.addSortListener(e -> {
 			sort();
 		});
 
-		rootVL.addComponent(depositoGRD);
-		rootVL.setComponentAlignment(depositoGRD, Alignment.MIDDLE_CENTER);
+		rootVL.addComponent(tipoCbteAFIPGRD);
+		rootVL.setComponentAlignment(tipoCbteAFIPGRD, Alignment.MIDDLE_CENTER);
 
 		// ----------------------------------------------
 
@@ -327,17 +264,17 @@ public class DepositoTableUi extends CustomComponent {
 
 		// ----------------------------------------------
 
-		copiarBTN = new Button();
-		copiarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-		copiarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-		copiarBTN.setIcon(FontAwesome.PLUS_SQUARE);
-		copiarBTN.setCaption("Copiar");
-		copiarBTN.setDescription(copiarBTN.getCaption() + " (Ctrl+C)");
-		copiarBTN.addClickListener(e -> {
-			copiarBTNClick();
-		});
-
-		barraDeHerramientasFila1.addComponent(copiarBTN);
+		// copiarBTN = new Button();
+		// copiarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+		// copiarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+		// copiarBTN.setIcon(FontAwesome.PLUS_SQUARE);
+		// copiarBTN.setCaption("Copiar");
+		// copiarBTN.setDescription(copiarBTN.getCaption() + " (Ctrl+C)");
+		// copiarBTN.addClickListener(e -> {
+		// copiarBTNClick();
+		// });
+		//
+		// barraDeHerramientasFila1.addComponent(copiarBTN);
 
 		// ----------------------------------------------
 
@@ -371,7 +308,7 @@ public class DepositoTableUi extends CustomComponent {
 
 			@Override
 			public void handleAction(Object sender, Object target) {
-				if (target.equals(depositoGRD)) {
+				if (target.equals(tipoCbteAFIPGRD)) {
 					modificarBTNClick();
 				}
 
@@ -404,16 +341,16 @@ public class DepositoTableUi extends CustomComponent {
 		});
 		// --------------------------------------------------
 
-		this.addShortcutListener(new ShortcutListener("CTRL+C", KeyCode.C,
-				new int[] { ModifierKey.CTRL }) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void handleAction(Object sender, Object target) {
-				copiarBTNClick();
-			}
-		});
+		// this.addShortcutListener(new ShortcutListener("CTRL+C", KeyCode.C,
+		// new int[] { ModifierKey.CTRL }) {
+		//
+		// private static final long serialVersionUID = 1L;
+		//
+		// @Override
+		// public void handleAction(Object sender, Object target) {
+		// copiarBTNClick();
+		// }
+		// });
 
 		// ----------------------------------------------
 
@@ -422,11 +359,25 @@ public class DepositoTableUi extends CustomComponent {
 	private void agregarBTNClick() {
 		try {
 
-			depositoGRD.select(null);
+			tipoCbteAFIPGRD.select(null);
 
-			DepositoFormUi ui = new DepositoFormUi(StandardFormUi.INSERT_MODE,
-					cx, null, this);
-			getUI().addWindow(ui.getWindow());
+			Window win = new Window();
+
+			// PuntoDeEquilibrioFormUi ui = new PuntoDeEquilibrioFormUi(win, cx,
+			// this, ejercicioContable);
+
+			win.setCaption("Agragar depósito");
+			win.setImmediate(true);
+			win.setWidth("-1px");
+			win.setHeight("-1px");
+			win.setClosable(true);
+			win.setResizable(false);
+			win.setModal(true);
+			win.center();
+			// win.setContent((Component) ui);
+			getUI().addWindow(win);
+			win.center();
+			win.focus();
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -436,13 +387,29 @@ public class DepositoTableUi extends CustomComponent {
 	private void modificarBTNClick() {
 		try {
 
-			if (depositoGRD.getSelectedRow() != null) {
+			if (tipoCbteAFIPGRD.getSelectedRow() != null) {
 
-				Deposito item = (Deposito) depositoGRD.getSelectedRow();
+				TipoCbteAFIP item = (TipoCbteAFIP) tipoCbteAFIPGRD
+						.getSelectedRow();
 
-				DepositoFormUi ui = new DepositoFormUi(
-						StandardFormUi.UPDATE_MODE, cx, item, this);
-				getUI().addWindow(ui.getWindow());
+				Window win = new Window();
+
+				// PuntoDeEquilibrioFormUi ui = new PuntoDeEquilibrioFormUi(win,
+				// cx, this, puntoDeEquilibrio, false);
+
+				win.setCaption("Modificar tipo de comprobante AFIP");
+				win.setImmediate(true);
+				win.setWidth("-1px");
+				win.setHeight("-1px");
+				win.setClosable(true);
+				win.setResizable(false);
+				win.setModal(true);
+				win.center();
+				// win.setContent((Component) ui);
+				getUI().addWindow(win);
+				win.center();
+				win.focus();
+
 			}
 
 		} catch (Exception e) {
@@ -450,36 +417,57 @@ public class DepositoTableUi extends CustomComponent {
 		}
 	}
 
-	private void copiarBTNClick() {
-		try {
-
-			if (depositoGRD.getSelectedRow() != null) {
-
-				Deposito item = (Deposito) depositoGRD.getSelectedRow();
-
-				Deposito itemNew = item.clone();
-
-				DepositoFormUi ui = new DepositoFormUi(
-						StandardFormUi.COPY_MODE, cx, itemNew, this);
-				getUI().addWindow(ui.getWindow());
-			}
-
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-	}
+	// private void copiarBTNClick() {
+	// try {
+	//
+	// if (tipoCbteAFIPGRD.getSelectedRow() != null) {
+	//
+	// TipoCbteAFIP item = (TipoCbteAFIP) tipoCbteAFIPGRD.getSelectedRow();
+	//
+	// // PuntoDeEquilibrio puntoDeEquilibrioNew = new
+	// // PuntoDeEquilibrio();
+	// // puntoDeEquilibrioNew.setEjercicioContable(item
+	// // .getEjercicioContable());
+	// // puntoDeEquilibrioNew.setNombre(item.getNombre());
+	// // puntoDeEquilibrioNew.setPuntoDeEquilibrioTipo(item
+	// // .getPuntoDeEquilibrioTipo());
+	//
+	// Window win = new Window();
+	//
+	// // PuntoDeEquilibrioFormUi ui = new PuntoDeEquilibrioFormUi(win,
+	// // cx, this, puntoDeEquilibrioNew);
+	//
+	// win.setCaption("Copiar tipo de comprobante AFIP");
+	// win.setImmediate(true);
+	// win.setWidth("-1px");
+	// win.setHeight("-1px");
+	// win.setClosable(true);
+	// win.setResizable(false);
+	// win.setModal(true);
+	// win.center();
+	// // win.setContent((Component) ui);
+	// getUI().addWindow(win);
+	// win.center();
+	// win.focus();
+	// }
+	//
+	// } catch (Exception e) {
+	// LogAndNotification.print(e);
+	// }
+	// }
 
 	private void eliminarBTNClick() {
 		try {
 
-			if (depositoGRD.getSelectedRow() != null) {
+			if (tipoCbteAFIPGRD.getSelectedRow() != null) {
 
-				Deposito item = (Deposito) depositoGRD.getSelectedRow();
+				TipoCbteAFIP item = (TipoCbteAFIP) tipoCbteAFIPGRD
+						.getSelectedRow();
 
 				getUI().addWindow(
 						new YesNoDialog("Eliminar",
-								"Esta seguro de eliminar el depósito " + item,
-								new YesNoDialog.Callback() {
+								"Esta seguro de eliminar el tipo de comprobante AFIP "
+										+ item, new YesNoDialog.Callback() {
 									public void onDialogResult(boolean yes) {
 										if (yes) {
 											delete();
@@ -496,19 +484,22 @@ public class DepositoTableUi extends CustomComponent {
 	private void delete() {
 		try {
 
-			if (depositoGRD.getSelectedRow() != null) {
+			if (tipoCbteAFIPGRD.getSelectedRow() != null) {
 
-				Deposito item = (Deposito) depositoGRD.getSelectedRow();
+				TipoCbteAFIP item = (TipoCbteAFIP) tipoCbteAFIPGRD
+						.getSelectedRow();
 				try {
 
 					// cx.buildPuntoDeEquilibrioBO().delete((Sucursal) item);
 
 				} catch (DeleteForeingObjectConflictException e) {
-					LogAndNotification.print(e, "Depósito " + item.getId());
+					LogAndNotification.print(e, "Tipo de comprobante AFIP "
+							+ item.getId());
 					return;
 				}
 
-				String msg = "Se eliminó con éxito el depoósito " + item;
+				String msg = "Se eliminó con éxito el tipo de comprobante AFIP "
+						+ item;
 
 				LogAndNotification.printSuccessOk(msg);
 
@@ -516,7 +507,7 @@ public class DepositoTableUi extends CustomComponent {
 			}
 
 		} catch (DeleteForeingObjectConflictException e) {
-			LogAndNotification.print(e, "Depósito");
+			LogAndNotification.print(e, "Tipo de comprobante AFIP");
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -535,7 +526,7 @@ public class DepositoTableUi extends CustomComponent {
 		try {
 
 			@SuppressWarnings("unchecked")
-			BeanItemContainer<Deposito> container = ((BeanItemContainer<Deposito>) depositoGRD
+			BeanItemContainer<TipoCbteAFIP> container = ((BeanItemContainer<TipoCbteAFIP>) tipoCbteAFIPGRD
 					.getContainerDataSource());
 
 			container.removeAllContainerFilters();
@@ -547,13 +538,13 @@ public class DepositoTableUi extends CustomComponent {
 						SimpleStringTraslateFilter.CONTAINS_WORDS_AND));
 
 			}
-			depositoGRD.recalculateColumnWidths();
+			tipoCbteAFIPGRD.recalculateColumnWidths();
 
-			boolean enabled = depositoBIC.size() > 0;
+			boolean enabled = tipoCbteAFIPBIC.size() > 0;
 
-			depositoGRD.setEnabled(enabled);
+			tipoCbteAFIPGRD.setEnabled(enabled);
 			modificarBTN.setEnabled(enabled);
-			copiarBTN.setEnabled(enabled);
+			// copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
 
 		} catch (Exception e) {
@@ -572,12 +563,12 @@ public class DepositoTableUi extends CustomComponent {
 
 	private void sort() {
 		try {
-			pidFiltering = depositoGRD.getSortOrder().get(0).getPropertyId()
-					.toString();
+			pidFiltering = tipoCbteAFIPGRD.getSortOrder().get(0)
+					.getPropertyId().toString();
 
 			// pidFiltering = attName;
 
-			String caption = depositoGRD.getColumn(pidFiltering)
+			String caption = tipoCbteAFIPGRD.getColumn(pidFiltering)
 					.getHeaderCaption();
 
 			filtroGenericoTXT.setCaption(caption);
@@ -602,23 +593,6 @@ public class DepositoTableUi extends CustomComponent {
 
 	}
 
-	private void removerFiltroSucursalesBTNClick() {
-		try {
-			sucursalesCBX.setValue(null);
-			loadOptionsViewPort768x1024();
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-	}
-
-	private void sucursalesCBXValueChange() {
-		try {
-			loadModelViewPort768x1024();
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-	}
-
 	private void loadOptionsViewPort768x1024() {
 		try {
 			loadModelViewPort768x1024();
@@ -630,17 +604,9 @@ public class DepositoTableUi extends CustomComponent {
 	private void loadModelViewPort768x1024() throws Exception {
 		try {
 
-			SucursalBO sucursalBO = cx.buildSucursalBO();
-
-			List<Sucursal> sucursales = sucursalBO.findAll();
-			sucursalesBIC.removeAllItems();
-			for (Sucursal item : sucursales) {
-				sucursalesBIC.addBean(item);
-			}
-
 			updateModelViewPort768x1024();
 
-			boolean enabled = depositoBIC.size() > 0;
+			boolean enabled = tipoCbteAFIPBIC.size() > 0;
 
 			if (enabled) {
 
@@ -655,27 +621,18 @@ public class DepositoTableUi extends CustomComponent {
 	public void updateModelViewPort768x1024() throws Exception {
 		try {
 
-			Sucursal sucursal = (Sucursal) sucursalesCBX.getValue();
+			List<TipoCbteAFIP> items = cx.buildBO(TipoCbteAFIP.class).findAll();
 
-			List<Deposito> items = null;
-
-			if (sucursal != null && sucursal.getCodigo() != null) {
-//				items = cx.buildDepositoBO().findAllBySucursal(
-//						sucursal.getCodigo());
-			} else {
-				items = cx.buildBO(Deposito.class).findAll();
+			tipoCbteAFIPBIC.removeAllItems();
+			for (TipoCbteAFIP item : items) {
+				tipoCbteAFIPBIC.addBean(item);
 			}
 
-			depositoBIC.removeAllItems();
-			for (Deposito item : items) {
-				depositoBIC.addBean(item);
-			}
+			boolean enabled = tipoCbteAFIPBIC.size() > 0;
 
-			boolean enabled = depositoBIC.size() > 0;
-
-			depositoGRD.setEnabled(enabled);
+			tipoCbteAFIPGRD.setEnabled(enabled);
 			modificarBTN.setEnabled(enabled);
-			copiarBTN.setEnabled(enabled);
+			// copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
 
 		} catch (Exception e) {

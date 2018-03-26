@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.talonario;
+package com.massoftware.frontend.ui.windows.old;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextField;
 
-public class TalonarioFormUi extends StandardFormUi<Talonario> {
+class TalonarioFormUi extends StandardFormUi<Talonario> {
 
 	/**
 	 * 

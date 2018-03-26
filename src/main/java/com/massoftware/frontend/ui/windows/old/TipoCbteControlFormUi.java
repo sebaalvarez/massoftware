@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.tipo_cbte_control;
+package com.massoftware.frontend.ui.windows.old;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
@@ -12,7 +12,7 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 
-public class TipoCbteControlFormUi extends StandardFormUi<TipoCbteControl> {
+class TipoCbteControlFormUi extends StandardFormUi<TipoCbteControl> {
 
 	/**
 	 * 

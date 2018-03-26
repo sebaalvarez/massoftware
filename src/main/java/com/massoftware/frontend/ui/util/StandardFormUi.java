@@ -11,6 +11,8 @@ import org.cendra.ex.crud.UniqueException;
 
 import com.massoftware.annotation.model.ClassFormSourceAnont;
 import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
+import com.massoftware.annotation.model.FieldLabelAnont;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.build.BuildComponentsUtil;
 import com.massoftware.frontend.xmd.BuilderXMD;
@@ -45,7 +47,7 @@ public class StandardFormUi<T> extends CustomComponent {
 	public final static String COPY_MODE = "COPY_MODE";
 
 	protected String mode;
-	private Window window;
+	protected Window window;
 	protected BackendContext cx;
 	protected String msg;
 	protected String dtoLabel;
@@ -168,7 +170,9 @@ public class StandardFormUi<T> extends CustomComponent {
 		return window;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void buildContainers(T dto) throws Exception {
+
 		if (dto != null && dto instanceof EntityId) {
 			originalDTO = ((EntityId) dto).clone();
 		}
@@ -183,15 +187,23 @@ public class StandardFormUi<T> extends CustomComponent {
 
 		// ----------------------------------------------------------------------
 
-		if (StandardFormUi.INSERT_MODE.equalsIgnoreCase(mode)) {
-			// LO DEJO COMENTADO POR LAS DUDAS QUE LUEGO QUERRAMOS IMPLEMENTAR
-			// ESTA FUNCIONALIDAD
-			// Integer maxNumero = cx.buildSucursalBO().findMaxSucursal();
-			// if (maxNumero == null || maxNumero < 1) {
-			// maxNumero = 1;
-			// }
-			//
-			// sucursalBI.getBean().setCodigo(maxNumero);
+		if (StandardFormUi.INSERT_MODE.equalsIgnoreCase(mode)
+				|| StandardFormUi.COPY_MODE.equalsIgnoreCase(mode)) {
+
+			Field[] fields = classModel.getDeclaredFields();
+
+			for (Field field : fields) {
+
+				if (field.getType() == Integer.class && isAutoMaxValue(field)) {
+
+					Integer maxNumero = cx.buildBO(classModel).maxValue(
+							field.getName());
+					if (maxNumero == null || maxNumero < 1) {
+						maxNumero = 1;
+					}
+					dtoBI.getItemProperty(field.getName()).setValue(maxNumero);
+				}
+			}
 		}
 	}
 
@@ -200,7 +212,7 @@ public class StandardFormUi<T> extends CustomComponent {
 		// 768x1024
 		// --------------------------------------------------
 
-		rootVL = BuilderXMD.buildVL();
+		rootVL = BuilderXMD.buildVL();		
 
 		this.setCompositionRoot(rootVL);
 
@@ -317,29 +329,11 @@ public class StandardFormUi<T> extends CustomComponent {
 	private void validateAllFields(AbstractComponentContainer componentContainer)
 			throws Exception {
 
-		// Iterator<Component> itr = componentContainer.iterator();
-		//
-		// while (itr.hasNext()) {
-		// Component component = itr.next();
-		// if (component instanceof AbstractField) {
-		//
-		// ((AbstractField) component)
-		// .addValidator(new GenericUniqueDTOValidator(
-		// String.class, cx.buildBO(classModel), dtoBI
-		// .getBean()));
-		//
-		// } else if (component instanceof ComponentContainer) {
-		//
-		// validateAllFields((AbstractComponentContainer) component);
-		// }
-		// }
-
-		// try {
-		cx.buildBO(classModel).checkUnique(dtoBI.getBean());
-		// } catch (UniqueException ue) {
-		// this.setErrorMessage(ue.getMessage());
-		//
-		// }
+		if (mode.equals(UPDATE_MODE)) {
+			cx.buildBO(classModel).checkUnique(dtoBI.getBean(), originalDTO);
+		} else {
+			cx.buildBO(classModel).checkUnique(dtoBI.getBean(), null);
+		}
 
 		Iterator<Component> itr = componentContainer.iterator();
 
@@ -351,14 +345,6 @@ public class StandardFormUi<T> extends CustomComponent {
 				validateAllFields((AbstractComponentContainer) component);
 			}
 		}
-
-		// for (int i = 0; i < component.getComponentCount(); i++) {
-		// if (component. instanceof AbstractField) {
-		// ((AbstractField) component.getComponent(i)).validate();
-		// } else if (component.getComponent(i) instanceof AbstractField) {
-		//
-		// }
-		// }
 
 	}
 
@@ -418,52 +404,38 @@ public class StandardFormUi<T> extends CustomComponent {
 		return null;
 	}
 
-	// protected Component getComponentByCaption(String caption){
-	// return getComponentByCaption(rootVL, caption);
-	// }
-	//
-	// protected Component getComponentByCaption(AbstractComponentContainer
-	// componentContainer, String caption){
-	// Iterator<Component> itr = componentContainer.iterator();
-	//
-	// while (itr.hasNext()) {
-	// Component component = itr.next();
-	// if(component.getCaption() != null &&
-	// component.getCaption().equals(caption)){
-	// return component;
-	// }
-	// if (component instanceof ComponentContainer) {
-	// return getComponentByCaption((AbstractComponentContainer) component,
-	// caption);
-	// }
-	// }
-	//
-	// return null;
-	// }
-
 	protected Component getComponentById(String id) {
 		// return getComponentById(rootVL, id);
-		
+
 		return controls.get(id);
 	}
 
-	// protected Component getComponentById(AbstractComponentContainer
-	// componentContainer, String id){
-	// Iterator<Component> itr = componentContainer.iterator();
-	//
-	// while (itr.hasNext()) {
-	// Component component = itr.next();
-	// System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX " +
-	// component.getId());
-	// if(component.getId() != null && component.getId().equals(id)){
-	// return component;
-	// }
-	// if (component instanceof ComponentContainer) {
-	// return getComponentById((AbstractComponentContainer) component, id);
-	// }
-	// }
-	//
-	// return null;
-	// }
+	private static boolean isAutoMaxValue(Field field) {
+
+		FieldAutoMaxValueAnont[] a = field
+				.getAnnotationsByType(FieldAutoMaxValueAnont.class);
+
+		return (a != null && a.length > 0);
+
+	}
+
+	protected String getLabel(Field field) {
+
+		FieldLabelAnont[] a = field.getAnnotationsByType(FieldLabelAnont.class);
+		if (a != null && a.length > 0) {
+			return a[0].value();
+		}
+
+		return null;
+	}
+
+	@SuppressWarnings("rawtypes")
+	protected String getLabel(Class clazz, String attName)
+			throws NoSuchFieldException, SecurityException {
+
+		Field field = clazz.getDeclaredField(attName);
+
+		return getLabel(field);
+	}
 
 } // END CLASS ///////////////////////////////////////////////////////////

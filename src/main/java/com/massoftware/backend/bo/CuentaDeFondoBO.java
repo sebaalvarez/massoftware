@@ -22,8 +22,8 @@ public class CuentaDeFondoBO extends GenericBO<CuentaDeFondo> {
 		super(CuentaDeFondo.class, dataSourceWrapper, cx);
 	}
 
-	public CuentaDeFondo findByCodigo(String codigo) throws Exception {
-		
+	public CuentaDeFondo findByCodigo(Integer codigo) throws Exception {
+
 		List<CuentaDeFondo> items = find("codigo", "codigo = ?", codigo);
 
 		if (items.size() == 1) {
@@ -83,14 +83,12 @@ public class CuentaDeFondoBO extends GenericBO<CuentaDeFondo> {
 
 	@Override
 	public void checkUnique(String attName, Object value) throws Exception {
-		
+
 		String viewNameOld = viewName;
-		
+
 		viewName = "vCuentaDeFondoA";
 
 		if (attName.equalsIgnoreCase(ATT_NAME_CODIGO)) {
-			
-			
 
 			checkUnique(attName, ATT_NAME_CODIGO + " = ?", value);
 
@@ -100,31 +98,8 @@ public class CuentaDeFondoBO extends GenericBO<CuentaDeFondo> {
 					.toString().toLowerCase());
 
 		}
-		
+
 		viewName = viewNameOld;
-	}
-
-	public boolean delete(CuentaDeFondo dto) throws Exception {
-
-		Object codigoArg = null;
-
-		if (dto.getCodigo() != null) {
-			codigoArg = dto.getCodigo();
-		} else {
-			codigoArg = Integer.class;
-		}
-
-		if (dataSourceWrapper.isDatabasePostgreSql()) {
-			return delete(ATT_NAME_CODIGO + " = ?", codigoArg);
-		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-
-			return delete(
-					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_CODIGO))
-							+ " = ?", codigoArg);
-		}
-
-		return false;
-
 	}
 
 	public CuentaDeFondo insert(CuentaDeFondo dto, Usuario usuario)
