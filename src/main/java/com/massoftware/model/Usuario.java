@@ -18,9 +18,9 @@ public class Usuario extends EntityId implements Cloneable, Comparable<Usuario> 
 
 	}
 
-	public Usuario(Object[] row) {
-		setterByArray(row);
-	}
+//	public Usuario(Object[] row) {
+//		setterByArray(row);
+//	}
 
 	public Integer getNumero() {
 		return numero;
@@ -48,28 +48,28 @@ public class Usuario extends EntityId implements Cloneable, Comparable<Usuario> 
 		this.ejercicioContable = ejercicioContable;
 	}
 
-	public void setterByArray(Object[] row) {
-
-		int column = 0;
-
-		if (row[column] != null) {
-			this.setNumero((Integer) row[column]);
-		}
-
-		column++;
-
-		if (row[column] != null) {
-			this.setNombre((String) row[column]);
-		}
-
-		EjercicioContable ejercicioContable = new EjercicioContable(
-				ArrayUtils.subarray(row, 2, 8));
-
-		if (ejercicioContable.getEjercicio() != null) {
-			this.setEjercicioContable(ejercicioContable);
-		}
-
-	}
+//	public void setterByArray(Object[] row) {
+//
+//		int column = 0;
+//
+//		if (row[column] != null) {
+//			this.setNumero((Integer) row[column]);
+//		}
+//
+//		column++;
+//
+//		if (row[column] != null) {
+//			this.setNombre((String) row[column]);
+//		}
+//
+//		EjercicioContable ejercicioContable = new EjercicioContable(
+//				ArrayUtils.subarray(row, 2, 8));
+//
+//		if (ejercicioContable.getEjercicio() != null) {
+//			this.setEjercicioContable(ejercicioContable);
+//		}
+//
+//	}
 
 	public Usuario clone() throws CloneNotSupportedException {
 		Usuario other = (Usuario) super.clone();

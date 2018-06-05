@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
-import com.massoftware.backend.bo.EjercicioContableBO;
+import com.massoftware.backend.bo.EjercicioContableBOViejo;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
@@ -693,7 +693,7 @@ public class PuntoDeEquilibrioTableUi extends CustomComponent {
 	protected void loadOptionsViewPort768x1024() {
 		try {
 
-			EjercicioContableBO ejercicioContableBO = cx
+			EjercicioContableBOViejo ejercicioContableBO = cx
 					.buildEjercicioContableBO();
 
 			List<EjercicioContable> ejerciciosContables = ejercicioContableBO

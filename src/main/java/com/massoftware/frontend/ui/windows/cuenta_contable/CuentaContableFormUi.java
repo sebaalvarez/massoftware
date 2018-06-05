@@ -11,7 +11,7 @@ import org.vaadin.inputmask.InputMask;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.validator.StringLengthValidatorInputMask;
-import com.massoftware.frontend.ui.windows.centro_de_costo_contable.CentroDeCostoContableFormUi;
+import com.massoftware.frontend.ui.windows.centro_de_costo_contable.CentroDeCostoContableFormUiViejo;
 import com.massoftware.frontend.ui.windows.punto_de_equilibrio.PuntoDeEquilibrioFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CostoDeVenta;
@@ -1162,7 +1162,7 @@ public class CuentaContableFormUi extends CustomComponent {
 
 			Window win = new Window();
 
-			CentroDeCostoContableFormUi ui = new CentroDeCostoContableFormUi(
+			CentroDeCostoContableFormUiViejo ui = new CentroDeCostoContableFormUiViejo(
 					win, cx, this, ejercicioContable);
 
 			win.setCaption("Agragar centro de costo contable");

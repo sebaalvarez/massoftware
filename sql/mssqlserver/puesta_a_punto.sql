@@ -39,11 +39,482 @@ ALTER TABLE [dbo].[SSECUR_User]
 --UPDATE [dbo].[CentrosDeCostoContable]  SET [id] = CONCAT ( CAST([CentrosDeCostoContable].[EJERCICIO] AS VARCHAR), '-', CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS VARCHAR) );
 
 
+--------------------------------------------------------------
+
+-- DROP FUNCTION dbo.Translate
+
+CREATE  FUNCTION dbo.Translate
+(     @Source      VARCHAR(8000)
+   , @ReplaceCharOrder    VARCHAR(8000)
+   , @ReplaceWithCharOrder   VARCHAR(8000)
+)
+   RETURNS VARCHAR(8000) AS  
+
+/*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+ *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+
+   Object Name      :   dbo.Translate
+   Author         :   UB for DCF, on August05, 2008
+   Purpose         :   Like TRANSLATE function in Oracle. Charecter-wise replace in source string with given charecters.
+   Input         :   
+   Output         :   returns @Translated_Source string 
+   Version         :   1.0 as of 08/05/2008
+   Modification   :   
+   Execute         :   SELECT dbo.Translate('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', '1234567890', '0987654321')
+
+ *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+ *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
+
+
+BEGIN 
+
+   --
+   --   Validate input 
+   --
+   IF   @Source   IS NULL
+         RETURN NULL
+   
+   IF    @Source   = ''
+         RETURN ''
+
+   IF    @ReplaceCharOrder IS NULL         OR
+      @ReplaceCharOrder = ''
+		SELECT @ReplaceCharOrder = '/\"'';,_-âãäåāăąàáÁÂÃÄÅĀĂĄÀèééêëēĕėęěĒĔĖĘĚÉÈËÊìíîïìĩīĭÌÍÎÏÌĨĪĬóôõöōŏőòÒÓÔÕÖŌŎŐùúûüũūŭůÙÚÛÜŨŪŬŮçÇñÑ'	
+         --RETURN @Source
+
+   IF   @ReplaceWithCharOrder IS NULL   
+			SELECT @ReplaceWithCharOrder = '        aaaaaaaaaAAAAAAAAAeeeeeeeeeeEEEEEEEEEiiiiiiiiIIIIIIIIooooooooOOOOOOOOuuuuuuuuUUUUUUUUcCnN'
+        -- RETURN 'Invalid parameters in function call dbo.Translate'
+
+
+   --
+   --   Variables used
+   --
+   DECLARE   @Curr_Pos_In_Source      INT
+      , @Check_Source_Str_Len      INT
+      , @nth_source         VARCHAR(1)
+      , @Found_Match         INT
+      , @Translated_Source      VARCHAR(8000)
+      , @Match_In_ReplaceWith      VARCHAR(1)
+
+
+   --
+   --   Assign starting values for variables
+   --
+   SELECT    @Curr_Pos_In_Source      = 1
+      , @Check_Source_Str_Len      = LEN(@Source)
+      , @Translated_Source      = ''
+
+
+
+   --
+   --   Replace each charecter with its corrosponding charecter from @ReplaceWithCharOrder
+   --
+   WHILE @Curr_Pos_In_Source <= @Check_Source_Str_Len
+   BEGIN
+
+      --
+      --   Get the n'th charecter in @Source
+      --
+      SELECT @nth_source = SUBSTRING(@Source, @Curr_Pos_In_Source, 1)
+   
+
+      --
+      --   See if there is a matching character for @nth_source in the @ReplaceCharOrder String, then replace it with 
+      --   corrosponding character in @ReplaceWithCharOrder String. If not..go to next n'th character in @Source
+      --      If a match is found in @ReplaceCharOrder but no corrosponding character in @ReplaceWithCharOrder
+      --      then, replace it with '' (nothing)
+      --   Store the resultant string in a separate variable
+      --
+      SELECT @Found_Match = CHARINDEX(@nth_source, @ReplaceCharOrder COLLATE SQL_Latin1_General_CP1_CS_AS)
+
+      IF @Found_Match > 0
+      BEGIN
+         --
+         --   Finding corrosponding match in the @Found_Match'th position in @ReplaceWithCharOrder
+         --   if not found then replace it with '' (nothing)
+         --
+         SELECT  @Match_In_ReplaceWith = SUBSTRING(@ReplaceWithCharOrder, @Found_Match, 1)
+
+         --
+         --   Now replace @nth_source with @Match_In_ReplaceWith and store it in @Translated_Source
+         --
+         SELECT @Translated_Source = @Translated_Source + @Match_In_ReplaceWith
+      END
+      ELSE
+      BEGIN
+         --
+         --   No match found in @ReplaceCharOrder
+         --
+         SELECT @Translated_Source = @Translated_Source + @nth_source
+      END
+
+      --
+      --   Increment the current position for loop
+      --
+      SELECT @Curr_Pos_In_Source = @Curr_Pos_In_Source + 1
+      
+   END
+   
+   SELECT @Translated_Source = LTRIM(RTRIM(@Translated_Source))
+
+   RETURN  @Translated_Source
+
+END
+
+/*
+TESTING:
+   SELECT dbo.Translate('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', 'abcdefghijklmnopqrstuvwxyz098765432')
+   SELECT dbo.Translate('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', '0123456789', '9876543210')
+   SELECT dbo.Translate('', '', '')
+   SELECT dbo.Translate('âãäåāăąàá', 'âãäåāăąàá', 'aaaaaaaaa')
+
+	
+	
+	 SELECT dbo.Translate(	
+						'/\"'';,_-âãäåāăąàáÁÂÃÄÅĀĂĄÀèééêëēĕėęěĒĔĖĘĚÉÈËÊìíîïìĩīĭÌÍÎÏÌĨĪĬóôõöōŏőòÒÓÔÕÖŌŎŐùúûüũūŭůÙÚÛÜŨŪŬŮçÇñÑ', 
+						'/\"'';,_-âãäåāăąàáÁÂÃÄÅĀĂĄÀèééêëēĕėęěĒĔĖĘĚÉÈËÊìíîïìĩīĭÌÍÎÏÌĨĪĬóôõöōŏőòÒÓÔÕÖŌŎŐùúûüũūŭůÙÚÛÜŨŪŬŮçÇñÑ', 
+						'        aaaaaaaaaAAAAAAAAAeeeeeeeeeeEEEEEEEEEiiiiiiiiIIIIIIIIooooooooOOOOOOOOuuuuuuuuUUUUUUUUcCnN'
+					)
+
+
+				
+		
+ SELECT dbo.Translate(	
+						'/\"'';,_-âãäåāăąàáÁÂÃÄÅĀĂĄÀèééêëēĕėęěĒĔĖĘĚÉÈËÊìíîïìĩīĭÌÍÎÏÌĨĪĬóôõöōŏőòÒÓÔÕÖŌŎŐùúûüũūŭůÙÚÛÜŨŪŬŮçÇñÑ', 
+						null,
+						null
+					)
+		
+		
+			
+			
+
+		
+ SELECT * FROM dbo.vZona WHERE LOWER(dbo.Translate(nombre, null, null)) = LOWER(dbo.Translate('/\"'';,_-âãäåaaaàááâãäåaaaàèéé', null,null));	
+
+
+*/
+
+
+
+
+---------------------------------------------------------------
+
+
 ALTER TABLE [dbo].[SSECUR_User] ADD DEFAULT_EJERCICIO_CONTABLE int NULL;  
 		
 		
 -- VISTAS
 
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vZona]
+
+CREATE VIEW [dbo].[vZona] AS  
+
+
+	SELECT	'com.massoftware.model.Zona'										AS ClassZona
+			-----------------------------------------------------------------------------------------------------
+			, LTRIM(RTRIM(CAST([Zonas].[ZONA] AS VARCHAR)))						AS id			
+			-----------------------------------------------------------------------------------------------------
+			, LTRIM(RTRIM(CAST([Zonas].[ZONA] AS VARCHAR)))						AS codigo		-- String (3) NOT NULL
+			, LTRIM(RTRIM(CAST([Zonas].[NOMBRE] AS VARCHAR)))					AS nombre		-- String (30) NOT NULL UN
+			, [Zonas].[BONIFICACION]											AS bonificacion	-- BigDecimal (5,2) [ 0 - 99.99] default 0.00
+			, [Zonas].[RECARGO]													AS recargo		-- BigDecimal (5,2) [ 0 - 99.99] default 0.00
+
+	FROM	[dbo].[Zonas];
+  
+	-- SELECT * FROM dbo.vZona;	
+	-- SELECT * FROM dbo.vZona ORDER BY codigo, nombre;
+	
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vPais]
+
+CREATE VIEW [dbo].[vPais] AS  
+
+
+	SELECT	'com.massoftware.model.Pais'										AS ClassPais
+			-----------------------------------------------------------------------------------------------------
+			, CAST([Paises].[PAIS] AS VARCHAR)									AS id			
+			-----------------------------------------------------------------------------------------------------
+			, CAST([Paises].[PAIS] AS INTEGER)									AS codigo		-- Integer NOT NULL [1-254] UN
+			, LTRIM(RTRIM(CAST([Paises].[NOMBRE] AS VARCHAR)))					AS nombre		-- String (25) NOT NULL UN
+			, LTRIM(RTRIM(CAST([Paises].[ABREVIATURA] AS VARCHAR)))				AS abreviatura	-- String (5) NOT NULL UN	
+					
+	FROM	[dbo].[Paises];
+  
+	-- SELECT * FROM dbo.vPais;	
+	-- SELECT * FROM dbo.vPais ORDER BY codigo, nombre;	
+	-- SELECT * FROM dbo.vPais ORDER BY codigo, nombre;
+
+	SELECT * FROM dbo.vPais WHERE LOWER(dbo.Translate(nombre, null, null)) = LOWER(dbo.Translate('argentina', null,null));
+args = []
+	
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vTipoCliente]
+
+CREATE VIEW [dbo].[vTipoCliente] AS  
+
+
+	SELECT	'com.massoftware.model.TipoCliente'									AS ClassTipoCliente
+			-----------------------------------------------------------------------------------------------------
+			, CAST([TablaTiposClientes].[TIPODECLIENTE] AS VARCHAR)				AS id			
+			-----------------------------------------------------------------------------------------------------
+			, CAST([TablaTiposClientes].[TIPODECLIENTE] AS INTEGER)				AS codigo		-- Integer NOT NULL [1-254] UN
+			, LTRIM(RTRIM(CAST([TablaTiposClientes].[NOMBRE] AS VARCHAR)))		AS nombre		-- String (20) NOT NULL UN			
+					
+	FROM	[dbo].[TablaTiposClientes];
+  
+	-- SELECT * FROM dbo.vTipoCliente;	
+	-- SELECT * FROM dbo.vTipoCliente ORDER BY codigo, nombre;			
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vTipoDocumentoAFIP]
+
+CREATE VIEW [dbo].[vTipoDocumentoAFIP] AS  
+
+
+	SELECT	'com.massoftware.model.TipoDocumentoAFIP'									AS ClassTipoDocumentoAFIP
+			-----------------------------------------------------------------------------------------------------
+			, CAST([AfipTiposDocumentos].[TIPO] AS VARCHAR)								AS id			
+			-----------------------------------------------------------------------------------------------------
+			, CAST([AfipTiposDocumentos].[TIPO] AS INTEGER)								AS codigo		-- Integer NOT NULL [0-34463] UN
+			, LTRIM(RTRIM(CAST([AfipTiposDocumentos].[DESCRIPCION] AS VARCHAR)))		AS nombre		-- String (40) NOT NULL UN			
+					
+	FROM	[dbo].[AfipTiposDocumentos];
+  
+	-- SELECT * FROM dbo.vTipoDocumentoAFIP;	
+	-- SELECT * FROM dbo.vTipoDocumentoAFIP ORDER BY codigo, nombre;	
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vTipoCbteAFIP]
+
+CREATE VIEW [dbo].[vTipoCbteAFIP] AS  
+
+
+	SELECT	'com.massoftware.model.TipoCbteAFIP'											AS ClassTipoCbteAFIP
+			-----------------------------------------------------------------------------------------------------			
+			, CAST([AfipTiposCbtes].[TIPO] AS VARCHAR)										AS id	-- String NOT NULL PK					
+			-----------------------------------------------------------------------------------------------------
+			, CAST([AfipTiposCbtes].[TIPO] AS INTEGER)										AS codigo -- Integer NOT NULL UN [ 1 - Short.MAX_VALUE] 
+			, LTRIM(RTRIM(CAST([AfipTiposCbtes].[DESCRIPCION] AS VARCHAR)))					AS nombre -- String (80) NOT NULL UN 
+  
+	FROM	[dbo].[AfipTiposCbtes];
+
+
+	-- SELECT * FROM dbo.vTipoCbteAFIP;	
+	-- SELECT * FROM dbo.vTipoCbteAFIP ORDER BY codigo, nombre;	
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vMotivoComentario]
+
+CREATE VIEW [dbo].[vMotivoComentario] AS  
+
+
+	SELECT	'com.massoftware.model.MotivoComentario'										AS ClassMotivoComentario
+			-----------------------------------------------------------------------------------------------------			
+			, CAST([TablaMotivosComentarios].[MOTIVO] AS VARCHAR)							AS id	-- String NOT NULL PK					
+			-----------------------------------------------------------------------------------------------------
+			, CAST([TablaMotivosComentarios].[MOTIVO] AS INTEGER)							AS codigo -- Integer NOT NULL UN [ 1 - 254] 
+			, LTRIM(RTRIM(CAST([TablaMotivosComentarios].[NOMBRE] AS VARCHAR)))				AS nombre -- String (20) NOT NULL UN 
+  
+	FROM	[dbo].[TablaMotivosComentarios];
+
+
+	-- SELECT * FROM dbo.vMotivoComentario;	
+	-- SELECT * FROM dbo.vMotivoComentario ORDER BY codigo, nombre;	
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vMotivoNotaDeCredito]
+
+CREATE VIEW [dbo].[vMotivoNotaDeCredito] AS  
+
+
+	SELECT	'com.massoftware.model.MotivoNotaDeCredito'										AS ClassMotivoNotaDeCredito
+			-----------------------------------------------------------------------------------------------------			
+			, CAST([TablaMotivosNotasDeCredito].[MOTIVO] AS VARCHAR)							AS id	-- String NOT NULL PK					
+			-----------------------------------------------------------------------------------------------------
+			, CAST([TablaMotivosNotasDeCredito].[MOTIVO] AS INTEGER)							AS codigo -- Integer NOT NULL UN [ 1 - 254] 
+			, LTRIM(RTRIM(CAST([TablaMotivosNotasDeCredito].[NOMBRE] AS VARCHAR)))				AS nombre -- String (30) NOT NULL UN 
+  
+	FROM	[dbo].[TablaMotivosNotasDeCredito];
+
+
+	-- SELECT * FROM dbo.vMotivoNotaDeCredito;	
+	-- SELECT * FROM dbo.vMotivoNotaDeCredito ORDER BY codigo, nombre;	
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vCodigoConvenioMultilateral]
+
+CREATE VIEW [dbo].[vCodigoConvenioMultilateral] AS  
+
+
+	SELECT	'com.massoftware.model.CodigoConvenioMultilateral'						AS ClassCodigoConvenioMultilateral
+			-----------------------------------------------------------------------------------------------------			
+			, CAST([ActividadesCM].[CODIGOCM] AS VARCHAR)							AS id	-- String NOT NULL PK					
+			-----------------------------------------------------------------------------------------------------
+			, CAST([ActividadesCM].[CODIGOCM] AS INTEGER)							AS codigo -- Integer NOT NULL UN [ 1 - Integer.MAX_VALUE] 
+			, LTRIM(RTRIM(CAST([ActividadesCM].[CODIGOCONVENIO] AS VARCHAR)))		AS codigoConvenio -- String (10) NOT NULL UN 
+			, LTRIM(RTRIM(CAST([ActividadesCM].[DESCRIPCION] AS VARCHAR)))			AS nombre -- String (150) NOT NULL UN 
+  
+	FROM	[dbo].[ActividadesCM];
+
+
+	-- SELECT * FROM dbo.vCodigoConvenioMultilateral;	
+	-- SELECT * FROM dbo.vCodigoConvenioMultilateral ORDER BY codigo, nombre;
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vCentroDeCostoProyectoTipo]
+
+CREATE VIEW [dbo].[vCentroDeCostoProyectoTipo] AS  
+
+		
+	SELECT 'com.massoftware.model.CentroDeCostoProyectoTipo' AS ClassCentroDeCostoProyectoTipo, '0' AS id, 0 AS codigo, 'Centro de costo' AS nombre
+	UNION ALL
+	SELECT 'com.massoftware.model.CentroDeCostoProyectoTipo' AS ClassCentroDeCostoProyectoTipo, '1' AS id, 1, 'Proyecto'	
+
+	-- SELECT * FROM dbo.vCentroDeCostoProyectoTipo;	
+	-- SELECT * FROM dbo.vCentroDeCostoProyectoTipo ORDER BY codigo, nombre;	
+
+-------------------------------------------------------------
+	
+-- DROP VIEW [dbo].[vEjercicioContable]; 	
+
+CREATE VIEW [dbo].[vEjercicioContable] AS
+
+	SELECT	'com.massoftware.model.EjercicioContable'									AS ClassEjercicioContable			
+
+			, CAST([EjerciciosContables].[EJERCICIO] AS VARCHAR)						AS id			
+			, CAST([EjerciciosContables].[EJERCICIO] AS INT)							AS ejercicio						
+			, LTRIM(RTRIM(CAST([EjerciciosContables].[COMENTARIO] AS VARCHAR)))			AS comentario
+			, CAST([EjerciciosContables].[FECHAAPERTURASQL] AS DATE)					AS fechaApertura			
+			, CAST([EjerciciosContables].[FECHACIERRESQL] AS DATE)						AS fechaCierre			
+			, CAST([EjerciciosContables].[EJERCICIOCERRADO] AS INT)						AS ejercicioCerrado
+			, CAST([EjerciciosContables].[EJERCICIOCERRADOMODULOS] AS INT)				AS ejercicioCerradoModulos
+
+	FROM	[dbo].[EjerciciosContables];
+	
+	-- SELECT * FROM dbo.[EjerciciosContables] ;
+	-- SELECT * FROM dbo.[vEjercicioContable] ;
+	-- SELECT * FROM dbo.[vEjercicioContable] WHERE CAST(ejercicio AS VARCHAR)  LIKE CONCAT('%', CAST(12 AS VARCHAR)) ORDER BY ejercicio DESC;
+	-- SELECT * FROM dbo.vEjercicioContable ORDER BY ejercicio DESC;
+
+--=============================================================================================================
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+--=============================================================================================================
+
+
+
+
+-- DROP VIEW [dbo].[vCentroDeCostoProyecto]
+
+CREATE VIEW [dbo].[vCentroDeCostoProyecto] AS  
+
+
+	SELECT	'com.massoftware.model.CentroDeCostoProyecto'							AS ClassCentroDeCostoProyecto
+			-----------------------------------------------------------------------------------------------------			
+			, CAST([CentrosDeCosto].[NUMERO] AS VARCHAR)							AS id	-- String NOT NULL PK					
+			-----------------------------------------------------------------------------------------------------
+			, CAST([CentrosDeCosto].[NUMERO] AS INTEGER)							AS codigo -- Integer NOT NULL UN [ 1 - Integer.MAX_VALUE] 			
+			, LTRIM(RTRIM(CAST([CentrosDeCosto].[NOMBRE] AS VARCHAR)))				AS nombre -- String (30) NOT NULL UN 
+			--, [APROPIACIONCONTABLE]
+			
+			, CASE    
+				WHEN [CentrosDeCosto].[CENTRODECOSTOPROYECTO] IS NULL THEN 0
+				ELSE CAST([CentrosDeCosto].[CENTRODECOSTOPROYECTO] AS INTEGER) 
+			  END																	AS tipo -- Integer NOT NULL UN [ 0 - 1]						 						
+			--, CAST([CentrosDeCosto].[CENTRODECOSTOPROYECTO] AS INTEGER)				AS tipo -- Integer NOT NULL UN [ 0 - 1] 	
+			
+			-----------------------------------------------------------------------------------------------------
+				-- , [CENTRODECOSTOPROYECTO]										AS tipo					-- NOT NULL UN [ 0 - 1] 	
+				, [vCentroDeCostoProyectoTipo].[id]									AS tipo_id		
+				, [vCentroDeCostoProyectoTipo].[codigo]								AS tipo_codigo 
+				, [vCentroDeCostoProyectoTipo].[nombre]								AS tipo_nombre 
+
+								
+			, [PROYECTOACTIVO]														AS proyectoActivo-- Boolean 						
+			, LTRIM(RTRIM(CAST([CentrosDeCosto].[PROYECTOCOMENTARIO] AS VARCHAR)))	AS proyectoComentario -- String (511) NOT NULL UN 			
+  
+	FROM	[dbo].[CentrosDeCosto]
+
+	LEFT JOIN	[dbo].[vCentroDeCostoProyectoTipo] 
+		ON (
+			[dbo].[vCentroDeCostoProyectoTipo].[codigo] = CAST([dbo].[CentrosDeCosto].[CENTRODECOSTOPROYECTO] AS INTEGER)
+			OR
+			(CAST([dbo].[CentrosDeCosto].[CENTRODECOSTOPROYECTO] AS INTEGER) IS NULL AND [dbo].[vCentroDeCostoProyectoTipo].[codigo] = 0)
+		);
+
+
+
+	-- SELECT * FROM dbo.vCentroDeCostoProyecto;	
+	-- SELECT * FROM dbo.vCentroDeCostoProyecto ORDER BY codigo, nombre;
+
+
+
+--=============================================================================================================
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+--=============================================================================================================
+	
+-- DROP VIEW [dbo].[vCentroDeCostoContable]
+
+CREATE VIEW [dbo].[vCentroDeCostoContable] AS        
+
+	SELECT	'com.massoftware.model.CentroDeCostoContable' AS ClassCentroDeCostoContable			
+			, CONCAT ( CAST([vEjercicioContable].[ejercicio] AS VARCHAR), '-', CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS VARCHAR) ) As id			
+			, CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS INT) AS numero			 
+			, LTRIM(RTRIM(CAST([CentrosDeCostoContable].[NOMBRE] AS VARCHAR))) AS nombre			 			
+			, LTRIM(RTRIM(CAST([CentrosDeCostoContable].[ABREVIATURA] AS VARCHAR))) AS abreviatura			 						
+			--,[CentrosDeCostoContable].[EJERCICIO] 
+				,vEjercicioContable.id  AS ejercicioContable_id			
+				,vEjercicioContable.ejercicio AS ejercicioContable_ejercicio		
+				,vEjercicioContable.fechaApertura AS ejercicioContable_fechaApertura
+				,vEjercicioContable.fechaCierre AS ejercicioContable_fechaCierre
+				,vEjercicioContable.ejercicioCerrado AS ejercicioContable_ejercicioCerrado
+				,vEjercicioContable.ejercicioCerradoModulos AS ejercicioContable_ejercicioCerradoModulos
+				,vEjercicioContable.comentario AS ejercicioContable_comentario
+			--,[CentrosDeCostoContable].[PRUEBA1] 
+			--,[CentrosDeCostoContable].[PRUEBA]
+	
+	FROM	[dbo].[CentrosDeCostoContable]
+	LEFT JOIN	[dbo].[vEjercicioContable]
+		ON [dbo].[vEjercicioContable].[ejercicio] = CAST([dbo].[CentrosDeCostoContable].[EJERCICIO] AS INT);
+
+	-- SELECT * FROM dbo.[CentrosDeCostoContable] ;
+	-- SELECT * FROM dbo.[vCentroDeCostoContable] ;
+	-- SELECT * FROM dbo.vCentroDeCostoContable ORDER BY nombre;
+	-- SELECT * FROM dbo.vCentroDeCostoContable ORDER BY numero;
+	-- SELECT * FROM dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = 2015  ORDER BY centroDeCostoContable;
+	-- SELECT	MAX(dbo.vCentroDeCostoContable.numero) FROM dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = 2015;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 -------------------------------------------------------------
 
 -- DROP VIEW [dbo].[vSeguridadModulo]
@@ -56,7 +527,7 @@ CREATE VIEW [dbo].[vSeguridadModulo] AS
 			, CAST([SSECUR_DoorGroup].[NO] AS VARCHAR)							AS id			
 			-----------------------------------------------------------------------------------------------------
 			, CAST([SSECUR_DoorGroup].[NO] AS INTEGER)							AS codigo -- Integer [ 1 - N ] NOT NULL
-			, LTRIM(RTRIM(CAST([SSECUR_DoorGroup].[NAME] AS VARCHAR)))			AS nombre -- String (30) NOT NULL
+			, LTRIM(RTRIM(CAST([SSECUR_DoorGroup].[NAME] AS VARCHAR)))			AS nombre -- String (30) NOT NULL UN
 			, [SSECUR_DoorGroup].[FREEZE]										AS congelado -- Boolean  			
 	FROM	[dbo].[SSECUR_DoorGroup];
   
@@ -95,26 +566,7 @@ CREATE VIEW [dbo].[vSeguridadPuerta] AS
 	-- SELECT * FROM dbo.vSeguridadPuerta ORDER BY codigo, nombre;	
 
 
--------------------------------------------------------------
-	
--- DROP VIEW [dbo].[vEjercicioContable]; 	
 
-CREATE VIEW [dbo].[vEjercicioContable] AS
-
-	SELECT	'com.massoftware.model.EjercicioContable' AS ClassEjercicioContable			
-			, CAST([EjerciciosContables].[EJERCICIO] AS VARCHAR) AS id			
-			, CAST([EjerciciosContables].[EJERCICIO] AS INT) AS ejercicio						
-			, LTRIM(RTRIM(CAST([EjerciciosContables].[COMENTARIO] AS VARCHAR))) AS comentario
-			, CAST([EjerciciosContables].[FECHAAPERTURASQL] AS DATE) AS fechaApertura			
-			, CAST([EjerciciosContables].[FECHACIERRESQL] AS DATE) AS fechaCierre			
-			, CAST([EjerciciosContables].[EJERCICIOCERRADO] AS INT) AS ejercicioCerrado
-			, CAST([EjerciciosContables].[EJERCICIOCERRADOMODULOS] AS INT) AS ejercicioCerradoModulos
-	FROM	[dbo].[EjerciciosContables];
-	
-	-- SELECT * FROM dbo.[EjerciciosContables] ;
-	-- SELECT * FROM dbo.[vEjercicioContable] ;
-	-- SELECT * FROM dbo.[vEjercicioContable] WHERE CAST(ejercicio AS VARCHAR)  LIKE CONCAT('%', CAST(12 AS VARCHAR)) ORDER BY ejercicio DESC;
-	-- SELECT * FROM dbo.vEjercicioContable ORDER BY ejercicio DESC;
 
 -------------------------------------------------------------
 
@@ -144,38 +596,7 @@ CREATE VIEW [dbo].[vUsuario] AS
 
 	
 
--------------------------------------------------------------
-	
-	-- DROP VIEW [dbo].[vCentroDeCostoContable]
 
-CREATE VIEW [dbo].[vCentroDeCostoContable] AS        
-
-	SELECT	'com.massoftware.model.CentroDeCostoContable' AS ClassCentroDeCostoContable			
-			, CONCAT ( CAST([vEjercicioContable].[ejercicio] AS VARCHAR), '-', CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS VARCHAR) ) As id			
-			, CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS INT) AS numero			 
-			, LTRIM(RTRIM(CAST([CentrosDeCostoContable].[NOMBRE] AS VARCHAR))) AS nombre			 			
-			, LTRIM(RTRIM(CAST([CentrosDeCostoContable].[ABREVIATURA] AS VARCHAR))) AS abreviatura			 						
-			--,[CentrosDeCostoContable].[EJERCICIO] 
-				,vEjercicioContable.id  AS ejercicioContable_id			
-				,vEjercicioContable.ejercicio AS ejercicioContable_ejercicio		
-				,vEjercicioContable.fechaApertura AS ejercicioContable_fechaApertura
-				,vEjercicioContable.fechaCierre AS ejercicioContable_fechaCierre
-				,vEjercicioContable.ejercicioCerrado AS ejercicioContable_ejercicioCerrado
-				,vEjercicioContable.ejercicioCerradoModulos AS ejercicioContable_ejercicioCerradoModulos
-				,vEjercicioContable.comentario AS ejercicioContable_comentario
-			--,[CentrosDeCostoContable].[PRUEBA1] 
-			--,[CentrosDeCostoContable].[PRUEBA]
-	
-	FROM	[dbo].[CentrosDeCostoContable]
-	LEFT JOIN	[dbo].[vEjercicioContable]
-		ON [dbo].[vEjercicioContable].[ejercicio] = CAST([dbo].[CentrosDeCostoContable].[EJERCICIO] AS INT);
-
-	-- SELECT * FROM dbo.[CentrosDeCostoContable] ;
-	-- SELECT * FROM dbo.[vCentroDeCostoContable] ;
-	-- SELECT * FROM dbo.vCentroDeCostoContable ORDER BY nombre;
-	-- SELECT * FROM dbo.vCentroDeCostoContable ORDER BY numero;
-	-- SELECT * FROM dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = 2015  ORDER BY centroDeCostoContable;
-	-- SELECT	MAX(dbo.vCentroDeCostoContable.numero) FROM dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = 2015;
 
 
 -------------------------------------------------------------
@@ -929,25 +1350,7 @@ CREATE VIEW [dbo].[vTipoCbteControl] AS
 	-- SELECT * FROM dbo.vTipoCbteControl;	
 	-- SELECT * FROM dbo.vTipoCbteControl ORDER BY codigo, nombre;	
 
--------------------------------------------------------------
 
--- DROP VIEW [dbo].[vTipoCbteAFIP]
-
-CREATE VIEW [dbo].[vTipoCbteAFIP] AS  
-
-
-	SELECT	'com.massoftware.model.TipoCbteAFIP'											AS ClassTipoCbteAFIP
-			-----------------------------------------------------------------------------------------------------			
-			, CAST([AfipTiposCbtes].[TIPO] AS VARCHAR)										AS id	-- String NOT NULL PK					
-			-----------------------------------------------------------------------------------------------------
-			, CAST([AfipTiposCbtes].[TIPO] AS INTEGER)										AS codigo -- Integer NOT NULL UN [ 1 - Short.MAX_VALUE] 
-			, LTRIM(RTRIM(CAST([AfipTiposCbtes].[DESCRIPCION] AS VARCHAR)))					AS nombre -- String (80) NOT NULL UN 
-  
-	FROM	[dbo].[AfipTiposCbtes];
-
-
-	-- SELECT * FROM dbo.vTipoCbteAFIP;	
-	-- SELECT * FROM dbo.vTipoCbteAFIP ORDER BY codigo, nombre;	
 
 -------------------------------------------------------------
 

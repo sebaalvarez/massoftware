@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.ejercicio_contable;
+package com.massoftware.frontend.ui.windows.old;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -8,7 +8,7 @@ import java.util.Map;
 import org.cendra.common.model.EntityId;
 import org.cendra.common.model.EntityMetaData;
 
-import com.massoftware.backend.bo.EjercicioContableBO;
+import com.massoftware.backend.bo.EjercicioContableBOViejo;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.FormUi;
 import com.massoftware.frontend.ui.util.TableUi;
@@ -30,7 +30,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class EjercicioContableFormUi extends FormUi {
+class EjercicioContableFormUi extends FormUi {
 
 	/**
 	 * 
@@ -50,7 +50,7 @@ public class EjercicioContableFormUi extends FormUi {
 	private String seccionLBLValue = "Se copiaran los datos del ejercicio ${maxEjercicio}";
 	private String ejercicioTXTMsgError2 = "El ejercicio debe ser un número entero y positivo de 4 cifras, igual a ${maxEjercicio}. Usted cargo el valor \"{0}\" y es inválido.";
 
-	private EjercicioContableBO ejercicioContableBO;
+	private EjercicioContableBOViejo ejercicioContableBO;
 	private EjercicioContable maxEjercicioContable;
 	private String format = "dd/MM/yyyy";
 

@@ -19,6 +19,8 @@ public @interface FieldColumnMetaDataAnont {
 	String simpleStringTraslateFilterMode() default "CONTAINS_WORDS_AND"; 
 
 	boolean pidFilteringStart() default false;
+	
+	boolean ascOrderByStart() default true;
 
 	boolean hidden() default false;
 

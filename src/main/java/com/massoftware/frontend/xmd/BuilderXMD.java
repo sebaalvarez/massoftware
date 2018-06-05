@@ -51,6 +51,7 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractOrderedLayout;
+import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -63,6 +64,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -282,7 +284,7 @@ public class BuilderXMD {
 
 	private static TabSheet buildTS(Map<String, Component> controls,
 			ComponentXMD componentXMD) {
-		TabSheet ts = new TabSheet();		
+		TabSheet ts = new TabSheet();
 		ts = (TabSheet) buildComponent(controls, componentXMD, ts);
 		ts = (TabSheet) buildAbstractComponent(componentXMD, ts);
 
@@ -726,7 +728,7 @@ public class BuilderXMD {
 		return og;
 	}
 
-	private static ComboBox buildCB() {
+	public static ComboBox buildCB() {
 
 		ComboBox cb = new ComboBox();
 		cb.addStyleName(ValoTheme.COMBOBOX_TINY);
@@ -847,131 +849,201 @@ public class BuilderXMD {
 		return txt;
 	}
 
+	private static TextArea buildTXA() {
+		TextArea txt = new TextArea();
+
+		txt.addStyleName(ValoTheme.TEXTFIELD_TINY);
+		txt.setWidth("-1px");
+		txt.setHeight("-1px");
+		txt.setValidationVisible(true);
+		txt.setRequiredError("El campo es requerido. Es decir no debe estar vacio.");
+		txt.setNullRepresentation("");
+		txt.setVisible(true);
+		txt.setEnabled(true);
+		txt.setReadOnly(false);
+		txt.setImmediate(true);
+
+		return txt;
+	}
+
 	@SuppressWarnings("rawtypes")
-	private static TextField buildFieldTXT(BackendContext cx, Class clazz,
-			String attName, BeanItem dtoBI, Object originalDTO, String mode)
-			throws SecurityException, ClassNotFoundException,
+	private static AbstractTextField buildFieldTXT(BackendContext cx,
+			Class clazz, String attName, BeanItem dtoBI, Object originalDTO,
+			String mode) throws SecurityException, ClassNotFoundException,
 			NoSuchFieldException, NoSuchMethodException,
 			IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException {
 
 		Field field = getField(clazz, attName);
 
-		TextField txt = buildTXT();
+		if (getMaxLength(field) > 200) {
+			TextArea txt = buildTXA();
 
-		if (getLabelVisible(field)) {
-			txt.setCaption(getLabel(field));
-		}
-		txt.setRequiredError("El campo '" + getLabel(field)
-				+ "' es requerido. Es decir no debe estar vacio.");
-		txt.setColumns(getColumns(field));
-		txt.setMaxLength(getMaxLength(field));
-		txt.setRequired(getRequired(field));
+			if (getLabelVisible(field)) {
+				txt.setCaption(getLabel(field));
+			}
+			txt.setRequiredError("El campo '" + getLabel(field)
+					+ "' es requerido. Es decir no debe estar vacio.");
+			txt.setColumns(getColumns(field));
+			txt.setMaxLength(getMaxLength(field));
+			txt.setRequired(getRequired(field));
 
-		Integer minLength = getMinLength(field);
+			Integer minLength = getMinLength(field);
 
-		if (minLength != null) {
+			if (minLength != null) {
 
-			txt.addValidator(new GenericMinLengthValidator(field.getType(),
-					clazz, attName, minLength));
-		}
+				txt.addValidator(new GenericMinLengthValidator(field.getType(),
+						clazz, attName, minLength));
+			}
 
-		if (getUnique(field) == true) {
+			if (getUnique(field) == true) {
 
-			String methodName = "get" + attName.substring(0, 1).toUpperCase()
-					+ attName.substring(1, attName.length());
+				String methodName = "get"
+						+ attName.substring(0, 1).toUpperCase()
+						+ attName.substring(1, attName.length());
 
-			@SuppressWarnings("unchecked")
-			Method method = clazz.getMethod(methodName);
-			Object originalValueDTO = method.invoke(originalDTO);
+				@SuppressWarnings("unchecked")
+				Method method = clazz.getMethod(methodName);
+				Object originalValueDTO = method.invoke(originalDTO);
 
-			txt.addValidator(new GenericUniqueValidator(field.getType(),
-					attName, true, true, cx.buildBO(clazz), originalValueDTO,
-					mode));
-		}
+				txt.addValidator(new GenericUniqueValidator(field.getType(),
+						attName, true, true, cx.buildBO(clazz),
+						originalValueDTO, mode));
+			}
 
-		if (isAllowInputUnmask(field)) {
-			InputMask im = new InputMask(getMask(field));
-			im.setAutoUnmask(getAutoUnmask(field));
-			im.setDigitsOptional(false);
-			im.extend(txt);
-		}
+			txt.setPropertyDataSource(dtoBI.getItemProperty(attName));
 
-		if (field.getType() == Integer.class) {
+			txt.setReadOnly(isReadOnly(field));
 
-			int minValue = getMinValueInteger(field);
-			int maxValue = getMaxValueInteger(field);
+			if (isNotVisibleInsert(field)
+					&& StandardFormUi.INSERT_MODE.equalsIgnoreCase(mode)) {
+				txt.setVisible(false);
+			} else if (isNotVisibleCopy(field)
+					&& StandardFormUi.COPY_MODE.equalsIgnoreCase(mode)) {
+				txt.setVisible(false);
+			}
 
-			txt.setConverter(new StringToIntegerConverterUnspecifiedLocale());
-			String msg = "El campo "
-					+ txt.getCaption()
-					+ " es inválido, se permiten sólo valores numéricos sin decimales, desde "
-					+ minValue + " hasta " + maxValue + ".";
+			return txt;
 
-			txt.addValidator(new IntegerRangeValidator(msg, minValue, maxValue));
+		} else {
+			TextField txt = buildTXT();
 
-			txt.addStyleName("align-right");
+			if (getLabelVisible(field)) {
+				txt.setCaption(getLabel(field));
+			}
+			txt.setRequiredError("El campo '" + getLabel(field)
+					+ "' es requerido. Es decir no debe estar vacio.");
+			txt.setColumns(getColumns(field));
+			txt.setMaxLength(getMaxLength(field));
+			txt.setRequired(getRequired(field));
 
-			txt.setConversionError(msg);
+			Integer minLength = getMinLength(field);
 
-		}
+			if (minLength != null) {
 
-		if (field.getType() == BigDecimal.class) {
+				txt.addValidator(new GenericMinLengthValidator(field.getType(),
+						clazz, attName, minLength));
+			}
 
-			BigDecimal minValue = getMinValueBigDecimal(field);
-			BigDecimal maxValue = getMaxValueBigDecimal(field);
+			if (getUnique(field) == true) {
 
-			txt.setConverter(new StringToBigDecimalConverterUnspecifiedLocale());
-			// txt.setConverter(new StringToBigDecimalConverter());
+				String methodName = "get"
+						+ attName.substring(0, 1).toUpperCase()
+						+ attName.substring(1, attName.length());
 
-			String msg = null;
-			if (getAllowDecimal(field)) {
-				msg = "El campo "
-						+ txt.getCaption()
-						+ " es inválido, se permiten sólo valores numéricos con decimales, desde "
-						+ minValue + " hasta " + maxValue + ".";
+				@SuppressWarnings("unchecked")
+				Method method = clazz.getMethod(methodName);
+				Object originalValueDTO = method.invoke(originalDTO);
 
-				txt.setLocale(Locale.US);
+				txt.addValidator(new GenericUniqueValidator(field.getType(),
+						attName, true, true, cx.buildBO(clazz),
+						originalValueDTO, mode));
+			}
 
-			} else {
-				msg = "El campo "
+			if (isAllowInputUnmask(field)) {
+				InputMask im = new InputMask(getMask(field));
+				im.setAutoUnmask(getAutoUnmask(field));
+				im.setDigitsOptional(false);
+				im.extend(txt);
+			}
+
+			if (field.getType() == Integer.class) {
+
+				int minValue = getMinValueInteger(field);
+				int maxValue = getMaxValueInteger(field);
+
+				txt.setConverter(new StringToIntegerConverterUnspecifiedLocale());
+				String msg = "El campo "
 						+ txt.getCaption()
 						+ " es inválido, se permiten sólo valores numéricos sin decimales, desde "
 						+ minValue + " hasta " + maxValue + ".";
+
+				txt.addValidator(new IntegerRangeValidator(msg, minValue,
+						maxValue));
+
+				txt.addStyleName("align-right");
+
+				txt.setConversionError(msg);
+
 			}
 
-			txt.addValidator(new BigDecimalRangeValidator(msg, minValue,
-					maxValue));
+			if (field.getType() == BigDecimal.class) {
 
-			txt.addStyleName("align-right");
+				BigDecimal minValue = getMinValueBigDecimal(field);
+				BigDecimal maxValue = getMaxValueBigDecimal(field);
 
-			txt.setConversionError(msg);
+				txt.setConverter(new StringToBigDecimalConverterUnspecifiedLocale());
+				// txt.setConverter(new StringToBigDecimalConverter());
+
+				String msg = null;
+				if (getAllowDecimal(field)) {
+					msg = "El campo "
+							+ txt.getCaption()
+							+ " es inválido, se permiten sólo valores numéricos con decimales, desde "
+							+ minValue + " hasta " + maxValue + ".";
+
+					txt.setLocale(Locale.US);
+
+				} else {
+					msg = "El campo "
+							+ txt.getCaption()
+							+ " es inválido, se permiten sólo valores numéricos sin decimales, desde "
+							+ minValue + " hasta " + maxValue + ".";
+				}
+
+				txt.addValidator(new BigDecimalRangeValidator(msg, minValue,
+						maxValue));
+
+				txt.addStyleName("align-right");
+
+				txt.setConversionError(msg);
+			}
+
+			txt.setPropertyDataSource(dtoBI.getItemProperty(attName));
+
+			txt.setReadOnly(isReadOnly(field));
+
+			if (isNotVisibleInsert(field)
+					&& StandardFormUi.INSERT_MODE.equalsIgnoreCase(mode)) {
+				txt.setVisible(false);
+			} else if (isNotVisibleCopy(field)
+					&& StandardFormUi.COPY_MODE.equalsIgnoreCase(mode)) {
+				txt.setVisible(false);
+			}
+
+			// if (clazz == Integer.class) {
+			// InputMask nim = new InputMask(mask);
+			// nim.setAutoUnmask(true);
+			// nim.setNumericInput(true);
+			// nim.setAllowMinus(allowMinus);
+			// nim.setMax(max);
+			// nim.setMin(min);
+			// nim.setDigitsOptional(false);
+			// nim.extend(txt);
+			// }
+
+			return txt;
 		}
-
-		txt.setPropertyDataSource(dtoBI.getItemProperty(attName));
-
-		txt.setReadOnly(isReadOnly(field));
-
-		if (isNotVisibleInsert(field)
-				&& StandardFormUi.INSERT_MODE.equalsIgnoreCase(mode)) {
-			txt.setVisible(false);
-		} else if (isNotVisibleCopy(field)
-				&& StandardFormUi.COPY_MODE.equalsIgnoreCase(mode)) {
-			txt.setVisible(false);
-		}
-
-		// if (clazz == Integer.class) {
-		// InputMask nim = new InputMask(mask);
-		// nim.setAutoUnmask(true);
-		// nim.setNumericInput(true);
-		// nim.setAllowMinus(allowMinus);
-		// nim.setMax(max);
-		// nim.setMin(min);
-		// nim.setDigitsOptional(false);
-		// nim.extend(txt);
-		// }
-
-		return txt;
 
 	}
 

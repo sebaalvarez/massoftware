@@ -3,15 +3,13 @@ package com.massoftware.frontend.ui.menu;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.massoftware.backend.bo.EjercicioContableBO;
+import com.massoftware.backend.bo.EjercicioContableBOViejo;
 import com.massoftware.backend.bo.UsuarioBO;
-import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.cx.FrontendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.windows.asiento_modelo.AsientoModeloTableUi;
-import com.massoftware.frontend.ui.windows.centro_de_costo_contable.CentroDeCostoContableTableUi;
-import com.massoftware.frontend.ui.windows.cuenta_contable.CuentaContableTableUi;
-import com.massoftware.frontend.ui.windows.ejercicio_contable.EjercicioContableTableUi;
+import com.massoftware.frontend.ui.windows.centro_de_costo_contable.CentroDeCostoContableTableUiViejo;
 import com.massoftware.frontend.ui.windows.punto_de_equilibrio.PuntoDeEquilibrioTableUi;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.EjercicioContable;
@@ -41,21 +39,18 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 	 */
 	private static final long serialVersionUID = 8506821800999861972L;
 
-	private BackendContext cx;
-
 	private UsuarioBO usuarioBO;
-	private EjercicioContableBO ejercicioContableBO;
+	private EjercicioContableBOViejo ejercicioContableBO;
 
 	private ComboBox ejercicioContableCBX;
 
-	private Usuario usuario;
+	private SessionVar sessionVar;
 
-	public ContabilidadGeneralMenu(BackendContext cx, Usuario usuario) {
+	public ContabilidadGeneralMenu(SessionVar sessionVar) {
 
 		try {
 
-			this.cx = cx;
-			this.usuario = usuario;
+			this.sessionVar = sessionVar;
 
 			initObjectBO();
 
@@ -78,8 +73,9 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 	}
 
 	private void initObjectBO() {
-		this.usuarioBO = (UsuarioBO) cx.buildBO(Usuario.class);
-		this.ejercicioContableBO = cx.buildEjercicioContableBO();
+		this.usuarioBO = (UsuarioBO) sessionVar.getCx().buildBO(Usuario.class);
+		this.ejercicioContableBO = sessionVar.getCx()
+				.buildEjercicioContableBO();
 	}
 
 	private MenuBar getMenuBar() {
@@ -107,20 +103,8 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 
 		archivos.addItem("Plan de cuentas ...", open(CuentaContable.class));
 
-		Command openEjercicioContableTableUi = new Command() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 5020933057074532017L;
-
-			@Override
-			public void menuSelected(MenuItem selectedItem) {
-				openEjercicioContableTableUi();
-			}
-		};
 		archivos.addItem("Ejercicios contables ...",
-				openEjercicioContableTableUi);
+				open(EjercicioContable.class));
 
 		Command openAsientoModeloTableUi = new Command() {
 
@@ -257,13 +241,14 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 		ejercicioContableCBX.addStyleName(ValoTheme.COMBOBOX_ALIGN_CENTER);
 		ejercicioContableCBX.setNullSelectionAllowed(false);
 
-		String itemCaptionPropertyId = cx.getEntityMetaData(
-				EjercicioContable.class.getCanonicalName()).getAttNames()[0];
+		String itemCaptionPropertyId = sessionVar.getCx()
+				.getEntityMetaData(EjercicioContable.class.getCanonicalName())
+				.getAttNames()[0];
 		ejercicioContableCBX.setItemCaptionPropertyId(itemCaptionPropertyId);
 
 		loadEjerciciosCBX();
 
-		EjercicioContable ejercicioContableDefault = usuario
+		EjercicioContable ejercicioContableDefault = sessionVar.getUsuario()
 				.getEjercicioContable();
 		if (ejercicioContableDefault != null
 				&& ejercicioContableDefault.getEjercicio() != null) {
@@ -296,9 +281,11 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 			EjercicioContable ejercicioContableDefault = (EjercicioContable) ejercicioContableCBX
 					.getValue();
 
-			usuario.setEjercicioContable(ejercicioContableDefault);
+			sessionVar.getUsuario().setEjercicioContable(
+					ejercicioContableDefault);
 
-			usuarioBO.update(usuario, usuario.clone(), usuario);
+			usuarioBO.update(sessionVar.getUsuario(), sessionVar.getUsuario()
+					.clone(), sessionVar.getUsuario());
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -329,64 +316,16 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 
 	}
 
-	private void openEjercicioContableTableUi() {
-		try {
-
-			String title = cx.getEntityMetaData(
-					EjercicioContable.class.getCanonicalName())
-					.getLabelPlural();
-
-			EjercicioContableTableUi ui = new EjercicioContableTableUi(cx,
-					usuario);
-
-			Window win = new Window(title);
-			// win.setWidth((float)(ejerciciosContablesDesing.rootVH.getWidth()
-			// * 1.2),
-			// ejerciciosContablesDesing.grid.getHeightUnits());
-			win.setWidth("660px");
-			win.setClosable(true);
-			win.setResizable(false);
-			win.setContent(ui);
-			// win.addCloseShortcut(KeyCode.ESCAPE, null);
-			getUI().addWindow(win);
-
-			win.center();
-			win.focus();
-
-		} catch (Exception e) {
-
-			LogAndNotification.print(e);
-		}
-
-	}
-
-	private void openCentroDeCostoContableTableUi() {
-		try {
-			// PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(cx, usuario);
-
-			Window win = new Window("Centros de costos");
-			win.setClosable(true);
-			win.setResizable(false);
-			CentroDeCostoContableTableUi ui = new CentroDeCostoContableTableUi(
-					win, cx, usuario);
-			win.setContent(ui);
-			getUI().addWindow(win);
-			win.center();
-			win.focus();
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-	}
-
-	// private void openPuntoDeEquilibrioTableUi2() {
+	// private void openEjercicioContableTableUi() {
 	// try {
 	//
-	// String title = cx.getEntityMetaData(
-	// PuntoDeEquilibrio.class.getCanonicalName())
+	// String title = sessionVar.getCx().getEntityMetaData(
+	// EjercicioContable.class.getCanonicalName())
 	// .getLabelPlural();
 	//
-	// PuntoDeEquilibrioTableUi ui = new PuntoDeEquilibrioTableUi(cx,
-	// usuario);
+	// EjercicioContableTableUi ui = new
+	// EjercicioContableTableUi(sessionVar.getCx(),
+	// sessionVar.getUsuario());
 	//
 	// Window win = new Window(title);
 	// // win.setWidth((float)(ejerciciosContablesDesing.rootVH.getWidth()
@@ -409,6 +348,24 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 	//
 	// }
 
+	private void openCentroDeCostoContableTableUi() {
+		try {
+			// PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(cx, usuario);
+
+			Window win = new Window("Centros de costos");
+			win.setClosable(true);
+			win.setResizable(false);
+			CentroDeCostoContableTableUiViejo ui = new CentroDeCostoContableTableUiViejo(
+					win, sessionVar.getCx(), sessionVar.getUsuario());
+			win.setContent(ui);
+			getUI().addWindow(win);
+			win.center();
+			win.focus();
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
+
 	private void openPuntoDeEquilibrioTableUi() {
 		try {
 			// PlanDeCuentaTableUi ui = new PlanDeCuentaTableUi(cx, usuario);
@@ -416,8 +373,8 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 			Window win = new Window("Puntos de equilibrios");
 			win.setClosable(true);
 			win.setResizable(false);
-			PuntoDeEquilibrioTableUi ui = new PuntoDeEquilibrioTableUi(win, cx,
-					usuario);
+			PuntoDeEquilibrioTableUi ui = new PuntoDeEquilibrioTableUi(win,
+					sessionVar.getCx(), sessionVar.getUsuario());
 			win.setContent(ui);
 			getUI().addWindow(win);
 			win.center();
@@ -434,7 +391,8 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 			Window win = new Window("Modelos de asientos");
 			win.setClosable(true);
 			win.setResizable(false);
-			AsientoModeloTableUi ui = new AsientoModeloTableUi(win, cx, usuario);
+			AsientoModeloTableUi ui = new AsientoModeloTableUi(win,
+					sessionVar.getCx(), sessionVar.getUsuario());
 			win.setContent(ui);
 			getUI().addWindow(win);
 			win.center();
@@ -465,7 +423,9 @@ public class ContabilidadGeneralMenu extends VerticalLayout implements View {
 
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				FrontendContext.openWindows(true, true, true,  true, true, getThis(), classModel, cx, usuario, null, null, null);
+				FrontendContext.openWindows(true, true, true, true, true,
+						getThis(), classModel, sessionVar.getCx(),
+						sessionVar.getUsuario(), null, null, null);
 
 			}
 		};

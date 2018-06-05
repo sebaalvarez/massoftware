@@ -1,28 +1,71 @@
 package com.massoftware.model;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.cendra.common.model.EntityId;
 
+import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
+import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassPluralLabelAnont;
+import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
+import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
+import com.massoftware.annotation.model.FieldColumnsAnont;
+import com.massoftware.annotation.model.FieldLabelAnont;
+import com.massoftware.annotation.model.FieldMaxLengthAnont;
+import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
+import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
+import com.massoftware.annotation.model.FieldNameMSAnont;
+import com.massoftware.annotation.model.FieldRequiredAnont;
+import com.massoftware.annotation.model.FieldSubNameFKAnont;
+import com.massoftware.annotation.model.FieldUniqueAnont;
+
+@SuppressWarnings("serial")
+@ClassLabelInTheSingularAnont(value = "Centro de costo contable")
+@ClassPluralLabelAnont(value = "Centros de costos contables")
+@ClassArticleLabelInTheSingularAnont(value = "el")
+@ClassArticleLabelInPluralAnont(value = "los")
+// @ClassFormSourceAnont(value = "Deposito")
+@ClassTableMSAnont(nameTableDB = "[CentrosDeCostoContable]")
 public class CentroDeCostoContable extends EntityId implements Cloneable,
 		Comparable<CentroDeCostoContable> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1651962136474483672L;
-
+	@FieldLabelAnont(value = "Ejercicio")
+	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldSubNameFKAnont(value = "ejercicio")
+//	@FieldNameMSAnont(nameAttDB = "[CUENTA]", classAttDB = String.class)
+//	@FieldCBBox(attName = "ejercicio")	
 	private EjercicioContable ejercicioContable;
+	
+	@FieldLabelAnont(value = "C.C")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 5)
+	@FieldColumnsAnont(value = 5)
+	@FieldMinValueIntegerAnont(value = 1)
+	@FieldMaxValueIntegerAnont(value = Short.MAX_VALUE)
+	@FieldColumnMetaDataAnont(attSize = 100, pidFilteringStart = true)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[CENTRODECOSTOCONTABLE]", classAttDB = Integer.class)
+	@FieldAutoMaxValueAnont()
 	private Integer numero;
+	
+	@FieldLabelAnont(value = "Nombre")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 30)
+	@FieldColumnsAnont(value = 30)
+	@FieldColumnMetaDataAnont(attSize = 300)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[NOMBRE]", classAttDB = String.class)
 	private String nombre;
+	
+	@FieldLabelAnont(value = "Abreviatura")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 12)
+	@FieldColumnsAnont(value = 12)
+	@FieldColumnMetaDataAnont(attSize = 120)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[ABREVIATURA]", classAttDB = String.class)
 	private String abreviatura;
-
-	public CentroDeCostoContable() {
-
-	}
-
-	public CentroDeCostoContable(Object[] row) {
-		setterByArray(row);
-	}
 
 	public Integer getNumero() {
 		return numero;
@@ -57,36 +100,10 @@ public class CentroDeCostoContable extends EntityId implements Cloneable,
 	}
 
 	public void setEjercicioContable(EjercicioContable ejercicioContable) {
+		if (ejercicioContable != null && ejercicioContable.getId() == null) {
+			return;
+		}
 		this.ejercicioContable = ejercicioContable;
-	}
-
-	public void setterByArray(Object[] row) {
-
-		int column = 0;
-
-		if (row[column] != null) {
-			this.setNumero((Integer) row[column]);
-		}
-
-		column++;
-
-		if (row[column] != null) {
-			this.setNombre((String) row[column]);
-		}
-
-		column++;
-
-		if (row[column] != null) {
-			this.setAbreviatura((String) row[column]);
-		}
-
-		EjercicioContable ejercicioContable = new EjercicioContable(
-				ArrayUtils.subarray(row, 3, 9));
-
-		if (ejercicioContable.getEjercicio() != null) {
-			this.setEjercicioContable(ejercicioContable);
-		}
-
 	}
 
 	@Override
@@ -110,11 +127,6 @@ public class CentroDeCostoContable extends EntityId implements Cloneable,
 
 		return this.getNumero().compareTo(o.getNumero());
 	}
-
-	// @Override
-	// public String toString() {
-	// return this.getEjercicioContable() + "-" + this.getNumero();
-	// }
 
 	@Override
 	public String toString() {

@@ -20,7 +20,11 @@ import com.massoftware.backend.bo.BancoBO;
 import com.massoftware.backend.bo.BancoFirmanteBO;
 import com.massoftware.backend.bo.CajaBO;
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
+import com.massoftware.backend.bo.CentroDeCostoContableBOViejo;
+import com.massoftware.backend.bo.CentroDeCostoProyectoBO;
+import com.massoftware.backend.bo.CentroDeCostoProyectoTipoBO;
 import com.massoftware.backend.bo.ChequeraBO;
+import com.massoftware.backend.bo.CodigoConvenioMultilateralBO;
 import com.massoftware.backend.bo.CostoDeVentaBO;
 import com.massoftware.backend.bo.CuentaContableBO;
 import com.massoftware.backend.bo.CuentaContableOldBO;
@@ -32,6 +36,7 @@ import com.massoftware.backend.bo.CuentaDeFondoTipoBO;
 import com.massoftware.backend.bo.CuentaDeFondoTipoBancoBO;
 import com.massoftware.backend.bo.DepositoBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
+import com.massoftware.backend.bo.EjercicioContableBOViejo;
 import com.massoftware.backend.bo.JurisdiccionConvenioMultilateralBO;
 import com.massoftware.backend.bo.ModeloCbteFondoBO;
 import com.massoftware.backend.bo.ModeloCbteFondoItemBO;
@@ -40,6 +45,9 @@ import com.massoftware.backend.bo.ModuloBO;
 import com.massoftware.backend.bo.MonedaAFIPBO;
 import com.massoftware.backend.bo.MonedaBO;
 import com.massoftware.backend.bo.MonedaCotizacionBO;
+import com.massoftware.backend.bo.MotivoComentarioBO;
+import com.massoftware.backend.bo.MotivoNotaDeCreditoBO;
+import com.massoftware.backend.bo.PaisBO;
 import com.massoftware.backend.bo.PlanDeCuentaEstadoBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioTipoBO;
@@ -51,13 +59,19 @@ import com.massoftware.backend.bo.TalonarioBO;
 import com.massoftware.backend.bo.TicketBO;
 import com.massoftware.backend.bo.TipoCbteAFIPBO;
 import com.massoftware.backend.bo.TipoCbteControlBO;
+import com.massoftware.backend.bo.TipoClienteBO;
+import com.massoftware.backend.bo.TipoDocumentoAFIPBO;
 import com.massoftware.backend.bo.UsuarioBO;
+import com.massoftware.backend.bo.ZonaBO;
 import com.massoftware.backend.util.bo.GenericBO;
 import com.massoftware.model.Banco;
 import com.massoftware.model.BancoFirmante;
 import com.massoftware.model.Caja;
 import com.massoftware.model.CentroDeCostoContable;
+import com.massoftware.model.CentroDeCostoProyecto;
+import com.massoftware.model.CentroDeCostoProyectoTipo;
 import com.massoftware.model.Chequera;
+import com.massoftware.model.CodigoConvenioMultilateral;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaContableEstado;
 import com.massoftware.model.CuentaDeFondo;
@@ -73,6 +87,9 @@ import com.massoftware.model.Modulo;
 import com.massoftware.model.Moneda;
 import com.massoftware.model.MonedaAFIP;
 import com.massoftware.model.MonedaCotizacion;
+import com.massoftware.model.MotivoComentario;
+import com.massoftware.model.MotivoNotaDeCredito;
+import com.massoftware.model.Pais;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.PuntoDeEquilibrioTipo;
 import com.massoftware.model.SeguridadModulo;
@@ -83,7 +100,10 @@ import com.massoftware.model.Talonario;
 import com.massoftware.model.Ticket;
 import com.massoftware.model.TipoCbteAFIP;
 import com.massoftware.model.TipoCbteControl;
+import com.massoftware.model.TipoCliente;
+import com.massoftware.model.TipoDocumentoAFIP;
 import com.massoftware.model.Usuario;
+import com.massoftware.model.Zona;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 
 public class BackendContext extends AbstractContext {
@@ -392,7 +412,58 @@ public class BackendContext extends AbstractContext {
 
 		try {
 
-			if (classModel == Banco.class) {
+			if (classModel == Zona.class) {
+
+				return new ZonaBO(dataSourceWrapper, this);
+
+			} else if (classModel == Pais.class) {
+
+				return new PaisBO(dataSourceWrapper, this);
+
+			} else if (classModel == TipoCliente.class) {
+
+				return new TipoClienteBO(dataSourceWrapper, this);
+
+			} else if (classModel == TipoDocumentoAFIP.class) {
+
+				return new TipoDocumentoAFIPBO(dataSourceWrapper, this);
+
+			} else if (classModel == TipoCbteAFIP.class) {
+
+				return new TipoCbteAFIPBO(dataSourceWrapper, this);
+
+			} else if (classModel == MotivoComentario.class) {
+
+				return new MotivoComentarioBO(dataSourceWrapper, this);
+
+			} else if (classModel == MotivoNotaDeCredito.class) {
+
+				return new MotivoNotaDeCreditoBO(dataSourceWrapper, this);
+
+			} else if (classModel == CodigoConvenioMultilateral.class) {
+
+				return new CodigoConvenioMultilateralBO(dataSourceWrapper, this);
+
+			} else if (classModel == CentroDeCostoProyectoTipo.class) {
+
+				return new CentroDeCostoProyectoTipoBO(dataSourceWrapper, this);
+
+			} else if (classModel == CentroDeCostoProyecto.class) {
+
+				return new CentroDeCostoProyectoBO(dataSourceWrapper, this);
+
+			} else if (classModel == EjercicioContable.class) {
+
+				return new EjercicioContableBO(dataSourceWrapper, this);
+
+			} else if (classModel == CentroDeCostoContable.class) {
+
+				return new CentroDeCostoContableBO(dataSourceWrapper, this);
+
+			}
+
+
+			else if (classModel == Banco.class) {
 
 				return new BancoBO(dataSourceWrapper, this);
 
@@ -427,10 +498,6 @@ public class BackendContext extends AbstractContext {
 			} else if (classModel == TipoCbteControl.class) {
 
 				return new TipoCbteControlBO(dataSourceWrapper, this);
-
-			} else if (classModel == TipoCbteAFIP.class) {
-
-				return new TipoCbteAFIPBO(dataSourceWrapper, this);
 
 			} else if (classModel == MonedaAFIP.class) {
 
@@ -513,11 +580,11 @@ public class BackendContext extends AbstractContext {
 
 	// ================================================================================
 
-	public EjercicioContableBO buildEjercicioContableBO() {
+	public EjercicioContableBOViejo buildEjercicioContableBO() {
 
 		try {
 
-			return new EjercicioContableBO(dataSourceWrapper);
+			return new EjercicioContableBOViejo(dataSourceWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),
@@ -528,10 +595,10 @@ public class BackendContext extends AbstractContext {
 
 	}
 
-	public CentroDeCostoContableBO buildCentroDeCostoContableBO() {
+	public CentroDeCostoContableBOViejo buildCentroDeCostoContableBO() {
 
 		try {
-			return new CentroDeCostoContableBO(dataSourceWrapper);
+			return new CentroDeCostoContableBOViejo(dataSourceWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),

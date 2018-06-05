@@ -1,32 +1,81 @@
 package com.massoftware.model;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 import org.cendra.common.model.EntityId;
 
+import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
+import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassPluralLabelAnont;
+import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
+import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
+import com.massoftware.annotation.model.FieldColumnsAnont;
+import com.massoftware.annotation.model.FieldLabelAnont;
+import com.massoftware.annotation.model.FieldMaxLengthAnont;
+import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
+import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
+import com.massoftware.annotation.model.FieldNameMSAnont;
+import com.massoftware.annotation.model.FieldRequiredAnont;
+import com.massoftware.annotation.model.FieldUniqueAnont;
+
+@SuppressWarnings("serial")
+@ClassLabelInTheSingularAnont(value = "ejercicio contable")
+@ClassPluralLabelAnont(value = "Ejercicios contables")
+@ClassArticleLabelInTheSingularAnont(value = "el")
+@ClassArticleLabelInPluralAnont(value = "los")
+// @ClassFormSourceAnont(value = "Deposito")
+@ClassTableMSAnont(nameTableDB = "[EjerciciosContables]")
 public class EjercicioContable extends EntityId implements Cloneable,
 		Comparable<EjercicioContable> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8579455015647831359L;
-
+	@FieldLabelAnont(value = "Ejercicio")
+	@FieldRequiredAnont(value = true)
+	@FieldColumnsAnont(value = 5)
+	@FieldMaxLengthAnont(value = 4)
+	@FieldMinValueIntegerAnont(value = 1990)
+	@FieldMaxValueIntegerAnont(value = 2030)
+	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true, simpleStringTraslateFilterMode = "ENDS_WITCH", ascOrderByStart = false)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[EJERCICIO]", classAttDB = Integer.class)
+	@FieldAutoMaxValueAnont()
 	private Integer ejercicio;
+	
+	@FieldLabelAnont(value = "Apertura")
+	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(attSize = 150)
+	@FieldNameMSAnont(nameAttDB = "[FECHAAPERTURASQL]", classAttDB = Date.class)
 	private Date fechaApertura;
+	
+	@FieldLabelAnont(value = "Cierre")
+	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(attSize = 150)
+	@FieldNameMSAnont(nameAttDB = "[FECHACIERRESQL]", classAttDB = Date.class)
 	private Date fechaCierre;
+	
+	@FieldLabelAnont(value = "Cerrado")
+	@FieldColumnMetaDataAnont(attSize = 150)
+	@FieldNameMSAnont(nameAttDB = "[EJERCICIOCERRADO]", classAttDB = Boolean.class)
 	private Boolean ejercicioCerrado;
+	
+	@FieldLabelAnont(value = "Módulos")
+	@FieldColumnMetaDataAnont(attSize = 150)
+	@FieldNameMSAnont(nameAttDB = "[EJERCICIOCERRADOMODULOS]", classAttDB = Boolean.class)
 	private Boolean ejercicioCerradoModulos;
+	
+	@FieldLabelAnont(value = "Comentario")
+	// @FieldRequiredAnont(value = true)
+	@FieldColumnsAnont(value = 70)
+	@FieldMaxLengthAnont(value = 511)	
+	@FieldColumnMetaDataAnont(hidden = true)
+	// @FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[COMENTARIO]", classAttDB = String.class)
 	private String comentario;
 
-	public EjercicioContable() {
-
-	}
-
-	public EjercicioContable(Object[] row) {
-		setterByArray(row);
-	}
+	// public EjercicioContable(Object[] row) {
+	// setterByArray(row);
+	// }
 
 	// public void setId(String id) {
 	// id = formatValue(id);
@@ -96,57 +145,57 @@ public class EjercicioContable extends EntityId implements Cloneable,
 		this.comentario = comentario;
 	}
 
-	public void setterByArray(Object[] row) {
-
-		int column = 0;
-
-		if (row[column] != null) {
-			this.setEjercicio((Integer) row[column]);
-		}
-
-		column++;
-
-		if (row[column] != null) {
-			this.setComentario((String) row[column]);
-		}
-
-		column++;
-
-		if (row[column] != null) {
-
-			Timestamp t = (Timestamp) row[column];
-			Date d = new Date(t.getTime());
-
-			this.setFechaApertura(d);
-		}
-
-		column++;
-
-		if (row[column] != null) {
-			Timestamp t = (Timestamp) row[column];
-			Date d = new Date(t.getTime());
-
-			this.setFechaCierre(d);
-		}
-
-		column++;
-
-		if (row[column] != null) {
-			Short s = (Short) row[column];
-			Boolean b = (s != null && s == 1);
-
-			this.setEjercicioCerrado(b);
-		}
-
-		column++;
-
-		if (row[column] != null) {
-			Short s = (Short) row[column];
-			Boolean b = (s != null && s == 1);
-
-			this.setEjercicioCerradoModulos(b);
-		}
-	}
+	// public void setterByArray(Object[] row) {
+	//
+	// int column = 0;
+	//
+	// if (row[column] != null) {
+	// this.setEjercicio((Integer) row[column]);
+	// }
+	//
+	// column++;
+	//
+	// if (row[column] != null) {
+	// this.setComentario((String) row[column]);
+	// }
+	//
+	// column++;
+	//
+	// if (row[column] != null) {
+	//
+	// Timestamp t = (Timestamp) row[column];
+	// Date d = new Date(t.getTime());
+	//
+	// this.setFechaApertura(d);
+	// }
+	//
+	// column++;
+	//
+	// if (row[column] != null) {
+	// Timestamp t = (Timestamp) row[column];
+	// Date d = new Date(t.getTime());
+	//
+	// this.setFechaCierre(d);
+	// }
+	//
+	// column++;
+	//
+	// if (row[column] != null) {
+	// Short s = (Short) row[column];
+	// Boolean b = (s != null && s == 1);
+	//
+	// this.setEjercicioCerrado(b);
+	// }
+	//
+	// column++;
+	//
+	// if (row[column] != null) {
+	// Short s = (Short) row[column];
+	// Boolean b = (s != null && s == 1);
+	//
+	// this.setEjercicioCerradoModulos(b);
+	// }
+	// }
 
 	@Override
 	public EjercicioContable clone() throws CloneNotSupportedException {
@@ -180,13 +229,13 @@ public class EjercicioContable extends EntityId implements Cloneable,
 	@Override
 	public String toString() {
 
-		return "(" + this.getEjercicio() + ")";
+		return this.getEjercicio().toString();
 	}
 
 	public boolean validate() throws IllegalArgumentException {
-		
+
 		super.validate();
-		
+
 		if (this.ejercicio == null || this.ejercicio == 0) {
 			throw new IllegalArgumentException(this.getClass()
 					.getCanonicalName() + ".ejercicio es nulo o igual a cero.");

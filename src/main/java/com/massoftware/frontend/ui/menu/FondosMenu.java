@@ -1,7 +1,6 @@
 package com.massoftware.frontend.ui.menu;
 
-import com.massoftware.backend.bo.UsuarioBO;
-import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.cx.FrontendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.windows.modelo_cbte_fondo.ModeloCbteFondoTableUi;
@@ -21,7 +20,6 @@ import com.massoftware.model.Talonario;
 import com.massoftware.model.Ticket;
 import com.massoftware.model.TipoCbteAFIP;
 import com.massoftware.model.TipoCbteControl;
-import com.massoftware.model.Usuario;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
@@ -45,20 +43,13 @@ public class FondosMenu extends VerticalLayout implements View {
 	 */
 	private static final long serialVersionUID = -4876972158479186080L;
 
-	private BackendContext cx;
+	private SessionVar sessionVar;
 
-	private UsuarioBO usuarioBO;
-
-	private Usuario usuario;
-
-	public FondosMenu(BackendContext cx, Usuario usuario) {
+	public FondosMenu(SessionVar sessionVar) {
 
 		try {
 
-			this.cx = cx;
-			this.usuario = usuario;
-
-			initObjectBO();
+			this.sessionVar = sessionVar;
 
 			setMargin(true);
 			// setSpacing(true);
@@ -76,10 +67,6 @@ public class FondosMenu extends VerticalLayout implements View {
 			LogAndNotification.print(e);
 		}
 
-	}
-
-	private void initObjectBO() {
-		this.usuarioBO = (UsuarioBO) cx.buildBO(Usuario.class);
 	}
 
 	private MenuBar getMenuBar() {
@@ -116,7 +103,8 @@ public class FondosMenu extends VerticalLayout implements View {
 		final MenuBar.MenuItem archivos = menubar.addItem("Archivos", null);
 
 		archivos.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class));
-//		archivos.addItem("Rubros y grupos de cuentas ...", open(CuentaDeFondo.class));
+		// archivos.addItem("Rubros y grupos de cuentas ...",
+		// open(CuentaDeFondo.class));
 		archivos.addItem("Cobranzas ...", click);
 		archivos.addItem("Chequeras ...", open(Chequera.class));
 		archivos.addItem("Bancos ...", open(Banco.class));
@@ -128,7 +116,8 @@ public class FondosMenu extends VerticalLayout implements View {
 				open(MonedaCotizacion.class));
 		archivos.addItem("Modelos de comprobantes", openModeloCbteFondoTableUi);
 		archivos.addItem("Sucursales ...", open(Sucursal.class));
-		archivos.addItem("Juridicciones convenio multilateral", open(JurisdiccionConvenioMultilateral.class));
+		archivos.addItem("Juridicciones convenio multilateral",
+				open(JurisdiccionConvenioMultilateral.class));
 		archivos.addSeparator();
 		archivos.addItem("Marcas de ticket's ...", open(Ticket.class));
 		archivos.addItem("Series de ticket's ...", click);
@@ -146,7 +135,8 @@ public class FondosMenu extends VerticalLayout implements View {
 		archivos.addItem("Prueba Tipo de comprobante AFIP",
 				open(TipoCbteAFIP.class));
 		archivos.addItem("Prueba Moneda AFIP", open(MonedaAFIP.class));
-		archivos.addItem("Prueba Mantenimiento de módulos y puertas", open(SeguridadPuerta.class));
+		archivos.addItem("Prueba Mantenimiento de módulos y puertas",
+				open(SeguridadPuerta.class));
 
 		return menubar;
 	}
@@ -210,8 +200,8 @@ public class FondosMenu extends VerticalLayout implements View {
 			Window win = new Window("Modelos de comprobandes de fondo");
 			win.setClosable(true);
 			win.setResizable(false);
-			ModeloCbteFondoTableUi ui = new ModeloCbteFondoTableUi(win, cx,
-					usuario);
+			ModeloCbteFondoTableUi ui = new ModeloCbteFondoTableUi(win, sessionVar.getCx(),
+					sessionVar.getUsuario());
 			win.setContent(ui);
 			getUI().addWindow(win);
 			win.center();
@@ -236,7 +226,8 @@ public class FondosMenu extends VerticalLayout implements View {
 
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				FrontendContext.openWindows(true, true, true,  true, true, getThis(), classModel, cx, usuario, null, null, null);
+				FrontendContext.openWindows(true, true, true, true, true,
+						getThis(), classModel, sessionVar.getCx(), sessionVar.getUsuario(), null, null, null);
 
 			}
 		};

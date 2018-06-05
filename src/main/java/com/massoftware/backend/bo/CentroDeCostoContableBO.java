@@ -1,570 +1,249 @@
 package com.massoftware.backend.bo;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import org.cendra.common.model.EntityId;
-import org.cendra.ex.crud.InsertDuplicateException;
-import org.cendra.jdbc.ConnectionWrapper;
+import org.cendra.ex.crud.UniqueException;
 import org.cendra.jdbc.DataSourceWrapper;
 
+import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.backend.util.bo.GenericBO;
 import com.massoftware.model.CentroDeCostoContable;
+import com.massoftware.model.Chequera;
 import com.massoftware.model.EjercicioContable;
 
-public class CentroDeCostoContableBO {
+public class CentroDeCostoContableBO extends GenericBO<CentroDeCostoContable> {
 
-	private DataSourceWrapper dataSourceWrapper;
-
-	private final String SQL_PG_1 = "SELECT * FROM massoftware.vCentroDeCostoContable";
-	private final String SQL_PG_2 = "INSERT INTO massoftware.CentroDeCostoContable(id, ejercicioContable, numero, nombre, abreviatura) VALUES (?, ?, ?, ?, ?);";
-	private final String SQL_PG_3 = "UPDATE massoftware.centrodecostocontable SET ejerciciocontable=?, numero=?, nombre=?, abreviatura=? WHERE id=?;";
-	private final String SQL_PG_4 = "DELETE FROM massoftware.centrodecostocontable WHERE id = ?";
-	private final String SQL_PG_5 = "SELECT	MAX(massoftware.vCentroDeCostoContable.numero) FROM massoftware.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = ?;";
-
-	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.vCentroDeCostoContable";
-	private final String SQL_MS_2 = "INSERT INTO [dbo].[CentrosDeCostoContable] ([CENTRODECOSTOCONTABLE],[NOMBRE] ,[ABREVIATURA] ,[EJERCICIO], [PRUEBA]) VALUES (?, ?, ?, ?, 0)";
-	private final String SQL_MS_3 = "UPDATE [dbo].[CentrosDeCostoContable]  SET [CENTRODECOSTOCONTABLE] = ?, [NOMBRE] = ?, [ABREVIATURA] = ?, [EJERCICIO] = ? WHERE [CENTRODECOSTOCONTABLE] = ? AND [EJERCICIO] = ?";
-	private final String SQL_MS_4 = "DELETE FROM [dbo].[CentrosDeCostoContable] WHERE [CENTRODECOSTOCONTABLE] = ? AND [EJERCICIO] = ? AND [PRUEBA] = 0;";
-	private final String SQL_MS_5 = "SELECT	MAX(VetaroRep.dbo.vCentroDeCostoContable.numero) FROM VetaroRep.dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = ?;";
-
-	public CentroDeCostoContableBO(DataSourceWrapper dataSourceWrapper) {
-		super();
-		this.dataSourceWrapper = dataSourceWrapper;
+	public CentroDeCostoContableBO(DataSourceWrapper dataSourceWrapper,
+			BackendContext cx) {
+		super(CentroDeCostoContable.class, dataSourceWrapper, cx);
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<CentroDeCostoContable> findAllOrderBy(boolean ordeByNombre,
-			Integer ejercicio) throws Exception {
-
-		String sql = null;
-
-		if (dataSourceWrapper.isDatabasePostgreSql()) {
-
-			String where = "";
-
-			if (ejercicio != null) {
-				where = " WHERE ejercicioContable_ejercicio = ? ";
-			}
-
-			if (ordeByNombre) {
-				sql = SQL_PG_1 + where
-						+ " ORDER BY ejercicioContable_ejercicio DESC, nombre;";
-			} else {
-				sql = SQL_PG_1 + where
-						+ " ORDER BY ejercicioContable_ejercicio DESC, numero;";
-			}
-
-		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-
-			String where = "";
-
-			if (ejercicio != null) {
-				where = " WHERE ejercicioContable_ejercicio = ? ";
-			}
-
-			if (ordeByNombre) {
-				sql = SQL_MS_1 + where
-						+ " ORDER BY ejercicioContable_ejercicio DESC, nombre;";
-			} else {
-				sql = SQL_MS_1 + where
-						+ " ORDER BY ejercicioContable_ejercicio DESC, numero;";
-			}
-		}
-
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
-
-		try {
-
-			List<CentroDeCostoContable> list = null;
-
-			if (ejercicio != null) {
-				list = connectionWrapper.findToListByCendraConvention(sql,
-						ejercicio);
-			} else {
-				list = connectionWrapper.findToListByCendraConvention(sql);
-
-			}
-
-			for (CentroDeCostoContable item : list) {
-				item.validate();
-			}
-
-			return list;
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
-		}
-
+	public List<CentroDeCostoContable> findAll() throws Exception {
+		return findAll("ejercicioContable_ejercicio, numero");
 	}
 
-	public List<CentroDeCostoContable> findAllOrderByCentroDeCostoContable()
-			throws Exception {
-		return findAllOrderBy(false, null);
-	}
-
-	public List<CentroDeCostoContable> findAllOrderByCentroDeCostoContable(
-			Integer ejercicio) throws Exception {
-		return findAllOrderBy(false, ejercicio);
-	}
-
-	public List<CentroDeCostoContable> findAllOrderByNombre() throws Exception {
-		return findAllOrderBy(true, null);
-	}
-
-	public List<CentroDeCostoContable> findAllOrderByNombre(Integer ejercicio)
-			throws Exception {
-		return findAllOrderBy(true, ejercicio);
-	}
-
-	public Integer findMaxCentroDeCostoContable(Integer ejercicio)
+	public List<CentroDeCostoContable> findAll(EjercicioContable dto)
 			throws Exception {
 
-		String sql = null;
+		if (dto != null) {
+			return find("ejercicioContable_ejercicio, numero",
+					"ejercicioContable_ejercicio = ?", dto.getEjercicio());
 
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
-
-		try {
-
-			if (dataSourceWrapper.isDatabasePostgreSql()) {
-				sql = SQL_PG_5;
-			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-				sql = SQL_MS_5;
-			}
-
-			Object[][] table = connectionWrapper.findToTable(sql, ejercicio);
-
-			for (Object[] row : table) {
-
-				Integer v = (Integer) row[0];
-				if (v == null) {
-					v = 0;
-				}
-				v++;
-				return v;
-			}
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
 		}
 
-		return 1;
+		return new ArrayList<CentroDeCostoContable>();
 	}
 
-	public boolean ifExistCentroDeCostoContable(Integer numero,
-			Integer ejercicio) throws Exception {
+	public void checkUnique(CentroDeCostoContable dto,
+			CentroDeCostoContable dtoOriginal) throws Exception {
 
-		return findByCentroDeCostoContable(numero, ejercicio) != null;
+		// fullEquals(Class type, boolean ignoreCaseTraslate,
+		// boolean ignoreCase, Object value, Object originalValue);
 
-	}
+		if (dtoOriginal != null
+				&& dto.getEjercicioContable()
+						.getEjercicio()
+						.equals(dtoOriginal.getEjercicioContable()
+								.getEjercicio())
+				&& dto.getNumero().equals(dtoOriginal.getNumero())) {
 
-	private CentroDeCostoContable findByCentroDeCostoContable(Integer numero,
-			Integer ejercicio) throws Exception {
+			return;
 
-		String sql = null;
+		}
 
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
+		String where = "ejercicioContable_ejercicio = ? AND numero = ?";
 
-		try {
+		Object ejercicioArg = null;
 
-			if (dataSourceWrapper.isDatabasePostgreSql()) {
-				sql = SQL_PG_1
-						+ " WHERE numero = ? AND ejercicioContable_ejercicio = ?;";
-			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-				sql = SQL_MS_1
-						+ " WHERE numero = ? AND ejercicioContable_ejercicio = ?;";
-			}
+		if (dto.getEjercicioContable().getEjercicio() != null) {
+			ejercicioArg = dto.getEjercicioContable().getEjercicio();
+		} else {
+			ejercicioArg = Integer.class;
+		}
 
-			@SuppressWarnings("unchecked")
-			List<CentroDeCostoContable> list = connectionWrapper
-					.findToListByCendraConvention(sql, numero, ejercicio);
+		Object numeroArg = null;
 
-			if (list.size() == 1) {
-				list.get(0).validate();
-				return list.get(0);
-			}
+		if (dto.getNumero() != null) {
+			numeroArg = dto.getNumero();
+		} else {
+			numeroArg = Integer.class;
+		}
 
-			// throw new Exception(
-			// "La sentencia debería afectar un solo registro, la sentencia afecto "
-			// + list.size() + " registros. SQL:\n" + sql);
+		if (ifExists(where, ejercicioArg, numeroArg)) {
 
-			return null;
+			Field fieldEjercicioContable = CentroDeCostoContable.class
+					.getDeclaredField("ejercicioContable");
+			Field fieldNumero = CentroDeCostoContable.class
+					.getDeclaredField("numero");
 
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
+			throw new UniqueException(getLabel(fieldEjercicioContable),
+					getLabel(fieldNumero));
 		}
 
 	}
 
-	public List<CentroDeCostoContable> insert(List<CentroDeCostoContable> items)
-			throws Exception {
+	// public CentroDeCostoContable insert(CentroDeCostoContable dto, Usuario
+	// usuario) throws Exception {
+	//
+	// String nameTableDB = getClassTableMSAnont(classModel);
+	//
+	// String[] nameAtts = { "[CUENTA]", "[CHEQUERA]", "[PRIMERNRO]",
+	// "[ULTIMONRO]", "[PROXIMONRO]", "[BLOQUEADO]",
+	// "[IMPRESIONDIFERIDA]", "[DESTINOIMPRESION]", "[FORMATO]" };
+	//
+	// Object cuentaDeFondo = Integer.class;
+	// Object codigo = Integer.class;
+	// Object primerNumero = Integer.class;
+	// Object ultimoNumero = Integer.class;
+	// Object proximoNumero = Integer.class;
+	// Object bloqueado = Boolean.class;
+	// Object impresionDiferida = Boolean.class;
+	// Object destinoImpresion = String.class;
+	// Object formato = String.class;
+	//
+	// if (dto.getCuentaDeFondo() != null
+	// && dto.getCuentaDeFondo().getId() != null) {
+	// cuentaDeFondo = dto.getCuentaDeFondo().getCodigo();
+	// }
+	// if (dto.getCodigo() != null) {
+	// codigo = dto.getCodigo();
+	// }
+	// if (dto.getPrimerNumero() != null) {
+	// primerNumero = dto.getPrimerNumero();
+	// }
+	// if (dto.getUltimoNumero() != null) {
+	// ultimoNumero = dto.getUltimoNumero();
+	// }
+	// if (dto.getProximoNumero() != null) {
+	// proximoNumero = dto.getProximoNumero();
+	// }
+	// if (dto.getBloqueado() != null) {
+	// bloqueado = dto.getBloqueado();
+	// }
+	// if (dto.getImpresionDiferida() != null) {
+	// impresionDiferida = dto.getImpresionDiferida();
+	// }
+	// if (dto.getDestinoImpresion() != null) {
+	// destinoImpresion = dto.getDestinoImpresion();
+	// }
+	// if (dto.getFormato() != null) {
+	// formato = dto.getFormato();
+	// }
+	//
+	// Object[] args = { cuentaDeFondo, codigo, primerNumero, ultimoNumero,
+	// proximoNumero, bloqueado, impresionDiferida, destinoImpresion,
+	// formato };
+	//
+	// insert(nameTableDB, nameAtts, args);
+	//
+	// return dto;
+	//
+	// // return insertByReflection(dto, usuario);
+	// }
 
-		String sql = null;
+	// public Chequera update(Chequera dto, Chequera dtoOriginal, Usuario
+	// usuario)
+	// throws Exception {
+	//
+	// String nameTableDB = getClassTableMSAnont(classModel);
+	//
+	// String[] nameAtts = { "[CUENTA]", "[CHEQUERA]", "[PRIMERNRO]",
+	// "[ULTIMONRO]", "[PROXIMONRO]", "[BLOQUEADO]",
+	// "[IMPRESIONDIFERIDA]", "[DESTINOIMPRESION]", "[FORMATO]" };
+	//
+	// Object cuentaDeFondo = Integer.class;
+	// Object codigo = Integer.class;
+	// Object primerNumero = Integer.class;
+	// Object ultimoNumero = Integer.class;
+	// Object proximoNumero = Integer.class;
+	// Object bloqueado = Boolean.class;
+	// Object impresionDiferida = Boolean.class;
+	// Object destinoImpresion = String.class;
+	// Object formato = String.class;
+	//
+	// if (dto.getCuentaDeFondo() != null
+	// && dto.getCuentaDeFondo().getId() != null) {
+	// cuentaDeFondo = dto.getCuentaDeFondo().getCodigo();
+	// }
+	// if (dto.getCodigo() != null) {
+	// codigo = dto.getCodigo();
+	// }
+	// if (dto.getPrimerNumero() != null) {
+	// primerNumero = dto.getPrimerNumero();
+	// }
+	// if (dto.getUltimoNumero() != null) {
+	// ultimoNumero = dto.getUltimoNumero();
+	// }
+	// if (dto.getProximoNumero() != null) {
+	// proximoNumero = dto.getProximoNumero();
+	// }
+	// if (dto.getBloqueado() != null) {
+	// bloqueado = dto.getBloqueado();
+	// }
+	// if (dto.getImpresionDiferida() != null) {
+	// impresionDiferida = dto.getImpresionDiferida();
+	// }
+	// if (dto.getDestinoImpresion() != null) {
+	// destinoImpresion = dto.getDestinoImpresion();
+	// }
+	// if (dto.getFormato() != null) {
+	// formato = dto.getFormato();
+	// }
+	//
+	// Object cuentaDeFondoOriginal = Integer.class;
+	//
+	// if (dtoOriginal.getCuentaDeFondo() != null
+	// && dto.getCuentaDeFondo().getId() != null) {
+	// cuentaDeFondoOriginal = dtoOriginal.getCuentaDeFondo().getCodigo();
+	// }
+	//
+	// Object codigoOriginal = Integer.class;
+	//
+	// if (dtoOriginal.getCodigo() != null) {
+	// codigoOriginal = dtoOriginal.getCodigo();
+	// }
+	//
+	// String where = "[CUENTA] = ? AND [CHEQUERA] = ?";
+	//
+	// Object[] args = { cuentaDeFondo, codigo, primerNumero, ultimoNumero,
+	// proximoNumero, bloqueado, impresionDiferida, destinoImpresion,
+	// formato, cuentaDeFondoOriginal, codigoOriginal };
+	//
+	// update(nameTableDB, nameAtts, args, where);
+	//
+	// return dto;
+	// }
+
+	public boolean delete(CentroDeCostoContable dto) throws Exception {
+
+		Object ejercicioArg = null;
+
+		if (dto.getEjercicioContable().getEjercicio() != null) {
+			ejercicioArg = dto.getEjercicioContable().getEjercicio();
+		} else {
+			ejercicioArg = Integer.class;
+		}
+
+		Object numeroArg = null;
+
+		if (dto.getNumero() != null) {
+			numeroArg = dto.getNumero();
+		} else {
+			numeroArg = Integer.class;
+		}
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
-			sql = SQL_PG_2;
+			// return delete(ATT_NAME_CODIGO + " = ?", codigoArg);
+			return false;
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-			sql = SQL_MS_2;
+
+			return delete("[EJERCICIO] = ? AND [CENTRODECOSTOCONTABLE] = ?",
+					ejercicioArg, numeroArg);
 		}
 
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
-
-		try {
-
-			connectionWrapper.begin();
-
-			for (CentroDeCostoContable item : items) {
-
-				if (findByCentroDeCostoContable(item.getNumero(), item
-						.getEjercicioContable().getEjercicio()) != null) {
-					throw new InsertDuplicateException(item.getNumero());
-				}
-
-				Object id = null;
-				if (item.getId() != null) {
-					id = item.getId();
-				} else {
-					id = String.class;
-				}
-				Object numero = null;
-				if (item.getNumero() != null) {
-					numero = item.getNumero();
-				} else {
-					numero = Short.class;
-				}
-				Object nombre = null;
-				if (item.getNombre() != null) {
-					nombre = item.getNombre();
-				} else {
-					nombre = String.class;
-				}
-				Object abreviatura = null;
-				if (item.getAbreviatura() != null) {
-					abreviatura = item.getAbreviatura();
-				} else {
-					abreviatura = String.class;
-				}
-				Object ejercicioContable = null;
-				if (item.getEjercicioContable() != null
-						&& item.getEjercicioContable().getEjercicio() != null) {
-					ejercicioContable = item.getEjercicioContable()
-							.getEjercicio();
-				} else {
-					ejercicioContable = Integer.class;
-				}
-
-				int rows = -1;
-
-				if (dataSourceWrapper.isDatabasePostgreSql()) {
-
-					Object[] args = { id, ejercicioContable, numero, nombre,
-							abreviatura, };
-					rows = connectionWrapper.insert(sql, args);
-
-				} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-					Object[] args = { numero, nombre, abreviatura,
-							ejercicioContable };
-					rows = connectionWrapper.insert(sql, args);
-				}
-
-				if (rows != 1) {
-					throw new Exception(
-							"La sentencia debería afectar un solo registro, la sentencia afecto "
-									+ rows + " registros.");
-				}
-			}
-
-			connectionWrapper.commit();
-
-			return items;
-
-		} catch (Exception e) {
-			connectionWrapper.rollBack();
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
-		}
-	}
-
-	public CentroDeCostoContable insert(CentroDeCostoContable item)
-			throws Exception {
-
-		String sql = null;
-
-		if (dataSourceWrapper.isDatabasePostgreSql()) {
-			sql = SQL_PG_2;
-		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-			sql = SQL_MS_2;
-		}
-
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
-
-		try {
-
-			connectionWrapper.begin();
-
-			if (findByCentroDeCostoContable(item.getNumero(), item
-					.getEjercicioContable().getEjercicio()) != null) {
-				throw new InsertDuplicateException(item.getNumero());
-			}
-
-			Object numero = null;
-			if (item.getNumero() != null) {
-				numero = item.getNumero();
-			} else {
-				numero = Short.class;
-			}
-			Object nombre = null;
-			if (item.getNombre() != null) {
-				nombre = item.getNombre();
-			} else {
-				nombre = String.class;
-			}
-			Object abreviatura = null;
-			if (item.getAbreviatura() != null) {
-				abreviatura = item.getAbreviatura();
-			} else {
-				abreviatura = String.class;
-			}
-
-			int rows = -1;
-
-			if (dataSourceWrapper.isDatabasePostgreSql()) {
-				item.setId(UUID.randomUUID().toString());
-				Object id = item.getId();
-
-				Object ejercicioContable = null;
-				if (item.getEjercicioContable() != null
-						&& item.getEjercicioContable().getEjercicio() != null) {
-					ejercicioContable = item.getEjercicioContable().getId();
-				} else {
-					ejercicioContable = String.class;
-				}
-
-				Object[] args = { id, ejercicioContable, numero, nombre,
-						abreviatura, };
-				rows = connectionWrapper.insert(sql, args);
-
-			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-
-				Object ejercicioContable = null;
-				if (item.getEjercicioContable() != null
-						&& item.getEjercicioContable().getEjercicio() != null) {
-					ejercicioContable = item.getEjercicioContable()
-							.getEjercicio();
-				} else {
-					ejercicioContable = Integer.class;
-				}
-
-				Object[] args = { numero, nombre, abreviatura,
-						ejercicioContable };
-				rows = connectionWrapper.insert(sql, args);
-			}
-
-			if (rows != 1) {
-				throw new Exception(
-						"La sentencia debería afectar un solo registro, la sentencia afecto "
-								+ rows + " registros.");
-			}
-
-			connectionWrapper.commit();
-
-			return item;
-
-		} catch (Exception e) {
-			connectionWrapper.rollBack();
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
-		}
-	}
-
-	public CentroDeCostoContable update(CentroDeCostoContable item,
-			Integer ejercicioOriginal, Integer numeroOriginal) throws Exception {
-
-		String sql = null;
-
-		if (dataSourceWrapper.isDatabasePostgreSql()) {
-			sql = SQL_PG_3;
-		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-			sql = SQL_MS_3;
-		}
-
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
-
-		try {
-
-			connectionWrapper.begin();
-
-			Object id = null;
-			if (item.getId() != null) {
-				id = item.getId();
-			} else {
-				id = String.class;
-			}
-			Object numero = null;
-			if (item.getNumero() != null) {
-				numero = item.getNumero();
-			} else {
-				numero = Short.class;
-			}
-			Object nombre = null;
-			if (item.getNombre() != null) {
-				nombre = item.getNombre();
-			} else {
-				nombre = String.class;
-			}
-			Object abreviatura = null;
-			if (item.getAbreviatura() != null) {
-				abreviatura = item.getAbreviatura();
-			} else {
-				abreviatura = String.class;
-			}
-
-			int rows = -1;
-
-			if (dataSourceWrapper.isDatabasePostgreSql()) {
-				Object ejercicioContable = null;
-				if (item.getEjercicioContable() != null
-						&& item.getEjercicioContable().getEjercicio() != null) {
-					ejercicioContable = item.getEjercicioContable().getId();
-				} else {
-					ejercicioContable = Integer.class;
-				}
-
-				Object[] args = { ejercicioContable, numero, nombre,
-						abreviatura, id };
-
-				rows = connectionWrapper.update(sql, args);
-
-			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-				Object ejercicioContable = null;
-				if (item.getEjercicioContable() != null
-						&& item.getEjercicioContable().getEjercicio() != null) {
-					ejercicioContable = item.getEjercicioContable()
-							.getEjercicio();
-				} else {
-					ejercicioContable = Integer.class;
-				}
-
-				Object[] args = { numero, nombre, abreviatura,
-						ejercicioContable, numeroOriginal, ejercicioOriginal };
-
-				rows = connectionWrapper.update(sql, args);
-			}
-
-			if (rows != 1) {
-				throw new Exception(
-						"La sentencia debería afectar un solo registro, la sentencia afecto "
-								+ rows + " registros.");
-			}
-
-			connectionWrapper.commit();
-
-		} catch (Exception e) {
-			connectionWrapper.rollBack();
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
-		}
-
-		item = this.findByCentroDeCostoContable(item.getNumero(), item
-				.getEjercicioContable().getEjercicio());
-
-		return item;
-	}
-
-	public EntityId delete(CentroDeCostoContable item) throws Exception {
-
-		String sql = null;
-
-		if (dataSourceWrapper.isDatabasePostgreSql()) {
-			sql = SQL_PG_4;
-		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-			sql = SQL_MS_4;
-		}
-
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
-
-		try {
-
-			connectionWrapper.begin();
-
-			int rows = -1;
-
-			if (dataSourceWrapper.isDatabasePostgreSql()) {
-
-				Object id = null;
-				if (item.getId() != null) {
-					id = item.getId();
-				} else {
-					id = String.class;
-				}
-
-				rows = connectionWrapper.delete(sql, id);
-
-			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-
-				Object numero = null;
-				if (item.getNumero() != null) {
-					numero = item.getNumero();
-				} else {
-					numero = Short.class;
-				}
-
-				Object ejercicioContable = null;
-				if (item.getEjercicioContable() != null
-						&& item.getEjercicioContable().getEjercicio() != null) {
-					ejercicioContable = item.getEjercicioContable()
-							.getEjercicio();
-				} else {
-					ejercicioContable = Integer.class;
-				}
-
-				rows = connectionWrapper.delete(sql, numero, ejercicioContable);
-			}
-
-			if (rows != 1) {
-				throw new Exception(
-						"La sentencia debería afectar un solo registro, la sentencia afecto "
-								+ rows + " registros.");
-			}
-
-			connectionWrapper.commit();
-
-			return item;
-
-		} catch (Exception e) {
-			connectionWrapper.rollBack();
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
-		}
+		return false;
 
 	}
-
-	// ++--------------------------------------------------------------------
-
-	public List<String> checkRefIntegrity(EjercicioContable objectFK) {
-
-		System.out.println("exeute : " + this.getClass().getCanonicalName()
-				+ ".checkRefIntegrity(EjercicioContable objectFK)");
-
-		return new ArrayList<String>();
-
-	}
-
 }

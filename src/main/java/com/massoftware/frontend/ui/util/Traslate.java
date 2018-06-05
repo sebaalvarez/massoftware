@@ -189,7 +189,7 @@ public class Traslate {
 			return value.toLowerCase();
 		}
 
-		return value;
+		return value.trim();
 
 	}
 

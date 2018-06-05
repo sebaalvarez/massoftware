@@ -102,6 +102,7 @@ public class StandardTableUi<T> extends CustomComponent {
 	// ----------------------------------------------
 
 	private String pidFiltering;
+	private Boolean orderByAsc;
 
 	// ----------------------------------------------
 
@@ -254,6 +255,8 @@ public class StandardTableUi<T> extends CustomComponent {
 					&& searchFilter == null) {
 
 				pidFiltering = columnMetaData.getAttName();
+				orderByAsc = getOrderByAsc(classModel
+						.getDeclaredField(pidFiltering));
 				filtroGenericoTXT.setCaption(columnMetaData.getAttLabel());
 
 				setInputPromptFiltroGenericoTXT(columnMetaData);
@@ -384,7 +387,13 @@ public class StandardTableUi<T> extends CustomComponent {
 		// .......
 
 		List<SortOrder> order = new ArrayList<SortOrder>();
-		order.add(new SortOrder(pidFiltering, SortDirection.ASCENDING));
+
+		if (orderByAsc) {
+			order.add(new SortOrder(pidFiltering, SortDirection.ASCENDING));
+		} else {
+			order.add(new SortOrder(pidFiltering, SortDirection.DESCENDING));
+		}
+
 		itemsGRD.setSortOrder(order);
 
 		itemsGRD.addSortListener(e -> {
@@ -1011,6 +1020,17 @@ public class StandardTableUi<T> extends CustomComponent {
 		FieldLabelAnont[] a = field.getAnnotationsByType(FieldLabelAnont.class);
 		if (a != null && a.length > 0) {
 			return a[0].value();
+		}
+
+		return null;
+	}
+
+	private Boolean getOrderByAsc(Field field) {
+
+		FieldColumnMetaDataAnont[] a = field
+				.getAnnotationsByType(FieldColumnMetaDataAnont.class);
+		if (a != null && a.length > 0) {
+			return a[0].ascOrderByStart();
 		}
 
 		return null;

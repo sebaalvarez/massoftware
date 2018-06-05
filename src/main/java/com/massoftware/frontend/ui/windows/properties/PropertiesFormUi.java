@@ -2,12 +2,10 @@ package com.massoftware.frontend.ui.windows.properties;
 
 import java.util.Properties;
 
-import com.massoftware.backend.MigradorMSToPG;
 import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.MasSoftware;
-import com.massoftware.frontend.ui.menu.ContabilidadGeneralMenu;
-import com.massoftware.frontend.ui.menu.FondosMenu;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.model.Usuario;
 import com.vaadin.server.FontAwesome;
@@ -32,53 +30,54 @@ public class PropertiesFormUi extends CustomComponent {
 
 	// ----------------------------------------------
 
-	protected Window window;
-	protected BackendContext cx;
-	protected MasSoftware masSoftware;
+	private Window window;
+	private SessionVar sessionVar;
+	private MasSoftware masSoftware;
 
 	// ----------------------------------------------
 	// CONTROLES
 
-	protected VerticalLayout rootVL;
+	private VerticalLayout rootVL;
 
-	protected TabSheet pestaniasTBS;
+	private TabSheet pestaniasTBS;
 
-	protected FormLayout userFL;
-	protected TextField userTXT;
+	private FormLayout userFL;
+	private TextField userTXT;
 
-	protected FormLayout msFL;
-	protected TextField userNameMSTXT;
-	protected TextField userPasswordMSTXT;
-	protected TextField serverNameMSTXT;
-	protected TextField portNumberMSTXT;
-	protected TextField databaseNameMSTXT;
+	private FormLayout msFL;
+	private TextField userNameMSTXT;
+	private TextField userPasswordMSTXT;
+	private TextField serverNameMSTXT;
+	private TextField portNumberMSTXT;
+	private TextField databaseNameMSTXT;
 
-	protected FormLayout pgFL;
-	protected TextField userNamePGTXT;
-	protected TextField userPasswordPGTXT;
-	protected TextField serverNamePGTXT;
-	protected TextField portNumberPGTXT;
-	protected TextField databaseNamePGTXT;
+	private FormLayout pgFL;
+	private TextField userNamePGTXT;
+	private TextField userPasswordPGTXT;
+	private TextField serverNamePGTXT;
+	private TextField portNumberPGTXT;
+	private TextField databaseNamePGTXT;
 
-	protected HorizontalLayout barraDeHerramientasFila1;
-	protected OptionGroup optionGroup;
-	protected Button ingresarBTN;
-	protected Button migrarBTN;
+	private HorizontalLayout barraDeHerramientasFila1;
+	private OptionGroup optionGroup;
+	private Button ingresarBTN;
 
-	public PropertiesFormUi(Window window, BackendContext cx,
+	// private Button migrarBTN;
+
+	public PropertiesFormUi(Window window, SessionVar sessionVar,
 			MasSoftware masSoftware) {
 		super();
 		try {
 			this.window = window;
-			this.cx = cx;
+			this.sessionVar = sessionVar;
 			this.masSoftware = masSoftware;
-			viewPort768x1024();
+			init();
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
 	}
 
-	protected void exit() {
+	private void exit() {
 
 		try {
 			window.close();
@@ -91,7 +90,7 @@ public class PropertiesFormUi extends CustomComponent {
 
 	// AAA ................................................................
 
-	protected void viewPort768x1024() throws Exception {
+	private void init() throws Exception {
 
 		// ----------------------------------------------
 		// CONTROLES
@@ -465,87 +464,91 @@ public class PropertiesFormUi extends CustomComponent {
 
 		// --------------------------------------------------
 
-		migrarBTN = new Button();
-		migrarBTN.addStyleName(ValoTheme.BUTTON_DANGER);
-		migrarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-		migrarBTN.setIcon(FontAwesome.PLAY_CIRCLE);
-		migrarBTN.setCaption("Migrar a PostgreSQL");
-		migrarBTN.addClickListener(e -> {
-			migrarBTNClick();
-		});
-
-		barraDeHerramientasFila1.addComponent(migrarBTN);
+		// migrarBTN = new Button();
+		// migrarBTN.addStyleName(ValoTheme.BUTTON_DANGER);
+		// migrarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+		// migrarBTN.setIcon(FontAwesome.PLAY_CIRCLE);
+		// migrarBTN.setCaption("Migrar a PostgreSQL");
+		// migrarBTN.addClickListener(e -> {
+		// migrarBTNClick();
+		// });
+		//
+		// barraDeHerramientasFila1.addComponent(migrarBTN);
 
 		// --------------------------------------------------
 
 	}
 
-	protected void migrarBTNClick() {
-		try {
-
-			Properties propertiesMS = new Properties();
-
-			propertiesMS.put("jdbc.driverClassName",
-					"com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			propertiesMS.put("jdbc.userName", userNameMSTXT.getValue());
-			propertiesMS.put("jdbc.userPassword", userPasswordMSTXT.getValue());
-			// properties.put("jdbc.url", ds.getURL());
-			propertiesMS.put("jdbc.maxActive", "10");
-			propertiesMS.put("jdbc.initialSize", "5");
-			propertiesMS.put("jdbc.maxIdle", "5");
-			propertiesMS.put("jdbc.validationQuery", "SELECT 1");
-			propertiesMS.put("jdbc.verbose", "true");
-			propertiesMS.put("jdbc.serverName", serverNameMSTXT.getValue());
-			propertiesMS.put("jdbc.databaseName", databaseNameMSTXT.getValue());
-			propertiesMS.put("jdbc.portNumber", portNumberMSTXT.getValue());
-
-			Properties propertiesPG = new Properties();
-
-			propertiesPG.put("jdbc.driverClassName", "org.postgresql.Driver");
-			propertiesPG.put("jdbc.userName", userNamePGTXT.getValue());
-			propertiesPG.put("jdbc.userPassword", userPasswordPGTXT.getValue());
-			propertiesPG.put("jdbc.url",
-					"jdbc:postgresql://" + serverNamePGTXT.getValue() + ":"
-							+ portNumberPGTXT.getValue() + "/"
-							+ databaseNamePGTXT.getValue() + "?searchpath="
-							+ databaseNamePGTXT.getValue() + "");
-			propertiesPG.put("jdbc.maxActive", "10");
-			propertiesPG.put("jdbc.initialSize", "5");
-			propertiesPG.put("jdbc.maxIdle", "5");
-			propertiesPG.put("jdbc.validationQuery", "SELECT 1");
-			propertiesPG.put("jdbc.verbose", "true");
-			
-			MigradorMSToPG migradorMSToPG = new MigradorMSToPG();
-			migradorMSToPG.migrar(propertiesPG, propertiesMS);
-			cx.start(BackendContext.PG, propertiesPG);
-			
-//			if (optionGroup.getValue().equals("PostgreSQL")) {
-//				cx.start(BackendContext.PG, propertiesPG);
-//			} else {
-//				cx.start(BackendContext.MS, propertiesMS);
-//			}
-
-			Usuario usuario = ((UsuarioBO)cx.buildBO(Usuario.class)).findByNombre(userTXT.getValue());
-
-			VerticalLayout layout = new VerticalLayout();
-
-			layout.addComponent(new ContabilidadGeneralMenu(cx, usuario));
-
-			masSoftware.setContent(layout);
-
-			window.close();
-
-			exit();
-
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-
-	}
+	// private void migrarBTNClick() {
+	// try {
+	//
+	// Properties propertiesMS = new Properties();
+	//
+	// propertiesMS.put("jdbc.driverClassName",
+	// "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+	// propertiesMS.put("jdbc.userName", userNameMSTXT.getValue());
+	// propertiesMS.put("jdbc.userPassword", userPasswordMSTXT.getValue());
+	// // properties.put("jdbc.url", ds.getURL());
+	// propertiesMS.put("jdbc.maxActive", "10");
+	// propertiesMS.put("jdbc.initialSize", "5");
+	// propertiesMS.put("jdbc.maxIdle", "5");
+	// propertiesMS.put("jdbc.validationQuery", "SELECT 1");
+	// propertiesMS.put("jdbc.verbose", "true");
+	// propertiesMS.put("jdbc.serverName", serverNameMSTXT.getValue());
+	// propertiesMS.put("jdbc.databaseName", databaseNameMSTXT.getValue());
+	// propertiesMS.put("jdbc.portNumber", portNumberMSTXT.getValue());
+	//
+	// Properties propertiesPG = new Properties();
+	//
+	// propertiesPG.put("jdbc.driverClassName", "org.postgresql.Driver");
+	// propertiesPG.put("jdbc.userName", userNamePGTXT.getValue());
+	// propertiesPG.put("jdbc.userPassword", userPasswordPGTXT.getValue());
+	// propertiesPG.put("jdbc.url",
+	// "jdbc:postgresql://" + serverNamePGTXT.getValue() + ":"
+	// + portNumberPGTXT.getValue() + "/"
+	// + databaseNamePGTXT.getValue() + "?searchpath="
+	// + databaseNamePGTXT.getValue() + "");
+	// propertiesPG.put("jdbc.maxActive", "10");
+	// propertiesPG.put("jdbc.initialSize", "5");
+	// propertiesPG.put("jdbc.maxIdle", "5");
+	// propertiesPG.put("jdbc.validationQuery", "SELECT 1");
+	// propertiesPG.put("jdbc.verbose", "true");
+	//
+	// MigradorMSToPG migradorMSToPG = new MigradorMSToPG();
+	// migradorMSToPG.migrar(propertiesPG, propertiesMS);
+	// masSoftware.getSessionVar().getCx().start(BackendContext.PG,
+	// propertiesPG);
+	//
+	// // if (optionGroup.getValue().equals("PostgreSQL")) {
+	// // cx.start(BackendContext.PG, propertiesPG);
+	// // } else {
+	// // cx.start(BackendContext.MS, propertiesMS);
+	// // }
+	//
+	// Usuario usuario = ((UsuarioBO)
+	// masSoftware.getSessionVar().getCx().buildBO(Usuario.class))
+	// .findByNombre(userTXT.getValue());
+	//
+	// VerticalLayout layout = new VerticalLayout();
+	//
+	// layout.addComponent(new
+	// ContabilidadGeneralMenu(masSoftware.getSessionVar().getCx(), usuario));
+	// //
+	// masSoftware.setContent(layout);
+	//
+	// window.close();
+	//
+	// exit();
+	//
+	// } catch (Exception e) {
+	// LogAndNotification.print(e);
+	// }
+	//
+	// }
 
 	// EVTs LISTENERS ===================================================
 
-	protected void ingresarBTNClick() {
+	private void ingresarBTNClick() {
 		try {
 
 			Properties propertiesMS = new Properties();
@@ -581,20 +584,17 @@ public class PropertiesFormUi extends CustomComponent {
 			propertiesPG.put("jdbc.verbose", "true");
 
 			if (optionGroup.getValue().equals("PostgreSQL")) {
-				cx.start(BackendContext.PG, propertiesPG);
+				sessionVar.getCx().start(BackendContext.PG, propertiesPG);
 			} else {
-				cx.start(BackendContext.MS, propertiesMS);
+				sessionVar.getCx().start(BackendContext.MS, propertiesMS);
 			}
 
-			Usuario usuario = ((UsuarioBO)cx.buildBO(Usuario.class)).findByNombre(
-					userTXT.getValue());
+			Usuario usuario = ((UsuarioBO) sessionVar.getCx().buildBO(
+					Usuario.class)).findByNombre(userTXT.getValue());
 
-			VerticalLayout layout = new VerticalLayout();
+			sessionVar.setUsuario(usuario);
 
-//			layout.addComponent(new ContabilidadGeneralMenu(cx, usuario));
-			layout.addComponent(new FondosMenu(cx, usuario));
-
-			masSoftware.setContent(layout);
+			masSoftware.renderMDI();
 
 			window.close();
 

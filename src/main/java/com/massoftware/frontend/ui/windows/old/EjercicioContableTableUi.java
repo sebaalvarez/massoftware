@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.ejercicio_contable;
+package com.massoftware.frontend.ui.windows.old;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.cendra.common.model.EntityId;
 
-import com.massoftware.backend.bo.EjercicioContableBO;
+import com.massoftware.backend.bo.EjercicioContableBOViejo;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.model.EjercicioContable;
@@ -26,7 +26,7 @@ import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class EjercicioContableTableUi extends TableUi {
+class EjercicioContableTableUi extends TableUi {
 
 	/**
 	 * 
@@ -41,7 +41,7 @@ public class EjercicioContableTableUi extends TableUi {
 
 	private boolean configGridFlag = false;
 
-	private EjercicioContableBO ejercicioContableBO;
+	private EjercicioContableBOViejo ejercicioContableBO;
 
 	public EjercicioContableTableUi(BackendContext cx, Usuario usuario) {
 		super(cx, usuario);
