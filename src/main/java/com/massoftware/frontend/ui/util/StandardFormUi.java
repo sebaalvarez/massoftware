@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.cendra.common.model.EntityId;
 import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.ex.crud.UniqueException;
 
@@ -17,6 +16,8 @@ import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.build.BuildComponentsUtil;
 import com.massoftware.frontend.xmd.BuilderXMD;
 import com.massoftware.frontend.xmd.ComponentXMD;
+import com.massoftware.model.EntityId;
+import com.massoftware.model.Entity;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
@@ -79,9 +80,19 @@ public class StandardFormUi<T> extends CustomComponent {
 
 	@SuppressWarnings("rawtypes")
 	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
-			BackendContext cx, StandardTableUi tableUi, T object) {
+			BackendContext cx, StandardTableUi tableUi, T objectClone, T object) {
 		super();
-		init(usuario, classModel, mode, cx, tableUi, object);
+		init(usuario, classModel, mode, cx, tableUi, objectClone);
+		if (StandardFormUi.COPY_MODE.equalsIgnoreCase(mode)) {
+			this.window.setCaption("Copiar " + dtoLabel + " : " + object);
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
+			BackendContext cx, StandardTableUi tableUi, T objectClone) {
+		super();
+		init(usuario, classModel, mode, cx, tableUi, objectClone);		
 	}
 
 	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
@@ -173,8 +184,8 @@ public class StandardFormUi<T> extends CustomComponent {
 	@SuppressWarnings("unchecked")
 	protected void buildContainers(T dto) throws Exception {
 
-		if (dto != null && dto instanceof EntityId) {
-			originalDTO = ((EntityId) dto).clone();
+		if (dto != null && dto instanceof Entity) {			
+			originalDTO = ((Entity) dto ).clone();						
 		}
 
 		// ======================================================================

@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.cendra.common.model.EntityId;
+
+
 import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.EntityId;
 import com.massoftware.model.PuntoDeEquilibrio;
 
 public class PuntoDeEquilibrioBO {

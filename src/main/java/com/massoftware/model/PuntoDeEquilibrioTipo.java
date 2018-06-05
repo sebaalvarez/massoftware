@@ -1,6 +1,5 @@
 package com.massoftware.model;
 
-import org.cendra.common.model.EntityId;
 
 public class PuntoDeEquilibrioTipo extends EntityId implements Cloneable,
 		Comparable<PuntoDeEquilibrioTipo> {

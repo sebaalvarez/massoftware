@@ -4,12 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.cendra.common.model.EntityId;
+
+
+
 
 import com.massoftware.backend.bo.EjercicioContableBOViejo;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.EntityId;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.server.FontAwesome;
@@ -170,6 +173,20 @@ class EjercicioContableTableUi extends TableUi {
 
 	protected CustomComponent getWindowsContent(Window win, EntityId item) {
 		return new EjercicioContableFormUi(item, cx, win, this, usuario);
+	}
+
+	@Override
+	protected void deleteBO(org.cendra.common.model.EntityId item)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected CustomComponent getWindowsContent(Window win,
+			org.cendra.common.model.EntityId item) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

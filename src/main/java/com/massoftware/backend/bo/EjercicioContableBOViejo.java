@@ -4,7 +4,8 @@ import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.cendra.common.model.EntityId;
+
+
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ConnectionWrapper;
@@ -12,6 +13,7 @@ import org.cendra.jdbc.DataSourceWrapper;
 import org.cendra.jdbc.SQLExceptionWrapper;
 
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.EntityId;
 
 public class EjercicioContableBOViejo {
 

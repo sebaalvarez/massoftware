@@ -2,8 +2,6 @@ package com.massoftware.model;
 
 import java.math.BigDecimal;
 
-import org.cendra.common.model.EntityId;
-
 import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
 import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
@@ -20,15 +18,13 @@ import com.massoftware.annotation.model.FieldNameMSAnont;
 import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.annotation.model.FieldUniqueAnont;
 
-@SuppressWarnings("serial")
-
 @ClassLabelInTheSingularAnont(value = "Zona")
 @ClassPluralLabelAnont(value = "Zonas")
 @ClassArticleLabelInTheSingularAnont(value = "la")
 @ClassArticleLabelInPluralAnont(value = "las")
 // @ClassFormSourceAnont(value = "Zona")
 @ClassTableMSAnont(nameTableDB = "[Zonas]")
-public class Zona extends EntityId implements Cloneable, Comparable<Zona> {
+public class Zona extends EntityId implements Comparable<Zona> {
 
 	@FieldLabelAnont(value = "Zona")
 	@FieldRequiredAnont(value = true)
@@ -125,29 +121,6 @@ public class Zona extends EntityId implements Cloneable, Comparable<Zona> {
 	}
 
 	@Override
-	public Zona clone() throws CloneNotSupportedException {
-
-		Zona other = new Zona();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-		if (this.getBonificacion() != null) {
-			other.setBonificacion(new BigDecimal(this.getBonificacion()
-					.toString()));
-		} else {
-			other.setBonificacion(null);
-		}
-		if (this.getRecargo() != null) {
-			other.setRecargo(new BigDecimal(this.getRecargo().toString()));
-		} else {
-			other.setRecargo(null);
-		}
-
-		return other;
-	}
-
-	@Override
 	public int compareTo(Zona other) {
 
 		return this.getCodigo().compareTo(other.getCodigo());
@@ -155,7 +128,17 @@ public class Zona extends EntityId implements Cloneable, Comparable<Zona> {
 
 	@Override
 	public String toString() {
-		return "(" + getCodigo() + ") " + getNombre();
+		
+		if (getCodigo() != null && getNombre() != null) {
+			return "(" + getCodigo() + ") " + getNombre();
+		} else if (getCodigo() != null && getNombre() == null) {
+			return "(" + getCodigo() + ") ";
+		}
+		if (getCodigo() == null && getNombre() != null) {
+			return getNombre();
+		}
+
+		return "";
 
 	}
 

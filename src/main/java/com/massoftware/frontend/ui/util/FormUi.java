@@ -1,10 +1,11 @@
 package com.massoftware.frontend.ui.util;
 
-import org.cendra.common.model.EntityId;
+
 import org.cendra.common.model.EntityMetaData;
 import org.cendra.ex.crud.InsertDuplicateException;
 
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.model.EntityId;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.server.FontAwesome;
@@ -60,7 +61,7 @@ public abstract class FormUi extends CustomComponent {
 			initObjectBO();
 
 			if (item != null) {
-				item = item.clone();
+				item = (EntityId) item.clone();
 
 				insert = false;
 

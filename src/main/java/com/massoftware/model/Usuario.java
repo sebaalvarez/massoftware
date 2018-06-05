@@ -1,7 +1,5 @@
 package com.massoftware.model;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.cendra.common.model.EntityId;
 
 public class Usuario extends EntityId implements Cloneable, Comparable<Usuario> {
 

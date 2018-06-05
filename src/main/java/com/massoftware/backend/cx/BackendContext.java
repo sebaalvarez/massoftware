@@ -115,6 +115,7 @@ public class BackendContext extends AbstractContext {
 	private DataSourceProperties dataSourceProperties;
 	private DataSource dataSource;
 	private DataSourceWrapper dataSourceWrapper;
+
 	private Map<String, EntityMetaData> entityMetaDataMap = new HashMap<String, EntityMetaData>();
 
 	public BackendContext() {
@@ -461,7 +462,6 @@ public class BackendContext extends AbstractContext {
 				return new CentroDeCostoContableBO(dataSourceWrapper, this);
 
 			}
-
 
 			else if (classModel == Banco.class) {
 

@@ -2,8 +2,6 @@ package com.massoftware.model;
 
 import java.math.BigDecimal;
 
-import org.cendra.common.model.EntityId;
-
 import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
 import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassFormSourceAnont;

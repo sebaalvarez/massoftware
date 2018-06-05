@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.cendra.common.model.EntityId;
-
 import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
 import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;

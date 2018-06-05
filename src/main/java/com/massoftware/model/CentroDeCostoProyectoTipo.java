@@ -1,14 +1,11 @@
 package com.massoftware.model;
 
-import org.cendra.common.model.EntityId;
 
+@SuppressWarnings("serial")
 public class CentroDeCostoProyectoTipo extends EntityId implements Cloneable,
 		Comparable<CentroDeCostoProyectoTipo> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5467523425556475587L;
+
 
 	private Integer codigo;
 	private String nombre;

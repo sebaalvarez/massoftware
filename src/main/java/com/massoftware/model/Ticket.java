@@ -3,8 +3,6 @@ package com.massoftware.model;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-import org.cendra.common.model.EntityId;
-
 import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
 import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;

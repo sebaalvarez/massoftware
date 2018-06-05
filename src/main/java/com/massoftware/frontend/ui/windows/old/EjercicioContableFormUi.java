@@ -5,7 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-import org.cendra.common.model.EntityId;
+
+
 import org.cendra.common.model.EntityMetaData;
 
 import com.massoftware.backend.bo.EjercicioContableBOViejo;
@@ -15,6 +16,7 @@ import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.frontend.ui.util.UtilDate;
 import com.massoftware.frontend.ui.util.validator.StringToIntegerConverterUnspecifiedLocale;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.EntityId;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItem;
@@ -100,7 +102,7 @@ class EjercicioContableFormUi extends FormUi {
 				+ " es requerido.";
 
 		if (item != null) {
-			item = item.clone();
+			item = (EntityId) item.clone();
 		} else {
 			item = new EjercicioContable();
 			EjercicioContable ejercicioContable = (EjercicioContable) item;

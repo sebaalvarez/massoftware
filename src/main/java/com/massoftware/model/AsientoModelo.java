@@ -3,8 +3,6 @@ package com.massoftware.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cendra.common.model.EntityId;
-
 public class AsientoModelo extends EntityId implements Cloneable,
 		Comparable<AsientoModelo> {
 

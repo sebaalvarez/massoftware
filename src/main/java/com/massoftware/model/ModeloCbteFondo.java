@@ -3,8 +3,6 @@ package com.massoftware.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cendra.common.model.EntityId;
-
 public class ModeloCbteFondo extends EntityId implements Cloneable,
 		Comparable<ModeloCbteFondo> {
 

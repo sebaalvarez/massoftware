@@ -4,9 +4,29 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
+import com.massoftware.model.Zona;
+
 public class Pruebas {
 
 	public static void main(String[] args) throws Exception {
+		
+		Zona z = new Zona();
+		z.setId("123");
+		z.setCodigo("codigo");
+		z.setNombre("nombre");
+		z.setBonificacion(new BigDecimal("2.344444"));
+		z.setRecargo(new BigDecimal("2.3"));
+		
+		Object other = z.clone();
+		
+		System.out.println(other);
+		
+		System.out.println("END");
+		
+		
+		System.exit(0);
+
+		// ////////////////////////////////////////////////////
 
 		String errorMessage = "XXXXXXXXXX";
 		BigDecimal minValue =  new BigDecimal("-9999999");

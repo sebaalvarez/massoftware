@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.cendra.common.model.EntityId;
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
 import com.massoftware.annotation.model.ClassPluralLabelAnont;
@@ -16,6 +15,8 @@ import com.massoftware.annotation.model.FieldLabelAnont;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.xmd.BuilderXMD;
 import com.massoftware.model.Deposito;
+import com.massoftware.model.Entity;
+import com.massoftware.model.EntityId;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.data.sort.SortOrder;
@@ -579,7 +580,8 @@ public class StandardTableUi<T> extends CustomComponent {
 						T item = (T) itemsGRD.getSelectedRow();
 
 						if (item != null && item instanceof EntityId) {
-							EntityId originalDTO = ((EntityId) item).clone();
+							EntityId originalDTO = (EntityId) ((EntityId) item)
+									.clone();
 							searchProperty.setValue(originalDTO);
 						} else {
 							searchProperty.setValue(item);
@@ -666,10 +668,11 @@ public class StandardTableUi<T> extends CustomComponent {
 		// DepositoFormUi ui = new DepositoFormUi(StandardFormUi.COPY_MODE, cx,
 		// itemNew, this);
 
-		T o = (T) ((EntityId) item).clone();
+		T o = (T) ((Entity) item).copy();
 
 		return new StandardFormUi<T>(usuario, classModel,
-				StandardFormUi.COPY_MODE, cx, this, o);
+				StandardFormUi.COPY_MODE, cx, this, o, item);
+
 	}
 
 	private void eliminarBTNClick() {

@@ -1,6 +1,5 @@
 package com.massoftware.model;
 
-import org.cendra.common.model.EntityId;
 
 public class SucursalTipo extends EntityId implements Cloneable,
 		Comparable<SucursalTipo> {

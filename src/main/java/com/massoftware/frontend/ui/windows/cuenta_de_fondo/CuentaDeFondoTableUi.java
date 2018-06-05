@@ -2,7 +2,6 @@ package com.massoftware.frontend.ui.windows.cuenta_de_fondo;
 
 import java.util.List;
 
-import org.cendra.common.model.EntityId;
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
 import com.massoftware.backend.bo.CuentaDeFondoABO;
@@ -19,6 +18,7 @@ import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.CuentaDeFondoA;
 import com.massoftware.model.CuentaDeFondoGrupo;
 import com.massoftware.model.CuentaDeFondoRubro;
+import com.massoftware.model.EntityId;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
