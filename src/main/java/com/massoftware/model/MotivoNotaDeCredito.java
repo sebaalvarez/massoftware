@@ -64,17 +64,17 @@ public class MotivoNotaDeCredito extends EntityId implements
 		this.nombre = nombre;
 	}
 
-//	@Override
-//	public MotivoNotaDeCredito clone() throws CloneNotSupportedException {
-//
-//		MotivoNotaDeCredito other = new MotivoNotaDeCredito();
-//
-//		other.setId(this.getId());
-//		other.setCodigo(this.getCodigo());
-//		other.setNombre(this.getNombre());
-//
-//		return other;
-//	}
+	// @Override
+	// public MotivoNotaDeCredito clone() throws CloneNotSupportedException {
+	//
+	// MotivoNotaDeCredito other = new MotivoNotaDeCredito();
+	//
+	// other.setId(this.getId());
+	// other.setCodigo(this.getCodigo());
+	// other.setNombre(this.getNombre());
+	//
+	// return other;
+	// }
 
 	@Override
 	public int compareTo(MotivoNotaDeCredito o) {
