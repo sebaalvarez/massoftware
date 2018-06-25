@@ -35,7 +35,6 @@ import com.massoftware.backend.bo.CuentaDeFondoTipoBO;
 import com.massoftware.backend.bo.CuentaDeFondoTipoBancoBO;
 import com.massoftware.backend.bo.DepositoBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
-import com.massoftware.backend.bo.EjercicioContableBOViejo;
 import com.massoftware.backend.bo.JurisdiccionConvenioMultilateralBO;
 import com.massoftware.backend.bo.ModeloCbteFondoBO;
 import com.massoftware.backend.bo.ModeloCbteFondoItemBO;
@@ -48,7 +47,7 @@ import com.massoftware.backend.bo.MotivoComentarioBO;
 import com.massoftware.backend.bo.MotivoNotaDeCreditoBO;
 import com.massoftware.backend.bo.PaisBO;
 import com.massoftware.backend.bo.PlanDeCuentaEstadoBO;
-import com.massoftware.backend.bo.PuntoDeEquilibrioBOViejo;
+import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioTipoBO;
 import com.massoftware.backend.bo.SeguridadModuloBO;
 import com.massoftware.backend.bo.SeguridadPuertaBO;
@@ -460,6 +459,14 @@ public class BackendContext extends AbstractContext {
 
 				return new CentroDeCostoContableBO(dataSourceWrapper, this);
 
+			} else if (classModel == PuntoDeEquilibrio.class) {
+
+				return new PuntoDeEquilibrioBO(dataSourceWrapper, this);
+
+			}else if (classModel == PuntoDeEquilibrioTipo.class) {
+
+				return new PuntoDeEquilibrioTipoBO(dataSourceWrapper, this);
+
 			}
 
 			else if (classModel == Banco.class) {
@@ -578,53 +585,6 @@ public class BackendContext extends AbstractContext {
 	}
 
 	// ================================================================================
-
-	public EjercicioContableBOViejo buildEjercicioContableBO() {
-
-		try {
-
-			return new EjercicioContableBOViejo(dataSourceWrapper);
-		} catch (Exception e) {
-			e.printStackTrace();
-			new LogPrinter().print(AbstractContext.class.getName(),
-					LogPrinter.LEVEL_FATAL, e);
-		}
-
-		return null;
-
-	}
-
-
-
-	public PuntoDeEquilibrioTipoBO buildPuntoDeEquilibrioTipoBO() {
-
-		try {
-
-			return new PuntoDeEquilibrioTipoBO(dataSourceWrapper);
-		} catch (Exception e) {
-			e.printStackTrace();
-			new LogPrinter().print(AbstractContext.class.getName(),
-					LogPrinter.LEVEL_FATAL, e);
-		}
-
-		return null;
-
-	}
-
-	public PuntoDeEquilibrioBOViejo buildPuntoDeEquilibrioBO() {
-
-		try {
-
-			return new PuntoDeEquilibrioBOViejo(dataSourceWrapper);
-		} catch (Exception e) {
-			e.printStackTrace();
-			new LogPrinter().print(AbstractContext.class.getName(),
-					LogPrinter.LEVEL_FATAL, e);
-		}
-
-		return null;
-
-	}
 
 	public PlanDeCuentaEstadoBO buildPlanDeCuentaEstadoBO() {
 

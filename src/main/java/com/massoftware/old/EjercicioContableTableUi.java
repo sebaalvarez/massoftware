@@ -8,7 +8,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 
 
-import com.massoftware.backend.bo.EjercicioContableBOViejo;
+
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.model.EjercicioContable;
@@ -52,7 +52,7 @@ class EjercicioContableTableUi extends TableUi {
 	}
 
 	protected void initObjectBO() {
-		this.ejercicioContableBO = cx.buildEjercicioContableBO();
+//		this.ejercicioContableBO = cx.buildEjercicioContableBO();
 	}
 
 	@SuppressWarnings("rawtypes")

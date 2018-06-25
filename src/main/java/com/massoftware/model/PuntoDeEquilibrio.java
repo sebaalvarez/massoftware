@@ -57,7 +57,7 @@ public class PuntoDeEquilibrio extends EntityId implements
 
 	@FieldLabelAnont(value = "Tipo")
 	@FieldRequiredAnont()
-	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldColumnMetaDataAnont(attSize = 250)
 	@FieldSubNameFKAnont(value = "puntoDeEquilibrioTipo")
 	private PuntoDeEquilibrioTipo puntoDeEquilibrioTipo;
 
@@ -89,6 +89,7 @@ public class PuntoDeEquilibrio extends EntityId implements
 
 	public void setPuntoDeEquilibrioTipo(
 			PuntoDeEquilibrioTipo puntoDeEquilibrioTipo) {
+		
 		if (puntoDeEquilibrioTipo != null
 				&& puntoDeEquilibrioTipo.getId() != null) {
 			this.puntoDeEquilibrioTipo = puntoDeEquilibrioTipo;
@@ -139,8 +140,8 @@ public class PuntoDeEquilibrio extends EntityId implements
 	@Override
 	public String toString() {
 		if (this.getEjercicioContable() != null) {
-			return this.getPuntoDeEquilibrio() + " - " + this.getNombre()
-					+ " - " + this.getEjercicioContable();
+			return this.getEjercicioContable() + " - "
+					+ this.getPuntoDeEquilibrio() + " - " + this.getNombre();
 		}
 		return this.getPuntoDeEquilibrio() + " - " + this.getNombre();
 	}

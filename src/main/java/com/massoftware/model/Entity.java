@@ -62,19 +62,24 @@ public class Entity implements Cloneable, Valuable {
 
 		return clone(this.getClass(), true);
 	}
-	
-	
+
 	public Object copy() throws CloneNotSupportedException {
 
 		return clone(this.getClass(), false);
 	}
 
-	protected Object clone(@SuppressWarnings("rawtypes") Class clazz, boolean full) {
+	protected Object clone(@SuppressWarnings("rawtypes") Class clazz,
+			boolean full) {
+
 		Object other;
+
 		try {
+
 			other = clazz.newInstance();
 
-			return clone(this, clazz, other, full);
+			Object o = clone(this, clazz, other, full);
+
+			return o;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -83,10 +88,12 @@ public class Entity implements Cloneable, Valuable {
 
 	}
 
-	protected Object clone(Object originalIsntance, @SuppressWarnings("rawtypes") Class clazz,
-			Object other, boolean full) throws NoSuchMethodException, SecurityException,
+	protected Object clone(Object originalIsntance,
+			@SuppressWarnings("rawtypes") Class clazz, Object other,
+			boolean full) throws NoSuchMethodException, SecurityException,
 			IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException, InstantiationException {
+			InvocationTargetException, InstantiationException,
+			CloneNotSupportedException {
 
 		if (clazz.getSuperclass() != null) {
 			clone(originalIsntance, clazz.getSuperclass(), other, full);
@@ -96,7 +103,8 @@ public class Entity implements Cloneable, Valuable {
 
 		for (Field field : fields) {
 
-			if (field.getName().startsWith("_") == false && (full || (getUnique(field) == false && getNotCopiable(field) == false))) {
+			if (field.getName().startsWith("_") == false
+					&& (full || (getUnique(field) == false && getNotCopiable(field) == false))) {
 
 				@SuppressWarnings("unchecked")
 				Method methodGet = clazz.getDeclaredMethod("get"
@@ -111,7 +119,8 @@ public class Entity implements Cloneable, Valuable {
 
 				if (field.getType() == Boolean.class) {
 
-					Boolean value = (Boolean) methodGet.invoke(originalIsntance);
+					Boolean value = (Boolean) methodGet
+							.invoke(originalIsntance);
 					methodSet.invoke(other, value);
 
 				} else if (field.getType() == String.class) {
@@ -131,7 +140,8 @@ public class Entity implements Cloneable, Valuable {
 
 				} else if (field.getType() == Integer.class) {
 
-					Integer value = (Integer) methodGet.invoke(originalIsntance);
+					Integer value = (Integer) methodGet
+							.invoke(originalIsntance);
 					methodSet.invoke(other, value);
 
 				} else if (field.getType() == Long.class) {
@@ -150,7 +160,8 @@ public class Entity implements Cloneable, Valuable {
 					methodSet.invoke(other, value);
 
 				} else if (field.getType() == BigDecimal.class) {
-					BigDecimal value = (BigDecimal) methodGet.invoke(originalIsntance);
+					BigDecimal value = (BigDecimal) methodGet
+							.invoke(originalIsntance);
 					if (value != null) {
 						value = new BigDecimal(value.toString());
 					}
@@ -166,14 +177,21 @@ public class Entity implements Cloneable, Valuable {
 					methodSet.invoke(other, value);
 
 				} else {
-					Object other2 = field.getType().newInstance();					
-					Object value = methodGet.invoke(originalIsntance);					
-					if (value != null) {						
-						value = clone(value, field.getType(), other2, full);						
+					Object value = methodGet.invoke(originalIsntance);
+					if (value instanceof Entity) {
+
+						// Object other2 = field.getType().newInstance();
+						if (value != null) {
+							// value = clone(value, field.getType(), other2,
+							// full);
+							value = ((Entity) value).clone();
+						}
+
+						methodSet.invoke(other, value);
+					} else {
+						throw new RuntimeException(field.getType()
+								+ " not found.");
 					}
-					
-					methodSet.invoke(other, value);													
-					
 				}
 
 			}
@@ -216,7 +234,7 @@ public class Entity implements Cloneable, Valuable {
 		return false;
 
 	}
-	
+
 	private static boolean getUnique(Field field) {
 		FieldUniqueAnont[] a = field
 				.getAnnotationsByType(FieldUniqueAnont.class);

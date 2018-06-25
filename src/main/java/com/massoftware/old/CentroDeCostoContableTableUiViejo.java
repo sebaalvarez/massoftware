@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
-import com.massoftware.backend.bo.EjercicioContableBOViejo;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
@@ -635,8 +634,10 @@ class CentroDeCostoContableTableUiViejo extends CustomComponent {
 	protected void loadOptionsViewPort768x1024() {
 		try {
 
-			EjercicioContableBOViejo ejercicioContableBO = cx
-					.buildEjercicioContableBO();
+//			EjercicioContableBOViejo ejercicioContableBO = cx
+//					.buildEjercicioContableBO();
+			
+			EjercicioContableBOViejo ejercicioContableBO = null;
 
 			List<EjercicioContable> ejerciciosContables = ejercicioContableBO
 					.findAll();

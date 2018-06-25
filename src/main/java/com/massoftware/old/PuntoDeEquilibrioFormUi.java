@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.punto_de_equilibrio;
+package com.massoftware.old;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class PuntoDeEquilibrioFormUi extends CustomComponent {
+class PuntoDeEquilibrioFormUi extends CustomComponent {
 
 	/**
 	 * 
@@ -151,8 +151,7 @@ public class PuntoDeEquilibrioFormUi extends CustomComponent {
 				PuntoDeEquilibrioTipo.class,
 				new ArrayList<PuntoDeEquilibrioTipo>());
 
-		List<PuntoDeEquilibrioTipo> puntosDeEquilibrioTipo = cx
-				.buildPuntoDeEquilibrioTipoBO().findAll();
+		List<PuntoDeEquilibrioTipo> puntosDeEquilibrioTipo = null; //cx.buildPuntoDeEquilibrioTipoBO().findAll();
 		puntoDeEquilibrioTipoBIC.removeAllItems();
 		for (PuntoDeEquilibrioTipo puntoDeEquilibrioTipo : puntosDeEquilibrioTipo) {
 			puntoDeEquilibrioTipoBIC.addBean(puntoDeEquilibrioTipo);
@@ -177,10 +176,7 @@ public class PuntoDeEquilibrioFormUi extends CustomComponent {
 				.getPuntoDeEquilibrio();
 
 		if (isForInsertForm) {
-			Integer maxNumero = cx.buildPuntoDeEquilibrioBO()
-					.findMaxPuntoDeEquilibrio(
-							puntoDeEquilibrioBI.getBean()
-									.getEjercicioContable().getEjercicio());
+			Integer maxNumero = null; //cx.buildPuntoDeEquilibrioBO().findMaxPuntoDeEquilibrio(puntoDeEquilibrioBI.getBean().getEjercicioContable().getEjercicio());
 			if (maxNumero == null || maxNumero < 1) {
 				maxNumero = 1;
 			}
@@ -406,16 +402,16 @@ public class PuntoDeEquilibrioFormUi extends CustomComponent {
 					+ " " + puntoDeEquilibrioBI.getBean().getNombre();
 
 			if (isForInsertForm) {
-				cx.buildPuntoDeEquilibrioBO().insert(
-						puntoDeEquilibrioBI.getBean());
+//				cx.buildPuntoDeEquilibrioBO().insert(
+//						puntoDeEquilibrioBI.getBean());
 
 				msg = "Se agregó con éxito el \"Punto de equilibrio: " + msg
 						+ "\".";
 
 			} else {
-				cx.buildPuntoDeEquilibrioBO().update(
-						puntoDeEquilibrioBI.getBean(),
-						(PuntoDeEquilibrio) puntoDeEquilibrioBI.getBean().clone());
+//				cx.buildPuntoDeEquilibrioBO().update(
+//						puntoDeEquilibrioBI.getBean(),
+//						(PuntoDeEquilibrio) puntoDeEquilibrioBI.getBean().clone());
 
 				msg = "Se modificó con éxito el \"Punto de equilibrio: " + msg
 						+ "\".";

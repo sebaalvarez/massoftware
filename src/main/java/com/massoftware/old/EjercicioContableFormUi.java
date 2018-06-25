@@ -7,9 +7,9 @@ import java.util.Map;
 
 
 
+
 import org.cendra.common.model.EntityMetaData;
 
-import com.massoftware.backend.bo.EjercicioContableBOViejo;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.FormUi;
 import com.massoftware.frontend.ui.util.TableUi;
@@ -67,7 +67,7 @@ class EjercicioContableFormUi extends FormUi {
 	// ==============================================================
 
 	protected void initObjectBO() {
-		this.ejercicioContableBO = cx.buildEjercicioContableBO();
+//		this.ejercicioContableBO = cx.buildEjercicioContableBO();
 	}
 
 	@SuppressWarnings("rawtypes")

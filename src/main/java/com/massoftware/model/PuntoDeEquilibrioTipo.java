@@ -92,17 +92,17 @@ public class PuntoDeEquilibrioTipo extends EntityId implements
 		this.nombre = nombre;
 	}
 
-//	@Override
-//	public PuntoDeEquilibrioTipo clone() throws CloneNotSupportedException {
-//
-//		PuntoDeEquilibrioTipo other = new PuntoDeEquilibrioTipo();
-//
-//		other.setId(this.getId());
-//		other.setCodigo(this.getCodigo());
-//		other.setNombre(this.getNombre());
-//
-//		return other;
-//	}
+	// @Override
+	// public PuntoDeEquilibrioTipo clone() throws CloneNotSupportedException {
+	//
+	// PuntoDeEquilibrioTipo other = new PuntoDeEquilibrioTipo();
+	//
+	// other.setId(this.getId());
+	// other.setCodigo(this.getCodigo());
+	// other.setNombre(this.getNombre());
+	//
+	// return other;
+	// }
 
 	public int compareTo(PuntoDeEquilibrioTipo o) {
 

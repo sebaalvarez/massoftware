@@ -1,4 +1,4 @@
-package com.massoftware.backend.bo;
+package com.massoftware.old;
 
 import java.sql.Date;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.cendra.jdbc.SQLExceptionWrapper;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.EntityId;
 
-public class EjercicioContableBOViejo {
+class EjercicioContableBOViejo {
 
 	private final String SQL_PG_1 = "SELECT * FROM  massoftware.vEjercicioContable ORDER BY ejercicio DESC;";
 	private final String SQL_PG_2 = "SELECT * FROM  massoftware.vEjercicioContable WHERE ejercicio::VARCHAR ILIKE '%'||(TRIM(?::VARCHAR)) ORDER BY ejercicio DESC;";

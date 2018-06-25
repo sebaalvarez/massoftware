@@ -1,4 +1,4 @@
-package com.massoftware.backend.bo;
+package com.massoftware.old;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.EntityId;
 import com.massoftware.model.PuntoDeEquilibrio;
 
-public class PuntoDeEquilibrioBOViejo {
+class PuntoDeEquilibrioBOViejo {
 
 	private DataSourceWrapper dataSourceWrapper;
 

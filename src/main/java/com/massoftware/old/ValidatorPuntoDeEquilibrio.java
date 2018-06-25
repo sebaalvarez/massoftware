@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.punto_de_equilibrio;
+package com.massoftware.old;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
@@ -6,7 +6,7 @@ import com.massoftware.model.PuntoDeEquilibrio;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.IntegerRangeValidator;
 
-public class ValidatorPuntoDeEquilibrio extends IntegerRangeValidator {
+class ValidatorPuntoDeEquilibrio extends IntegerRangeValidator {
 
 	/**
 	 * 
@@ -56,11 +56,7 @@ public class ValidatorPuntoDeEquilibrio extends IntegerRangeValidator {
 						+ puntoDeEquilibrioBI.getBean().getEjercicioContable()
 						+ " - " + puntoDeEquilibrio + ")");
 
-				boolean b = cx.buildPuntoDeEquilibrioBO()
-						.ifExistsPuntoDeEquilibrio(
-								puntoDeEquilibrio,
-								puntoDeEquilibrioBI.getBean()
-										.getEjercicioContable().getEjercicio());
+				boolean b = false; //cx.buildPuntoDeEquilibrioBO().ifExistsPuntoDeEquilibrio(puntoDeEquilibrio,puntoDeEquilibrioBI.getBean().getEjercicioContable().getEjercicio());
 
 				if (b == true) {
 					return false;

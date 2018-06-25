@@ -3,6 +3,7 @@ package com.massoftware.frontend.cx;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.custom.CentroDeCostoContableTableUi;
 import com.massoftware.frontend.ui.custom.EjercicioContableTableUi;
+import com.massoftware.frontend.ui.custom.PuntoDeEquilibrioTableUi;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.StandardTableUi;
 import com.massoftware.frontend.ui.windows.centro_de_costo_proyecto.CentroDeCostoProyectoTableUi;
@@ -29,6 +30,7 @@ import com.massoftware.model.MonedaCotizacion;
 import com.massoftware.model.MotivoComentario;
 import com.massoftware.model.MotivoNotaDeCredito;
 import com.massoftware.model.Pais;
+import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.SeguridadPuerta;
 import com.massoftware.model.Sucursal;
 import com.massoftware.model.Talonario;
@@ -108,17 +110,15 @@ public class FrontendContext {
 
 			} else if (classModel == EjercicioContable.class) {
 
-//				new StandardTableUi<EjercicioContable>(shortcut,
-//						agregar, modificar, copiar, eliminar, win, cx, usuario,
-//						EjercicioContable.class, pidFiltering,
-//						searchFilter, searchProperty);
-				
-				new EjercicioContableTableUi(shortcut,
-						agregar, modificar, copiar, eliminar, win, cx, usuario,
-						EjercicioContable.class, pidFiltering,
-						searchFilter, searchProperty);
-				
-				
+				// new StandardTableUi<EjercicioContable>(shortcut,
+				// agregar, modificar, copiar, eliminar, win, cx, usuario,
+				// EjercicioContable.class, pidFiltering,
+				// searchFilter, searchProperty);
+
+				new EjercicioContableTableUi(shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario,
+						EjercicioContable.class, pidFiltering, searchFilter,
+						searchProperty);
 
 			} else if (classModel == CentroDeCostoProyecto.class) {
 
@@ -127,22 +127,21 @@ public class FrontendContext {
 						CentroDeCostoProyecto.class, pidFiltering,
 						searchFilter, searchProperty);
 
-			}else if (classModel == CentroDeCostoContable.class) {
-				
-//				new StandardTableUi<CentroDeCostoContable>(shortcut,
-//						agregar, modificar, copiar, eliminar, win, cx, usuario,
-//						CentroDeCostoContable.class, pidFiltering,
-//						searchFilter, searchProperty);
+			} else if (classModel == CentroDeCostoContable.class) {
 
 				new CentroDeCostoContableTableUi(shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario,
 						CentroDeCostoContable.class, pidFiltering,
 						searchFilter, searchProperty);
 
+			} else if (classModel == PuntoDeEquilibrio.class) {
+
+				new PuntoDeEquilibrioTableUi(shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario,
+						PuntoDeEquilibrio.class, pidFiltering,
+						searchFilter, searchProperty);
+
 			}
-			
-			
-			
 
 			else if (classModel == SeguridadPuerta.class) {
 

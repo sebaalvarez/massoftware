@@ -9,6 +9,7 @@ import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.MotivoComentario;
 import com.massoftware.model.MotivoNotaDeCredito;
 import com.massoftware.model.Pais;
+import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.TipoCbteAFIP;
 import com.massoftware.model.TipoCliente;
 import com.massoftware.model.TipoDocumentoAFIP;
@@ -72,6 +73,7 @@ public class GeneralMenu extends AbstractMenu {
 				open(CentroDeCostoProyecto.class)).setEnabled(false);
 
 		a24.addItem("Centros de costos contables", open(CentroDeCostoContable.class));
+		a24.addItem("Puntos de equilibrio ...", open(PuntoDeEquilibrio.class));
 		a24.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class));
 
 		return menubar;

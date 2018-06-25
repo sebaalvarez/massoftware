@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
-import com.massoftware.backend.bo.EjercicioContableBOViejo;
+import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
@@ -675,11 +675,9 @@ public class AsientoModeloTableUi extends CustomComponent {
 	protected void loadOptionsViewPort768x1024() {
 		try {
 
-			EjercicioContableBOViejo ejercicioContableBO = cx
-					.buildEjercicioContableBO();
+			EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) cx.buildBO(EjercicioContable.class);
 
-			List<EjercicioContable> ejerciciosContables = ejercicioContableBO
-					.findAll();
+			List<EjercicioContable> ejerciciosContables = ejercicioContableBO.findAll();
 			ejerciciosContablesBIC.removeAllItems();
 			for (EjercicioContable ejercicioContable : ejerciciosContables) {
 				ejerciciosContablesBIC.addBean(ejercicioContable);

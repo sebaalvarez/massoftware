@@ -3,13 +3,14 @@ package com.massoftware.frontend.ui.menu;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.massoftware.backend.bo.EjercicioContableBOViejo;
+import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.FontAwesome;
@@ -30,11 +31,9 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 	private static final long serialVersionUID = 8506821800939861972L;
 
 	private UsuarioBO usuarioBO;
-	private EjercicioContableBOViejo ejercicioContableBO;
+	private EjercicioContableBO ejercicioContableBO;
 
 	private ComboBox ejercicioContableCBX;
-
-	// private SessionVar sessionVar;
 
 	public ContabilidadGeneralMenu(SessionVar sessionVar) {
 		super("Contabilidad general", sessionVar);
@@ -48,8 +47,8 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 
 	private void initObjectBO() {
 		this.usuarioBO = (UsuarioBO) sessionVar.getCx().buildBO(Usuario.class);
-		this.ejercicioContableBO = sessionVar.getCx()
-				.buildEjercicioContableBO();
+		this.ejercicioContableBO = (EjercicioContableBO) sessionVar.getCx()
+				.buildBO(EjercicioContable.class);
 	}
 
 	protected MenuBar getMenuBar() {
@@ -65,7 +64,7 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 		final MenuBar.MenuItem a5 = menubar.addItem("Informes", null);
 		final MenuBar.MenuItem a6 = menubar.addItem("Ventana", null);
 		final MenuBar.MenuItem a7 = menubar.addItem("Ayuda", null);
-		
+
 		a2.setEnabled(false);
 		a3.setEnabled(false);
 		a4.setEnabled(false);
@@ -80,7 +79,7 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 		a1.addItem("Ejercicios contables ...", open(EjercicioContable.class));
 		a1.addItem("Modelos de asientos", null).setEnabled(false);
 		a1.addItem("Centros de costos ...", open(CentroDeCostoContable.class));
-		a1.addItem("Puntos de equilibrio ...", null).setEnabled(false);
+		a1.addItem("Puntos de equilibrio ...", open(PuntoDeEquilibrio.class));
 		a1.addSeparator();
 		a1.addItem("Parámetros generales", null).setEnabled(false);
 		a1.addItem("Fecha de cierre por módulos", null).setEnabled(false);

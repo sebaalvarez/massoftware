@@ -6,7 +6,7 @@ import java.util.List;
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
-import com.massoftware.backend.bo.EjercicioContableBOViejo;
+import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
@@ -109,13 +109,13 @@ public class CuentaContableTableUi extends CustomComponent {
 
 	private Object searchFilter;
 	@SuppressWarnings("rawtypes")
-	private Property searchProperty;
+	private Property<CuentaContable> searchProperty;
 
 	// ----------------------------------------------
 
 	public CuentaContableTableUi(Window window, BackendContext cx,
 			Usuario usuario, String pidFiltering, Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty) {
+			@SuppressWarnings("rawtypes") Property<CuentaContable> searchProperty) {
 		super();
 		try {
 			this.window = window;
@@ -1054,10 +1054,9 @@ public class CuentaContableTableUi extends CustomComponent {
 				centroDeCostoHL
 						.setEnabled(centrosDeCostosContablesBIC.size() > 0);
 
-				List<PuntoDeEquilibrio> puntosDeEquilibrio = cx
-						.buildPuntoDeEquilibrioBO()
-						.findAllOrderByPuntoDeEquilibrio(
-								ejercicioContable.getEjercicio());
+//				List<PuntoDeEquilibrio> puntosDeEquilibrio = cx.buildBO(PuntoDeEquilibrio.class).findAllOrderByPuntoDeEquilibrio(ejercicioContable.getEjercicio());
+				@SuppressWarnings("unchecked")
+				List<PuntoDeEquilibrio> puntosDeEquilibrio = cx.buildBO(PuntoDeEquilibrio.class).findAll();
 				puntosDeEquilibrioBIC.removeAllItems();
 				for (PuntoDeEquilibrio puntoDeEquilibrio : puntosDeEquilibrio) {
 					puntosDeEquilibrioBIC.addBean(puntoDeEquilibrio);
@@ -1077,8 +1076,7 @@ public class CuentaContableTableUi extends CustomComponent {
 	protected void loadOptionsViewPort768x1024() {
 		try {
 
-			EjercicioContableBOViejo ejercicioContableBO = cx
-					.buildEjercicioContableBO();
+			EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) cx.buildBO(EjercicioContable.class);
 
 			List<EjercicioContable> ejerciciosContables = ejercicioContableBO
 					.findAll();

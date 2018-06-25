@@ -1,11 +1,10 @@
-package com.massoftware.frontend.ui.windows.punto_de_equilibrio;
+package com.massoftware.old;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
-import com.massoftware.backend.bo.EjercicioContableBOViejo;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
@@ -35,7 +34,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class PuntoDeEquilibrioTableUi extends CustomComponent {
+class PuntoDeEquilibrioTableUi extends CustomComponent {
 
 	/**
 	 * 
@@ -568,8 +567,8 @@ public class PuntoDeEquilibrioTableUi extends CustomComponent {
 						.getSelectedRow();
 				try {
 
-					cx.buildPuntoDeEquilibrioBO().delete(
-							(PuntoDeEquilibrio) item);
+//					cx.buildPuntoDeEquilibrioBO().delete(
+//							(PuntoDeEquilibrio) item);
 
 				} catch (DeleteForeingObjectConflictException e) {
 					LogAndNotification.print(e,
@@ -693,8 +692,7 @@ public class PuntoDeEquilibrioTableUi extends CustomComponent {
 	protected void loadOptionsViewPort768x1024() {
 		try {
 
-			EjercicioContableBOViejo ejercicioContableBO = cx
-					.buildEjercicioContableBO();
+			EjercicioContableBOViejo ejercicioContableBO = null;//cx.buildEjercicioContableBO();
 
 			List<EjercicioContable> ejerciciosContables = ejercicioContableBO
 					.findAll();
@@ -762,10 +760,7 @@ public class PuntoDeEquilibrioTableUi extends CustomComponent {
 			EjercicioContable ejercicioContable = (EjercicioContable) ejercicioContableCBX
 					.getValue();
 
-			List<PuntoDeEquilibrio> puntosDeEquilibrio = cx
-					.buildPuntoDeEquilibrioBO()
-					.findAllOrderByPuntoDeEquilibrio(
-							ejercicioContable.getEjercicio());
+			List<PuntoDeEquilibrio> puntosDeEquilibrio = null; //cx.buildPuntoDeEquilibrioBO().findAllOrderByPuntoDeEquilibrio(ejercicioContable.getEjercicio());
 
 			puntosDeEquilibrioBIC.removeAllItems();
 			for (PuntoDeEquilibrio puntoDeEquilibrio : puntosDeEquilibrio) {

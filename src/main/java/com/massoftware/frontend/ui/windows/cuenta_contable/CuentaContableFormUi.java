@@ -9,10 +9,10 @@ import org.cendra.ex.crud.InsertDuplicateException;
 import org.vaadin.inputmask.InputMask;
 
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
+import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.validator.StringLengthValidatorInputMask;
-import com.massoftware.frontend.ui.windows.punto_de_equilibrio.PuntoDeEquilibrioFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CostoDeVenta;
 import com.massoftware.model.CuentaContable;
@@ -37,7 +37,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -950,10 +949,8 @@ public class CuentaContableFormUi extends CustomComponent {
 			centrosDeCostosContablesBIC.addBean(centroDeCostoContable);
 		}
 
-		List<PuntoDeEquilibrio> puntosDeEquilibrio = cx
-				.buildPuntoDeEquilibrioBO().findAllOrderByPuntoDeEquilibrio(
-						planDeCuentaBI.getBean().getEjercicioContable()
-								.getEjercicio());
+//		List<PuntoDeEquilibrio> puntosDeEquilibrio = cx.buildPuntoDeEquilibrioBO().findAllOrderByPuntoDeEquilibrio(planDeCuentaBI.getBean().getEjercicioContable().getEjercicio());
+		List<PuntoDeEquilibrio> puntosDeEquilibrio = ((PuntoDeEquilibrioBO)cx.buildBO(PuntoDeEquilibrio.class)).findAll(planDeCuentaBI.getBean().getEjercicioContable());
 		puntosDeEquilibrioBIC.removeAllItems();
 		for (PuntoDeEquilibrio puntoDeEquilibrio : puntosDeEquilibrio) {
 			puntosDeEquilibrioBIC.addBean(puntoDeEquilibrio);
@@ -1010,10 +1007,8 @@ public class CuentaContableFormUi extends CustomComponent {
 	public void loadOptionsPE(PuntoDeEquilibrio puntoDeEquilibrioNew)
 			throws Exception {
 
-		List<PuntoDeEquilibrio> puntosDeEquilibrio = cx
-				.buildPuntoDeEquilibrioBO().findAllOrderByPuntoDeEquilibrio(
-						planDeCuentaBI.getBean().getEjercicioContable()
-								.getEjercicio());
+//		List<PuntoDeEquilibrio> puntosDeEquilibrio = cx.buildPuntoDeEquilibrioBO().findAllOrderByPuntoDeEquilibrio(planDeCuentaBI.getBean().getEjercicioContable().getEjercicio());
+		List<PuntoDeEquilibrio> puntosDeEquilibrio = ((PuntoDeEquilibrioBO)cx.buildBO(PuntoDeEquilibrio.class)).findAll(planDeCuentaBI.getBean().getEjercicioContable());
 		puntosDeEquilibrioBIC.removeAllItems();
 		for (PuntoDeEquilibrio puntoDeEquilibrio : puntosDeEquilibrio) {
 			puntosDeEquilibrioBIC.addBean(puntoDeEquilibrio);
@@ -1202,8 +1197,7 @@ public class CuentaContableFormUi extends CustomComponent {
 
 			Window win = new Window();
 
-			PuntoDeEquilibrioFormUi ui = new PuntoDeEquilibrioFormUi(win, cx,
-					this, ejercicioContable);
+//			PuntoDeEquilibrioFormUi ui = new PuntoDeEquilibrioFormUi(win, cx, this, ejercicioContable);
 
 			win.setCaption("Agragar punto de equilibrio");
 			win.setImmediate(true);
@@ -1214,7 +1208,7 @@ public class CuentaContableFormUi extends CustomComponent {
 			win.setModal(true);
 			win.center();
 			// win.addCloseShortcut(KeyCode.ESCAPE, null);
-			win.setContent((Component) ui);
+//			win.setContent((Component) ui);
 			getUI().addWindow(win);
 			win.center();
 			win.focus();

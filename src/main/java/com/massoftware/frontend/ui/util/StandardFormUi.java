@@ -51,7 +51,7 @@ public class StandardFormUi<T> extends CustomComponent {
 	protected BackendContext cx;
 	protected String msg;
 	protected String dtoLabel;
-	protected Object originalDTO;
+	public Object originalDTO;
 	protected BeanItem<T> dtoBI;
 	protected Class<T> classModel;
 	protected Usuario usuario;
@@ -184,7 +184,7 @@ public class StandardFormUi<T> extends CustomComponent {
 
 		if (dto != null && dto instanceof Entity) {
 
-			originalDTO = ((Entity) dto).clone();
+			originalDTO = ((Entity) dto).clone();						
 		}
 
 		// ======================================================================

@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cendra.ex.crud.UniqueException;
+import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.backend.util.bo.GenericBO;
-import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.Usuario;
 
 public class PuntoDeEquilibrioBO extends GenericBO<PuntoDeEquilibrio> {
@@ -36,6 +37,35 @@ public class PuntoDeEquilibrioBO extends GenericBO<PuntoDeEquilibrio> {
 		}
 
 		return new ArrayList<PuntoDeEquilibrio>();
+	}
+	
+	protected Integer maxValueInteger(String attName, PuntoDeEquilibrio dto) throws Exception {
+
+		String viewName = getViewName();
+		String sql = "SELECT MAX(" + attName + ") + 1 FROM " + viewName + " WHERE ejercicioContable_ejercicio = ?";
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+			
+			Object ejercicioContable = Integer.class;
+			
+			if (dto.getEjercicioContable() != null
+					&& dto.getEjercicioContable().getId() != null) {
+				ejercicioContable = dto.getEjercicioContable().getEjercicio();
+			}
+
+			Object[][] table = connectionWrapper.findToTable(sql, ejercicioContable);
+
+			return (Integer) table[0][0];
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
 	}
 
 	@Override
