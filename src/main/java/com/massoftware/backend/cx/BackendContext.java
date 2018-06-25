@@ -47,6 +47,7 @@ import com.massoftware.backend.bo.MotivoComentarioBO;
 import com.massoftware.backend.bo.MotivoNotaDeCreditoBO;
 import com.massoftware.backend.bo.PaisBO;
 import com.massoftware.backend.bo.PlanDeCuentaEstadoBO;
+import com.massoftware.backend.bo.ProvinciaBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioTipoBO;
 import com.massoftware.backend.bo.SeguridadModuloBO;
@@ -88,6 +89,7 @@ import com.massoftware.model.MonedaCotizacion;
 import com.massoftware.model.MotivoComentario;
 import com.massoftware.model.MotivoNotaDeCredito;
 import com.massoftware.model.Pais;
+import com.massoftware.model.Provincia;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.PuntoDeEquilibrioTipo;
 import com.massoftware.model.SeguridadModulo;
@@ -463,9 +465,13 @@ public class BackendContext extends AbstractContext {
 
 				return new PuntoDeEquilibrioBO(dataSourceWrapper, this);
 
-			}else if (classModel == PuntoDeEquilibrioTipo.class) {
+			} else if (classModel == PuntoDeEquilibrioTipo.class) {
 
 				return new PuntoDeEquilibrioTipoBO(dataSourceWrapper, this);
+
+			} else if (classModel == Provincia.class) {
+
+				return new ProvinciaBO(dataSourceWrapper, this);
 
 			}
 

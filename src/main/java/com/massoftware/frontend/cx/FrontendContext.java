@@ -3,6 +3,7 @@ package com.massoftware.frontend.cx;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.custom.CentroDeCostoContableTableUi;
 import com.massoftware.frontend.ui.custom.EjercicioContableTableUi;
+import com.massoftware.frontend.ui.custom.ProvinciaTableUi;
 import com.massoftware.frontend.ui.custom.PuntoDeEquilibrioTableUi;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.StandardTableUi;
@@ -30,6 +31,7 @@ import com.massoftware.model.MonedaCotizacion;
 import com.massoftware.model.MotivoComentario;
 import com.massoftware.model.MotivoNotaDeCredito;
 import com.massoftware.model.Pais;
+import com.massoftware.model.Provincia;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.SeguridadPuerta;
 import com.massoftware.model.Sucursal;
@@ -139,6 +141,13 @@ public class FrontendContext {
 				new PuntoDeEquilibrioTableUi(shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario,
 						PuntoDeEquilibrio.class, pidFiltering,
+						searchFilter, searchProperty);
+
+			} else if (classModel == Provincia.class) {
+
+				new ProvinciaTableUi(shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario,
+						Provincia.class, pidFiltering,
 						searchFilter, searchProperty);
 
 			}

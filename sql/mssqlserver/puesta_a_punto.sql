@@ -464,8 +464,6 @@ CREATE VIEW [dbo].[vPuntoDeEquilibrioTipo] AS
 
 	-- SELECT * FROM dbo.[vPuntoDeEquilibrioTipo] ;	
 	-- SELECT * FROM dbo.[vPuntoDeEquilibrioTipo] ORDER BY codigo, nombre;	
-
-	
 		
 -------------------------------------------------------------
 		
@@ -508,6 +506,36 @@ CREATE VIEW [dbo].[vPuntoDeEquilibrio] AS
 USE [VetaroRep]
 GO
 
+
+-------------------------------------------------------------
+
+ -- DROP VIEW [dbo].[vProvincia] 
+
+CREATE VIEW [dbo].[vProvincia] AS        
+
+	SELECT	'com.massoftware.model.Provincia' AS ClassProvincia			
+			, CONCAT ( [vPais].[codigo], '-', CAST([Provincias].[PROVINCIA] AS VARCHAR) )	AS id
+
+			-- [PAIS]																		AS FK NOT NULL
+			, [vPais].id																	AS pais_id
+			, [vPais].codigo																AS pais_codigo
+			, [vPais].nombre																AS pais_nombre	
+			, [vPais].abreviatura															AS pais_abreviatura	
+
+			, CAST([Provincias].[PROVINCIA] AS INTEGER)										AS codigo			-- Integer NOT NULL UN [ 1 - 231] 
+			, LTRIM(RTRIM(CAST([Provincias].[NOMBRE] AS VARCHAR)))							AS nombre			-- String (25) NOT NULL UN 
+			, LTRIM(RTRIM(CAST([Provincias].[ABREVIATURA] AS VARCHAR)))						AS abreviatura		-- String (5) NOT NULL UN 			
+			, CAST([Provincias].[NROPROVINCIAAFIP] AS INTEGER)								AS codigoAfip		-- Integer [ 0 - 99] 
+			, CAST([Provincias].[NROPROVINCIAINGBRUTOS] AS INTEGER)							AS codigoIngBrutos	-- Integer [ 0 - 99] 
+			, CAST([Provincias].[NROPROVINCIARENATEA] AS INTEGER)							AS codigoRenatea	-- Integer [ 0 - 231]     
+			      
+	FROM [dbo].[Provincias]
+	LEFT JOIN	[dbo].[vPais]
+		ON [dbo].[vPais].[codigo] = CAST([dbo].[Provincias].[PAIS] AS INT);
+
+	-- SELECT * FROM dbo.[Provincias] ;
+	-- SELECT * FROM dbo.[vProvincia] ;
+	-- SELECT * FROM dbo.[vProvincia] ORDER BY pais_codigo DESC, codigo;	
 
 
 --=============================================================================================================

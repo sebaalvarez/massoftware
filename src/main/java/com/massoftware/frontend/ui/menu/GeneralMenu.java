@@ -9,6 +9,7 @@ import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.MotivoComentario;
 import com.massoftware.model.MotivoNotaDeCredito;
 import com.massoftware.model.Pais;
+import com.massoftware.model.Provincia;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.TipoCbteAFIP;
 import com.massoftware.model.TipoCliente;
@@ -52,6 +53,8 @@ public class GeneralMenu extends AbstractMenu {
 		MenuBar.MenuItem a23 = a2.addItem("Extends StandardTableUi", null);
 		MenuBar.MenuItem a24 = a2.addItem(
 				"Extends StandardTableUi + StandardFormUi", null);
+		MenuBar.MenuItem a25 = a2.addItem(
+				"Extends StandardTableUi + StandardFormUi + DOBLE PK", null);
 
 		a11.addItem("Zonas", open(Zona.class));
 		a11.addItem("Países", open(Pais.class));
@@ -71,10 +74,12 @@ public class GeneralMenu extends AbstractMenu {
 
 		a14.addItem("Centros de costo - Proyectos",
 				open(CentroDeCostoProyecto.class)).setEnabled(false);
-
-		a24.addItem("Centros de costos contables", open(CentroDeCostoContable.class));
-		a24.addItem("Puntos de equilibrio ...", open(PuntoDeEquilibrio.class));
-		a24.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class));
+		
+		a24.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class)).setEnabled(false);;
+		
+		a25.addItem("Centros de costos contables", open(CentroDeCostoContable.class));
+		a25.addItem("Puntos de equilibrio ...", open(PuntoDeEquilibrio.class));
+		a25.addItem("Provincias ...", open(Provincia.class));
 
 		return menubar;
 	}
