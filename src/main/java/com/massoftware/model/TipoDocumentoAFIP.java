@@ -34,7 +34,7 @@ public class TipoDocumentoAFIP extends EntityId implements
 	@FieldColumnMetaDataAnont(attSize = 100, pidFilteringStart = true)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[TIPO]", classAttDB = Integer.class)
-//	@FieldReadOnly()
+	// @FieldReadOnly()
 	@FieldAutoMaxValueAnont()
 	private Integer codigo;
 
