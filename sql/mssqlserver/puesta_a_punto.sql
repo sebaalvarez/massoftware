@@ -522,12 +522,12 @@ CREATE VIEW [dbo].[vProvincia] AS
 			, [vPais].nombre																AS pais_nombre	
 			, [vPais].abreviatura															AS pais_abreviatura	
 
-			, CAST([Provincias].[PROVINCIA] AS INTEGER)										AS codigo			-- Integer NOT NULL UN [ 1 - 231] 
+			, CAST([Provincias].[PROVINCIA] AS INTEGER)										AS codigo			-- Integer NOT NULL UN [ 1 - 255] 
 			, LTRIM(RTRIM(CAST([Provincias].[NOMBRE] AS VARCHAR)))							AS nombre			-- String (25) NOT NULL UN 
 			, LTRIM(RTRIM(CAST([Provincias].[ABREVIATURA] AS VARCHAR)))						AS abreviatura		-- String (5) NOT NULL UN 			
 			, CAST([Provincias].[NROPROVINCIAAFIP] AS INTEGER)								AS codigoAfip		-- Integer [ 0 - 99] 
 			, CAST([Provincias].[NROPROVINCIAINGBRUTOS] AS INTEGER)							AS codigoIngBrutos	-- Integer [ 0 - 99] 
-			, CAST([Provincias].[NROPROVINCIARENATEA] AS INTEGER)							AS codigoRenatea	-- Integer [ 0 - 231]     
+			, CAST([Provincias].[NROPROVINCIARENATEA] AS INTEGER)							AS codigoRenatea	-- Integer [ 0 - 255]     
 			      
 	FROM [dbo].[Provincias]
 	LEFT JOIN	[dbo].[vPais]

@@ -51,7 +51,7 @@ public class ProvinciaTableUi extends StandardTableUi<Provincia> {
 				new ArrayList<Pais>());
 
 		filtroPaisCBX = BuilderXMD.buildCB();
-		filtroPaisCBX.setCaption("Ejercicio");
+		filtroPaisCBX.setCaption("País");
 		filtroPaisCBX.setRequired(true);
 		filtroPaisCBX.setNullSelectionAllowed(false);
 		filtroPaisCBX.setContainerDataSource(paisesBIC);

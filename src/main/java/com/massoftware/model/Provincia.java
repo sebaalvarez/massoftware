@@ -38,7 +38,7 @@ public class Provincia extends EntityId implements Comparable<Provincia> {
 	@FieldMaxLengthAnont(value = 5)
 	@FieldColumnsAnont(value = 5)
 	@FieldMinValueIntegerAnont(value = 1)
-	@FieldMaxValueIntegerAnont(value = 231)
+	@FieldMaxValueIntegerAnont(value = 255)
 	@FieldColumnMetaDataAnont(attSize = 100, pidFilteringStart = true)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[PROVINCIA]", classAttDB = Integer.class)
