@@ -258,6 +258,9 @@ public class StandardTableUi<T> extends CustomComponent {
 				pidFiltering = columnMetaData.getAttName();
 				orderByAsc = getOrderByAsc(classModel
 						.getDeclaredField(pidFiltering));
+				if(orderByAsc == null){
+					orderByAsc = true;
+				}
 				filtroGenericoTXT.setCaption(columnMetaData.getAttLabel());
 
 				setInputPromptFiltroGenericoTXT(columnMetaData);
@@ -389,6 +392,10 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		List<SortOrder> order = new ArrayList<SortOrder>();
 
+		if(orderByAsc == null){
+			orderByAsc = true;
+		}
+		
 		if (orderByAsc) {
 			order.add(new SortOrder(pidFiltering, SortDirection.ASCENDING));
 		} else {
@@ -838,10 +845,10 @@ public class StandardTableUi<T> extends CustomComponent {
 			if (modificar) {
 				modificarBTN.setEnabled(enabled);
 			}
-			if (modificar) {
+			if (copiar) {
 				copiarBTN.setEnabled(enabled);
 			}
-			if (modificar) {
+			if (eliminar) {
 				eliminarBTN.setEnabled(enabled);
 			}
 
@@ -952,10 +959,10 @@ public class StandardTableUi<T> extends CustomComponent {
 			if (modificar) {
 				modificarBTN.setEnabled(enabled);
 			}
-			if (modificar) {
+			if (copiar) {
 				copiarBTN.setEnabled(enabled);
 			}
-			if (modificar) {
+			if (eliminar) {
 				eliminarBTN.setEnabled(enabled);
 			}
 

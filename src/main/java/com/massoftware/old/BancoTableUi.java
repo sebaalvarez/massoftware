@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.old;
+package com.massoftware.old;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.StandardTableUi;

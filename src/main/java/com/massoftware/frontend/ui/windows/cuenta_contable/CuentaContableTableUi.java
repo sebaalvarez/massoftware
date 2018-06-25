@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
+import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.EjercicioContableBOViejo;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
@@ -590,14 +591,14 @@ public class CuentaContableTableUi extends CustomComponent {
 						CuentaContable item = (CuentaContable) planDeCuentasGRD
 								.getSelectedRow();
 						searchProperty.setValue(item);
-//						System.out.println(item.toString());
-						window.close();
-					}
-
-				} catch (Exception ex) {
-					LogAndNotification.print(ex);
+						// System.out.println(item.toString());
+					window.close();
 				}
-			});
+
+			} catch (Exception ex) {
+				LogAndNotification.print(ex);
+			}
+		})	;
 
 			barraDeHerramientasFila3.addComponent(seleccionarBTN);
 
@@ -931,8 +932,8 @@ public class CuentaContableTableUi extends CustomComponent {
 			modificarBTN.setEnabled(enabled);
 			copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
-			if(seleccionarBTN != null){
-				seleccionarBTN.setEnabled(enabled);	
+			if (seleccionarBTN != null) {
+				seleccionarBTN.setEnabled(enabled);
 			}
 
 		} catch (Exception e) {
@@ -1041,10 +1042,9 @@ public class CuentaContableTableUi extends CustomComponent {
 				EjercicioContable ejercicioContable = (EjercicioContable) ejercicioContableCBX
 						.getValue();
 
-				List<CentroDeCostoContable> centrosDeCostosContables = cx
-						.buildCentroDeCostoContableBO()
-						.findAllOrderByCentroDeCostoContable(
-								ejercicioContable.getEjercicio());
+				List<CentroDeCostoContable> centrosDeCostosContables = ((CentroDeCostoContableBO) cx
+						.buildBO(CentroDeCostoContable.class))
+						.findAll(ejercicioContable);
 
 				centrosDeCostosContablesBIC.removeAllItems();
 				for (CentroDeCostoContable centroDeCostoContable : centrosDeCostosContables) {
@@ -1116,8 +1116,8 @@ public class CuentaContableTableUi extends CustomComponent {
 			planDeCuentasGRD.setEnabled(enabled);
 			barraDeHerramientasFila1.setEnabled(enabled);
 			barraDeHerramientasFila2.setEnabled(enabled);
-			if(seleccionarBTN != null){
-				seleccionarBTN.setEnabled(enabled);	
+			if (seleccionarBTN != null) {
+				seleccionarBTN.setEnabled(enabled);
 			}
 
 			if (enabled) {
@@ -1157,9 +1157,9 @@ public class CuentaContableTableUi extends CustomComponent {
 			eliminarBTN.setEnabled(enabled);
 			// barraDeHerramientasFila1.setEnabled(enabled);
 			// barraDeHerramientasFila2.setEnabled(enabled);
-			
-			if(seleccionarBTN != null){
-				seleccionarBTN.setEnabled(enabled);	
+
+			if (seleccionarBTN != null) {
+				seleccionarBTN.setEnabled(enabled);
 			}
 
 			if (enabled) {
@@ -1204,10 +1204,9 @@ public class CuentaContableTableUi extends CustomComponent {
 			eliminarBTN.setEnabled(enabled);
 			// barraDeHerramientasFila1.setEnabled(enabled);
 			// barraDeHerramientasFila2.setEnabled(enabled);
-			if(seleccionarBTN != null){
-				seleccionarBTN.setEnabled(enabled);	
+			if (seleccionarBTN != null) {
+				seleccionarBTN.setEnabled(enabled);
 			}
-			
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);

@@ -1,13 +1,14 @@
-package com.massoftware.frontend.ui.windows.centro_de_costo_contable;
+package com.massoftware.old;
 
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.ui.custom.CentroDeCostoContableTableUi;
 import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Usuario;
 import com.vaadin.ui.ComboBox;
 
-public class CentroDeCostoContableFormUi extends
+class CentroDeCostoContableFormUi extends
 		StandardFormUi<CentroDeCostoContable> {
 
 	/**
@@ -27,10 +28,13 @@ public class CentroDeCostoContableFormUi extends
 
 	public CentroDeCostoContableFormUi(Usuario usuario, String mode,
 			BackendContext cx, CentroDeCostoContableTableUi tableUi,
-			CentroDeCostoContable object, EjercicioContable ejercicioContableDefault) {
+			CentroDeCostoContable object, CentroDeCostoContable objectOriginal, EjercicioContable ejercicioContableDefault) {
 
 		super(usuario, CentroDeCostoContable.class, mode, cx, tableUi,
 				object);
+		if (StandardFormUi.COPY_MODE.equalsIgnoreCase(mode)) {
+			this.window.setCaption("Copiar " + dtoLabel + " : " + objectOriginal);
+		}
 		init(ejercicioContableDefault);
 	}
 
@@ -39,7 +43,7 @@ public class CentroDeCostoContableFormUi extends
 //		tipoCBXValueChange();
 //		
 		ejercicioContableCB = (ComboBox) this.getComponentById("ejercicioContable");
-		ejercicioContableCB.setValue(ejercicioContableDefault);
+//		ejercicioContableCB.setValue(ejercicioContableDefault);
 //
 //		tipoCB.addValueChangeListener(e -> {
 //			tipoCBXValueChange();

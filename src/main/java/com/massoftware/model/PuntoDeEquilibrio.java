@@ -1,26 +1,69 @@
 package com.massoftware.model;
 
+import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
+import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
+import com.massoftware.annotation.model.ClassPluralLabelAnont;
+import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
+import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
+import com.massoftware.annotation.model.FieldColumnsAnont;
+import com.massoftware.annotation.model.FieldLabelAnont;
+import com.massoftware.annotation.model.FieldMaxLengthAnont;
+import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
+import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
+import com.massoftware.annotation.model.FieldNameMSAnont;
+import com.massoftware.annotation.model.FieldRequiredAnont;
+import com.massoftware.annotation.model.FieldSubNameFKAnont;
+import com.massoftware.annotation.model.FieldUniqueAnont;
 
-public class PuntoDeEquilibrio extends EntityId implements Cloneable,
+@ClassLabelInTheSingularAnont(value = "Punto de equilibrio")
+@ClassPluralLabelAnont(value = "Puntos de equilibrio")
+@ClassArticleLabelInTheSingularAnont(value = "el")
+@ClassArticleLabelInPluralAnont(value = "los")
+// @ClassFormSourceAnont(value = "Deposito")
+@ClassTableMSAnont(nameTableDB = "[PuntoDeEquilibrio]")
+public class PuntoDeEquilibrio extends EntityId implements
 		Comparable<PuntoDeEquilibrio> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7063241156348196814L;
-
+	@FieldLabelAnont(value = "Ejercicio")
+	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldSubNameFKAnont(value = "ejercicio")
+	// @FieldNameMSAnont(nameAttDB = "[CUENTA]", classAttDB = String.class)
+	// @FieldCBBox(attName = "ejercicio")
 	private EjercicioContable ejercicioContable;
+
+	@FieldLabelAnont(value = "Número")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 5)
+	@FieldColumnsAnont(value = 5)
+	@FieldMinValueIntegerAnont(value = 1)
+	@FieldMaxValueIntegerAnont(value = Short.MAX_VALUE)
+	@FieldColumnMetaDataAnont(attSize = 100, pidFilteringStart = true)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[PUNTODEEQUILIBRIO]", classAttDB = Integer.class)
+	@FieldAutoMaxValueAnont()
 	private Integer puntoDeEquilibrio;
+
+	@FieldLabelAnont(value = "Nombre")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 30)
+	@FieldColumnsAnont(value = 30)
+	@FieldColumnMetaDataAnont(attSize = 300)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[NOMBRE]", classAttDB = String.class)
 	private String nombre;
+
+	@FieldLabelAnont(value = "Tipo")
+	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldSubNameFKAnont(value = "puntoDeEquilibrioTipo")
 	private PuntoDeEquilibrioTipo puntoDeEquilibrioTipo;
 
-	public PuntoDeEquilibrio() {
-
-	}
-
-	public PuntoDeEquilibrio(Object[] row) {
-		// setterByArray(row);
-	}
+	// public PuntoDeEquilibrio(Object[] row) {
+	// // setterByArray(row);
+	// }
 
 	public Integer getPuntoDeEquilibrio() {
 		return puntoDeEquilibrio;
@@ -46,7 +89,11 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 
 	public void setPuntoDeEquilibrioTipo(
 			PuntoDeEquilibrioTipo puntoDeEquilibrioTipo) {
-		this.puntoDeEquilibrioTipo = puntoDeEquilibrioTipo;
+		if (puntoDeEquilibrioTipo != null
+				&& puntoDeEquilibrioTipo.getId() != null) {
+			this.puntoDeEquilibrioTipo = puntoDeEquilibrioTipo;
+		}
+
 	}
 
 	public EjercicioContable getEjercicioContable() {
@@ -54,31 +101,34 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 	}
 
 	public void setEjercicioContable(EjercicioContable ejercicioContable) {
-		this.ejercicioContable = ejercicioContable;
-	}
-
-	@Override
-	public PuntoDeEquilibrio clone() throws CloneNotSupportedException {
-
-		PuntoDeEquilibrio other = new PuntoDeEquilibrio();
-
-		other.setId(this.getId());
-		if (this.getEjercicioContable() != null) {
-			other.setEjercicioContable(this.getEjercicioContable().clone());
-		} else {
-			other.setEjercicioContable(null);
-		}
-		other.setNombre(this.getNombre());
-		other.setPuntoDeEquilibrio(this.getPuntoDeEquilibrio());
-		if (this.getPuntoDeEquilibrioTipo() != null) {
-			other.setPuntoDeEquilibrioTipo(this.getPuntoDeEquilibrioTipo()
-					.clone());
-		} else {
-			other.setPuntoDeEquilibrioTipo(null);
+		if (ejercicioContable != null && ejercicioContable.getId() != null) {
+			this.ejercicioContable = ejercicioContable;
 		}
 
-		return other;
 	}
+
+	// @Override
+	// public PuntoDeEquilibrio clone() throws CloneNotSupportedException {
+	//
+	// PuntoDeEquilibrio other = new PuntoDeEquilibrio();
+	//
+	// other.setId(this.getId());
+	// if (this.getEjercicioContable() != null) {
+	// other.setEjercicioContable(this.getEjercicioContable().clone());
+	// } else {
+	// other.setEjercicioContable(null);
+	// }
+	// other.setNombre(this.getNombre());
+	// other.setPuntoDeEquilibrio(this.getPuntoDeEquilibrio());
+	// if (this.getPuntoDeEquilibrioTipo() != null) {
+	// other.setPuntoDeEquilibrioTipo(this.getPuntoDeEquilibrioTipo()
+	// .clone());
+	// } else {
+	// other.setPuntoDeEquilibrioTipo(null);
+	// }
+	//
+	// return other;
+	// }
 
 	public int compareTo(PuntoDeEquilibrio o) {
 
@@ -88,8 +138,11 @@ public class PuntoDeEquilibrio extends EntityId implements Cloneable,
 
 	@Override
 	public String toString() {
-		return this.getPuntoDeEquilibrio() + " - " + this.getNombre() + " - "
-				+ this.getEjercicioContable();
+		if (this.getEjercicioContable() != null) {
+			return this.getPuntoDeEquilibrio() + " - " + this.getNombre()
+					+ " - " + this.getEjercicioContable();
+		}
+		return this.getPuntoDeEquilibrio() + " - " + this.getNombre();
 	}
 
 	public boolean validate() {

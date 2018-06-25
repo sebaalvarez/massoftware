@@ -69,19 +69,19 @@ public class Usuario extends EntityId implements Cloneable, Comparable<Usuario> 
 //
 //	}
 
-	public Usuario clone() throws CloneNotSupportedException {
-		Usuario other = (Usuario) super.clone();
-
-		other.setNumero(numero);
-		other.setNombre(nombre);
-		if (this.getEjercicioContable() != null) {
-			other.setEjercicioContable(getEjercicioContable().clone());
-		} else {
-			other.setEjercicioContable(null);
-		}
-
-		return other;
-	}
+//	public Usuario clone() throws CloneNotSupportedException {
+//		Usuario other = (Usuario) super.clone();
+//
+//		other.setNumero(numero);
+//		other.setNombre(nombre);
+//		if (this.getEjercicioContable() != null) {
+//			other.setEjercicioContable(getEjercicioContable().clone());
+//		} else {
+//			other.setEjercicioContable(null);
+//		}
+//
+//		return other;
+//	}
 
 	@Override
 	public int compareTo(Usuario o) {

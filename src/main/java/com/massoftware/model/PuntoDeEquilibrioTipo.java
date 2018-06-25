@@ -1,13 +1,7 @@
 package com.massoftware.model;
 
-
-public class PuntoDeEquilibrioTipo extends EntityId implements Cloneable,
+public class PuntoDeEquilibrioTipo extends EntityId implements
 		Comparable<PuntoDeEquilibrioTipo> {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -488325529842418211L;
 
 	// final public static PuntoDeEquilibrioTipo TIPO_1 = new
 	// PuntoDeEquilibrioTipo(
@@ -98,17 +92,17 @@ public class PuntoDeEquilibrioTipo extends EntityId implements Cloneable,
 		this.nombre = nombre;
 	}
 
-	@Override
-	public PuntoDeEquilibrioTipo clone() throws CloneNotSupportedException {
-
-		PuntoDeEquilibrioTipo other = new PuntoDeEquilibrioTipo();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-
-		return other;
-	}
+//	@Override
+//	public PuntoDeEquilibrioTipo clone() throws CloneNotSupportedException {
+//
+//		PuntoDeEquilibrioTipo other = new PuntoDeEquilibrioTipo();
+//
+//		other.setId(this.getId());
+//		other.setCodigo(this.getCodigo());
+//		other.setNombre(this.getNombre());
+//
+//		return other;
+//	}
 
 	public int compareTo(PuntoDeEquilibrioTipo o) {
 

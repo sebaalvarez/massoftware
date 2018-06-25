@@ -953,7 +953,7 @@ public class BuilderXMD {
 
 				@SuppressWarnings("unchecked")
 				Method method = clazz.getMethod(methodName);				
-				Object originalValueDTO = method.invoke(originalDTO);
+				Object originalValueDTO = method.invoke(originalDTO);								
 
 				txt.addValidator(new GenericUniqueValidator(field.getType(),
 						attName, true, true, cx.buildBO(clazz),

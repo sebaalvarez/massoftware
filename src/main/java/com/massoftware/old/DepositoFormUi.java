@@ -1,4 +1,7 @@
-package com.massoftware.frontend.ui.windows.old;
+package com.massoftware.old;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
@@ -6,21 +9,29 @@ import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.frontend.ui.util.build.BuildComponentsUtil;
 import com.massoftware.frontend.ui.util.build.PropertiesComponentInteger;
 import com.massoftware.frontend.ui.util.build.PropertiesComponentString;
-import com.massoftware.model.TipoCbteControl;
+import com.massoftware.model.Deposito;
+import com.massoftware.model.Modulo;
+import com.massoftware.model.Sucursal;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 
-class TipoCbteControlFormUi extends StandardFormUi<TipoCbteControl> {
+class DepositoFormUi extends StandardFormUi<Deposito> {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2232262154487745403L;
+	private static final long serialVersionUID = -2532562154487745403L;
 
 	// ----------------------------------------------
 	// OPCIONES
+
+	private BeanItemContainer<Sucursal> sucursalesBIC;
+	private BeanItemContainer<Modulo> modulosBIC;
 
 	// ----------------------------------------------
 	// MODELOS
@@ -32,20 +43,24 @@ class TipoCbteControlFormUi extends StandardFormUi<TipoCbteControl> {
 	private TextField codigoTXT;
 	private TextField nombreTXT;
 	private TextField abreviaturaTXT;
-	private TextField columnaInformeTXT;
+	private CheckBox depositoActivoCHK;
+	private ComboBox sucursalCB;
+	private ComboBox moduloCB;
+	// private Deposito depositoAgrupacion;
+	// private SeguridadPuerta puertaOperativo;
+	// private SeguridadPuerta puertaConsulta;
 
 	// ----------------------------------------------
 
-	private TipoCbteControlTableUi tipoCbteControlTableUi;
+	private DepositoTableUi depositoTableUi;
 
 	// ----------------------------------------------
 
-	public TipoCbteControlFormUi(String mode, BackendContext cx,
-			TipoCbteControl tipoCbteControl,
-			TipoCbteControlTableUi TipoCbteControlTableUi) {
-		super(null, TipoCbteControl.class, mode, cx, null, tipoCbteControl);
+	public DepositoFormUi(String mode, BackendContext cx, Deposito deposito,
+			DepositoTableUi depositoTableUi) {
+		super(null, Deposito.class, mode, cx, null, deposito);
 		try {
-			this.tipoCbteControlTableUi = TipoCbteControlTableUi;
+			this.depositoTableUi = depositoTableUi;
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -53,7 +68,9 @@ class TipoCbteControlFormUi extends StandardFormUi<TipoCbteControl> {
 
 	// ======================================================
 
-	protected void buildContainers(TipoCbteControl dto) throws Exception {
+	protected void buildContainers(Deposito dto) throws Exception {
+
+		// Deposito dto = (Deposito) object;
 
 		if (dto != null) {
 			originalDTO = dto.clone();
@@ -62,14 +79,36 @@ class TipoCbteControlFormUi extends StandardFormUi<TipoCbteControl> {
 		// ======================================================================
 		// OPCIONES
 
+		// -----------------
+
+		sucursalesBIC = new BeanItemContainer<Sucursal>(Sucursal.class,
+				new ArrayList<Sucursal>());
+
+		List<Sucursal> sucursales = cx.buildSucursalBO().findAll();
+		sucursalesBIC.removeAllItems();
+		for (Sucursal sucursal : sucursales) {
+			sucursalesBIC.addBean(sucursal);
+		}
+
+		// -----------------
+
+		modulosBIC = new BeanItemContainer<Modulo>(Modulo.class,
+				new ArrayList<Modulo>());
+
+		List<Modulo> modulos = cx.buildModuloBO().findAll();
+		modulosBIC.removeAllItems();
+		for (Modulo modulo : modulos) {
+			modulosBIC.addBean(modulo);
+		}
+
 		// ======================================================================
 		// MODELOS
 
 		if (dto != null) {
-			dtoBI = new BeanItem<TipoCbteControl>(dto);
+			dtoBI = new BeanItem<Deposito>(dto);
 		} else {
-			dto = new TipoCbteControl();
-			dtoBI = new BeanItem<TipoCbteControl>(dto);
+			dto = new Deposito();
+			dtoBI = new BeanItem<Deposito>(dto);
 		}
 
 		// ----------------------------------------------------------------------
@@ -96,7 +135,7 @@ class TipoCbteControlFormUi extends StandardFormUi<TipoCbteControl> {
 		// ----------------------------------------------
 
 		PropertiesComponentInteger codigoTXTProp = new PropertiesComponentInteger(
-				TipoCbteControl.class, "codigo", dtoBI, 4, 2, 0, 99);
+				Deposito.class, "codigo", dtoBI, 5, 3, 1, 999);
 
 		codigoTXT = BuildComponentsUtil.buildTXT(cx, codigoTXTProp);
 
@@ -105,7 +144,7 @@ class TipoCbteControlFormUi extends StandardFormUi<TipoCbteControl> {
 		// ----------------------------------------------
 
 		PropertiesComponentString nombreTXTProp = new PropertiesComponentString(
-				TipoCbteControl.class, "nombre", dtoBI, 30, 30, true);
+				Deposito.class, "nombre", dtoBI, 35, 35, true);
 
 		nombreTXT = BuildComponentsUtil.buildTXT(cx, nombreTXTProp);
 
@@ -114,7 +153,7 @@ class TipoCbteControlFormUi extends StandardFormUi<TipoCbteControl> {
 		// ----------------------------------------------
 
 		PropertiesComponentString abreviaturaTXTProp = new PropertiesComponentString(
-				TipoCbteControl.class, "abreviatura", dtoBI, 5, 5, true);
+				Deposito.class, "abreviatura", dtoBI, 4, 4, true);
 
 		abreviaturaTXT = BuildComponentsUtil.buildTXT(cx, abreviaturaTXTProp);
 
@@ -122,13 +161,24 @@ class TipoCbteControlFormUi extends StandardFormUi<TipoCbteControl> {
 
 		// ----------------------------------------------
 
-		PropertiesComponentInteger columnaInformeTXTProp = new PropertiesComponentInteger(
-				TipoCbteControl.class, "columnaInforme", dtoBI, 5, 3, 1, 255);
+		depositoActivoCHK = BuildComponentsUtil.buildCHK("Depósito activo",
+				dtoBI.getItemProperty("depositoActivo"));
 
-		columnaInformeTXT = BuildComponentsUtil.buildTXT(cx,
-				columnaInformeTXTProp);
+		generalFL.addComponent(depositoActivoCHK);
 
-		generalFL.addComponent(columnaInformeTXT);
+		// ----------------------------------------------
+
+		sucursalCB = BuildComponentsUtil.buildCB("Sucursal", false, false,
+				true, true, sucursalesBIC, dtoBI.getItemProperty("sucursal"));
+
+		generalFL.addComponent(sucursalCB);
+
+		// ----------------------------------------------
+
+		moduloCB = BuildComponentsUtil.buildCB("Módulo", true, false, true,
+				false, modulosBIC, dtoBI.getItemProperty("modulo"));
+
+		generalFL.addComponent(moduloCB);
 
 		// ----------------------------------------------
 
@@ -164,8 +214,8 @@ class TipoCbteControlFormUi extends StandardFormUi<TipoCbteControl> {
 	}
 
 	protected void postInsertUpdate() throws Exception {
-		if (tipoCbteControlTableUi != null) {
-			tipoCbteControlTableUi.updateModelViewPort768x1024();
+		if (depositoTableUi != null) {
+			depositoTableUi.updateModelViewPort768x1024();
 		}
 		// } else if (planDeCuantaFormUi != null) {
 		// this.planDeCuantaFormUi.loadOptionsPE(puntoDeEquilibrioBI

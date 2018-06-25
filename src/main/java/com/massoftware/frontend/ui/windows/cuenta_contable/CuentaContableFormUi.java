@@ -8,10 +8,10 @@ import java.util.Locale;
 import org.cendra.ex.crud.InsertDuplicateException;
 import org.vaadin.inputmask.InputMask;
 
+import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.validator.StringLengthValidatorInputMask;
-import com.massoftware.frontend.ui.windows.centro_de_costo_contable.CentroDeCostoContableFormUiViejo;
 import com.massoftware.frontend.ui.windows.punto_de_equilibrio.PuntoDeEquilibrioFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CostoDeVenta;
@@ -935,12 +935,16 @@ public class CuentaContableFormUi extends CustomComponent {
 	}
 
 	protected void loadOptionsPostLoadModelStateView() throws Exception {
+		
+		List<CentroDeCostoContable> centrosDeCostosContables = ((CentroDeCostoContableBO) cx
+				.buildBO(CentroDeCostoContable.class))
+				.findAll(planDeCuentaBI.getBean().getEjercicioContable());
 
-		List<CentroDeCostoContable> centrosDeCostosContables = cx
-				.buildCentroDeCostoContableBO()
-				.findAllOrderByCentroDeCostoContable(
-						planDeCuentaBI.getBean().getEjercicioContable()
-								.getEjercicio());
+//		List<CentroDeCostoContable> centrosDeCostosContables = cx
+//				.buildCentroDeCostoContableBO()
+//				.findAllOrderByCentroDeCostoContable(
+//						planDeCuentaBI.getBean().getEjercicioContable()
+//								.getEjercicio());
 		centrosDeCostosContablesBIC.removeAllItems();
 		for (CentroDeCostoContable centroDeCostoContable : centrosDeCostosContables) {
 			centrosDeCostosContablesBIC.addBean(centroDeCostoContable);
@@ -982,12 +986,16 @@ public class CuentaContableFormUi extends CustomComponent {
 
 	public void loadOptionsCCC(CentroDeCostoContable centroDeCostoContableNew)
 			throws Exception {
+		
+		List<CentroDeCostoContable> centrosDeCostosContables = ((CentroDeCostoContableBO) cx
+				.buildBO(CentroDeCostoContable.class))
+				.findAll(planDeCuentaBI.getBean().getEjercicioContable());
 
-		List<CentroDeCostoContable> centrosDeCostosContables = cx
-				.buildCentroDeCostoContableBO()
-				.findAllOrderByCentroDeCostoContable(
-						planDeCuentaBI.getBean().getEjercicioContable()
-								.getEjercicio());
+//		List<CentroDeCostoContable> centrosDeCostosContables = cx
+//				.buildCentroDeCostoContableBO()
+//				.findAllOrderByCentroDeCostoContable(
+//						planDeCuentaBI.getBean().getEjercicioContable()
+//								.getEjercicio());
 		centrosDeCostosContablesBIC.removeAllItems();
 		for (CentroDeCostoContable centroDeCostoContable : centrosDeCostosContables) {
 			centrosDeCostosContablesBIC.addBean(centroDeCostoContable);
@@ -1160,10 +1168,10 @@ public class CuentaContableFormUi extends CustomComponent {
 
 			puntoDeEquilibrioCB.select(null);
 
-			Window win = new Window();
-
-			CentroDeCostoContableFormUiViejo ui = new CentroDeCostoContableFormUiViejo(
-					win, cx, this, ejercicioContable);
+			Window win = new Window();			
+			
+//			CentroDeCostoContableFormUiViejo ui = new CentroDeCostoContableFormUiViejo(
+//					win, cx, this, ejercicioContable);777
 
 			win.setCaption("Agragar centro de costo contable");
 			win.setImmediate(true);
@@ -1174,7 +1182,7 @@ public class CuentaContableFormUi extends CustomComponent {
 			win.setModal(true);
 			win.center();
 			// win.addCloseShortcut(KeyCode.ESCAPE, null);
-			win.setContent((Component) ui);
+//			win.setContent((Component) ui);777
 			getUI().addWindow(win);
 			win.center();
 			win.focus();

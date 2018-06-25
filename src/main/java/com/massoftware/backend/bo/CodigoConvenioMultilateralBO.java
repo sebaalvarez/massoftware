@@ -9,13 +9,15 @@ import com.massoftware.backend.util.bo.GenericBO;
 import com.massoftware.model.CodigoConvenioMultilateral;
 import com.massoftware.model.Usuario;
 
-public class CodigoConvenioMultilateralBO extends GenericBO<CodigoConvenioMultilateral> {
+public class CodigoConvenioMultilateralBO extends
+		GenericBO<CodigoConvenioMultilateral> {
 
 	private final String ATT_NAME_CODIGO = "codigo";
 	private final String ATT_NAME_NOMBRE = "nombre";
 	private final String ATT_NAME_CODIGO_CONVENIO = "codigoConvenio";
 
-	public CodigoConvenioMultilateralBO(DataSourceWrapper dataSourceWrapper, BackendContext cx) {
+	public CodigoConvenioMultilateralBO(DataSourceWrapper dataSourceWrapper,
+			BackendContext cx) {
 		super(CodigoConvenioMultilateral.class, dataSourceWrapper, cx);
 	}
 
@@ -32,12 +34,15 @@ public class CodigoConvenioMultilateralBO extends GenericBO<CodigoConvenioMultil
 
 		} else if (attName.equalsIgnoreCase(ATT_NAME_NOMBRE)) {
 
-			checkUnique(attName, "LOWER(" + ATT_NAME_NOMBRE + ") = ?", value
-					.toString().toLowerCase());
+			checkUnique(attName, "LOWER(dbo.Translate(" + ATT_NAME_NOMBRE
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
+					value.toString().toLowerCase());
 
 		} else if (attName.equalsIgnoreCase(ATT_NAME_CODIGO_CONVENIO)) {
 
-			checkUnique(attName, "LOWER(" + ATT_NAME_CODIGO_CONVENIO + ") = ?",
+			checkUnique(attName, "LOWER(dbo.Translate("
+					+ ATT_NAME_CODIGO_CONVENIO
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
 					value.toString().toLowerCase());
 		}
 	}
@@ -65,12 +70,14 @@ public class CodigoConvenioMultilateralBO extends GenericBO<CodigoConvenioMultil
 
 	}
 
-	public CodigoConvenioMultilateral insert(CodigoConvenioMultilateral dto, Usuario usuario) throws Exception {
+	public CodigoConvenioMultilateral insert(CodigoConvenioMultilateral dto,
+			Usuario usuario) throws Exception {
 
 		return insertByReflection(dto, usuario);
 	}
 
-	public CodigoConvenioMultilateral update(CodigoConvenioMultilateral dto, CodigoConvenioMultilateral dtoOriginal, Usuario usuario)
+	public CodigoConvenioMultilateral update(CodigoConvenioMultilateral dto,
+			CodigoConvenioMultilateral dtoOriginal, Usuario usuario)
 			throws Exception {
 
 		Object codigoArg = null;

@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.centro_de_costo_contable;
+package com.massoftware.old;
 
 import org.cendra.ex.crud.InsertDuplicateException;
 import org.vaadin.inputmask.InputMask;
@@ -21,7 +21,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class CentroDeCostoContableFormUiViejo extends CustomComponent {
+class CentroDeCostoContableFormUiViejo extends CustomComponent {
 
 	/**
 	 * 
@@ -156,15 +156,15 @@ public class CentroDeCostoContableFormUiViejo extends CustomComponent {
 		numeroOriginal = centroDeCostoContableBI.getBean().getNumero();
 
 		if (isForInsertForm) {
-			Integer maxNumero = cx.buildCentroDeCostoContableBO()
-					.findMaxCentroDeCostoContable(
-							centroDeCostoContableBI.getBean()
-									.getEjercicioContable().getEjercicio());
-			if (maxNumero == null || maxNumero < 1) {
-				maxNumero = 1;
-			}
+//			Integer maxNumero = cx.buildCentroDeCostoContableBO()777
+//					.findMaxCentroDeCostoContable(
+//							centroDeCostoContableBI.getBean()
+//									.getEjercicioContable().getEjercicio());
+//			if (maxNumero == null || maxNumero < 1) {
+//				maxNumero = 1;
+//			}
 
-			centroDeCostoContableBI.getBean().setNumero(maxNumero);
+//			centroDeCostoContableBI.getBean().setNumero(maxNumero);
 		} 
 
 		
@@ -437,16 +437,16 @@ public class CentroDeCostoContableFormUiViejo extends CustomComponent {
 					+ centroDeCostoContableBI.getBean().getNombre();
 
 			if (isForInsertForm) {
-				cx.buildCentroDeCostoContableBO().insert(
-						centroDeCostoContableBI.getBean());
+//				cx.buildCentroDeCostoContableBO().insert(
+//						centroDeCostoContableBI.getBean());
 
 				msg = "Se agregó con éxito el \"Centro de costo: " + msg
 						+ "\".";
 
 			} else {
-				cx.buildCentroDeCostoContableBO().update(
-						centroDeCostoContableBI.getBean(), ejercicioOriginal,
-						numeroOriginal);
+//				cx.buildCentroDeCostoContableBO().update(
+//						centroDeCostoContableBI.getBean(), ejercicioOriginal,
+//						numeroOriginal);
 
 				msg = "Se modificó con éxito el \"Centro de costo: " + msg
 						+ "\".";

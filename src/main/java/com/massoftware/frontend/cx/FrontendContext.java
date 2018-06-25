@@ -1,9 +1,10 @@
 package com.massoftware.frontend.cx;
 
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.ui.custom.CentroDeCostoContableTableUi;
+import com.massoftware.frontend.ui.custom.EjercicioContableTableUi;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.StandardTableUi;
-import com.massoftware.frontend.ui.windows.centro_de_costo_contable.CentroDeCostoContableTableUi;
 import com.massoftware.frontend.ui.windows.centro_de_costo_proyecto.CentroDeCostoProyectoTableUi;
 import com.massoftware.frontend.ui.windows.chequera.ChequeraTableUi;
 import com.massoftware.frontend.ui.windows.cuenta_contable.CuentaContableTableUi;
@@ -107,10 +108,17 @@ public class FrontendContext {
 
 			} else if (classModel == EjercicioContable.class) {
 
-				new StandardTableUi<EjercicioContable>(shortcut,
+//				new StandardTableUi<EjercicioContable>(shortcut,
+//						agregar, modificar, copiar, eliminar, win, cx, usuario,
+//						EjercicioContable.class, pidFiltering,
+//						searchFilter, searchProperty);
+				
+				new EjercicioContableTableUi(shortcut,
 						agregar, modificar, copiar, eliminar, win, cx, usuario,
 						EjercicioContable.class, pidFiltering,
 						searchFilter, searchProperty);
+				
+				
 
 			} else if (classModel == CentroDeCostoProyecto.class) {
 

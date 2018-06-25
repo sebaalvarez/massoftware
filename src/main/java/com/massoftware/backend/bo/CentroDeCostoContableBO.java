@@ -5,15 +5,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cendra.ex.crud.UniqueException;
+import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.backend.util.bo.GenericBO;
 import com.massoftware.model.CentroDeCostoContable;
-import com.massoftware.model.Chequera;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.Usuario;
 
 public class CentroDeCostoContableBO extends GenericBO<CentroDeCostoContable> {
+
+	private final String ATT_NAME_ABREVIATURA = "abreviatura";
+	private final String ATT_NAME_NOMBRE = "nombre";
 
 	public CentroDeCostoContableBO(DataSourceWrapper dataSourceWrapper,
 			BackendContext cx) {
@@ -35,13 +39,60 @@ public class CentroDeCostoContableBO extends GenericBO<CentroDeCostoContable> {
 
 		return new ArrayList<CentroDeCostoContable>();
 	}
+	
+	protected Integer maxValueInteger(String attName, CentroDeCostoContable dto) throws Exception {
+
+		String viewName = getViewName();
+		String sql = "SELECT MAX(" + attName + ") + 1 FROM " + viewName + " WHERE ejercicioContable_ejercicio = ?";
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+			
+			Object ejercicioContable = Integer.class;
+			
+			if (dto.getEjercicioContable() != null
+					&& dto.getEjercicioContable().getId() != null) {
+				ejercicioContable = dto.getEjercicioContable().getEjercicio();
+			}
+
+			Object[][] table = connectionWrapper.findToTable(sql, ejercicioContable);
+
+			return (Integer) table[0][0];
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
+	}
+
+	@Override
+	public void checkUnique(String attName, Object value) throws Exception {
+
+		if (attName.equalsIgnoreCase(ATT_NAME_ABREVIATURA)) {
+
+			checkUnique(attName, "LOWER(dbo.Translate(" + ATT_NAME_ABREVIATURA
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
+					value.toString().toLowerCase());
+
+		} else if (attName.equalsIgnoreCase(ATT_NAME_NOMBRE)) {
+
+			checkUnique(attName, "LOWER(dbo.Translate(" + ATT_NAME_NOMBRE
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
+					value.toString().toLowerCase());
+
+		}
+	}
 
 	public void checkUnique(CentroDeCostoContable dto,
 			CentroDeCostoContable dtoOriginal) throws Exception {
 
 		// fullEquals(Class type, boolean ignoreCaseTraslate,
 		// boolean ignoreCase, Object value, Object originalValue);
-
+		
 		if (dtoOriginal != null
 				&& dto.getEjercicioContable()
 						.getEjercicio()
@@ -84,137 +135,93 @@ public class CentroDeCostoContableBO extends GenericBO<CentroDeCostoContable> {
 
 	}
 
-	// public CentroDeCostoContable insert(CentroDeCostoContable dto, Usuario
-	// usuario) throws Exception {
-	//
-	// String nameTableDB = getClassTableMSAnont(classModel);
-	//
-	// String[] nameAtts = { "[CUENTA]", "[CHEQUERA]", "[PRIMERNRO]",
-	// "[ULTIMONRO]", "[PROXIMONRO]", "[BLOQUEADO]",
-	// "[IMPRESIONDIFERIDA]", "[DESTINOIMPRESION]", "[FORMATO]" };
-	//
-	// Object cuentaDeFondo = Integer.class;
-	// Object codigo = Integer.class;
-	// Object primerNumero = Integer.class;
-	// Object ultimoNumero = Integer.class;
-	// Object proximoNumero = Integer.class;
-	// Object bloqueado = Boolean.class;
-	// Object impresionDiferida = Boolean.class;
-	// Object destinoImpresion = String.class;
-	// Object formato = String.class;
-	//
-	// if (dto.getCuentaDeFondo() != null
-	// && dto.getCuentaDeFondo().getId() != null) {
-	// cuentaDeFondo = dto.getCuentaDeFondo().getCodigo();
-	// }
-	// if (dto.getCodigo() != null) {
-	// codigo = dto.getCodigo();
-	// }
-	// if (dto.getPrimerNumero() != null) {
-	// primerNumero = dto.getPrimerNumero();
-	// }
-	// if (dto.getUltimoNumero() != null) {
-	// ultimoNumero = dto.getUltimoNumero();
-	// }
-	// if (dto.getProximoNumero() != null) {
-	// proximoNumero = dto.getProximoNumero();
-	// }
-	// if (dto.getBloqueado() != null) {
-	// bloqueado = dto.getBloqueado();
-	// }
-	// if (dto.getImpresionDiferida() != null) {
-	// impresionDiferida = dto.getImpresionDiferida();
-	// }
-	// if (dto.getDestinoImpresion() != null) {
-	// destinoImpresion = dto.getDestinoImpresion();
-	// }
-	// if (dto.getFormato() != null) {
-	// formato = dto.getFormato();
-	// }
-	//
-	// Object[] args = { cuentaDeFondo, codigo, primerNumero, ultimoNumero,
-	// proximoNumero, bloqueado, impresionDiferida, destinoImpresion,
-	// formato };
-	//
-	// insert(nameTableDB, nameAtts, args);
-	//
-	// return dto;
-	//
-	// // return insertByReflection(dto, usuario);
-	// }
+	public CentroDeCostoContable insert(CentroDeCostoContable dto,
+			Usuario usuario) throws Exception {
 
-	// public Chequera update(Chequera dto, Chequera dtoOriginal, Usuario
-	// usuario)
-	// throws Exception {
-	//
-	// String nameTableDB = getClassTableMSAnont(classModel);
-	//
-	// String[] nameAtts = { "[CUENTA]", "[CHEQUERA]", "[PRIMERNRO]",
-	// "[ULTIMONRO]", "[PROXIMONRO]", "[BLOQUEADO]",
-	// "[IMPRESIONDIFERIDA]", "[DESTINOIMPRESION]", "[FORMATO]" };
-	//
-	// Object cuentaDeFondo = Integer.class;
-	// Object codigo = Integer.class;
-	// Object primerNumero = Integer.class;
-	// Object ultimoNumero = Integer.class;
-	// Object proximoNumero = Integer.class;
-	// Object bloqueado = Boolean.class;
-	// Object impresionDiferida = Boolean.class;
-	// Object destinoImpresion = String.class;
-	// Object formato = String.class;
-	//
-	// if (dto.getCuentaDeFondo() != null
-	// && dto.getCuentaDeFondo().getId() != null) {
-	// cuentaDeFondo = dto.getCuentaDeFondo().getCodigo();
-	// }
-	// if (dto.getCodigo() != null) {
-	// codigo = dto.getCodigo();
-	// }
-	// if (dto.getPrimerNumero() != null) {
-	// primerNumero = dto.getPrimerNumero();
-	// }
-	// if (dto.getUltimoNumero() != null) {
-	// ultimoNumero = dto.getUltimoNumero();
-	// }
-	// if (dto.getProximoNumero() != null) {
-	// proximoNumero = dto.getProximoNumero();
-	// }
-	// if (dto.getBloqueado() != null) {
-	// bloqueado = dto.getBloqueado();
-	// }
-	// if (dto.getImpresionDiferida() != null) {
-	// impresionDiferida = dto.getImpresionDiferida();
-	// }
-	// if (dto.getDestinoImpresion() != null) {
-	// destinoImpresion = dto.getDestinoImpresion();
-	// }
-	// if (dto.getFormato() != null) {
-	// formato = dto.getFormato();
-	// }
-	//
-	// Object cuentaDeFondoOriginal = Integer.class;
-	//
-	// if (dtoOriginal.getCuentaDeFondo() != null
-	// && dto.getCuentaDeFondo().getId() != null) {
-	// cuentaDeFondoOriginal = dtoOriginal.getCuentaDeFondo().getCodigo();
-	// }
-	//
-	// Object codigoOriginal = Integer.class;
-	//
-	// if (dtoOriginal.getCodigo() != null) {
-	// codigoOriginal = dtoOriginal.getCodigo();
-	// }
-	//
-	// String where = "[CUENTA] = ? AND [CHEQUERA] = ?";
-	//
-	// Object[] args = { cuentaDeFondo, codigo, primerNumero, ultimoNumero,
-	// proximoNumero, bloqueado, impresionDiferida, destinoImpresion,
-	// formato, cuentaDeFondoOriginal, codigoOriginal };
-	//
-	// update(nameTableDB, nameAtts, args, where);
-	//
-	// return dto;
-	// }
+		String nameTableDB = getClassTableMSAnont(classModel);
+
+		String[] nameAtts = { "[EJERCICIO]", "[CENTRODECOSTOCONTABLE]",
+				"[NOMBRE]", "[ABREVIATURA], [PRUEBA]" };
+
+		Object ejercicioContable = Integer.class;
+		Object numero = Integer.class;
+		Object nombre = String.class;
+		Object abreviatura = String.class;
+
+		if (dto.getEjercicioContable() != null
+				&& dto.getEjercicioContable().getId() != null) {
+			ejercicioContable = dto.getEjercicioContable().getEjercicio();
+		}
+		if (dto.getNumero() != null) {
+			numero = dto.getNumero();
+		}
+		if (dto.getNombre() != null) {
+			nombre = dto.getNombre();
+		}
+		if (dto.getAbreviatura() != null) {
+			abreviatura = dto.getAbreviatura();
+		}
+
+		Object[] args = { ejercicioContable, numero, nombre, abreviatura, 0 };
+
+		insert(nameTableDB, nameAtts, args);
+
+		return dto;
+
+		// return insertByReflection(dto, usuario);
+	}
+
+	public CentroDeCostoContable update(CentroDeCostoContable dto,
+			CentroDeCostoContable dtoOriginal, Usuario usuario)
+			throws Exception {
+
+		String nameTableDB = getClassTableMSAnont(classModel);
+
+		String[] nameAtts = { "[EJERCICIO]", "[CENTRODECOSTOCONTABLE]",
+				"[NOMBRE]", "[ABREVIATURA]" };
+
+		Object ejercicioContable = Integer.class;
+		Object numero = Integer.class;
+		Object nombre = String.class;
+		Object abreviatura = String.class;
+
+		if (dto.getEjercicioContable() != null
+				&& dto.getEjercicioContable().getId() != null) {
+			ejercicioContable = dto.getEjercicioContable().getEjercicio();
+		}
+		if (dto.getNumero() != null) {
+			numero = dto.getNumero();
+		}
+		if (dto.getNombre() != null) {
+			nombre = dto.getNombre();
+		}
+		if (dto.getAbreviatura() != null) {
+			abreviatura = dto.getAbreviatura();
+		}
+
+		Object ejercicioContableOriginal = Integer.class;
+
+		if (dtoOriginal.getEjercicioContable() != null
+				&& dto.getEjercicioContable().getId() != null) {
+			ejercicioContableOriginal = dtoOriginal.getEjercicioContable()
+					.getEjercicio();
+		}
+
+		Object numeroOriginal = Integer.class;
+
+		if (dtoOriginal.getNumero() != null) {
+			numeroOriginal = dtoOriginal.getNumero();
+		}
+
+		String where = "[EJERCICIO] = ? AND [CENTRODECOSTOCONTABLE] = ?";
+
+		Object[] args = { ejercicioContable, numero, nombre, abreviatura,
+				ejercicioContableOriginal, numeroOriginal };
+
+		update(nameTableDB, nameAtts, args, where);
+
+		return dto;
+	}
 
 	public boolean delete(CentroDeCostoContable dto) throws Exception {
 

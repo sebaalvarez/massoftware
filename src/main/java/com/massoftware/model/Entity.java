@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.massoftware.annotation.model.FieldNotCopiableAnont;
@@ -73,28 +74,29 @@ public class Entity implements Cloneable, Valuable {
 		try {
 			other = clazz.newInstance();
 
-			return clone(clazz, other, full);
+			return clone(this, clazz, other, full);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 
 	}
 
-	protected Object clone(@SuppressWarnings("rawtypes") Class clazz,
+	protected Object clone(Object originalIsntance, @SuppressWarnings("rawtypes") Class clazz,
 			Object other, boolean full) throws NoSuchMethodException, SecurityException,
 			IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException {
+			InvocationTargetException, InstantiationException {
 
 		if (clazz.getSuperclass() != null) {
-			clone(clazz.getSuperclass(), other, full);
+			clone(originalIsntance, clazz.getSuperclass(), other, full);
 		}
 
 		Field[] fields = clazz.getDeclaredFields();
 
 		for (Field field : fields) {
 
-			if (full || (getUnique(field) == false && getNotCopiable(field) == false)) {
+			if (field.getName().startsWith("_") == false && (full || (getUnique(field) == false && getNotCopiable(field) == false))) {
 
 				@SuppressWarnings("unchecked")
 				Method methodGet = clazz.getDeclaredMethod("get"
@@ -109,52 +111,69 @@ public class Entity implements Cloneable, Valuable {
 
 				if (field.getType() == Boolean.class) {
 
-					Boolean value = (Boolean) methodGet.invoke(this);
+					Boolean value = (Boolean) methodGet.invoke(originalIsntance);
 					methodSet.invoke(other, value);
 
 				} else if (field.getType() == String.class) {
 
-					String value = (String) methodGet.invoke(this);
+					String value = (String) methodGet.invoke(originalIsntance);
 					methodSet.invoke(other, value);
 
 				} else if (field.getType() == Byte.class) {
 
-					Byte value = (Byte) methodGet.invoke(this);
+					Byte value = (Byte) methodGet.invoke(originalIsntance);
 					methodSet.invoke(other, value);
 
 				} else if (field.getType() == Short.class) {
 
-					Short value = (Short) methodGet.invoke(this);
+					Short value = (Short) methodGet.invoke(originalIsntance);
 					methodSet.invoke(other, value);
 
 				} else if (field.getType() == Integer.class) {
 
-					Integer value = (Integer) methodGet.invoke(this);
+					Integer value = (Integer) methodGet.invoke(originalIsntance);
 					methodSet.invoke(other, value);
 
 				} else if (field.getType() == Long.class) {
 
-					Long value = (Long) methodGet.invoke(this);
+					Long value = (Long) methodGet.invoke(originalIsntance);
 					methodSet.invoke(other, value);
 
 				} else if (field.getType() == Float.class) {
 
-					Float value = (Float) methodGet.invoke(this);
+					Float value = (Float) methodGet.invoke(originalIsntance);
 					methodSet.invoke(other, value);
 
 				} else if (field.getType() == Double.class) {
 
-					Double value = (Double) methodGet.invoke(this);
+					Double value = (Double) methodGet.invoke(originalIsntance);
 					methodSet.invoke(other, value);
 
 				} else if (field.getType() == BigDecimal.class) {
-					BigDecimal value = (BigDecimal) methodGet.invoke(this);
+					BigDecimal value = (BigDecimal) methodGet.invoke(originalIsntance);
 					if (value != null) {
 						value = new BigDecimal(value.toString());
 					}
 
 					methodSet.invoke(other, value);
 
+				} else if (field.getType() == Date.class) {
+					Date value = (Date) methodGet.invoke(originalIsntance);
+					if (value != null) {
+						value = new Date(value.getTime());
+					}
+
+					methodSet.invoke(other, value);
+
+				} else {
+					Object other2 = field.getType().newInstance();					
+					Object value = methodGet.invoke(originalIsntance);					
+					if (value != null) {						
+						value = clone(value, field.getType(), other2, full);						
+					}
+					
+					methodSet.invoke(other, value);													
+					
 				}
 
 			}

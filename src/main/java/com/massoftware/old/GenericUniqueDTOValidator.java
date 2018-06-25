@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.util.validator;
+package com.massoftware.old;
 
 import org.cendra.ex.crud.UniqueException;
 
@@ -7,7 +7,7 @@ import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.vaadin.data.validator.AbstractValidator;
 
 @SuppressWarnings("rawtypes")
-public class GenericUniqueDTOValidator extends AbstractValidator {
+class GenericUniqueDTOValidator extends AbstractValidator {
 
 	/**
 	 * 

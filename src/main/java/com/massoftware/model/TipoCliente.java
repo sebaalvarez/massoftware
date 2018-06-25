@@ -5,6 +5,7 @@ import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassPluralLabelAnont;
 import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
 import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
 import com.massoftware.annotation.model.FieldColumnsAnont;
 import com.massoftware.annotation.model.FieldLabelAnont;
@@ -15,25 +16,25 @@ import com.massoftware.annotation.model.FieldNameMSAnont;
 import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.annotation.model.FieldUniqueAnont;
 
-@SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "Tipo de cliente")
 @ClassPluralLabelAnont(value = "Tipos de cliente")
 @ClassArticleLabelInTheSingularAnont(value = "el")
 @ClassArticleLabelInPluralAnont(value = "los")
 // @ClassFormSourceAnont(value = "Zona")
 @ClassTableMSAnont(nameTableDB = "[TablaTiposClientes]")
-public class TipoCliente extends EntityId implements Cloneable,
-		Comparable<TipoCliente> {
+public class TipoCliente extends EntityId implements Comparable<TipoCliente> {
 
 	@FieldLabelAnont(value = "Número.")
 	@FieldRequiredAnont(value = true)
 	@FieldColumnsAnont(value = 5)
 	@FieldMaxLengthAnont(value = 3)
-	@FieldMinValueIntegerAnont(value = 1)
-	@FieldMaxValueIntegerAnont(value = 254)
-	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
+	@FieldMinValueIntegerAnont(value = 0)
+	@FieldMaxValueIntegerAnont(value = 255)
+	@FieldColumnMetaDataAnont(attSize = 100, pidFilteringStart = true)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[TIPODECLIENTE]", classAttDB = Integer.class)
+	@FieldAutoMaxValueAnont()
+//	@FieldReadOnly()
 	private Integer codigo;
 
 	@FieldLabelAnont(value = "Nombre")
@@ -63,17 +64,17 @@ public class TipoCliente extends EntityId implements Cloneable,
 		this.nombre = nombre;
 	}
 
-	@Override
-	public TipoCliente clone() throws CloneNotSupportedException {
-
-		TipoCliente other = new TipoCliente();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-
-		return other;
-	}
+//	@Override
+//	public TipoCliente clone() throws CloneNotSupportedException {
+//
+//		TipoCliente other = new TipoCliente();
+//
+//		other.setId(this.getId());
+//		other.setCodigo(this.getCodigo());
+//		other.setNombre(this.getNombre());
+//
+//		return other;
+//	}
 
 	@Override
 	public int compareTo(TipoCliente other) {

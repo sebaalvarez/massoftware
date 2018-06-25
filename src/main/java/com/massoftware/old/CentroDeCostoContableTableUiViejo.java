@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.centro_de_costo_contable;
+package com.massoftware.old;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class CentroDeCostoContableTableUiViejo extends CustomComponent {
+class CentroDeCostoContableTableUiViejo extends CustomComponent {
 
 	/**
 	 * 
@@ -512,8 +512,8 @@ public class CentroDeCostoContableTableUiViejo extends CustomComponent {
 						.getSelectedRow();
 				try {
 
-					cx.buildCentroDeCostoContableBO().delete(
-							(CentroDeCostoContable) item);
+//					cx.buildCentroDeCostoContableBO().delete(
+//							(CentroDeCostoContable) item);
 
 				} catch (DeleteForeingObjectConflictException e) {
 					LogAndNotification.print(e,
@@ -730,15 +730,15 @@ public class CentroDeCostoContableTableUiViejo extends CustomComponent {
 			EjercicioContable ejercicioContable = (EjercicioContable) ejercicioContableCB
 					.getValue();
 
-			List<CentroDeCostoContable> centrosDeCostoContable = cx
-					.buildCentroDeCostoContableBO()
-					.findAllOrderByCentroDeCostoContable(
-							ejercicioContable.getEjercicio());
+//			List<CentroDeCostoContable> centrosDeCostoContable = cx
+//					.buildCentroDeCostoContableBO()
+//					.findAllOrderByCentroDeCostoContable(
+//							ejercicioContable.getEjercicio());
 
 			centrosDeCostoContableBIC.removeAllItems();
-			for (CentroDeCostoContable centroDeCostoContable : centrosDeCostoContable) {
-				centrosDeCostoContableBIC.addBean(centroDeCostoContable);
-			}
+//			for (CentroDeCostoContable centroDeCostoContable : centrosDeCostoContable) {
+//				centrosDeCostoContableBIC.addBean(centroDeCostoContable);
+//			}
 
 			boolean enabled = centrosDeCostoContableBIC.size() > 0;
 

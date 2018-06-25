@@ -5,6 +5,7 @@ import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassPluralLabelAnont;
 import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
 import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
 import com.massoftware.annotation.model.FieldColumnsAnont;
 import com.massoftware.annotation.model.FieldLabelAnont;
@@ -12,19 +13,18 @@ import com.massoftware.annotation.model.FieldMaxLengthAnont;
 import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
 import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
 import com.massoftware.annotation.model.FieldNameMSAnont;
+import com.massoftware.annotation.model.FieldReadOnly;
 import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.annotation.model.FieldUniqueAnont;
 
-@SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "Tipo cbte. AFIP")
 @ClassPluralLabelAnont(value = "Tipos cbtes. AFIP")
 @ClassArticleLabelInTheSingularAnont(value = "el")
 @ClassArticleLabelInPluralAnont(value = "los")
-//@ClassFormSourceAnont(value = "Deposito")
+// @ClassFormSourceAnont(value = "Deposito")
 @ClassTableMSAnont(nameTableDB = "[AfipTiposCbtes]")
 public class TipoCbteAFIP extends EntityId implements Cloneable,
 		Comparable<TipoCbteAFIP> {
-
 
 	@FieldLabelAnont(value = "Tipo")
 	@FieldRequiredAnont()
@@ -35,8 +35,10 @@ public class TipoCbteAFIP extends EntityId implements Cloneable,
 	@FieldColumnMetaDataAnont(attSize = 100, pidFilteringStart = true)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[TIPO]", classAttDB = Integer.class)
+	@FieldReadOnly()
+	@FieldAutoMaxValueAnont()
 	private Integer codigo;
-	
+
 	@FieldLabelAnont(value = "Descripción")
 	@FieldRequiredAnont()
 	@FieldMaxLengthAnont(value = 80)

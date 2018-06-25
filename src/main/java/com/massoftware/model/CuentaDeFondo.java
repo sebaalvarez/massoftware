@@ -488,100 +488,100 @@ public class CuentaDeFondo extends EntityId implements Cloneable,
 		this.puertaLimite = puertaLimite;
 	}
 
-	@Override
-	public CuentaDeFondo clone() throws CloneNotSupportedException {
-
-		CuentaDeFondo other = new CuentaDeFondo();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-		if (this.getCuentaDeFondoGrupo() != null) {
-			other.setCuentaDeFondoGrupo(getCuentaDeFondoGrupo().clone());
-		} else {
-			other.setCuentaDeFondoGrupo(null);
-		}
-		if (this.getCuentaDeFondoTipo() != null) {
-			other.setCuentaDeFondoTipo(getCuentaDeFondoTipo().clone());
-		} else {
-			other.setCuentaDeFondoTipo(null);
-		}
-		if (this.getMoneda() != null) {
-			other.setMoneda(getMoneda().clone());
-		} else {
-			other.setMoneda(null);
-		}
-		if (this.getCaja() != null) {
-			other.setCaja(getCaja().clone());
-		} else {
-			other.setCaja(null);
-		}
-		if (this.getCuentaDeFondoTipoBanco() != null) {
-			other.setCuentaDeFondoTipoBanco(getCuentaDeFondoTipoBanco().clone());
-		} else {
-			other.setCuentaDeFondoTipoBanco(null);
-		}
-		other.setObsoleta(getObsoleta());
-		other.setNoImprimeCaja(getNoImprimeCaja());
-		other.setModuloCompras(getModuloCompras());
-		other.setModuloFondos(getModuloFondos());
-		other.setModuloVentas(getModuloVentas());
-		if (this.getCuentaContable() != null) {
-			other.setCuentaContable(getCuentaContable().clone());
-		} else {
-			other.setCuentaContable(null);
-		}
-
-		if (this.getCuentaDiferidos() != null) {
-			other.setCuentaDiferidos(getCuentaDiferidos().clone());
-		} else {
-			other.setCuentaDiferidos(null);
-		}
-		if (this.getCuentaCaucion() != null) {
-			other.setCuentaCaucion(getCuentaCaucion().clone());
-		} else {
-			other.setCuentaCaucion(null);
-		}
-		if (this.getLimiteDescubierto() != null) {
-			other.setLimiteDescubierto(new BigDecimal(getLimiteDescubierto()
-					.toString()));
-		} else {
-			other.setLimiteDescubierto(null);
-		}
-		if (this.getBanco() != null) {
-			other.setBanco(getBanco().clone());
-		} else {
-			other.setBanco(null);
-		}
-		other.setCuentaBancaria(getCuentaBancaria());
-		other.setCbu(getCbu());
-		other.setConciliacion(getConciliacion());
-		other.setRechazados(getRechazados());
-
-		if (this.getSeguridadPuerta() != null) {
-			other.setSeguridadPuerta(getSeguridadPuerta().clone());
-		} else {
-			other.setSeguridadPuerta(null);
-		}
-		if (this.getPuertaConsulta() != null) {
-			other.setPuertaConsulta(getPuertaConsulta().clone());
-		} else {
-			other.setPuertaConsulta(null);
-		}
-		if (this.getLimiteOperacionIndividual() != null) {
-			other.setLimiteOperacionIndividual(new BigDecimal(
-					getLimiteOperacionIndividual().toString()));
-		} else {
-			other.setLimiteOperacionIndividual(null);
-		}
-		if (this.getPuertaLimite() != null) {
-			other.setPuertaLimite(getPuertaLimite().clone());
-		} else {
-			other.setPuertaLimite(null);
-		}
-
-		return other;
-	}
+//	@Override
+//	public CuentaDeFondo clone() throws CloneNotSupportedException {
+//
+//		CuentaDeFondo other = new CuentaDeFondo();
+//
+//		other.setId(this.getId());
+//		other.setCodigo(this.getCodigo());
+//		other.setNombre(this.getNombre());
+//		if (this.getCuentaDeFondoGrupo() != null) {
+//			other.setCuentaDeFondoGrupo(getCuentaDeFondoGrupo().clone());
+//		} else {
+//			other.setCuentaDeFondoGrupo(null);
+//		}
+//		if (this.getCuentaDeFondoTipo() != null) {
+//			other.setCuentaDeFondoTipo(getCuentaDeFondoTipo().clone());
+//		} else {
+//			other.setCuentaDeFondoTipo(null);
+//		}
+//		if (this.getMoneda() != null) {
+//			other.setMoneda(getMoneda().clone());
+//		} else {
+//			other.setMoneda(null);
+//		}
+//		if (this.getCaja() != null) {
+//			other.setCaja(getCaja().clone());
+//		} else {
+//			other.setCaja(null);
+//		}
+//		if (this.getCuentaDeFondoTipoBanco() != null) {
+//			other.setCuentaDeFondoTipoBanco(getCuentaDeFondoTipoBanco().clone());
+//		} else {
+//			other.setCuentaDeFondoTipoBanco(null);
+//		}
+//		other.setObsoleta(getObsoleta());
+//		other.setNoImprimeCaja(getNoImprimeCaja());
+//		other.setModuloCompras(getModuloCompras());
+//		other.setModuloFondos(getModuloFondos());
+//		other.setModuloVentas(getModuloVentas());
+//		if (this.getCuentaContable() != null) {
+//			other.setCuentaContable(getCuentaContable().clone());
+//		} else {
+//			other.setCuentaContable(null);
+//		}
+//
+//		if (this.getCuentaDiferidos() != null) {
+//			other.setCuentaDiferidos(getCuentaDiferidos().clone());
+//		} else {
+//			other.setCuentaDiferidos(null);
+//		}
+//		if (this.getCuentaCaucion() != null) {
+//			other.setCuentaCaucion(getCuentaCaucion().clone());
+//		} else {
+//			other.setCuentaCaucion(null);
+//		}
+//		if (this.getLimiteDescubierto() != null) {
+//			other.setLimiteDescubierto(new BigDecimal(getLimiteDescubierto()
+//					.toString()));
+//		} else {
+//			other.setLimiteDescubierto(null);
+//		}
+//		if (this.getBanco() != null) {
+//			other.setBanco(getBanco().clone());
+//		} else {
+//			other.setBanco(null);
+//		}
+//		other.setCuentaBancaria(getCuentaBancaria());
+//		other.setCbu(getCbu());
+//		other.setConciliacion(getConciliacion());
+//		other.setRechazados(getRechazados());
+//
+//		if (this.getSeguridadPuerta() != null) {
+//			other.setSeguridadPuerta(getSeguridadPuerta().clone());
+//		} else {
+//			other.setSeguridadPuerta(null);
+//		}
+//		if (this.getPuertaConsulta() != null) {
+//			other.setPuertaConsulta(getPuertaConsulta().clone());
+//		} else {
+//			other.setPuertaConsulta(null);
+//		}
+//		if (this.getLimiteOperacionIndividual() != null) {
+//			other.setLimiteOperacionIndividual(new BigDecimal(
+//					getLimiteOperacionIndividual().toString()));
+//		} else {
+//			other.setLimiteOperacionIndividual(null);
+//		}
+//		if (this.getPuertaLimite() != null) {
+//			other.setPuertaLimite(getPuertaLimite().clone());
+//		} else {
+//			other.setPuertaLimite(null);
+//		}
+//
+//		return other;
+//	}
 
 	@Override
 	public int compareTo(CuentaDeFondo o) {

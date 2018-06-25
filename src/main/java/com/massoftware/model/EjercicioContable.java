@@ -15,17 +15,17 @@ import com.massoftware.annotation.model.FieldMaxLengthAnont;
 import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
 import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
 import com.massoftware.annotation.model.FieldNameMSAnont;
+import com.massoftware.annotation.model.FieldReadOnly;
 import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.annotation.model.FieldUniqueAnont;
 
-@SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "ejercicio contable")
 @ClassPluralLabelAnont(value = "Ejercicios contables")
 @ClassArticleLabelInTheSingularAnont(value = "el")
 @ClassArticleLabelInPluralAnont(value = "los")
 // @ClassFormSourceAnont(value = "Deposito")
 @ClassTableMSAnont(nameTableDB = "[EjerciciosContables]")
-public class EjercicioContable extends EntityId implements Cloneable,
+public class EjercicioContable extends EntityId implements
 		Comparable<EjercicioContable> {
 
 	@FieldLabelAnont(value = "Ejercicio")
@@ -38,34 +38,35 @@ public class EjercicioContable extends EntityId implements Cloneable,
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[EJERCICIO]", classAttDB = Integer.class)
 	@FieldAutoMaxValueAnont()
+	@FieldReadOnly()
 	private Integer ejercicio;
-	
+
 	@FieldLabelAnont(value = "Apertura")
 	@FieldRequiredAnont()
 	@FieldColumnMetaDataAnont(attSize = 150)
 	@FieldNameMSAnont(nameAttDB = "[FECHAAPERTURASQL]", classAttDB = Date.class)
 	private Date fechaApertura;
-	
+
 	@FieldLabelAnont(value = "Cierre")
 	@FieldRequiredAnont()
 	@FieldColumnMetaDataAnont(attSize = 150)
 	@FieldNameMSAnont(nameAttDB = "[FECHACIERRESQL]", classAttDB = Date.class)
 	private Date fechaCierre;
-	
+
 	@FieldLabelAnont(value = "Cerrado")
 	@FieldColumnMetaDataAnont(attSize = 150)
 	@FieldNameMSAnont(nameAttDB = "[EJERCICIOCERRADO]", classAttDB = Boolean.class)
 	private Boolean ejercicioCerrado;
-	
+
 	@FieldLabelAnont(value = "Módulos")
 	@FieldColumnMetaDataAnont(attSize = 150)
 	@FieldNameMSAnont(nameAttDB = "[EJERCICIOCERRADOMODULOS]", classAttDB = Boolean.class)
 	private Boolean ejercicioCerradoModulos;
-	
+
 	@FieldLabelAnont(value = "Comentario")
 	// @FieldRequiredAnont(value = true)
 	@FieldColumnsAnont(value = 70)
-	@FieldMaxLengthAnont(value = 511)	
+	@FieldMaxLengthAnont(value = 255)
 	@FieldColumnMetaDataAnont(hidden = true)
 	// @FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[COMENTARIO]", classAttDB = String.class)
@@ -195,28 +196,28 @@ public class EjercicioContable extends EntityId implements Cloneable,
 	// }
 	// }
 
-	@Override
-	public EjercicioContable clone() throws CloneNotSupportedException {
-		EjercicioContable other = new EjercicioContable();
-
-		other.setId(this.getId());
-		other.setEjercicio(this.getEjercicio());
-		if (this.getFechaApertura() != null) {
-			other.setFechaApertura((Date) this.getFechaApertura().clone());
-		} else {
-			other.setFechaApertura(null);
-		}
-		if (this.getFechaCierre() != null) {
-			other.setFechaCierre((Date) this.getFechaCierre().clone());
-		} else {
-			other.setFechaCierre(null);
-		}
-		other.setEjercicioCerrado(this.getEjercicioCerrado());
-		other.setEjercicioCerradoModulos(this.getEjercicioCerradoModulos());
-		other.setComentario(this.getComentario());
-
-		return other;
-	}
+//	@Override
+//	public EjercicioContable clone() throws CloneNotSupportedException {
+//		EjercicioContable other = new EjercicioContable();
+//
+//		other.setId(this.getId());
+//		other.setEjercicio(this.getEjercicio());
+//		if (this.getFechaApertura() != null) {
+//			other.setFechaApertura((Date) this.getFechaApertura().clone());
+//		} else {
+//			other.setFechaApertura(null);
+//		}
+//		if (this.getFechaCierre() != null) {
+//			other.setFechaCierre((Date) this.getFechaCierre().clone());
+//		} else {
+//			other.setFechaCierre(null);
+//		}
+//		other.setEjercicioCerrado(this.getEjercicioCerrado());
+//		other.setEjercicioCerradoModulos(this.getEjercicioCerradoModulos());
+//		other.setComentario(this.getComentario());
+//
+//		return other;
+//	}
 
 	public int compareTo(EjercicioContable o) {
 
@@ -227,7 +228,12 @@ public class EjercicioContable extends EntityId implements Cloneable,
 	@Override
 	public String toString() {
 
-		return this.getEjercicio().toString();
+		if(this.getEjercicio() != null){
+			return this.getEjercicio().toString();	
+		}
+		
+		return null;
+		
 	}
 
 	public boolean validate() throws IllegalArgumentException {

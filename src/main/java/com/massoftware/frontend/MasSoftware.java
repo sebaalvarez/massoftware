@@ -10,6 +10,9 @@ import javax.servlet.annotation.WebServlet;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.menu.ContabilidadGeneralMenu;
 import com.massoftware.frontend.ui.menu.FondosMenu;
+import com.massoftware.frontend.ui.menu.GeneralMenu;
+import com.massoftware.frontend.ui.menu.StockMenu;
+import com.massoftware.frontend.ui.menu.VentasMenu;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.windows.properties.PropertiesFormUi;
 import com.vaadin.annotations.Theme;
@@ -258,8 +261,8 @@ public class MasSoftware extends UI {
 		navigator = new Navigator(this, viewDisplay);
 		
 		navigator.addView("a", new GeneralMenu(sessionVar));
-		navigator.addView("b", new FondosMenu(sessionVar));
-		navigator.addView("c", new FondosMenu(sessionVar));
+		navigator.addView("b", new VentasMenu(sessionVar));
+		navigator.addView("c", new StockMenu(sessionVar));
 		navigator.addView("d", new FondosMenu(sessionVar));
 		navigator.addView("e", new FondosMenu(sessionVar));
 		navigator.addView("f", new ContabilidadGeneralMenu(sessionVar));
@@ -397,7 +400,7 @@ public class MasSoftware extends UI {
 					}
 				}
 			});
-			b.setEnabled(false);
+//			b.setEnabled(false);
 			b.setHtmlContentAllowed(true);
 			b.setPrimaryStyleName(ValoTheme.MENU_ITEM);
 			if (item.getKey().equals("a")) {

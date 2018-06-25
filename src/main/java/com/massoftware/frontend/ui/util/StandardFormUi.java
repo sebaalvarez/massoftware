@@ -16,7 +16,6 @@ import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.build.BuildComponentsUtil;
 import com.massoftware.frontend.xmd.BuilderXMD;
 import com.massoftware.frontend.xmd.ComponentXMD;
-import com.massoftware.model.EntityId;
 import com.massoftware.model.Entity;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -65,7 +64,7 @@ public class StandardFormUi<T> extends CustomComponent {
 	// ----------------------------------------------
 	// CONTROLES
 
-	protected VerticalLayout rootVL;
+	public VerticalLayout rootVL;
 	private HorizontalLayout barraDeHerramientasFila1;
 	private Button updateBTN;
 
@@ -87,12 +86,12 @@ public class StandardFormUi<T> extends CustomComponent {
 			this.window.setCaption("Copiar " + dtoLabel + " : " + object);
 		}
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
 			BackendContext cx, StandardTableUi tableUi, T objectClone) {
 		super();
-		init(usuario, classModel, mode, cx, tableUi, objectClone);		
+		init(usuario, classModel, mode, cx, tableUi, objectClone);
 	}
 
 	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
@@ -181,11 +180,11 @@ public class StandardFormUi<T> extends CustomComponent {
 		return window;
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void buildContainers(T dto) throws Exception {
 
-		if (dto != null && dto instanceof Entity) {			
-			originalDTO = ((Entity) dto ).clone();						
+		if (dto != null && dto instanceof Entity) {
+
+			originalDTO = ((Entity) dto).clone();
 		}
 
 		// ======================================================================
@@ -198,6 +197,13 @@ public class StandardFormUi<T> extends CustomComponent {
 
 		// ----------------------------------------------------------------------
 
+		setMaxValues();
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setMaxValues() throws Exception {
+
 		if (StandardFormUi.INSERT_MODE.equalsIgnoreCase(mode)
 				|| StandardFormUi.COPY_MODE.equalsIgnoreCase(mode)) {
 
@@ -208,7 +214,7 @@ public class StandardFormUi<T> extends CustomComponent {
 				if (field.getType() == Integer.class && isAutoMaxValue(field)) {
 
 					Integer maxNumero = cx.buildBO(classModel).maxValue(
-							field.getName());
+							field.getName(), dtoBI.getBean());
 					if (maxNumero == null || maxNumero < 1) {
 						maxNumero = 1;
 					}
@@ -216,6 +222,7 @@ public class StandardFormUi<T> extends CustomComponent {
 				}
 			}
 		}
+
 	}
 
 	private void buildControls() throws Exception {
@@ -223,7 +230,7 @@ public class StandardFormUi<T> extends CustomComponent {
 		// 768x1024
 		// --------------------------------------------------
 
-		rootVL = BuilderXMD.buildVL();		
+		rootVL = BuilderXMD.buildVL();
 
 		this.setCompositionRoot(rootVL);
 
@@ -415,7 +422,7 @@ public class StandardFormUi<T> extends CustomComponent {
 		return null;
 	}
 
-	protected Component getComponentById(String id) {
+	public Component getComponentById(String id) {
 		// return getComponentById(rootVL, id);
 
 		return controls.get(id);

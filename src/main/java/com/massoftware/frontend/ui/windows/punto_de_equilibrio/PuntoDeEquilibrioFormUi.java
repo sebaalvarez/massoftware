@@ -415,7 +415,7 @@ public class PuntoDeEquilibrioFormUi extends CustomComponent {
 			} else {
 				cx.buildPuntoDeEquilibrioBO().update(
 						puntoDeEquilibrioBI.getBean(),
-						puntoDeEquilibrioBI.getBean().clone());
+						(PuntoDeEquilibrio) puntoDeEquilibrioBI.getBean().clone());
 
 				msg = "Se modificó con éxito el \"Punto de equilibrio: " + msg
 						+ "\".";

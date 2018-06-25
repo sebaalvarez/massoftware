@@ -1,19 +1,16 @@
-package com.massoftware.frontend.ui.windows.old;
+package com.massoftware.old;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
-import com.massoftware.backend.bo.SucursalBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
 import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.frontend.ui.util.YesNoDialog;
-import com.massoftware.model.Deposito;
 import com.massoftware.model.Sucursal;
-import com.massoftware.model.Talonario;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItemContainer;
@@ -27,7 +24,6 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
@@ -39,14 +35,14 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
-class DepositoTableUi extends CustomComponent {
+class SucursalTableUi extends CustomComponent {
 
 	// ----------------------------------------------
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6282458747672426781L;
+	private static final long serialVersionUID = -6282458147672456781L;
 
 	private Window window;
 	private BackendContext cx;
@@ -59,15 +55,11 @@ class DepositoTableUi extends CustomComponent {
 
 	private HorizontalLayout filaFiltro1HL;
 
-	private HorizontalLayout sucursalHL;
-	private ComboBox sucursalesCBX;
-	private Button removerFiltroSucursalesBTN;
-
 	private HorizontalLayout filtroGenericoHL;
 	private TextField filtroGenericoTXT;
 	private Button removerFiltroGenericoBTN;
 
-	private Grid depositoGRD;
+	private Grid sucursalGRD;
 
 	private HorizontalLayout barraDeHerramientasFila1;
 	private Button agregarBTN;
@@ -79,12 +71,12 @@ class DepositoTableUi extends CustomComponent {
 	// ----------------------------------------------
 	// OPCIONES
 
-	private BeanItemContainer<Sucursal> sucursalesBIC;
+	// No hay opciones (por je. ComboBox)
 
 	// ----------------------------------------------
 	// MODELO
 
-	private BeanItemContainer<Deposito> depositoBIC;
+	private BeanItemContainer<Sucursal> sucursalBIC;
 
 	// ----------------------------------------------
 
@@ -92,7 +84,7 @@ class DepositoTableUi extends CustomComponent {
 
 	// ----------------------------------------------
 
-	public DepositoTableUi(Window window, BackendContext cx, Usuario usuario) {
+	public SucursalTableUi(Window window, BackendContext cx, Usuario usuario) {
 		super();
 		try {
 			this.window = window;
@@ -107,10 +99,8 @@ class DepositoTableUi extends CustomComponent {
 
 	private void viewPort768x1024() throws Exception {
 
-		sucursalesBIC = new BeanItemContainer<Sucursal>(Sucursal.class,
+		sucursalBIC = new BeanItemContainer<Sucursal>(Sucursal.class,
 				new ArrayList<Sucursal>());
-		depositoBIC = new BeanItemContainer<Deposito>(Deposito.class,
-				new ArrayList<Deposito>());
 
 		// ----------------------------------------------
 
@@ -131,42 +121,6 @@ class DepositoTableUi extends CustomComponent {
 
 		// ----------------------------------------------
 
-		sucursalHL = new HorizontalLayout();
-
-		filaFiltro1HL.addComponent(sucursalHL);
-
-		// ----------------------------------------------
-
-		sucursalesCBX = new ComboBox();
-		sucursalesCBX.addStyleName("tiny");
-		sucursalesCBX.setIcon(FontAwesome.SEARCH);
-		sucursalesCBX.setCaption("Sucursal");
-		sucursalesCBX.setNullSelectionAllowed(true);
-		sucursalesCBX.setImmediate(true);
-		sucursalesCBX.setContainerDataSource(sucursalesBIC);
-		sucursalesCBX.addValueChangeListener(e -> {
-			sucursalesCBXValueChange();
-		});
-
-		sucursalHL.addComponent(sucursalesCBX);
-
-		// ----------------------------------------------
-
-		removerFiltroSucursalesBTN = new Button();
-		removerFiltroSucursalesBTN.addStyleName("borderless tiny");
-		removerFiltroSucursalesBTN.setIcon(FontAwesome.TIMES);
-		removerFiltroSucursalesBTN
-				.setDescription("Quitar filtro ejercicio contable, y reestablecer su valor por defecto");
-		removerFiltroSucursalesBTN.addClickListener(e -> {
-			removerFiltroSucursalesBTNClick();
-		});
-
-		sucursalHL.addComponent(removerFiltroSucursalesBTN);
-		sucursalHL.setComponentAlignment(removerFiltroSucursalesBTN,
-				Alignment.BOTTOM_LEFT);
-
-		// ----------------------------------------------
-
 		filtroGenericoHL = new HorizontalLayout();
 
 		filaFiltro1HL.addComponent(filtroGenericoHL);
@@ -178,8 +132,8 @@ class DepositoTableUi extends CustomComponent {
 		filtroGenericoTXT = new TextField();
 		filtroGenericoTXT.addStyleName("tiny");
 		filtroGenericoTXT.setIcon(FontAwesome.SEARCH);
-		filtroGenericoTXT.setCaption("Depósito");
-		filtroGenericoTXT.setInputPrompt("Depósito");
+		filtroGenericoTXT.setCaption("Sucursal");
+		filtroGenericoTXT.setInputPrompt("Sucursal");
 		filtroGenericoTXT.setImmediate(true);
 		filtroGenericoTXT.setNullRepresentation("");
 
@@ -213,29 +167,41 @@ class DepositoTableUi extends CustomComponent {
 
 		// ----------------------------------------------
 
-		depositoGRD = new Grid();
-		depositoGRD.addStyleName("small compact");
-		depositoGRD.setWidth("100%");
+		sucursalGRD = new Grid();
+		sucursalGRD.addStyleName("small compact");
+		sucursalGRD.setWidth("100%");
 		// centrosDeCostoContableGRD.setHeight("400px");
-		depositoGRD.setSelectionMode(SelectionMode.SINGLE);
-		depositoGRD.setImmediate(true);
+		sucursalGRD.setSelectionMode(SelectionMode.SINGLE);
+		sucursalGRD.setImmediate(true);
 
 		String[] attNames = { "codigo", "nombre", "abreviatura",
-				"depositoActivo", "sucursal", "modulo", "depositoAgrupacion" };
+				"sucursalTipo", "cuentaClientesDesde", "cuentaClientesHasta",
+				"cantidadCaracteresClientes", "identificacionNumericaClientes",
+				"permiteCambiarClientes", "clientesOcasionalesDesde",
+				"clientesOcasionalesHasta", "nroCobranzaDesde",
+				"nroCobranzaHasta", "proveedoresDesde", "proveedoresHasta",
+				"cantidadCaracteresProveedor",
+				"identificacionNumericaProveedores",
+				"permiteCambiarProveedores" };
 
-		String[] attLabels = { "Depósito", "Nombre", "Abrev.", "Activo",
-				"Sucursal", "Modulo", "Agrupación" };
+		String[] attLabels = { "Sucursal", "Nombre", "Abr.", "Tipo",
+				"Cta. cli desde", "Cta. cli hasta", "Caracteres cli.",
+				"Ident. num. cli.", "Permite cambiar cli",
+				"Cli. ocasionales desde", "Cli. ocasionales hasta",
+				"Nro. cobranza desde", "Nro. cobranza hasta", "Prov. desde",
+				"Prov. hasta", "Caracteres Prov.", "Ident. num. prov.",
+				"Permite cambiar prov." };
 
-		depositoGRD.setColumns((Object[]) attNames);
+		sucursalGRD.setColumns((Object[]) attNames);
 
 		// .......
 
 		int width = 0;
-
+		
 		for (int i = 0; i < attNames.length; i++) {
 			String attName = attNames[i];
 			String attLabel = attLabels[i];
-			Column column = depositoGRD.getColumn(attName);
+			Column column = sucursalGRD.getColumn(attName);
 			column.setHidable(true);
 			column.setHeaderCaption(attLabel);
 
@@ -246,30 +212,40 @@ class DepositoTableUi extends CustomComponent {
 			} else if (i == 2) {
 				column.setWidth(80);
 			} else if (i == 3) {
-				column.setWidth(80);
-			} else if (i == 4) {
-				column.setWidth(150);
-			} else if (i == 5) {
-				column.setWidth(150);
-			} else if (i == 6) {
 				column.setWidth(150);
 			} else {
-				// column.setHidden(true);
+				column.setHidden(true);
 			}
-
+			
 			width += column.getWidth();
 
 		}
 
-		depositoGRD.setWidth(width + "px");
+		
+		sucursalGRD.setWidth(width + "px");
 
 		// .......
 
-		depositoGRD.setContainerDataSource(depositoBIC);
+		sucursalGRD.setContainerDataSource(sucursalBIC);
 
 		// .......
 
-		depositoGRD.getColumn("depositoActivo").setRenderer(
+		sucursalGRD.getColumn("identificacionNumericaClientes").setRenderer(
+				new HtmlRenderer(),
+				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+
+		sucursalGRD.getColumn("permiteCambiarClientes").setRenderer(
+				new HtmlRenderer(),
+				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+
+		sucursalGRD.getColumn("identificacionNumericaProveedores").setRenderer(
+				new HtmlRenderer(),
+				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+
+		sucursalGRD.getColumn("permiteCambiarProveedores").setRenderer(
 				new HtmlRenderer(),
 				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
 						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
@@ -278,14 +254,14 @@ class DepositoTableUi extends CustomComponent {
 
 		List<SortOrder> order = new ArrayList<SortOrder>();
 		order.add(new SortOrder(pidFiltering, SortDirection.ASCENDING));
-		depositoGRD.setSortOrder(order);
+		sucursalGRD.setSortOrder(order);
 
-		depositoGRD.addSortListener(e -> {
+		sucursalGRD.addSortListener(e -> {
 			sort();
 		});
 
-		rootVL.addComponent(depositoGRD);
-		rootVL.setComponentAlignment(depositoGRD, Alignment.MIDDLE_CENTER);
+		rootVL.addComponent(sucursalGRD);
+		rootVL.setComponentAlignment(sucursalGRD, Alignment.MIDDLE_CENTER);
 
 		// ----------------------------------------------
 
@@ -370,7 +346,7 @@ class DepositoTableUi extends CustomComponent {
 
 			@Override
 			public void handleAction(Object sender, Object target) {
-				if (target.equals(depositoGRD)) {
+				if (target.equals(sucursalGRD)) {
 					modificarBTNClick();
 				}
 
@@ -421,9 +397,9 @@ class DepositoTableUi extends CustomComponent {
 	private void agregarBTNClick() {
 		try {
 
-			depositoGRD.select(null);
+			sucursalGRD.select(null);
 
-			DepositoFormUi ui = new DepositoFormUi(StandardFormUi.INSERT_MODE,
+			SucursalFormUi ui = new SucursalFormUi(StandardFormUi.INSERT_MODE,
 					cx, null, this);
 			getUI().addWindow(ui.getWindow());
 
@@ -435,11 +411,11 @@ class DepositoTableUi extends CustomComponent {
 	private void modificarBTNClick() {
 		try {
 
-			if (depositoGRD.getSelectedRow() != null) {
+			if (sucursalGRD.getSelectedRow() != null) {
 
-				Deposito item = (Deposito) depositoGRD.getSelectedRow();
+				Sucursal item = (Sucursal) sucursalGRD.getSelectedRow();
 
-				DepositoFormUi ui = new DepositoFormUi(
+				SucursalFormUi ui = new SucursalFormUi(
 						StandardFormUi.UPDATE_MODE, cx, item, this);
 				getUI().addWindow(ui.getWindow());
 			}
@@ -452,15 +428,16 @@ class DepositoTableUi extends CustomComponent {
 	private void copiarBTNClick() {
 		try {
 
-			if (depositoGRD.getSelectedRow() != null) {
+			if (sucursalGRD.getSelectedRow() != null) {
 
-				Deposito item = (Deposito) depositoGRD.getSelectedRow();
+				Sucursal item = (Sucursal) sucursalGRD.getSelectedRow();
 
-				Deposito itemNew = item.clone();
+				Sucursal itemNew = item.clone();
 
-				DepositoFormUi ui = new DepositoFormUi(
+				SucursalFormUi ui = new SucursalFormUi(
 						StandardFormUi.COPY_MODE, cx, itemNew, this);
 				getUI().addWindow(ui.getWindow());
+
 			}
 
 		} catch (Exception e) {
@@ -471,13 +448,13 @@ class DepositoTableUi extends CustomComponent {
 	private void eliminarBTNClick() {
 		try {
 
-			if (depositoGRD.getSelectedRow() != null) {
+			if (sucursalGRD.getSelectedRow() != null) {
 
-				Deposito item = (Deposito) depositoGRD.getSelectedRow();
+				Sucursal item = (Sucursal) sucursalGRD.getSelectedRow();
 
 				getUI().addWindow(
 						new YesNoDialog("Eliminar",
-								"Esta seguro de eliminar el depósito " + item,
+								"Esta seguro de eliminar la sucursal " + item,
 								new YesNoDialog.Callback() {
 									public void onDialogResult(boolean yes) {
 										if (yes) {
@@ -495,19 +472,20 @@ class DepositoTableUi extends CustomComponent {
 	private void delete() {
 		try {
 
-			if (depositoGRD.getSelectedRow() != null) {
+			if (sucursalGRD.getSelectedRow() != null) {
 
-				Deposito item = (Deposito) depositoGRD.getSelectedRow();
+				Sucursal item = (Sucursal) sucursalGRD.getSelectedRow();
 				try {
 
 					// cx.buildPuntoDeEquilibrioBO().delete((Sucursal) item);
 
 				} catch (DeleteForeingObjectConflictException e) {
-					LogAndNotification.print(e, "Depósito " + item.getId());
+					LogAndNotification.print(e,
+							"Punto de equilibrio " + item.getId());
 					return;
 				}
 
-				String msg = "Se eliminó con éxito el depoósito " + item;
+				String msg = "Se eliminó con éxito la sucursal " + item;
 
 				LogAndNotification.printSuccessOk(msg);
 
@@ -515,7 +493,7 @@ class DepositoTableUi extends CustomComponent {
 			}
 
 		} catch (DeleteForeingObjectConflictException e) {
-			LogAndNotification.print(e, "Depósito");
+			LogAndNotification.print(e, "Punto de equilibrio");
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -534,7 +512,7 @@ class DepositoTableUi extends CustomComponent {
 		try {
 
 			@SuppressWarnings("unchecked")
-			BeanItemContainer<Deposito> container = ((BeanItemContainer<Deposito>) depositoGRD
+			BeanItemContainer<Sucursal> container = ((BeanItemContainer<Sucursal>) sucursalGRD
 					.getContainerDataSource());
 
 			container.removeAllContainerFilters();
@@ -546,11 +524,11 @@ class DepositoTableUi extends CustomComponent {
 						SimpleStringTraslateFilter.CONTAINS_WORDS_AND));
 
 			}
-			depositoGRD.recalculateColumnWidths();
+			sucursalGRD.recalculateColumnWidths();
 
-			boolean enabled = depositoBIC.size() > 0;
+			boolean enabled = sucursalBIC.size() > 0;
 
-			depositoGRD.setEnabled(enabled);
+			sucursalGRD.setEnabled(enabled);
 			modificarBTN.setEnabled(enabled);
 			copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
@@ -571,16 +549,19 @@ class DepositoTableUi extends CustomComponent {
 
 	private void sort() {
 		try {
-			pidFiltering = depositoGRD.getSortOrder().get(0).getPropertyId()
+			pidFiltering = sucursalGRD.getSortOrder().get(0).getPropertyId()
 					.toString();
 
 			// pidFiltering = attName;
 
-			String caption = depositoGRD.getColumn(pidFiltering)
+			String caption = sucursalGRD.getColumn(pidFiltering)
 					.getHeaderCaption();
 
 			filtroGenericoTXT.setCaption(caption);
-			if (pidFiltering.equals("depositoActivo")) {
+			if (pidFiltering.equals("identificacionNumericaClientes")
+					|| pidFiltering.equals("permiteCambiarClientes")
+					|| pidFiltering.equals("identificacionNumericaProveedores")
+					|| pidFiltering.equals("permiteCambiarProveedores")) {
 
 				filtroGenericoTXT
 						.setInputPrompt("s/n o vacio para ver todos ..");
@@ -601,23 +582,6 @@ class DepositoTableUi extends CustomComponent {
 
 	}
 
-	private void removerFiltroSucursalesBTNClick() {
-		try {
-			sucursalesCBX.setValue(null);
-			loadOptionsViewPort768x1024();
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-	}
-
-	private void sucursalesCBXValueChange() {
-		try {
-			loadModelViewPort768x1024();
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-	}
-
 	private void loadOptionsViewPort768x1024() {
 		try {
 			loadModelViewPort768x1024();
@@ -629,17 +593,9 @@ class DepositoTableUi extends CustomComponent {
 	private void loadModelViewPort768x1024() throws Exception {
 		try {
 
-			SucursalBO sucursalBO = cx.buildSucursalBO();
-
-			List<Sucursal> sucursales = sucursalBO.findAll();
-			sucursalesBIC.removeAllItems();
-			for (Sucursal item : sucursales) {
-				sucursalesBIC.addBean(item);
-			}
-
 			updateModelViewPort768x1024();
 
-			boolean enabled = depositoBIC.size() > 0;
+			boolean enabled = sucursalBIC.size() > 0;
 
 			if (enabled) {
 
@@ -654,25 +610,16 @@ class DepositoTableUi extends CustomComponent {
 	public void updateModelViewPort768x1024() throws Exception {
 		try {
 
-			Sucursal sucursal = (Sucursal) sucursalesCBX.getValue();
+			List<Sucursal> items = cx.buildSucursalBO().findAll();
 
-			List<Deposito> items = null;
-
-			if (sucursal != null && sucursal.getCodigo() != null) {
-//				items = cx.buildDepositoBO().findAllBySucursal(
-//						sucursal.getCodigo());
-			} else {
-				items = cx.buildBO(Deposito.class).findAll();
+			sucursalBIC.removeAllItems();
+			for (Sucursal item : items) {
+				sucursalBIC.addBean(item);
 			}
 
-			depositoBIC.removeAllItems();
-			for (Deposito item : items) {
-				depositoBIC.addBean(item);
-			}
+			boolean enabled = sucursalBIC.size() > 0;
 
-			boolean enabled = depositoBIC.size() > 0;
-
-			depositoGRD.setEnabled(enabled);
+			sucursalGRD.setEnabled(enabled);
 			modificarBTN.setEnabled(enabled);
 			copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);

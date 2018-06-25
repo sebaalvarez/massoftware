@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.centro_de_costo_contable;
+package com.massoftware.old;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
@@ -6,7 +6,7 @@ import com.massoftware.model.CentroDeCostoContable;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.IntegerRangeValidator;
 
-public class ValidatorCentroDeCostoContableNumero extends IntegerRangeValidator {
+class ValidatorCentroDeCostoContableNumero extends IntegerRangeValidator {
 
 	/**
 	 * 
@@ -57,17 +57,17 @@ public class ValidatorCentroDeCostoContableNumero extends IntegerRangeValidator 
 						+ centroDeCostoContableBI.getBean()
 								.getEjercicioContable() + " - " + numero + ")");
 
-				boolean b = cx.buildCentroDeCostoContableBO()
-						.ifExistCentroDeCostoContable(
-								numero,
-								centroDeCostoContableBI.getBean()
-										.getEjercicioContable().getEjercicio());
-
-				if (b == true) {
-					return false;
-				} else {
-					return true;
-				}
+//				boolean b = cx.buildCentroDeCostoContableBO()
+//						.ifExistCentroDeCostoContable(
+//								numero,
+//								centroDeCostoContableBI.getBean()
+//										.getEjercicioContable().getEjercicio());
+//
+//				if (b == true) {
+//					return false;
+//				} else {
+//					return true;
+//				}
 
 			} catch (Exception e) {
 				LogAndNotification.print(e);

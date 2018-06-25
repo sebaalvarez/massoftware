@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.centro_de_costo_contable;
+package com.massoftware.frontend.ui.custom;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import com.massoftware.frontend.ui.util.StandardTableUi;
 import com.massoftware.frontend.xmd.BuilderXMD;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.Entity;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
@@ -94,8 +95,6 @@ public class CentroDeCostoContableTableUi extends
 			}
 		}
 
-		// boolean enabled = ejerciciosContablesBIC.size() > 0;
-
 		filtroEjercicioCBX.addValueChangeListener(e -> {
 			ejercicioCBXValueChange();
 		});
@@ -113,8 +112,6 @@ public class CentroDeCostoContableTableUi extends
 
 	}
 
-	// public CuentaDeFondoA cuentaDeFondoFilter;
-	//
 	protected List<CentroDeCostoContable> reloadDataList() throws Exception {
 
 		return ((CentroDeCostoContableBO) cx.buildBO(classModel))
@@ -127,27 +124,34 @@ public class CentroDeCostoContableTableUi extends
 
 		CentroDeCostoContable item = CentroDeCostoContable.class.newInstance();
 
-		return new CentroDeCostoContableFormUi(usuario,
-				StandardFormUi.INSERT_MODE, cx, this, item, (EjercicioContable) filtroEjercicioCBX.getValue());
-	}
+		item.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
+				.getValue());
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected StandardFormUi openFormModificar(CentroDeCostoContable item)
-			throws Exception {
+		StandardFormUi<CentroDeCostoContable> form = new StandardFormUi<CentroDeCostoContable>(
+				usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item);
 
-		return new CentroDeCostoContableFormUi(usuario,
-				StandardFormUi.UPDATE_MODE, cx, this, item, (EjercicioContable) filtroEjercicioCBX.getValue());
+		form.setMaxValues();
+
+		return form;
+
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected StandardFormUi openFormCopiar(CentroDeCostoContable item)
 			throws Exception {
 
-		CentroDeCostoContable itemClone = ((CentroDeCostoContable) item)
-				.clone();
+		CentroDeCostoContable o = (CentroDeCostoContable) ((Entity) item)
+				.copy();
 
-		return new CentroDeCostoContableFormUi(usuario,
-				StandardFormUi.COPY_MODE, cx, this, itemClone, (EjercicioContable) filtroEjercicioCBX.getValue());
+		o.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
+				.getValue());
+
+		StandardFormUi<CentroDeCostoContable> form = new StandardFormUi<CentroDeCostoContable>(
+				usuario, classModel, StandardFormUi.COPY_MODE, cx, this, o,
+				item);
+
+		return form;
+
 	}
 
 }

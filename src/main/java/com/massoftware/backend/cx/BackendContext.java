@@ -20,7 +20,6 @@ import com.massoftware.backend.bo.BancoBO;
 import com.massoftware.backend.bo.BancoFirmanteBO;
 import com.massoftware.backend.bo.CajaBO;
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
-import com.massoftware.backend.bo.CentroDeCostoContableBOViejo;
 import com.massoftware.backend.bo.CentroDeCostoProyectoBO;
 import com.massoftware.backend.bo.CentroDeCostoProyectoTipoBO;
 import com.massoftware.backend.bo.ChequeraBO;
@@ -49,7 +48,7 @@ import com.massoftware.backend.bo.MotivoComentarioBO;
 import com.massoftware.backend.bo.MotivoNotaDeCreditoBO;
 import com.massoftware.backend.bo.PaisBO;
 import com.massoftware.backend.bo.PlanDeCuentaEstadoBO;
-import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
+import com.massoftware.backend.bo.PuntoDeEquilibrioBOViejo;
 import com.massoftware.backend.bo.PuntoDeEquilibrioTipoBO;
 import com.massoftware.backend.bo.SeguridadModuloBO;
 import com.massoftware.backend.bo.SeguridadPuertaBO;
@@ -595,19 +594,7 @@ public class BackendContext extends AbstractContext {
 
 	}
 
-	public CentroDeCostoContableBOViejo buildCentroDeCostoContableBO() {
 
-		try {
-			return new CentroDeCostoContableBOViejo(dataSourceWrapper);
-		} catch (Exception e) {
-			e.printStackTrace();
-			new LogPrinter().print(AbstractContext.class.getName(),
-					LogPrinter.LEVEL_FATAL, e);
-		}
-
-		return null;
-
-	}
 
 	public PuntoDeEquilibrioTipoBO buildPuntoDeEquilibrioTipoBO() {
 
@@ -624,11 +611,11 @@ public class BackendContext extends AbstractContext {
 
 	}
 
-	public PuntoDeEquilibrioBO buildPuntoDeEquilibrioBO() {
+	public PuntoDeEquilibrioBOViejo buildPuntoDeEquilibrioBO() {
 
 		try {
 
-			return new PuntoDeEquilibrioBO(dataSourceWrapper);
+			return new PuntoDeEquilibrioBOViejo(dataSourceWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),

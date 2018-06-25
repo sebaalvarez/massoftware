@@ -1,15 +1,17 @@
-package com.massoftware.frontend.ui.windows.old;
+package com.massoftware.old;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
+import com.massoftware.backend.bo.SucursalBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
 import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.frontend.ui.util.YesNoDialog;
+import com.massoftware.model.Deposito;
 import com.massoftware.model.Sucursal;
 import com.massoftware.model.Talonario;
 import com.massoftware.model.Usuario;
@@ -25,6 +27,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
@@ -36,14 +39,14 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
-class TalonarioTableUi extends CustomComponent {
+class DepositoTableUi extends CustomComponent {
 
 	// ----------------------------------------------
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6282458147672426781L;
+	private static final long serialVersionUID = -6282458747672426781L;
 
 	private Window window;
 	private BackendContext cx;
@@ -56,11 +59,15 @@ class TalonarioTableUi extends CustomComponent {
 
 	private HorizontalLayout filaFiltro1HL;
 
+	private HorizontalLayout sucursalHL;
+	private ComboBox sucursalesCBX;
+	private Button removerFiltroSucursalesBTN;
+
 	private HorizontalLayout filtroGenericoHL;
 	private TextField filtroGenericoTXT;
 	private Button removerFiltroGenericoBTN;
 
-	private Grid talonarioGRD;
+	private Grid depositoGRD;
 
 	private HorizontalLayout barraDeHerramientasFila1;
 	private Button agregarBTN;
@@ -72,12 +79,12 @@ class TalonarioTableUi extends CustomComponent {
 	// ----------------------------------------------
 	// OPCIONES
 
-	// No hay opciones (por je. ComboBox)
+	private BeanItemContainer<Sucursal> sucursalesBIC;
 
 	// ----------------------------------------------
 	// MODELO
 
-	private BeanItemContainer<Talonario> talonarioBIC;
+	private BeanItemContainer<Deposito> depositoBIC;
 
 	// ----------------------------------------------
 
@@ -85,7 +92,7 @@ class TalonarioTableUi extends CustomComponent {
 
 	// ----------------------------------------------
 
-	public TalonarioTableUi(Window window, BackendContext cx, Usuario usuario) {
+	public DepositoTableUi(Window window, BackendContext cx, Usuario usuario) {
 		super();
 		try {
 			this.window = window;
@@ -100,8 +107,10 @@ class TalonarioTableUi extends CustomComponent {
 
 	private void viewPort768x1024() throws Exception {
 
-		talonarioBIC = new BeanItemContainer<Talonario>(Talonario.class,
-				new ArrayList<Talonario>());
+		sucursalesBIC = new BeanItemContainer<Sucursal>(Sucursal.class,
+				new ArrayList<Sucursal>());
+		depositoBIC = new BeanItemContainer<Deposito>(Deposito.class,
+				new ArrayList<Deposito>());
 
 		// ----------------------------------------------
 
@@ -122,6 +131,42 @@ class TalonarioTableUi extends CustomComponent {
 
 		// ----------------------------------------------
 
+		sucursalHL = new HorizontalLayout();
+
+		filaFiltro1HL.addComponent(sucursalHL);
+
+		// ----------------------------------------------
+
+		sucursalesCBX = new ComboBox();
+		sucursalesCBX.addStyleName("tiny");
+		sucursalesCBX.setIcon(FontAwesome.SEARCH);
+		sucursalesCBX.setCaption("Sucursal");
+		sucursalesCBX.setNullSelectionAllowed(true);
+		sucursalesCBX.setImmediate(true);
+		sucursalesCBX.setContainerDataSource(sucursalesBIC);
+		sucursalesCBX.addValueChangeListener(e -> {
+			sucursalesCBXValueChange();
+		});
+
+		sucursalHL.addComponent(sucursalesCBX);
+
+		// ----------------------------------------------
+
+		removerFiltroSucursalesBTN = new Button();
+		removerFiltroSucursalesBTN.addStyleName("borderless tiny");
+		removerFiltroSucursalesBTN.setIcon(FontAwesome.TIMES);
+		removerFiltroSucursalesBTN
+				.setDescription("Quitar filtro ejercicio contable, y reestablecer su valor por defecto");
+		removerFiltroSucursalesBTN.addClickListener(e -> {
+			removerFiltroSucursalesBTNClick();
+		});
+
+		sucursalHL.addComponent(removerFiltroSucursalesBTN);
+		sucursalHL.setComponentAlignment(removerFiltroSucursalesBTN,
+				Alignment.BOTTOM_LEFT);
+
+		// ----------------------------------------------
+
 		filtroGenericoHL = new HorizontalLayout();
 
 		filaFiltro1HL.addComponent(filtroGenericoHL);
@@ -133,8 +178,8 @@ class TalonarioTableUi extends CustomComponent {
 		filtroGenericoTXT = new TextField();
 		filtroGenericoTXT.addStyleName("tiny");
 		filtroGenericoTXT.setIcon(FontAwesome.SEARCH);
-		filtroGenericoTXT.setCaption("Número");
-		filtroGenericoTXT.setInputPrompt("Número");
+		filtroGenericoTXT.setCaption("Depósito");
+		filtroGenericoTXT.setInputPrompt("Depósito");
 		filtroGenericoTXT.setImmediate(true);
 		filtroGenericoTXT.setNullRepresentation("");
 
@@ -168,33 +213,29 @@ class TalonarioTableUi extends CustomComponent {
 
 		// ----------------------------------------------
 
-		talonarioGRD = new Grid();
-		talonarioGRD.addStyleName("small compact");
-		talonarioGRD.setWidth("100%");
+		depositoGRD = new Grid();
+		depositoGRD.addStyleName("small compact");
+		depositoGRD.setWidth("100%");
 		// centrosDeCostoContableGRD.setHeight("400px");
-		talonarioGRD.setSelectionMode(SelectionMode.SINGLE);
-		talonarioGRD.setImmediate(true);
+		depositoGRD.setSelectionMode(SelectionMode.SINGLE);
+		depositoGRD.setImmediate(true);
 
-		String[] attNames = { "codigo", "nombre", "letra", "sucursal",
-				"autonumeracion", "numeracionPreImpresa", "asociadoAlRG10098",
-				"asociadoAControladorFiscal", "primerNumero", "proximoNumero",
-				"ultimoNumero", "cantidadMinimaComprobantes", "ultimaFecha",
-				"numeroCAI", "vencimientoCAI", "diasAvisoVencimiento" };
+		String[] attNames = { "codigo", "nombre", "abreviatura",
+				"depositoActivo", "sucursal", "modulo", "depositoAgrupacion" };
 
-		String[] attLabels = { "Nro.", "Nombre", "Letra", "Sucursal",
-				"Autonumeracion", "Num. Pre-Impresa", "RG10098",
-				"Ctrl. Fiscal", "1er numero", "Prox. nro.", "Último nro.",
-				"Cant. min. compr.", "Fecha", "CAI", "Venc. CAI",
-				"Dias aviso venc." };
+		String[] attLabels = { "Depósito", "Nombre", "Abrev.", "Activo",
+				"Sucursal", "Modulo", "Agrupación" };
 
-		talonarioGRD.setColumns((Object[]) attNames);
+		depositoGRD.setColumns((Object[]) attNames);
 
 		// .......
+
+		int width = 0;
 
 		for (int i = 0; i < attNames.length; i++) {
 			String attName = attNames[i];
 			String attLabel = attLabels[i];
-			Column column = talonarioGRD.getColumn(attName);
+			Column column = depositoGRD.getColumn(attName);
 			column.setHidable(true);
 			column.setHeaderCaption(attLabel);
 
@@ -205,35 +246,30 @@ class TalonarioTableUi extends CustomComponent {
 			} else if (i == 2) {
 				column.setWidth(80);
 			} else if (i == 3) {
-				column.setWidth(150);
-			} else if (i == 9) {
 				column.setWidth(80);
+			} else if (i == 4) {
+				column.setWidth(150);
+			} else if (i == 5) {
+				column.setWidth(150);
+			} else if (i == 6) {
+				column.setWidth(150);
 			} else {
-				column.setHidden(true);
+				// column.setHidden(true);
 			}
+
+			width += column.getWidth();
 
 		}
 
-		int width = 80 + 150 + 80 + 150 + 80;
-		talonarioGRD.setWidth(width + "px");
+		depositoGRD.setWidth(width + "px");
 
 		// .......
 
-		talonarioGRD.setContainerDataSource(talonarioBIC);
+		depositoGRD.setContainerDataSource(depositoBIC);
 
 		// .......
 
-		talonarioGRD.getColumn("autonumeracion").setRenderer(
-				new HtmlRenderer(),
-				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
-						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
-
-		talonarioGRD.getColumn("numeracionPreImpresa").setRenderer(
-				new HtmlRenderer(),
-				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
-						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
-
-		talonarioGRD.getColumn("asociadoAlRG10098").setRenderer(
+		depositoGRD.getColumn("depositoActivo").setRenderer(
 				new HtmlRenderer(),
 				new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
 						.getHtml(), FontAwesome.SQUARE_O.getHtml()));
@@ -242,14 +278,14 @@ class TalonarioTableUi extends CustomComponent {
 
 		List<SortOrder> order = new ArrayList<SortOrder>();
 		order.add(new SortOrder(pidFiltering, SortDirection.ASCENDING));
-		talonarioGRD.setSortOrder(order);
+		depositoGRD.setSortOrder(order);
 
-		talonarioGRD.addSortListener(e -> {
+		depositoGRD.addSortListener(e -> {
 			sort();
 		});
 
-		rootVL.addComponent(talonarioGRD);
-		rootVL.setComponentAlignment(talonarioGRD, Alignment.MIDDLE_CENTER);
+		rootVL.addComponent(depositoGRD);
+		rootVL.setComponentAlignment(depositoGRD, Alignment.MIDDLE_CENTER);
 
 		// ----------------------------------------------
 
@@ -334,7 +370,7 @@ class TalonarioTableUi extends CustomComponent {
 
 			@Override
 			public void handleAction(Object sender, Object target) {
-				if (target.equals(talonarioGRD)) {
+				if (target.equals(depositoGRD)) {
 					modificarBTNClick();
 				}
 
@@ -385,10 +421,10 @@ class TalonarioTableUi extends CustomComponent {
 	private void agregarBTNClick() {
 		try {
 
-			talonarioGRD.select(null);
+			depositoGRD.select(null);
 
-			TalonarioFormUi ui = new TalonarioFormUi(
-					StandardFormUi.INSERT_MODE, cx, null, this);
+			DepositoFormUi ui = new DepositoFormUi(StandardFormUi.INSERT_MODE,
+					cx, null, this);
 			getUI().addWindow(ui.getWindow());
 
 		} catch (Exception e) {
@@ -399,14 +435,13 @@ class TalonarioTableUi extends CustomComponent {
 	private void modificarBTNClick() {
 		try {
 
-			if (talonarioGRD.getSelectedRow() != null) {
+			if (depositoGRD.getSelectedRow() != null) {
 
-				Talonario item = (Talonario) talonarioGRD.getSelectedRow();
+				Deposito item = (Deposito) depositoGRD.getSelectedRow();
 
-				TalonarioFormUi ui = new TalonarioFormUi(
+				DepositoFormUi ui = new DepositoFormUi(
 						StandardFormUi.UPDATE_MODE, cx, item, this);
 				getUI().addWindow(ui.getWindow());
-
 			}
 
 		} catch (Exception e) {
@@ -417,13 +452,13 @@ class TalonarioTableUi extends CustomComponent {
 	private void copiarBTNClick() {
 		try {
 
-			if (talonarioGRD.getSelectedRow() != null) {
+			if (depositoGRD.getSelectedRow() != null) {
 
-				Talonario item = (Talonario) talonarioGRD.getSelectedRow();
+				Deposito item = (Deposito) depositoGRD.getSelectedRow();
 
-				Talonario itemNew = item.clone();
+				Deposito itemNew = item.clone();
 
-				TalonarioFormUi ui = new TalonarioFormUi(
+				DepositoFormUi ui = new DepositoFormUi(
 						StandardFormUi.COPY_MODE, cx, itemNew, this);
 				getUI().addWindow(ui.getWindow());
 			}
@@ -436,13 +471,13 @@ class TalonarioTableUi extends CustomComponent {
 	private void eliminarBTNClick() {
 		try {
 
-			if (talonarioGRD.getSelectedRow() != null) {
+			if (depositoGRD.getSelectedRow() != null) {
 
-				Talonario item = (Talonario) talonarioGRD.getSelectedRow();
+				Deposito item = (Deposito) depositoGRD.getSelectedRow();
 
 				getUI().addWindow(
 						new YesNoDialog("Eliminar",
-								"Esta seguro de eliminar el talonario " + item,
+								"Esta seguro de eliminar el depósito " + item,
 								new YesNoDialog.Callback() {
 									public void onDialogResult(boolean yes) {
 										if (yes) {
@@ -460,19 +495,19 @@ class TalonarioTableUi extends CustomComponent {
 	private void delete() {
 		try {
 
-			if (talonarioGRD.getSelectedRow() != null) {
+			if (depositoGRD.getSelectedRow() != null) {
 
-				Talonario item = (Talonario) talonarioGRD.getSelectedRow();
+				Deposito item = (Deposito) depositoGRD.getSelectedRow();
 				try {
 
 					// cx.buildPuntoDeEquilibrioBO().delete((Sucursal) item);
 
 				} catch (DeleteForeingObjectConflictException e) {
-					LogAndNotification.print(e, "Talonario " + item.getId());
+					LogAndNotification.print(e, "Depósito " + item.getId());
 					return;
 				}
 
-				String msg = "Se eliminó con éxito el talonario " + item;
+				String msg = "Se eliminó con éxito el depoósito " + item;
 
 				LogAndNotification.printSuccessOk(msg);
 
@@ -480,7 +515,7 @@ class TalonarioTableUi extends CustomComponent {
 			}
 
 		} catch (DeleteForeingObjectConflictException e) {
-			LogAndNotification.print(e, "Talonario");
+			LogAndNotification.print(e, "Depósito");
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -499,7 +534,7 @@ class TalonarioTableUi extends CustomComponent {
 		try {
 
 			@SuppressWarnings("unchecked")
-			BeanItemContainer<Talonario> container = ((BeanItemContainer<Talonario>) talonarioGRD
+			BeanItemContainer<Deposito> container = ((BeanItemContainer<Deposito>) depositoGRD
 					.getContainerDataSource());
 
 			container.removeAllContainerFilters();
@@ -511,11 +546,11 @@ class TalonarioTableUi extends CustomComponent {
 						SimpleStringTraslateFilter.CONTAINS_WORDS_AND));
 
 			}
-			talonarioGRD.recalculateColumnWidths();
+			depositoGRD.recalculateColumnWidths();
 
-			boolean enabled = talonarioBIC.size() > 0;
+			boolean enabled = depositoBIC.size() > 0;
 
-			talonarioGRD.setEnabled(enabled);
+			depositoGRD.setEnabled(enabled);
 			modificarBTN.setEnabled(enabled);
 			copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
@@ -536,18 +571,16 @@ class TalonarioTableUi extends CustomComponent {
 
 	private void sort() {
 		try {
-			pidFiltering = talonarioGRD.getSortOrder().get(0).getPropertyId()
+			pidFiltering = depositoGRD.getSortOrder().get(0).getPropertyId()
 					.toString();
 
 			// pidFiltering = attName;
 
-			String caption = talonarioGRD.getColumn(pidFiltering)
+			String caption = depositoGRD.getColumn(pidFiltering)
 					.getHeaderCaption();
 
 			filtroGenericoTXT.setCaption(caption);
-			if (pidFiltering.equals("autonumeracion")
-					|| pidFiltering.equals("numeracionPreImpresa")
-					|| pidFiltering.equals("asociadoAlRG10098")) {
+			if (pidFiltering.equals("depositoActivo")) {
 
 				filtroGenericoTXT
 						.setInputPrompt("s/n o vacio para ver todos ..");
@@ -568,6 +601,23 @@ class TalonarioTableUi extends CustomComponent {
 
 	}
 
+	private void removerFiltroSucursalesBTNClick() {
+		try {
+			sucursalesCBX.setValue(null);
+			loadOptionsViewPort768x1024();
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
+
+	private void sucursalesCBXValueChange() {
+		try {
+			loadModelViewPort768x1024();
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
+
 	private void loadOptionsViewPort768x1024() {
 		try {
 			loadModelViewPort768x1024();
@@ -579,9 +629,17 @@ class TalonarioTableUi extends CustomComponent {
 	private void loadModelViewPort768x1024() throws Exception {
 		try {
 
+			SucursalBO sucursalBO = cx.buildSucursalBO();
+
+			List<Sucursal> sucursales = sucursalBO.findAll();
+			sucursalesBIC.removeAllItems();
+			for (Sucursal item : sucursales) {
+				sucursalesBIC.addBean(item);
+			}
+
 			updateModelViewPort768x1024();
 
-			boolean enabled = talonarioBIC.size() > 0;
+			boolean enabled = depositoBIC.size() > 0;
 
 			if (enabled) {
 
@@ -596,16 +654,25 @@ class TalonarioTableUi extends CustomComponent {
 	public void updateModelViewPort768x1024() throws Exception {
 		try {
 
-			List<Talonario> items = cx.buildTalonarioBO().findAll();
+			Sucursal sucursal = (Sucursal) sucursalesCBX.getValue();
 
-			talonarioBIC.removeAllItems();
-			for (Talonario item : items) {
-				talonarioBIC.addBean(item);
+			List<Deposito> items = null;
+
+			if (sucursal != null && sucursal.getCodigo() != null) {
+//				items = cx.buildDepositoBO().findAllBySucursal(
+//						sucursal.getCodigo());
+			} else {
+				items = cx.buildBO(Deposito.class).findAll();
 			}
 
-			boolean enabled = talonarioBIC.size() > 0;
+			depositoBIC.removeAllItems();
+			for (Deposito item : items) {
+				depositoBIC.addBean(item);
+			}
 
-			talonarioGRD.setEnabled(enabled);
+			boolean enabled = depositoBIC.size() > 0;
+
+			depositoGRD.setEnabled(enabled);
 			modificarBTN.setEnabled(enabled);
 			copiarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);

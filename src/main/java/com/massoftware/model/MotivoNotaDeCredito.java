@@ -5,6 +5,7 @@ import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassPluralLabelAnont;
 import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
 import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
 import com.massoftware.annotation.model.FieldColumnsAnont;
 import com.massoftware.annotation.model.FieldLabelAnont;
@@ -15,28 +16,27 @@ import com.massoftware.annotation.model.FieldNameMSAnont;
 import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.annotation.model.FieldUniqueAnont;
 
-@SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "Motivo nota de crédito")
 @ClassPluralLabelAnont(value = "Motivos notas de créditos")
 @ClassArticleLabelInTheSingularAnont(value = "el")
 @ClassArticleLabelInPluralAnont(value = "los")
-//@ClassFormSourceAnont(value = "Deposito")
+// @ClassFormSourceAnont(value = "Deposito")
 @ClassTableMSAnont(nameTableDB = "[TablaMotivosNotasDeCredito]")
-public class MotivoNotaDeCredito extends EntityId implements Cloneable,
+public class MotivoNotaDeCredito extends EntityId implements
 		Comparable<MotivoNotaDeCredito> {
-
 
 	@FieldLabelAnont(value = "Motivo")
 	@FieldRequiredAnont()
 	@FieldMaxLengthAnont(value = 3)
 	@FieldColumnsAnont(value = 5)
-	@FieldMinValueIntegerAnont(value = 1)
-	@FieldMaxValueIntegerAnont(value = 254)
+	@FieldMinValueIntegerAnont(value = 0)
+	@FieldMaxValueIntegerAnont(value = 255)
 	@FieldColumnMetaDataAnont(attSize = 100, pidFilteringStart = true)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[MOTIVO]", classAttDB = Integer.class)
+	@FieldAutoMaxValueAnont()
 	private Integer codigo;
-	
+
 	@FieldLabelAnont(value = "Nombre")
 	@FieldRequiredAnont()
 	@FieldMaxLengthAnont(value = 30)
@@ -64,17 +64,17 @@ public class MotivoNotaDeCredito extends EntityId implements Cloneable,
 		this.nombre = nombre;
 	}
 
-	@Override
-	public MotivoNotaDeCredito clone() throws CloneNotSupportedException {
-
-		MotivoNotaDeCredito other = new MotivoNotaDeCredito();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-
-		return other;
-	}
+//	@Override
+//	public MotivoNotaDeCredito clone() throws CloneNotSupportedException {
+//
+//		MotivoNotaDeCredito other = new MotivoNotaDeCredito();
+//
+//		other.setId(this.getId());
+//		other.setCodigo(this.getCodigo());
+//		other.setNombre(this.getNombre());
+//
+//		return other;
+//	}
 
 	@Override
 	public int compareTo(MotivoNotaDeCredito o) {

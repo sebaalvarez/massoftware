@@ -134,10 +134,14 @@ public abstract class GenericBO<T> {
 	}
 
 	public Integer maxValue(String attName) throws Exception {
-		return maxValueInteger(attName);
+		return maxValueInteger(attName, null);
+	}
+	
+	public Integer maxValue(String attName, T dto) throws Exception {
+		return maxValueInteger(attName, dto);
 	}
 
-	protected Integer maxValueInteger(String attName) throws Exception {
+	protected Integer maxValueInteger(String attName, T dto) throws Exception {
 
 		String viewName = getViewName();
 		String sql = "SELECT MAX(" + attName + ") + 1 FROM " + viewName;
@@ -567,7 +571,7 @@ public abstract class GenericBO<T> {
 		}
 	}
 
-	private String getViewName() {
+	protected String getViewName() {
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
 			return "massoftware." + viewName;
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {

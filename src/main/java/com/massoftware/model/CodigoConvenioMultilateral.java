@@ -5,6 +5,7 @@ import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassPluralLabelAnont;
 import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
 import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
 import com.massoftware.annotation.model.FieldColumnsAnont;
 import com.massoftware.annotation.model.FieldLabelAnont;
@@ -15,14 +16,13 @@ import com.massoftware.annotation.model.FieldNameMSAnont;
 import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.annotation.model.FieldUniqueAnont;
 
-@SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "Código convenio multilateral")
 @ClassPluralLabelAnont(value = "Códigos convenios multilaterales")
 @ClassArticleLabelInTheSingularAnont(value = "el")
 @ClassArticleLabelInPluralAnont(value = "los")
 // @ClassFormSourceAnont(value = "Zona")
 @ClassTableMSAnont(nameTableDB = "[ActividadesCM]")
-public class CodigoConvenioMultilateral extends EntityId implements Cloneable,
+public class CodigoConvenioMultilateral extends EntityId implements
 		Comparable<CodigoConvenioMultilateral> {
 
 	@FieldLabelAnont(value = "Número")
@@ -34,6 +34,7 @@ public class CodigoConvenioMultilateral extends EntityId implements Cloneable,
 	@FieldColumnMetaDataAnont(attSize = 120, pidFilteringStart = true)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[CODIGOCM]", classAttDB = Integer.class)
+	@FieldAutoMaxValueAnont()
 	private Integer codigo;
 
 	@FieldLabelAnont(value = "Código convenio")
@@ -47,7 +48,7 @@ public class CodigoConvenioMultilateral extends EntityId implements Cloneable,
 
 	@FieldLabelAnont(value = "Descripción")
 	@FieldRequiredAnont(value = true)
-	@FieldColumnsAnont(value = 100)
+	@FieldColumnsAnont(value = 80)
 	@FieldMaxLengthAnont(value = 150)
 	@FieldColumnMetaDataAnont(attSize = 250)
 	@FieldUniqueAnont()
@@ -82,18 +83,18 @@ public class CodigoConvenioMultilateral extends EntityId implements Cloneable,
 		this.codigoConvenio = codigoConvenio;
 	}
 
-	@Override
-	public CodigoConvenioMultilateral clone() throws CloneNotSupportedException {
-
-		CodigoConvenioMultilateral other = new CodigoConvenioMultilateral();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-		other.setCodigoConvenio(this.getCodigoConvenio());
-
-		return other;
-	}
+//	@Override
+//	public CodigoConvenioMultilateral clone() throws CloneNotSupportedException {
+//
+//		CodigoConvenioMultilateral other = new CodigoConvenioMultilateral();
+//
+//		other.setId(this.getId());
+//		other.setCodigo(this.getCodigo());
+//		other.setNombre(this.getNombre());
+//		other.setCodigoConvenio(this.getCodigoConvenio());
+//
+//		return other;
+//	}
 
 	@Override
 	public int compareTo(CodigoConvenioMultilateral other) {

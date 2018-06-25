@@ -17,14 +17,13 @@ import com.massoftware.annotation.model.FieldReadOnly;
 import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.annotation.model.FieldUniqueAnont;
 
-@SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "País")
 @ClassPluralLabelAnont(value = "Países")
 @ClassArticleLabelInTheSingularAnont(value = "el")
 @ClassArticleLabelInPluralAnont(value = "los")
 // @ClassFormSourceAnont(value = "Zona")
 @ClassTableMSAnont(nameTableDB = "[Paises]")
-public class Pais extends EntityId implements Cloneable, Comparable<Pais> {
+public class Pais extends EntityId implements Comparable<Pais> {
 
 	@FieldLabelAnont(value = "Nro. país")
 	@FieldRequiredAnont(value = true)
@@ -85,18 +84,19 @@ public class Pais extends EntityId implements Cloneable, Comparable<Pais> {
 		this.abreviatura = abreviatura;
 	}
 
-	@Override
-	public Pais clone() throws CloneNotSupportedException {
-
-		Pais other = new Pais();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-		other.setAbreviatura(this.getAbreviatura());
-
-		return other;
-	}
+//	@Override
+//	public Pais clone() throws CloneNotSupportedException {
+//
+//		Pais other = new Pais();
+//
+//		other.setId(this.getId());
+//		other.setCodigo(this.getCodigo());
+//		other.setNombre(this.getNombre());
+//		other.setAbreviatura(this.getAbreviatura());
+//
+//		return other;
+	
+//	}
 
 	@Override
 	public int compareTo(Pais other) {

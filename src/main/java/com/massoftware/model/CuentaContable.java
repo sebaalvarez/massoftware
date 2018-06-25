@@ -183,50 +183,50 @@ public class CuentaContable extends EntityId implements Cloneable,
 		this.costoDeVenta = costoDeVenta;
 	}
 
-	@Override
-	public CuentaContable clone() throws CloneNotSupportedException {
-		CuentaContable other = new CuentaContable();
-
-		other.setId(this.getId());
-		if (this.getEjercicioContable() != null) {
-			other.setEjercicioContable(this.getEjercicioContable().clone());
-		} else {
-			other.setEjercicioContable(null);
-		}
-		other.setCuentaContable(this.getCuentaContable());
-		other.setCodigoCuentaPadre(this.getCodigoCuentaPadre());
-		other.setCodigoCuenta(this.getCodigoCuenta());
-		other.setNombre(this.getNombre());
-		other.setImputable(this.getImputable());
-		other.setAjustaPorInflacion(this.getAjustaPorInflacion());
-		if (this.getCuentaContableEstado() != null) {
-			other.setCuentaContableEstado(this.getCuentaContableEstado()
-					.clone());
-		} else {
-			other.setCuentaContableEstado(null);
-		}
-		other.setCuentaConApropiacion(this.getCuentaConApropiacion());
-		if (this.getCentroDeCostoContable() != null) {
-			other.setCentroDeCostoContable(this.getCentroDeCostoContable()
-					.clone());
-		} else {
-			other.setCentroDeCostoContable(null);
-		}
-		other.setCuentaAgrupadora(this.getCuentaAgrupadora());
-		other.setPorcentaje(this.getPorcentaje());
-		if (this.getPuntoDeEquilibrio() != null) {
-			other.setPuntoDeEquilibrio(this.getPuntoDeEquilibrio().clone());
-		} else {
-			other.setPuntoDeEquilibrio(null);
-		}
-		if (this.getCostoDeVenta() != null) {
-			other.setCostoDeVenta(this.getCostoDeVenta().clone());
-		} else {
-			other.setCostoDeVenta(null);
-		}
-
-		return other;
-	}
+//	@Override
+//	public CuentaContable clone() throws CloneNotSupportedException {
+//		CuentaContable other = new CuentaContable();
+//
+//		other.setId(this.getId());
+//		if (this.getEjercicioContable() != null) {
+//			other.setEjercicioContable(this.getEjercicioContable().clone());
+//		} else {
+//			other.setEjercicioContable(null);
+//		}
+//		other.setCuentaContable(this.getCuentaContable());
+//		other.setCodigoCuentaPadre(this.getCodigoCuentaPadre());
+//		other.setCodigoCuenta(this.getCodigoCuenta());
+//		other.setNombre(this.getNombre());
+//		other.setImputable(this.getImputable());
+//		other.setAjustaPorInflacion(this.getAjustaPorInflacion());
+//		if (this.getCuentaContableEstado() != null) {
+//			other.setCuentaContableEstado(this.getCuentaContableEstado()
+//					.clone());
+//		} else {
+//			other.setCuentaContableEstado(null);
+//		}
+//		other.setCuentaConApropiacion(this.getCuentaConApropiacion());
+//		if (this.getCentroDeCostoContable() != null) {
+//			other.setCentroDeCostoContable(this.getCentroDeCostoContable()
+//					.clone());
+//		} else {
+//			other.setCentroDeCostoContable(null);
+//		}
+//		other.setCuentaAgrupadora(this.getCuentaAgrupadora());
+//		other.setPorcentaje(this.getPorcentaje());
+//		if (this.getPuntoDeEquilibrio() != null) {
+//			other.setPuntoDeEquilibrio(this.getPuntoDeEquilibrio().clone());
+//		} else {
+//			other.setPuntoDeEquilibrio(null);
+//		}
+//		if (this.getCostoDeVenta() != null) {
+//			other.setCostoDeVenta(this.getCostoDeVenta().clone());
+//		} else {
+//			other.setCostoDeVenta(null);
+//		}
+//
+//		return other;
+//	}
 
 	@Override
 	public String toString() {

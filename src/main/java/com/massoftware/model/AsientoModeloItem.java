@@ -48,26 +48,26 @@ public class AsientoModeloItem extends EntityId implements Cloneable,
 
 	}
 
-	@Override
-	public AsientoModeloItem clone() throws CloneNotSupportedException {
-		AsientoModeloItem other = new AsientoModeloItem();
-
-		other.setId(this.getId());
-		if (this.getAsientoModelo() != null) {
-			other.setAsientoModelo(this.getAsientoModelo().clone());
-		} else {
-			other.setAsientoModelo(null);
-		}
-		other.setRegistro(getRegistro());
-
-		if (this.getCuentaContable() != null) {
-			other.setCuentaContable(this.getCuentaContable().clone());
-		} else {
-			other.setCuentaContable(null);
-		}
-
-		return other;
-	}
+//	@Override
+//	public AsientoModeloItem clone() throws CloneNotSupportedException {
+//		AsientoModeloItem other = new AsientoModeloItem();
+//
+//		other.setId(this.getId());
+//		if (this.getAsientoModelo() != null) {
+//			other.setAsientoModelo(this.getAsientoModelo().clone());
+//		} else {
+//			other.setAsientoModelo(null);
+//		}
+//		other.setRegistro(getRegistro());
+//
+//		if (this.getCuentaContable() != null) {
+//			other.setCuentaContable(this.getCuentaContable().clone());
+//		} else {
+//			other.setCuentaContable(null);
+//		}
+//
+//		return other;
+//	}
 
 	public int compareTo(AsientoModeloItem o) {
 

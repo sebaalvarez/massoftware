@@ -252,7 +252,6 @@ CREATE VIEW [dbo].[vPais] AS
 	SELECT * FROM dbo.vPais WHERE LOWER(dbo.Translate(nombre, null, null)) = LOWER(dbo.Translate('argentina', null,null));
 args = []
 	
-
 -------------------------------------------------------------
 
 -- DROP VIEW [dbo].[vTipoCliente]
@@ -264,7 +263,7 @@ CREATE VIEW [dbo].[vTipoCliente] AS
 			-----------------------------------------------------------------------------------------------------
 			, CAST([TablaTiposClientes].[TIPODECLIENTE] AS VARCHAR)				AS id			
 			-----------------------------------------------------------------------------------------------------
-			, CAST([TablaTiposClientes].[TIPODECLIENTE] AS INTEGER)				AS codigo		-- Integer NOT NULL [1-254] UN
+			, CAST([TablaTiposClientes].[TIPODECLIENTE] AS INTEGER)				AS codigo		-- Integer NOT NULL [0-255] UN
 			, LTRIM(RTRIM(CAST([TablaTiposClientes].[NOMBRE] AS VARCHAR)))		AS nombre		-- String (20) NOT NULL UN			
 					
 	FROM	[dbo].[TablaTiposClientes];
@@ -283,7 +282,7 @@ CREATE VIEW [dbo].[vTipoDocumentoAFIP] AS
 			-----------------------------------------------------------------------------------------------------
 			, CAST([AfipTiposDocumentos].[TIPO] AS VARCHAR)								AS id			
 			-----------------------------------------------------------------------------------------------------
-			, CAST([AfipTiposDocumentos].[TIPO] AS INTEGER)								AS codigo		-- Integer NOT NULL [0-34463] UN
+			, CAST([AfipTiposDocumentos].[TIPO] AS INTEGER)								AS codigo		-- Integer NOT NULL [0-Short.MAX_VALUE] UN
 			, LTRIM(RTRIM(CAST([AfipTiposDocumentos].[DESCRIPCION] AS VARCHAR)))		AS nombre		-- String (40) NOT NULL UN			
 					
 	FROM	[dbo].[AfipTiposDocumentos];
@@ -322,7 +321,7 @@ CREATE VIEW [dbo].[vMotivoComentario] AS
 			-----------------------------------------------------------------------------------------------------			
 			, CAST([TablaMotivosComentarios].[MOTIVO] AS VARCHAR)							AS id	-- String NOT NULL PK					
 			-----------------------------------------------------------------------------------------------------
-			, CAST([TablaMotivosComentarios].[MOTIVO] AS INTEGER)							AS codigo -- Integer NOT NULL UN [ 1 - 254] 
+			, CAST([TablaMotivosComentarios].[MOTIVO] AS INTEGER)							AS codigo -- Integer NOT NULL UN [ 0 - 255] 
 			, LTRIM(RTRIM(CAST([TablaMotivosComentarios].[NOMBRE] AS VARCHAR)))				AS nombre -- String (20) NOT NULL UN 
   
 	FROM	[dbo].[TablaMotivosComentarios];
@@ -342,7 +341,7 @@ CREATE VIEW [dbo].[vMotivoNotaDeCredito] AS
 			-----------------------------------------------------------------------------------------------------			
 			, CAST([TablaMotivosNotasDeCredito].[MOTIVO] AS VARCHAR)							AS id	-- String NOT NULL PK					
 			-----------------------------------------------------------------------------------------------------
-			, CAST([TablaMotivosNotasDeCredito].[MOTIVO] AS INTEGER)							AS codigo -- Integer NOT NULL UN [ 1 - 254] 
+			, CAST([TablaMotivosNotasDeCredito].[MOTIVO] AS INTEGER)							AS codigo -- Integer NOT NULL UN [ 0 - 255] 
 			, LTRIM(RTRIM(CAST([TablaMotivosNotasDeCredito].[NOMBRE] AS VARCHAR)))				AS nombre -- String (30) NOT NULL UN 
   
 	FROM	[dbo].[TablaMotivosNotasDeCredito];
@@ -393,14 +392,14 @@ CREATE VIEW [dbo].[vCentroDeCostoProyectoTipo] AS
 CREATE VIEW [dbo].[vEjercicioContable] AS
 
 	SELECT	'com.massoftware.model.EjercicioContable'									AS ClassEjercicioContable			
-
 			, CAST([EjerciciosContables].[EJERCICIO] AS VARCHAR)						AS id			
-			, CAST([EjerciciosContables].[EJERCICIO] AS INT)							AS ejercicio						
-			, LTRIM(RTRIM(CAST([EjerciciosContables].[COMENTARIO] AS VARCHAR)))			AS comentario
-			, CAST([EjerciciosContables].[FECHAAPERTURASQL] AS DATE)					AS fechaApertura			
-			, CAST([EjerciciosContables].[FECHACIERRESQL] AS DATE)						AS fechaCierre			
-			, CAST([EjerciciosContables].[EJERCICIOCERRADO] AS INT)						AS ejercicioCerrado
-			, CAST([EjerciciosContables].[EJERCICIOCERRADOMODULOS] AS INT)				AS ejercicioCerradoModulos
+			
+			, CAST([EjerciciosContables].[EJERCICIO] AS INT)							AS ejercicio				-- Integer NOT NULL UN [ 1 - Integer.MAX_VALUE]  		
+			, LTRIM(RTRIM(CAST([EjerciciosContables].[COMENTARIO] AS VARCHAR)))			AS comentario				-- String (255) 
+			, CAST([EjerciciosContables].[FECHAAPERTURASQL] AS DATE)					AS fechaApertura			-- Date NOT NULL    		
+			, CAST([EjerciciosContables].[FECHACIERRESQL] AS DATE)						AS fechaCierre				-- Date NOT NULL    		
+			, CAST([EjerciciosContables].[EJERCICIOCERRADO] AS INT)						AS ejercicioCerrado			-- Boolean NOT NULL    		
+			, CAST([EjerciciosContables].[EJERCICIOCERRADOMODULOS] AS INT)				AS ejercicioCerradoModulos  -- Boolean NOT NULL    		
 
 	FROM	[dbo].[EjerciciosContables];
 	
@@ -408,6 +407,108 @@ CREATE VIEW [dbo].[vEjercicioContable] AS
 	-- SELECT * FROM dbo.[vEjercicioContable] ;
 	-- SELECT * FROM dbo.[vEjercicioContable] WHERE CAST(ejercicio AS VARCHAR)  LIKE CONCAT('%', CAST(12 AS VARCHAR)) ORDER BY ejercicio DESC;
 	-- SELECT * FROM dbo.vEjercicioContable ORDER BY ejercicio DESC;
+
+
+
+-- DROP VIEW [dbo].[vCentroDeCostoContable]
+
+CREATE VIEW [dbo].[vCentroDeCostoContable] AS        
+
+	SELECT	'com.massoftware.model.CentroDeCostoContable' AS ClassCentroDeCostoContable			
+			, CONCAT ( CAST([vEjercicioContable].[ejercicio] AS VARCHAR), '-', CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS VARCHAR) )	AS id										-- String NOT NULL PK					
+
+			, CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS INT)																			AS numero									-- Integer NOT NULL UN [ 1 - Short.MAX_VALUE] 		 
+			, LTRIM(RTRIM(CAST([CentrosDeCostoContable].[NOMBRE] AS VARCHAR)))																		AS nombre			 						-- String (30) NOT NULL UN 		
+			, LTRIM(RTRIM(CAST([CentrosDeCostoContable].[ABREVIATURA] AS VARCHAR)))																	AS abreviatura			 					-- String (12) NOT NULL UN 			
+			
+			--,[CentrosDeCostoContable].[EJERCICIO]																																				-- NOT NULL FK
+				,vEjercicioContable.id																												AS ejercicioContable_id			
+				,vEjercicioContable.ejercicio																										AS ejercicioContable_ejercicio		
+				,vEjercicioContable.fechaApertura																									AS ejercicioContable_fechaApertura
+				,vEjercicioContable.fechaCierre																										AS ejercicioContable_fechaCierre
+				,vEjercicioContable.ejercicioCerrado																								AS ejercicioContable_ejercicioCerrado
+				,vEjercicioContable.ejercicioCerradoModulos																							AS ejercicioContable_ejercicioCerradoModulos
+				,vEjercicioContable.comentario																										AS ejercicioContable_comentario
+			
+			--,[CentrosDeCostoContable].[PRUEBA1] 
+			--,[CentrosDeCostoContable].[PRUEBA]
+	
+	FROM	[dbo].[CentrosDeCostoContable]
+	LEFT JOIN	[dbo].[vEjercicioContable]
+		ON [dbo].[vEjercicioContable].[ejercicio] = CAST([dbo].[CentrosDeCostoContable].[EJERCICIO] AS INT);
+
+	-- SELECT * FROM dbo.[CentrosDeCostoContable] ;
+	-- SELECT * FROM dbo.[vCentroDeCostoContable] ;
+	-- SELECT * FROM dbo.vCentroDeCostoContable ORDER BY nombre;
+	-- SELECT * FROM dbo.vCentroDeCostoContable ORDER BY numero;
+	-- SELECT * FROM dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = 2015  ORDER BY centroDeCostoContable;
+	-- SELECT	MAX(dbo.vCentroDeCostoContable.numero) FROM dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = 2015;
+
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vPuntoDeEquilibrioTipo];
+
+CREATE VIEW [dbo].[vPuntoDeEquilibrioTipo] AS  
+
+		
+	SELECT 'com.massoftware.model.PuntoDeEquilibrioTipo' AS ClassPuntoDeEquilibrioTipo, '1' AS id, 1 AS codigo, 'Individual' AS nombre
+	UNION ALL
+	SELECT 'com.massoftware.model.PuntoDeEquilibrioTipo' AS ClassPuntoDeEquilibrioTipo, '2' AS id, 2, 'Costo de ventas'
+	UNION ALL
+	SELECT 'com.massoftware.model.PuntoDeEquilibrioTipo' AS ClassPuntoDeEquilibrioTipo, '3' AS id, 3, 'Utilidad bruta'
+	UNION ALL
+	SELECT 'com.massoftware.model.PuntoDeEquilibrioTipo' AS ClassPuntoDeEquilibrioTipo, '4' AS id, 4, 'Resultados por sección'
+	UNION ALL
+	SELECT 'com.massoftware.model.PuntoDeEquilibrioTipo' AS ClassPuntoDeEquilibrioTipo, '5' AS id, 5, 'Resultados operativos'; 
+
+	-- SELECT * FROM dbo.[vPuntoDeEquilibrioTipo] ;	
+	-- SELECT * FROM dbo.[vPuntoDeEquilibrioTipo] ORDER BY codigo, nombre;	
+
+	
+		
+-------------------------------------------------------------
+		
+ -- DROP VIEW [dbo].[vPuntoDeEquilibrio]         
+
+CREATE VIEW [dbo].[vPuntoDeEquilibrio] AS        
+
+	SELECT	'com.massoftware.model.PuntoDeEquilibrio' AS ClassPuntoDeEquilibrio			
+			, CONCAT ( [vEjercicioContable].[ejercicio], '-', CAST(PuntoDeEquilibrio.PUNTODEEQUILIBRIO AS VARCHAR) )	AS id
+			
+			--,[PuntoDeEquilibrio].[EJERCICIO]   																														-- NOT NULL FK
+				,vEjercicioContable.id																					AS ejercicioContable_id							-- String NOT NULL PK	
+				,vEjercicioContable.ejercicio																			AS ejercicioContable_ejercicio					
+				,vEjercicioContable.fechaApertura																		AS ejercicioContable_fechaApertura
+				,vEjercicioContable.fechaCierre																			AS ejercicioContable_fechaCierre
+				,vEjercicioContable.ejercicioCerrado																	AS ejercicioContable_ejercicioCerrado
+				,vEjercicioContable.ejercicioCerradoModulos																AS ejercicioContable_ejercicioCerradoModulos
+				,vEjercicioContable.comentario																			AS ejercicioContable_comentario
+			
+			, CAST([PuntoDeEquilibrio].[PUNTODEEQUILIBRIO] AS INTEGER)													AS puntoDeEquilibrio							-- Integer NOT NULL UN [ 1 - Short.MAX_VALUE] 
+			, LTRIM(RTRIM(CAST([PuntoDeEquilibrio].[NOMBRE] AS VARCHAR)))												AS nombre										-- String (40) NOT NULL UN 
+			
+			--,[PuntoDeEquilibrio].[TIPO] AS tipo																														-- NOT NULL FK 	
+				,vPuntoDeEquilibrioTipo.id																				AS puntoDeEquilibrioTipo_id			
+				,vPuntoDeEquilibrioTipo.codigo																			AS puntoDeEquilibrioTipo_codigo
+				,vPuntoDeEquilibrioTipo.nombre																			AS puntoDeEquilibrioTipo_nombre
+			
+	FROM	[dbo].[PuntoDeEquilibrio]
+	LEFT JOIN	[dbo].[vEjercicioContable]
+		ON [dbo].[vEjercicioContable].[ejercicio] = CAST([dbo].[PuntoDeEquilibrio].[EJERCICIO] AS INT)
+	LEFT JOIN	[dbo].[vPuntoDeEquilibrioTipo]
+		ON [dbo].[vPuntoDeEquilibrioTipo].[codigo] = CAST([dbo].[PuntoDeEquilibrio].[TIPO] AS INT);
+	
+
+	-- SELECT * FROM dbo.[PuntoDeEquilibrio] ;
+	-- SELECT * FROM dbo.[vPuntoDeEquilibrio] ;
+	-- SELECT * FROM dbo.vPuntoDeEquilibrio ORDER BY ejercicioContable_ejercicio DESC, puntoDeEquilibrio;	
+	-- SELECT MAX(puntoDeEquilibrio) FROM dbo.vPuntoDeEquilibrio;
+
+USE [VetaroRep]
+GO
+
+
 
 --=============================================================================================================
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -453,8 +554,7 @@ CREATE VIEW [dbo].[vCentroDeCostoProyecto] AS
 			OR
 			(CAST([dbo].[CentrosDeCosto].[CENTRODECOSTOPROYECTO] AS INTEGER) IS NULL AND [dbo].[vCentroDeCostoProyectoTipo].[codigo] = 0)
 		);
-
-
+			
 
 	-- SELECT * FROM dbo.vCentroDeCostoProyecto;	
 	-- SELECT * FROM dbo.vCentroDeCostoProyecto ORDER BY codigo, nombre;
@@ -465,36 +565,6 @@ CREATE VIEW [dbo].[vCentroDeCostoProyecto] AS
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --=============================================================================================================
 	
--- DROP VIEW [dbo].[vCentroDeCostoContable]
-
-CREATE VIEW [dbo].[vCentroDeCostoContable] AS        
-
-	SELECT	'com.massoftware.model.CentroDeCostoContable' AS ClassCentroDeCostoContable			
-			, CONCAT ( CAST([vEjercicioContable].[ejercicio] AS VARCHAR), '-', CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS VARCHAR) ) As id			
-			, CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS INT) AS numero			 
-			, LTRIM(RTRIM(CAST([CentrosDeCostoContable].[NOMBRE] AS VARCHAR))) AS nombre			 			
-			, LTRIM(RTRIM(CAST([CentrosDeCostoContable].[ABREVIATURA] AS VARCHAR))) AS abreviatura			 						
-			--,[CentrosDeCostoContable].[EJERCICIO] 
-				,vEjercicioContable.id  AS ejercicioContable_id			
-				,vEjercicioContable.ejercicio AS ejercicioContable_ejercicio		
-				,vEjercicioContable.fechaApertura AS ejercicioContable_fechaApertura
-				,vEjercicioContable.fechaCierre AS ejercicioContable_fechaCierre
-				,vEjercicioContable.ejercicioCerrado AS ejercicioContable_ejercicioCerrado
-				,vEjercicioContable.ejercicioCerradoModulos AS ejercicioContable_ejercicioCerradoModulos
-				,vEjercicioContable.comentario AS ejercicioContable_comentario
-			--,[CentrosDeCostoContable].[PRUEBA1] 
-			--,[CentrosDeCostoContable].[PRUEBA]
-	
-	FROM	[dbo].[CentrosDeCostoContable]
-	LEFT JOIN	[dbo].[vEjercicioContable]
-		ON [dbo].[vEjercicioContable].[ejercicio] = CAST([dbo].[CentrosDeCostoContable].[EJERCICIO] AS INT);
-
-	-- SELECT * FROM dbo.[CentrosDeCostoContable] ;
-	-- SELECT * FROM dbo.[vCentroDeCostoContable] ;
-	-- SELECT * FROM dbo.vCentroDeCostoContable ORDER BY nombre;
-	-- SELECT * FROM dbo.vCentroDeCostoContable ORDER BY numero;
-	-- SELECT * FROM dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = 2015  ORDER BY centroDeCostoContable;
-	-- SELECT	MAX(dbo.vCentroDeCostoContable.numero) FROM dbo.vCentroDeCostoContable WHERE ejercicioContable_ejercicio = 2015;
 
 
 
@@ -599,62 +669,7 @@ CREATE VIEW [dbo].[vUsuario] AS
 
 
 
--------------------------------------------------------------
 
--- DROP VIEW [dbo].[vPuntoDeEquilibrioTipo];
-
-CREATE VIEW [dbo].[vPuntoDeEquilibrioTipo] AS  
-
-		
-	SELECT 'com.massoftware.model.PuntoDeEquilibrioTipo' AS ClassPuntoDeEquilibrioTipo, '1' AS id, 1 AS codigo, 'Individual' AS nombre
-	UNION ALL
-	SELECT 'com.massoftware.model.PuntoDeEquilibrioTipo' AS ClassPuntoDeEquilibrioTipo, '2' AS id, 2, 'Costo de ventas'
-	UNION ALL
-	SELECT 'com.massoftware.model.PuntoDeEquilibrioTipo' AS ClassPuntoDeEquilibrioTipo, '3' AS id, 3, 'Utilidad bruta'
-	UNION ALL
-	SELECT 'com.massoftware.model.PuntoDeEquilibrioTipo' AS ClassPuntoDeEquilibrioTipo, '4' AS id, 4, 'Resultados por sección'
-	UNION ALL
-	SELECT 'com.massoftware.model.PuntoDeEquilibrioTipo' AS ClassPuntoDeEquilibrioTipo, '5' AS id, 5, 'Resultados operativos'; 
-
-	-- SELECT * FROM dbo.[vPuntoDeEquilibrioTipo] ;	
-	-- SELECT * FROM dbo.[vPuntoDeEquilibrioTipo] ORDER BY codigo, nombre;	
-
-	
-		
--------------------------------------------------------------
-		
- -- DROP VIEW [dbo].[vPuntoDeEquilibrio]         
-
-CREATE VIEW [dbo].[vPuntoDeEquilibrio] AS        
-
-	SELECT	'com.massoftware.model.PuntoDeEquilibrio' AS ClassPuntoDeEquilibrio			
-			, CONCAT ( [vEjercicioContable].[ejercicio], '-', CAST(PuntoDeEquilibrio.PUNTODEEQUILIBRIO AS VARCHAR) ) AS id
-			--,[PuntoDeEquilibrio].[EJERCICIO]   	
-				,vEjercicioContable.id  AS ejercicioContable_id			
-				,vEjercicioContable.ejercicio AS ejercicioContable_ejercicio		
-				,vEjercicioContable.fechaApertura AS ejercicioContable_fechaApertura
-				,vEjercicioContable.fechaCierre AS ejercicioContable_fechaCierre
-				,vEjercicioContable.ejercicioCerrado AS ejercicioContable_ejercicioCerrado
-				,vEjercicioContable.ejercicioCerradoModulos AS ejercicioContable_ejercicioCerradoModulos
-				,vEjercicioContable.comentario AS ejercicioContable_comentario
-			, CAST([PuntoDeEquilibrio].[PUNTODEEQUILIBRIO] AS INTEGER)  AS puntoDeEquilibrio
-			, LTRIM(RTRIM(CAST([PuntoDeEquilibrio].[NOMBRE] AS VARCHAR)))  AS nombre
-			--,[PuntoDeEquilibrio].[TIPO] AS tipo	
-				,vPuntoDeEquilibrioTipo.id  AS puntoDeEquilibrioTipo_id			
-				,vPuntoDeEquilibrioTipo.codigo AS puntoDeEquilibrioTipo_codigo
-				,vPuntoDeEquilibrioTipo.nombre AS puntoDeEquilibrioTipo_nombre
-			
-	FROM	[dbo].[PuntoDeEquilibrio]
-	LEFT JOIN	[dbo].[vEjercicioContable]
-		ON [dbo].[vEjercicioContable].[ejercicio] = CAST([dbo].[PuntoDeEquilibrio].[EJERCICIO] AS INT)
-	LEFT JOIN	[dbo].[vPuntoDeEquilibrioTipo]
-		ON [dbo].[vPuntoDeEquilibrioTipo].[codigo] = CAST([dbo].[PuntoDeEquilibrio].[TIPO] AS INT);
-	
-
-	-- SELECT * FROM dbo.[PuntoDeEquilibrio] ;
-	-- SELECT * FROM dbo.[vPuntoDeEquilibrio] ;
-	-- SELECT * FROM dbo.vPuntoDeEquilibrio ORDER BY ejercicioContable_ejercicio DESC, puntoDeEquilibrio;	
-	-- SELECT MAX(puntoDeEquilibrio) FROM dbo.vPuntoDeEquilibrio;
 
 	
 -------------------------------------------------------------
