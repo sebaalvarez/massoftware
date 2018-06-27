@@ -593,8 +593,7 @@ CREATE VIEW [dbo].[vBanco] AS
 			-----------------------------------------------------------------------------------------------------
 			, CAST([Bancos].[BANCO] AS INTEGER)										AS codigo				-- Integer NOT NULL PK [ 0 - 999 ]
 			, LTRIM(RTRIM(CAST([Bancos].[NOMBRE] AS VARCHAR)))						AS nombre				-- String (40) NOT NULL UN
-			, [Bancos].[CUIT]														AS cuit					-- BigDecimal (13,0) NOT NULL UN
-			, [Bancos].[BLOQUEADO]													AS bloqueado			-- Boolean
+			, [Bancos].[CUIT]														AS cuit					-- BigDecimal (13,0) NOT NULL UN			
 			
 			, CASE    
 
@@ -604,8 +603,10 @@ CREATE VIEW [dbo].[vBanco] AS
 			  
 			  END																	AS nombreOficial		-- String (40) NOT NULL UN
 
+			, [Bancos].[BLOQUEADO]													AS bloqueado			-- Boolean
+
 			-- , [Bancos].[PLANILLA]												AS pathPlanilla			-- SE omite dado que se va a pedir cada vez que se haga la conciliación	
-			, CAST([Bancos].[HOJA] AS INTEGER)										AS hoja					-- Integer [ 0 - 231 ] Default [0]
+			, CAST([Bancos].[HOJA] AS INTEGER)										AS hoja					-- Integer [ 0 - 255 ] Default [0]
 			, CAST([Bancos].[PRIMERAFILA] AS INTEGER)								AS primeraFila			-- Integer [ 0 - 999999 ] Default [0]
 			, CAST([Bancos].[ULTIMAFILA] AS INTEGER)								AS uiltimaFila			-- Integer [ 0 - 999999 ] Default [0]
 			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNAFECHA] AS VARCHAR))))			AS columnaFecha			-- String (3) 

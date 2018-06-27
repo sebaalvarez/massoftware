@@ -9,6 +9,7 @@ import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassPluralLabelAnont;
 import com.massoftware.annotation.model.ClassTableMSAnont;
 import com.massoftware.annotation.model.FieldAllowDecimalAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
 import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
 import com.massoftware.annotation.model.FieldColumnsAnont;
 import com.massoftware.annotation.model.FieldInputMaskAnont;
@@ -23,14 +24,13 @@ import com.massoftware.annotation.model.FieldNameMSAnont;
 import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.annotation.model.FieldUniqueAnont;
 
-@SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "Banco")
 @ClassPluralLabelAnont(value = "Bancos")
 @ClassArticleLabelInTheSingularAnont(value = "el")
 @ClassArticleLabelInPluralAnont(value = "los")
 @ClassFormSourceAnont(value = "Banco")
 @ClassTableMSAnont(nameTableDB = "[Bancos]")
-public class Banco extends EntityId implements Cloneable, Comparable<Banco> {
+public class Banco extends EntityId implements Comparable<Banco> {
 
 	@FieldLabelAnont(value = "Banco")
 	@FieldRequiredAnont(value = true)
@@ -41,6 +41,7 @@ public class Banco extends EntityId implements Cloneable, Comparable<Banco> {
 	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[BANCO]", classAttDB = Integer.class)
+	@FieldAutoMaxValueAnont()
 	private Integer codigo;
 
 	@FieldLabelAnont(value = "Nombre")
@@ -61,14 +62,10 @@ public class Banco extends EntityId implements Cloneable, Comparable<Banco> {
 	@FieldMaxValueBigDecimalAnont(value = "99999999999")
 	@FieldAllowDecimalAnont(value = false)
 	@FieldInputMaskAnont(mask = "99-99999999-9")
-	@FieldColumnMetaDataAnont(attSize = 100)
+	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[CUIT]", classAttDB = BigDecimal.class)
 	private BigDecimal cuit;
-
-	@FieldLabelAnont(value = "Bloqueado")
-	@FieldNameMSAnont(nameAttDB = "[BLOQUEADO]", classAttDB = Boolean.class)
-	private Boolean bloqueado;
 
 	@FieldLabelAnont(value = "Nombre oficial")
 	@FieldRequiredAnont(value = true)
@@ -79,11 +76,16 @@ public class Banco extends EntityId implements Cloneable, Comparable<Banco> {
 	@FieldNameMSAnont(nameAttDB = "[NOMBRECOMPLETO]", classAttDB = String.class)
 	private String nombreOficial;
 
+	@FieldLabelAnont(value = "Bloqueado")
+	@FieldColumnMetaDataAnont(attSize = 80)
+	@FieldNameMSAnont(nameAttDB = "[BLOQUEADO]", classAttDB = Boolean.class)
+	private Boolean bloqueado;
+
 	@FieldLabelAnont(value = "Hoja")
 	@FieldColumnsAnont(value = 5)
 	@FieldMaxLengthAnont(value = 3)
 	@FieldMinValueIntegerAnont(value = 0)
-	@FieldMaxValueIntegerAnont(value = 231)
+	@FieldMaxValueIntegerAnont(value = 255)
 	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldNameMSAnont(nameAttDB = "[HOJA]", classAttDB = Short.class)
 	private Integer hoja;
@@ -284,33 +286,33 @@ public class Banco extends EntityId implements Cloneable, Comparable<Banco> {
 		this.columnaSaldo = columnaSaldo;
 	}
 
-	@Override
-	public Banco clone() throws CloneNotSupportedException {
-
-		Banco other = new Banco();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-		if (this.getCuit() != null) {
-			other.setCuit(new BigDecimal(this.getCuit().toString()));
-		} else {
-			other.setCuit(null);
-		}
-		other.setBloqueado(this.getBloqueado());
-		other.setNombreOficial(this.getNombreOficial());
-		other.setHoja(getHoja());
-		other.setPrimeraFila(getPrimeraFila());
-		other.setUiltimaFila(getUiltimaFila());
-		other.setColumnaFecha(getColumnaFecha());
-		other.setColumnaDescripcion(getColumnaDescripcion());
-		other.setColumnaReferencia1(getColumnaReferencia1());
-		other.setColumnaReferencia2(getColumnaReferencia2());
-		other.setColumnaImporte(getColumnaImporte());
-		other.setColumnaSaldo(getColumnaSaldo());
-
-		return other;
-	}
+	// @Override
+	// public Banco clone() throws CloneNotSupportedException {
+	//
+	// Banco other = new Banco();
+	//
+	// other.setId(this.getId());
+	// other.setCodigo(this.getCodigo());
+	// other.setNombre(this.getNombre());
+	// if (this.getCuit() != null) {
+	// other.setCuit(new BigDecimal(this.getCuit().toString()));
+	// } else {
+	// other.setCuit(null);
+	// }
+	// other.setBloqueado(this.getBloqueado());
+	// other.setNombreOficial(this.getNombreOficial());
+	// other.setHoja(getHoja());
+	// other.setPrimeraFila(getPrimeraFila());
+	// other.setUiltimaFila(getUiltimaFila());
+	// other.setColumnaFecha(getColumnaFecha());
+	// other.setColumnaDescripcion(getColumnaDescripcion());
+	// other.setColumnaReferencia1(getColumnaReferencia1());
+	// other.setColumnaReferencia2(getColumnaReferencia2());
+	// other.setColumnaImporte(getColumnaImporte());
+	// other.setColumnaSaldo(getColumnaSaldo());
+	//
+	// return other;
+	// }
 
 	@Override
 	public int compareTo(Banco other) {

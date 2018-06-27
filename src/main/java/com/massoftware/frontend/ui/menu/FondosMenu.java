@@ -82,6 +82,7 @@ public class FondosMenu extends AbstractMenu {
 		a5.setEnabled(false);
 		a6.setEnabled(false);
 		a7.setEnabled(false);
+		a8.setEnabled(false);
 
 		a1.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class))
 				.setEnabled(false);
