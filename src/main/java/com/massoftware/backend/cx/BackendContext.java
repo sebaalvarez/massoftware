@@ -23,6 +23,7 @@ import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.CentroDeCostoProyectoBO;
 import com.massoftware.backend.bo.CentroDeCostoProyectoTipoBO;
 import com.massoftware.backend.bo.ChequeraBO;
+import com.massoftware.backend.bo.CiudadBO;
 import com.massoftware.backend.bo.CodigoConvenioMultilateralBO;
 import com.massoftware.backend.bo.CostoDeVentaBO;
 import com.massoftware.backend.bo.CuentaContableBO;
@@ -70,6 +71,7 @@ import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CentroDeCostoProyecto;
 import com.massoftware.model.CentroDeCostoProyectoTipo;
 import com.massoftware.model.Chequera;
+import com.massoftware.model.Ciudad;
 import com.massoftware.model.CodigoConvenioMultilateral;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaContableEstado;
@@ -472,6 +474,10 @@ public class BackendContext extends AbstractContext {
 			} else if (classModel == Provincia.class) {
 
 				return new ProvinciaBO(dataSourceWrapper, this);
+
+			} else if (classModel == Ciudad.class) {
+
+				return new CiudadBO(dataSourceWrapper, this);
 
 			}
 

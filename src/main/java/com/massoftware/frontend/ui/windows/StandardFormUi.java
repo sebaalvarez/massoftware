@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.util;
+package com.massoftware.frontend.ui.windows;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -13,6 +13,7 @@ import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
 import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
 import com.massoftware.annotation.model.FieldLabelAnont;
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.build.BuildComponentsUtil;
 import com.massoftware.frontend.xmd.BuilderXMD;
 import com.massoftware.frontend.xmd.ComponentXMD;
@@ -110,6 +111,7 @@ public class StandardFormUi<T> extends CustomComponent {
 	private void init(Usuario usuario, Class<T> classModel, String mode,
 			BackendContext cx, StandardTableUi tableUi, T object) {
 		try {
+
 			this.tableUi = tableUi;
 
 			this.classModel = classModel;
@@ -184,7 +186,7 @@ public class StandardFormUi<T> extends CustomComponent {
 
 		if (dto != null && dto instanceof Entity) {
 
-			originalDTO = ((Entity) dto).clone();						
+			originalDTO = ((Entity) dto).clone();
 		}
 
 		// ======================================================================

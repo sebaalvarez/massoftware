@@ -503,8 +503,6 @@ CREATE VIEW [dbo].[vPuntoDeEquilibrio] AS
 	-- SELECT * FROM dbo.vPuntoDeEquilibrio ORDER BY ejercicioContable_ejercicio DESC, puntoDeEquilibrio;	
 	-- SELECT MAX(puntoDeEquilibrio) FROM dbo.vPuntoDeEquilibrio;
 
-USE [VetaroRep]
-GO
 
 
 -------------------------------------------------------------
@@ -537,11 +535,59 @@ CREATE VIEW [dbo].[vProvincia] AS
 	-- SELECT * FROM dbo.[vProvincia] ;
 	-- SELECT * FROM dbo.[vProvincia] ORDER BY pais_codigo DESC, codigo;	
 
+-------------------------------------------------------------
+
+ -- DROP VIEW [dbo].[vCiudad] 
+
+CREATE VIEW [dbo].[vCiudad] AS        
+
+	SELECT	'com.massoftware.model.Ciudad'													AS ClassCiudad			
+			, CAST([Ciudades].[CIUDAD] AS VARCHAR)											AS id
+
+
+			-- [PROVINCIA]																	AS FK NOT NULL
+			, [vProvincia].id																AS provincia_id
+			
+			-- [PAIS]																		AS FK NOT NULL
+			, [vProvincia].pais_id															AS provincia_pais_id
+			, [vProvincia].pais_codigo														AS provincia_pais_codigo
+			, [vProvincia].pais_nombre														AS provincia_pais_nombre	
+			, [vProvincia].pais_abreviatura													AS provincia_pais_abreviatura	
+
+			, [vProvincia].codigo															AS provincia_codigo
+			, [vProvincia].nombre															AS provincia_nombre
+			, [vProvincia].abreviatura														AS provincia_abreviatura
+			, [vProvincia].codigoAfip														AS provincia_codigoAfip
+			, [vProvincia].codigoIngBrutos													AS provincia_codigoIngBrutos
+			, [vProvincia].codigoRenatea													AS provincia_codigoRenatea	
+
+			, CAST([Ciudades].[CIUDAD] AS INTEGER)											AS codigo			-- Integer NOT NULL UN [ 1 - Short.MAX_VALUE] 
+			, LTRIM(RTRIM(CAST([Ciudades].[NOMBRE] AS VARCHAR)))							AS nombre			-- String (35) NOT NULL  
+			, LTRIM(RTRIM(CAST([Ciudades].[DEPARTAMENTO] AS VARCHAR)))						AS departamento		-- String (35) 
+			, CAST([Ciudades].[CODIGO] AS INTEGER)											AS codigoAfip		-- Integer [ 0 - 9999]  
+			      
+	FROM	[dbo].[Ciudades]
+
+	LEFT JOIN	[dbo].[vProvincia]
+		ON	[dbo].[vProvincia].[pais_codigo]	=	CAST([dbo].[Ciudades].[PAIS] AS INT)
+		AND [dbo].[vProvincia].[codigo]			=	CAST([dbo].[Ciudades].[PROVINCIA] AS INT);
+
+		-- UN (pais_id, provincia_codigo, nombre)
+
+	-- SELECT * FROM dbo.[Provincias] ;
+	-- SELECT * FROM dbo.[vCiudad] ;
+	-- SELECT * FROM dbo.[vCiudad] ORDER BY provincia_pais_codigo, provincia_codigo, codigo;
+	-- SELECT * FROM dbo.vCiudad WHERE provincia_pais_codigo = 2 AND provincia_codigo = 7;
+	-- SELECT * FROM dbo.vCiudad WHERE provincia_pais_codigo = 2 AND provincia_codigo = 7 AND LOWER(dbo.Translate(nombre, null, null)) = LOWER(dbo.Translate('ciudad3102', null,null));
+
+	
 
 --=============================================================================================================
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --=============================================================================================================
 
+USE [VetaroRep]
+GO
 
 
 

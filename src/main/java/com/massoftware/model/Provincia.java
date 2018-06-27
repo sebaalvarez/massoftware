@@ -177,11 +177,11 @@ public class Provincia extends EntityId implements Comparable<Provincia> {
 
 	@Override
 	public String toString() {
-		if (this.getPais() != null) {
-			return this.getPais() + " - " + this.getCodigo() + " - "
-					+ this.getNombre();
-		}
-		return this.getCodigo() + " - " + this.getCodigo();
+//		if (this.getPais() != null) {
+//			return this.getPais() + " - (" + this.getCodigo() + ") "
+//					+ this.getNombre();
+//		}
+		return "(" + this.getCodigo() + ") " + this.getNombre();
 	}
 
 	public boolean validate() {

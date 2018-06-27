@@ -1,6 +1,7 @@
 package com.massoftware.frontend.ui.menu;
 
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.model.Ciudad;
 import com.massoftware.model.MotivoComentario;
 import com.massoftware.model.MotivoNotaDeCredito;
 import com.massoftware.model.Pais;
@@ -69,8 +70,7 @@ public class VentasMenu extends AbstractMenu {
 		MenuBar.MenuItem a11 = a1.addItem("Ciudades ...",
 				open(MotivoNotaDeCredito.class));
 
-		a11.addItem("Ciudades ...", open(MotivoNotaDeCredito.class))
-				.setEnabled(false);
+		a11.addItem("Ciudades ...", open(Ciudad.class));
 		a11.addItem("Provincias ...", open(Provincia.class));
 		a11.addItem("Paises ...", open(Pais.class));
 

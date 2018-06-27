@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.util;
+package com.massoftware.frontend.ui.windows;
 
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
@@ -13,6 +13,11 @@ import com.massoftware.annotation.model.ClassPluralLabelAnont;
 import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
 import com.massoftware.annotation.model.FieldLabelAnont;
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.ui.util.ColumnMetaData;
+import com.massoftware.frontend.ui.util.LogAndNotification;
+import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
+import com.massoftware.frontend.ui.util.YesNoDialog;
+import com.massoftware.frontend.ui.util.YesNoDialog.Callback;
 import com.massoftware.frontend.xmd.BuilderXMD;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.Entity;

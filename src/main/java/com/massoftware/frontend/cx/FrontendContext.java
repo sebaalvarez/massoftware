@@ -1,16 +1,17 @@
 package com.massoftware.frontend.cx;
 
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.ui.custom.CentroDeCostoContableTableUi;
-import com.massoftware.frontend.ui.custom.EjercicioContableTableUi;
-import com.massoftware.frontend.ui.custom.ProvinciaTableUi;
-import com.massoftware.frontend.ui.custom.PuntoDeEquilibrioTableUi;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StandardTableUi;
+import com.massoftware.frontend.ui.windows.StandardTableUi;
 import com.massoftware.frontend.ui.windows.centro_de_costo_proyecto.CentroDeCostoProyectoTableUi;
 import com.massoftware.frontend.ui.windows.chequera.ChequeraTableUi;
 import com.massoftware.frontend.ui.windows.cuenta_contable.CuentaContableTableUi;
 import com.massoftware.frontend.ui.windows.cuenta_de_fondo.CuentaDeFondoTableUi;
+import com.massoftware.frontend.ui.windows.custom.CentroDeCostoContableTableUi;
+import com.massoftware.frontend.ui.windows.custom.CiudadTableUi;
+import com.massoftware.frontend.ui.windows.custom.EjercicioContableTableUi;
+import com.massoftware.frontend.ui.windows.custom.ProvinciaTableUi;
+import com.massoftware.frontend.ui.windows.custom.PuntoDeEquilibrioTableUi;
 import com.massoftware.frontend.ui.windows.seguridad.SeguridadPuertaTableUi;
 import com.massoftware.model.Banco;
 import com.massoftware.model.BancoFirmante;
@@ -18,6 +19,7 @@ import com.massoftware.model.Caja;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CentroDeCostoProyecto;
 import com.massoftware.model.Chequera;
+import com.massoftware.model.Ciudad;
 import com.massoftware.model.CodigoConvenioMultilateral;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaDeFondo;
@@ -150,7 +152,15 @@ public class FrontendContext {
 						Provincia.class, pidFiltering,
 						searchFilter, searchProperty);
 
+			}  else if (classModel == Ciudad.class) {
+
+				new CiudadTableUi(shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario,
+						Ciudad.class, pidFiltering,
+						searchFilter, searchProperty);
+
 			}
+
 
 			else if (classModel == SeguridadPuerta.class) {
 

@@ -5,7 +5,7 @@ import java.util.List;
 import com.massoftware.backend.bo.CuentaDeFondoABO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StandardTableUi;
+import com.massoftware.frontend.ui.windows.StandardTableUi;
 import com.massoftware.frontend.ui.windows.chequera.ChequeraTableUi;
 import com.massoftware.model.CuentaDeFondoA;
 import com.massoftware.model.Usuario;

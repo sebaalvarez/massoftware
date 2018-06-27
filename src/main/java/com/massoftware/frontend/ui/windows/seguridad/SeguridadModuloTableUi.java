@@ -2,7 +2,7 @@ package com.massoftware.frontend.ui.windows.seguridad;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StandardTableUi;
+import com.massoftware.frontend.ui.windows.StandardTableUi;
 import com.massoftware.model.SeguridadModulo;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;

@@ -177,20 +177,27 @@ public class Entity implements Cloneable, Valuable {
 					methodSet.invoke(other, value);
 
 				} else {
-					Object value = methodGet.invoke(originalIsntance);
-					if (value instanceof Entity) {
 
+					Object value = methodGet.invoke(originalIsntance);
+
+					if (value != null && value instanceof Entity) {
+
+						value = ((Entity) value).clone();
+						
 						// Object other2 = field.getType().newInstance();
-						if (value != null) {
+//						if (value != null) {
 							// value = clone(value, field.getType(), other2,
 							// full);
-							value = ((Entity) value).clone();
-						}
+//							value = ((Entity) value).clone();
+//						}
 
 						methodSet.invoke(other, value);
 					} else {
-						throw new RuntimeException(field.getType()
-								+ " not found.");
+						if (value != null) {
+							throw new RuntimeException(field.getType()
+									+ " not found.");	
+						}
+						
 					}
 				}
 

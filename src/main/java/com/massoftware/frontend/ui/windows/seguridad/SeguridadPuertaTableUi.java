@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.massoftware.backend.bo.SeguridadPuertaBO;
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.ui.util.StandardTableUi;
+import com.massoftware.frontend.ui.windows.StandardTableUi;
 import com.massoftware.model.SeguridadModulo;
 import com.massoftware.model.SeguridadPuerta;
 import com.massoftware.model.Usuario;

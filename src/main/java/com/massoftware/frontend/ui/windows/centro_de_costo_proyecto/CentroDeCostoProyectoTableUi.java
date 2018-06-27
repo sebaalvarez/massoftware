@@ -1,8 +1,8 @@
 package com.massoftware.frontend.ui.windows.centro_de_costo_proyecto;
 
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.ui.util.StandardFormUi;
-import com.massoftware.frontend.ui.util.StandardTableUi;
+import com.massoftware.frontend.ui.windows.StandardFormUi;
+import com.massoftware.frontend.ui.windows.StandardTableUi;
 import com.massoftware.model.CentroDeCostoProyecto;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;

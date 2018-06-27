@@ -3,6 +3,7 @@ package com.massoftware.frontend.ui.menu;
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CentroDeCostoProyecto;
+import com.massoftware.model.Ciudad;
 import com.massoftware.model.CodigoConvenioMultilateral;
 import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.EjercicioContable;
@@ -80,6 +81,7 @@ public class GeneralMenu extends AbstractMenu {
 		a25.addItem("Centros de costos contables", open(CentroDeCostoContable.class));
 		a25.addItem("Puntos de equilibrio ...", open(PuntoDeEquilibrio.class));
 		a25.addItem("Provincias ...", open(Provincia.class));
+		a25.addItem("Ciudades ...", open(Ciudad.class));
 
 		return menubar;
 	}

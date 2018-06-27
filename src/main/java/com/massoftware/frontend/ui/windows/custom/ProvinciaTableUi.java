@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.custom;
+package com.massoftware.frontend.ui.windows.custom;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +7,8 @@ import com.massoftware.backend.bo.PaisBO;
 import com.massoftware.backend.bo.ProvinciaBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StandardFormUi;
-import com.massoftware.frontend.ui.util.StandardTableUi;
+import com.massoftware.frontend.ui.windows.StandardFormUi;
+import com.massoftware.frontend.ui.windows.StandardTableUi;
 import com.massoftware.frontend.xmd.BuilderXMD;
 import com.massoftware.model.Entity;
 import com.massoftware.model.Pais;

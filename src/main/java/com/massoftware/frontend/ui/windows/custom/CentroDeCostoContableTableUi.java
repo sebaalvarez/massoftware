@@ -1,18 +1,18 @@
-package com.massoftware.frontend.ui.custom;
+package com.massoftware.frontend.ui.windows.custom;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
-import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StandardFormUi;
-import com.massoftware.frontend.ui.util.StandardTableUi;
+import com.massoftware.frontend.ui.windows.StandardFormUi;
+import com.massoftware.frontend.ui.windows.StandardTableUi;
 import com.massoftware.frontend.xmd.BuilderXMD;
+import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Entity;
-import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
@@ -20,21 +20,21 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Window;
 
-public class PuntoDeEquilibrioTableUi extends
-		StandardTableUi<PuntoDeEquilibrio> {
+public class CentroDeCostoContableTableUi extends
+		StandardTableUi<CentroDeCostoContable> {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4960961261832226758L;
+	private static final long serialVersionUID = 4960961261882226758L;
 
 	private ComboBox filtroEjercicioCBX;
 	private BeanItemContainer<EjercicioContable> ejerciciosContablesBIC;
 
-	public PuntoDeEquilibrioTableUi(boolean shortcut, boolean agregar,
+	public CentroDeCostoContableTableUi(boolean shortcut, boolean agregar,
 			boolean modificar, boolean copiar, boolean eliminar, Window window,
 			BackendContext cx, Usuario usuario,
-			Class<PuntoDeEquilibrio> classModel, String pidFiltering,
+			Class<CentroDeCostoContable> classModel, String pidFiltering,
 			Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
@@ -112,9 +112,9 @@ public class PuntoDeEquilibrioTableUi extends
 
 	}
 
-	protected List<PuntoDeEquilibrio> reloadDataList() throws Exception {
+	protected List<CentroDeCostoContable> reloadDataList() throws Exception {
 
-		return ((PuntoDeEquilibrioBO) cx.buildBO(classModel))
+		return ((CentroDeCostoContableBO) cx.buildBO(classModel))
 				.findAll((EjercicioContable) filtroEjercicioCBX.getValue());
 
 	}
@@ -122,12 +122,12 @@ public class PuntoDeEquilibrioTableUi extends
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected StandardFormUi openFormAgregar() throws Exception {
 
-		PuntoDeEquilibrio item = PuntoDeEquilibrio.class.newInstance();
+		CentroDeCostoContable item = CentroDeCostoContable.class.newInstance();
 
 		item.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
 				.getValue());
 
-		StandardFormUi<PuntoDeEquilibrio> form = new StandardFormUi<PuntoDeEquilibrio>(
+		StandardFormUi<CentroDeCostoContable> form = new StandardFormUi<CentroDeCostoContable>(
 				usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item);
 
 		form.setMaxValues();
@@ -137,18 +137,19 @@ public class PuntoDeEquilibrioTableUi extends
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected StandardFormUi openFormCopiar(PuntoDeEquilibrio item)
+	protected StandardFormUi openFormCopiar(CentroDeCostoContable item)
 			throws Exception {
 
-		PuntoDeEquilibrio o = (PuntoDeEquilibrio) ((Entity) item).copy();
+		CentroDeCostoContable o = (CentroDeCostoContable) ((Entity) item)
+				.copy();
 
 		o.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
 				.getValue());
 
-		StandardFormUi<PuntoDeEquilibrio> form = new StandardFormUi<PuntoDeEquilibrio>(
+		StandardFormUi<CentroDeCostoContable> form = new StandardFormUi<CentroDeCostoContable>(
 				usuario, classModel, StandardFormUi.COPY_MODE, cx, this, o,
 				item);
-
+		
 		form.setMaxValues();
 
 		return form;
