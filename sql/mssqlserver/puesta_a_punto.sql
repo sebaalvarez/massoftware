@@ -359,11 +359,11 @@ CREATE VIEW [dbo].[vCodigoConvenioMultilateral] AS
 
 	SELECT	'com.massoftware.model.CodigoConvenioMultilateral'						AS ClassCodigoConvenioMultilateral
 			-----------------------------------------------------------------------------------------------------			
-			, CAST([ActividadesCM].[CODIGOCM] AS VARCHAR)							AS id	-- String NOT NULL PK					
+			, CAST([ActividadesCM].[CODIGOCM] AS VARCHAR)							AS id								-- String NOT NULL PK					
 			-----------------------------------------------------------------------------------------------------
-			, CAST([ActividadesCM].[CODIGOCM] AS INTEGER)							AS codigo -- Integer NOT NULL UN [ 1 - Integer.MAX_VALUE] 
-			, LTRIM(RTRIM(CAST([ActividadesCM].[CODIGOCONVENIO] AS VARCHAR)))		AS codigoConvenio -- String (10) NOT NULL UN 
-			, LTRIM(RTRIM(CAST([ActividadesCM].[DESCRIPCION] AS VARCHAR)))			AS nombre -- String (150) NOT NULL UN 
+			, CAST([ActividadesCM].[CODIGOCM] AS INTEGER)							AS codigo							-- Integer NOT NULL UN [ 1 - Integer.MAX_VALUE] 
+			, LTRIM(RTRIM(CAST([ActividadesCM].[CODIGOCONVENIO] AS VARCHAR)))		AS codigoConvenio					-- String (10) NOT NULL UN 
+			, LTRIM(RTRIM(CAST([ActividadesCM].[DESCRIPCION] AS VARCHAR)))			AS nombre							-- String (150) NOT NULL UN 
   
 	FROM	[dbo].[ActividadesCM];
 
@@ -580,9 +580,62 @@ CREATE VIEW [dbo].[vCiudad] AS
 	-- SELECT * FROM dbo.vCiudad WHERE provincia_pais_codigo = 2 AND provincia_codigo = 7;
 	-- SELECT * FROM dbo.vCiudad WHERE provincia_pais_codigo = 2 AND provincia_codigo = 7 AND LOWER(dbo.Translate(nombre, null, null)) = LOWER(dbo.Translate('ciudad3102', null,null));
 
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vBanco]
+
+CREATE VIEW [dbo].[vBanco] AS  		
+	
+	SELECT	'com.massoftware.model.Banco'											AS ClassBanco
+			-----------------------------------------------------------------------------------------------------
+			, CAST([Bancos].[BANCO] AS VARCHAR)										AS id					-- String NOT NULL PK
+			-----------------------------------------------------------------------------------------------------
+			, CAST([Bancos].[BANCO] AS INTEGER)										AS codigo				-- Integer NOT NULL PK [ 0 - 999 ]
+			, LTRIM(RTRIM(CAST([Bancos].[NOMBRE] AS VARCHAR)))						AS nombre				-- String (40) NOT NULL UN
+			, [Bancos].[CUIT]														AS cuit					-- BigDecimal (13,0) NOT NULL UN
+			, [Bancos].[BLOQUEADO]													AS bloqueado			-- Boolean
+			
+			, CASE    
+
+				WHEN [Bancos].[NOMBRECOMPLETO]										 IS NULL	THEN LTRIM(RTRIM(CAST([Bancos].[NOMBRE] AS VARCHAR)))
+				WHEN LEN(LTRIM(RTRIM(CAST([Bancos].[NOMBRECOMPLETO] AS VARCHAR)))) = 0			THEN LTRIM(RTRIM(CAST([Bancos].[NOMBRE] AS VARCHAR)))
+																								ELSE LTRIM(RTRIM(CAST([Bancos].[NOMBRECOMPLETO] AS VARCHAR))) 
+			  
+			  END																	AS nombreOficial		-- String (40) NOT NULL UN
+
+			-- , [Bancos].[PLANILLA]												AS pathPlanilla			-- SE omite dado que se va a pedir cada vez que se haga la conciliación	
+			, CAST([Bancos].[HOJA] AS INTEGER)										AS hoja					-- Integer [ 0 - 231 ] Default [0]
+			, CAST([Bancos].[PRIMERAFILA] AS INTEGER)								AS primeraFila			-- Integer [ 0 - 999999 ] Default [0]
+			, CAST([Bancos].[ULTIMAFILA] AS INTEGER)								AS uiltimaFila			-- Integer [ 0 - 999999 ] Default [0]
+			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNAFECHA] AS VARCHAR))))			AS columnaFecha			-- String (3) 
+			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNADESCRIPCION] AS VARCHAR))))	AS columnaDescripcion	-- String (3) 
+			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNAREFERENCIA1] AS VARCHAR))))	AS columnaReferencia1	-- String (3) 
+			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNAREFERENCIA2] AS VARCHAR))))	AS columnaReferencia2	-- String (3) 
+			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNAIMPORTE] AS VARCHAR))))		AS columnaImporte		-- String (3) 	
+			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNASALDO] AS VARCHAR))))			AS columnaSaldo			-- String (3) 
+
+	FROM	[dbo].[Bancos];	
+
+	-- SELECT * FROM dbo.vBanco;	
+	-- SELECT * FROM dbo.vBanco ORDER BY codigo, nombre;	
+	-- SELECT * FROM dbo.vBanco ORDER BY codigo;	
+	-- SELECT * FROM dbo.vBanco ORDER BY nombre;	
+	-- SELECT * FROM dbo.vBanco ORDER BY nombreOficial;	
+
 	
 
 --=============================================================================================================
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --=============================================================================================================
 
@@ -632,6 +685,8 @@ CREATE VIEW [dbo].[vCentroDeCostoProyecto] AS
 
 	-- SELECT * FROM dbo.vCentroDeCostoProyecto;	
 	-- SELECT * FROM dbo.vCentroDeCostoProyecto ORDER BY codigo, nombre;
+
+
 
 
 
@@ -1006,47 +1061,7 @@ CREATE VIEW [dbo].[vAsientoModeloItem] AS
 
 -- FONDOS
 
--------------------------------------------------------------
 
--- DROP VIEW [dbo].[vBanco]
-
-CREATE VIEW [dbo].[vBanco] AS  		
-	
-	SELECT	'com.massoftware.model.Banco'											AS ClassBanco
-			-----------------------------------------------------------------------------------------------------
-			, CAST([Bancos].[BANCO] AS VARCHAR)										AS id					-- String NOT NULL PK
-			-----------------------------------------------------------------------------------------------------
-			, CAST([Bancos].[BANCO] AS INTEGER)										AS codigo				-- Integer NOT NULL PK [ 0 - 999 ]
-			, LTRIM(RTRIM(CAST([Bancos].[NOMBRE] AS VARCHAR)))						AS nombre				-- String (40) NOT NULL UN
-			, [Bancos].[CUIT]														AS cuit					-- BigDecimal (13,0) NOT NULL UN
-			, [Bancos].[BLOQUEADO]													AS bloqueado			-- Boolean
-			
-			, CASE    
-
-				WHEN [Bancos].[NOMBRECOMPLETO]										 IS NULL	THEN LTRIM(RTRIM(CAST([Bancos].[NOMBRE] AS VARCHAR)))
-				WHEN LEN(LTRIM(RTRIM(CAST([Bancos].[NOMBRECOMPLETO] AS VARCHAR)))) = 0			THEN LTRIM(RTRIM(CAST([Bancos].[NOMBRE] AS VARCHAR)))
-																								ELSE LTRIM(RTRIM(CAST([Bancos].[NOMBRECOMPLETO] AS VARCHAR))) 
-			  
-			  END																	AS nombreOficial		-- String (40) NOT NULL UN
-
-			-- , [Bancos].[PLANILLA]												AS pathPlanilla			-- SE omite dado que se va a pedir cada vez que se haga la conciliación	
-			, CAST([Bancos].[HOJA] AS INTEGER)										AS hoja					-- Integer [ 0 - 231 ] Default [0]
-			, CAST([Bancos].[PRIMERAFILA] AS INTEGER)								AS primeraFila			-- Integer [ 0 - 999999 ] Default [0]
-			, CAST([Bancos].[ULTIMAFILA] AS INTEGER)								AS uiltimaFila			-- Integer [ 0 - 999999 ] Default [0]
-			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNAFECHA] AS VARCHAR))))			AS columnaFecha			-- String (3) 
-			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNADESCRIPCION] AS VARCHAR))))	AS columnaDescripcion	-- String (3) 
-			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNAREFERENCIA1] AS VARCHAR))))	AS columnaReferencia1	-- String (3) 
-			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNAREFERENCIA2] AS VARCHAR))))	AS columnaReferencia2	-- String (3) 
-			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNAIMPORTE] AS VARCHAR))))		AS columnaImporte		-- String (3) 	
-			, UPPER(LTRIM(RTRIM(CAST([Bancos].[COLUMNASALDO] AS VARCHAR))))			AS columnaSaldo			-- String (3) 
-
-	FROM	[dbo].[Bancos];	
-
-	-- SELECT * FROM dbo.vBanco;	
-	-- SELECT * FROM dbo.vBanco ORDER BY codigo, nombre;	
-	-- SELECT * FROM dbo.vBanco ORDER BY codigo;	
-	-- SELECT * FROM dbo.vBanco ORDER BY nombre;	
-	-- SELECT * FROM dbo.vBanco ORDER BY nombreOficial;	
 
 -------------------------------------------------------------
 

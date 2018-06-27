@@ -1,9 +1,6 @@
 package com.massoftware.frontend.ui.menu;
 
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.cx.FrontendContext;
-import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.windows.modelo_cbte_fondo.ModeloCbteFondoTableUi;
 import com.massoftware.model.Banco;
 import com.massoftware.model.BancoFirmante;
 import com.massoftware.model.Caja;
@@ -20,128 +17,115 @@ import com.massoftware.model.Talonario;
 import com.massoftware.model.Ticket;
 import com.massoftware.model.TipoCbteAFIP;
 import com.massoftware.model.TipoCbteControl;
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.MenuBar.Command;
-import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class FondosMenu extends VerticalLayout implements View {
+public class FondosMenu extends AbstractMenu {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4876972158479186080L;
 
-	private SessionVar sessionVar;
-
 	public FondosMenu(SessionVar sessionVar) {
-
-		try {
-
-			this.sessionVar = sessionVar;
-
-			setMargin(true);
-			// setSpacing(true);
-
-			Label h1 = new Label("Fondos");
-			h1.addStyleName(ValoTheme.LABEL_H1);
-			h1.addStyleName(ValoTheme.LABEL_COLORED);
-			addComponent(h1);
-
-			addComponent(getMenuBar());
-
-			addComponent(getControlBar());
-
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-
+		super("Fondos", sessionVar);
 	}
 
-	private MenuBar getMenuBar() {
+	// public FondosMenu(SessionVar sessionVar) {
+	//
+	// try {
+	//
+	// this.sessionVar = sessionVar;
+	//
+	// setMargin(true);
+	// // setSpacing(true);
+	//
+	// Label h1 = new Label("Fondos");
+	// h1.addStyleName(ValoTheme.LABEL_H1);
+	// h1.addStyleName(ValoTheme.LABEL_COLORED);
+	// addComponent(h1);
+	//
+	// addComponent(getMenuBar());
+	//
+	// addComponent(getControlBar());
+	//
+	// } catch (Exception e) {
+	// LogAndNotification.print(e);
+	// }
+	//
+	// }
 
-		Command click = new Command() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 6678419241635254963L;
-
-			@Override
-			public void menuSelected(MenuItem selectedItem) {
-				Notification.show("Clicked " + selectedItem.getText());
-			}
-		};
-
-		Command openModeloCbteFondoTableUi = new Command() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 3890088916049691486L;
-
-			@Override
-			public void menuSelected(MenuItem selectedItem) {
-				openModeloCbteFondoTableUi();
-			}
-		};
+	protected MenuBar getMenuBar() {
 
 		MenuBar menubar = new MenuBar();
 		menubar.setWidth("100%");
 		menubar.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
 
-		final MenuBar.MenuItem archivos = menubar.addItem("Archivos", null);
+		final MenuBar.MenuItem a1 = menubar.addItem("Archivos", null);
+		final MenuBar.MenuItem a2 = menubar.addItem("Editar", null);
+		final MenuBar.MenuItem a3 = menubar.addItem("Comprobantes", null);
+		final MenuBar.MenuItem a4 = menubar.addItem(
+				"Instrumentos de pago/cobro", null);
+		final MenuBar.MenuItem a5 = menubar.addItem("Procesos", null);
+		final MenuBar.MenuItem a6 = menubar.addItem("Informes", null);
+		final MenuBar.MenuItem a7 = menubar.addItem("Ventana", null);
+		final MenuBar.MenuItem a8 = menubar.addItem("Ayuda", null);
 
-		archivos.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class));
+		a2.setEnabled(false);
+		a3.setEnabled(false);
+		a4.setEnabled(false);
+		a5.setEnabled(false);
+		a6.setEnabled(false);
+		a7.setEnabled(false);
+
+		a1.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class))
+				.setEnabled(false);
 		// archivos.addItem("Rubros y grupos de cuentas ...",
 		// open(CuentaDeFondo.class));
-		archivos.addItem("Cobranzas ...", click);
-		archivos.addItem("Chequeras ...", open(Chequera.class));
-		archivos.addItem("Bancos ...", open(Banco.class));
-		archivos.addItem("Firmantes (cheques propios) ...",
-				open(BancoFirmante.class));
-		archivos.addItem("Cajas", open(Caja.class));
-		archivos.addItem("Monedas ...", open(Moneda.class));
-		archivos.addItem("Cotizaciones de monedas ...",
-				open(MonedaCotizacion.class));
-		archivos.addItem("Modelos de comprobantes", openModeloCbteFondoTableUi);
-		archivos.addItem("Sucursales ...", open(Sucursal.class));
-		archivos.addItem("Juridicciones convenio multilateral",
-				open(JurisdiccionConvenioMultilateral.class));
-		archivos.addSeparator();
-		archivos.addItem("Marcas de ticket's ...", open(Ticket.class));
-		archivos.addItem("Series de ticket's ...", click);
-		archivos.addItem("Ticket's denunciados ...", click);
-		archivos.addSeparator();
-		archivos.addItem("Tipos de comprobante", click);
-		archivos.addItem("Talonarios ...", open(Talonario.class));
-		archivos.addSeparator();
-		archivos.addItem("Parámetros generales", click);
-		archivos.addItem("Fechas de cierres por módulos", click);
-		archivos.addSeparator();
-		archivos.addItem("Prueba Deposito", open(Deposito.class));
-		archivos.addItem("Prueba Tipos cbtes. control - Stock",
-				open(TipoCbteControl.class));
-		archivos.addItem("Prueba Tipo de comprobante AFIP",
-				open(TipoCbteAFIP.class));
-		archivos.addItem("Prueba Moneda AFIP", open(MonedaAFIP.class));
-		archivos.addItem("Prueba Mantenimiento de módulos y puertas",
-				open(SeguridadPuerta.class));
+		a1.addItem("Cobranzas ...", null).setEnabled(false);
+		a1.addItem("Chequeras ...", open(Chequera.class)).setEnabled(false);
+		a1.addItem("Bancos ...", open(Banco.class));
+		a1.addItem("Firmantes (cheques propios) ...", open(BancoFirmante.class))
+				.setEnabled(false);
+		a1.addItem("Cajas", open(Caja.class)).setEnabled(false);
+		a1.addItem("Monedas ...", open(Moneda.class)).setEnabled(false);
+		a1.addItem("Cotizaciones de monedas ...", open(MonedaCotizacion.class))
+				.setEnabled(false);
+		a1.addItem("Modelos de comprobantes", null).setEnabled(false);
+		a1.addItem("Sucursales ...", open(Sucursal.class)).setEnabled(false);
+		a1.addItem("Juridicciones convenio multilateral",
+				open(JurisdiccionConvenioMultilateral.class)).setEnabled(false);
+		a1.addSeparator();
+		a1.addItem("Marcas de ticket's ...", open(Ticket.class)).setEnabled(
+				false);
+		a1.addItem("Series de ticket's ...", null).setEnabled(false);
+		a1.addItem("Ticket's denunciados ...", null).setEnabled(false);
+		a1.addSeparator();
+		a1.addItem("Tipos de comprobante", null).setEnabled(false);
+		a1.addItem("Talonarios ...", open(Talonario.class)).setEnabled(false);
+		a1.addSeparator();
+		a1.addItem("Parámetros generales", null).setEnabled(false);
+		a1.addItem("Fechas de cierres por módulos", null).setEnabled(false);
+		a1.addSeparator();
+		a1.addItem("Prueba Deposito", open(Deposito.class)).setEnabled(false);
+		a1.addItem("Prueba Tipos cbtes. control - Stock",
+				open(TipoCbteControl.class)).setEnabled(false);
+		a1.addItem("Prueba Tipo de comprobante AFIP", open(TipoCbteAFIP.class))
+				.setEnabled(false);
+		a1.addItem("Prueba Moneda AFIP", open(MonedaAFIP.class)).setEnabled(
+				false);
+		a1.addItem("Prueba Mantenimiento de módulos y puertas",
+				open(SeguridadPuerta.class)).setEnabled(false);
 
 		return menubar;
 	}
 
-	private HorizontalLayout getControlBar() throws Exception {
+	protected HorizontalLayout getControlBar() throws Exception {
 
 		HorizontalLayout row = new HorizontalLayout();
 		row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
@@ -187,50 +171,6 @@ public class FondosMenu extends VerticalLayout implements View {
 		row.addComponent(mayor);
 
 		return row;
-	}
-
-	@Override
-	public void enter(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void openModeloCbteFondoTableUi() {
-		try {
-			Window win = new Window("Modelos de comprobandes de fondo");
-			win.setClosable(true);
-			win.setResizable(false);
-			ModeloCbteFondoTableUi ui = new ModeloCbteFondoTableUi(win, sessionVar.getCx(),
-					sessionVar.getUsuario());
-			win.setContent(ui);
-			getUI().addWindow(win);
-			win.center();
-			win.focus();
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-	}
-
-	private Component getThis() {
-		return this;
-	}
-
-	@SuppressWarnings("rawtypes")
-	private Command open(Class classModel) {
-
-		return new Command() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 4645387020070455569L;
-
-			@Override
-			public void menuSelected(MenuItem selectedItem) {
-				FrontendContext.openWindows(true, true, true, true, true,
-						getThis(), classModel, sessionVar.getCx(), sessionVar.getUsuario(), null, null, null);
-
-			}
-		};
 	}
 
 }
