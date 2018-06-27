@@ -5,6 +5,7 @@ import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassPluralLabelAnont;
 import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
 import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
 import com.massoftware.annotation.model.FieldColumnsAnont;
 import com.massoftware.annotation.model.FieldLabelAnont;
@@ -12,17 +13,17 @@ import com.massoftware.annotation.model.FieldMaxLengthAnont;
 import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
 import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
 import com.massoftware.annotation.model.FieldNameMSAnont;
+import com.massoftware.annotation.model.FieldReadOnly;
 import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.annotation.model.FieldUniqueAnont;
 
-@SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "Firmante")
 @ClassPluralLabelAnont(value = "Firmantes")
 @ClassArticleLabelInTheSingularAnont(value = "el")
 @ClassArticleLabelInPluralAnont(value = "los")
 // @ClassFormSourceAnont(value = "Deposito")
 @ClassTableMSAnont(nameTableDB = "[BancosFirmantes]")
-public class BancoFirmante extends EntityId implements Cloneable,
+public class BancoFirmante extends EntityId implements
 		Comparable<BancoFirmante> {
 
 	@FieldLabelAnont(value = "Código")
@@ -34,6 +35,8 @@ public class BancoFirmante extends EntityId implements Cloneable,
 	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[CODIGO]", classAttDB = Integer.class)
+	@FieldAutoMaxValueAnont()
+	@FieldReadOnly()
 	private Integer codigo;
 
 	@FieldLabelAnont(value = "Firmante")
@@ -91,19 +94,19 @@ public class BancoFirmante extends EntityId implements Cloneable,
 		this.activo = activo;
 	}
 
-	@Override
-	public BancoFirmante clone() throws CloneNotSupportedException {
-
-		BancoFirmante other = new BancoFirmante();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-		other.setCargo(getCargo());
-		other.setActivo(getActivo());
-
-		return other;
-	}
+	// @Override
+	// public BancoFirmante clone() throws CloneNotSupportedException {
+	//
+	// BancoFirmante other = new BancoFirmante();
+	//
+	// other.setId(this.getId());
+	// other.setCodigo(this.getCodigo());
+	// other.setNombre(this.getNombre());
+	// other.setCargo(getCargo());
+	// other.setActivo(getActivo());
+	//
+	// return other;
+	// }
 
 	@Override
 	public int compareTo(BancoFirmante o) {

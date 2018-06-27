@@ -33,13 +33,17 @@ public class BancoBO extends GenericBO<Banco> {
 
 		} else if (attName.equalsIgnoreCase(ATT_NAME_NOMBRE)) {
 
-			checkUnique(attName, "LOWER(" + ATT_NAME_NOMBRE + ") = ?", value
-					.toString().toLowerCase());
+			checkUnique(attName, "LOWER(dbo.Translate(" + ATT_NAME_NOMBRE
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
+					value.toString().toLowerCase());
 
 		} else if (attName.equalsIgnoreCase(ATT_NAME_NOMBRE_OFICIAL)) {
 
-			checkUnique(attName, "LOWER(" + ATT_NAME_NOMBRE_OFICIAL + ") = ?",
+			checkUnique(attName, "LOWER(dbo.Translate("
+					+ ATT_NAME_NOMBRE_OFICIAL
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
 					value.toString().toLowerCase());
+
 		} else if (attName.equalsIgnoreCase(ATT_NAME_CUIT)) {
 
 			checkUnique(attName, ATT_NAME_CUIT + " = ?", value.toString()
@@ -76,27 +80,19 @@ public class BancoBO extends GenericBO<Banco> {
 		return insertByReflection(dto, usuario);
 	}
 
-	public Banco update(Banco dto, Banco dtoOriginal, Usuario usuario) throws Exception {
+	public Banco update(Banco dto, Banco dtoOriginal, Usuario usuario)
+			throws Exception {
 
-		Object codigoArg = null;
+		Object codigoArg = Integer.class;
 
 		if (dtoOriginal.getCodigo() != null) {
 			codigoArg = dtoOriginal.getCodigo();
-		} else {
-			codigoArg = Integer.class;
 		}
 
-		if (dataSourceWrapper.isDatabasePostgreSql()) {
+		return updateByReflection(dto, usuario,
+				getFieldNameMS(classModel.getDeclaredField(ATT_NAME_CODIGO))
+						+ " = ?", codigoArg);
 
-		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-
-			return updateByReflection(
-					dto, usuario, 
-					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_CODIGO))
-							+ " = ?", codigoArg);
-		}
-
-		return null;
 	}
 
 }

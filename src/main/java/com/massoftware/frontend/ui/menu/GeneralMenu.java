@@ -2,6 +2,7 @@ package com.massoftware.frontend.ui.menu;
 
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.Banco;
+import com.massoftware.model.BancoFirmante;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CentroDeCostoProyecto;
 import com.massoftware.model.Ciudad;
@@ -71,6 +72,7 @@ public class GeneralMenu extends AbstractMenu {
 				open(MotivoNotaDeCredito.class));
 		a11.addItem("Codigos convenio multilateral",
 				open(CodigoConvenioMultilateral.class));
+		a11.addItem("Firmantes (cheques propios) ...", open(BancoFirmante.class));
 
 		a13.addItem("Ejercicios contables", open(EjercicioContable.class));
 

@@ -28,12 +28,15 @@ public class BancoFirmanteBO extends GenericBO<BancoFirmante> {
 
 		if (attName.equalsIgnoreCase(ATT_NAME_CODIGO)) {
 
-			checkUnique(attName, ATT_NAME_CODIGO + " = ?", value);
+			checkUnique(attName, "LOWER(dbo.Translate(" + ATT_NAME_CODIGO
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
+					value.toString().toLowerCase());
 
 		} else if (attName.equalsIgnoreCase(ATT_NAME_NOMBRE)) {
 
-			checkUnique(attName, "LOWER(" + ATT_NAME_NOMBRE + ") = ?", value
-					.toString().toLowerCase());
+			checkUnique(attName, "LOWER(dbo.Translate(" + ATT_NAME_NOMBRE
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
+					value.toString().toLowerCase());
 
 		}
 	}
@@ -61,32 +64,25 @@ public class BancoFirmanteBO extends GenericBO<BancoFirmante> {
 
 	}
 
-	public BancoFirmante insert(BancoFirmante dto, Usuario usuario) throws Exception {
+	public BancoFirmante insert(BancoFirmante dto, Usuario usuario)
+			throws Exception {
 
 		return insertByReflection(dto, usuario);
 	}
 
-	public BancoFirmante update(BancoFirmante dto, BancoFirmante dtoOriginal, Usuario usuario) throws Exception {
+	public BancoFirmante update(BancoFirmante dto, BancoFirmante dtoOriginal,
+			Usuario usuario) throws Exception {
 
-		Object codigoArg = null;
+		Object codigoArg = Integer.class;
 
 		if (dtoOriginal.getCodigo() != null) {
 			codigoArg = dtoOriginal.getCodigo();
-		} else {
-			codigoArg = Integer.class;
 		}
 
-		if (dataSourceWrapper.isDatabasePostgreSql()) {
+		return updateByReflection(dto, usuario,
+				getFieldNameMS(classModel.getDeclaredField(ATT_NAME_CODIGO))
+						+ " = ?", codigoArg);
 
-		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-
-			return updateByReflection(
-					dto, usuario,
-					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_CODIGO))
-							+ " = ?", codigoArg);
-		}
-
-		return null;
 	}
 
 }

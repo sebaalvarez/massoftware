@@ -624,6 +624,28 @@ CREATE VIEW [dbo].[vBanco] AS
 	-- SELECT * FROM dbo.vBanco ORDER BY nombre;	
 	-- SELECT * FROM dbo.vBanco ORDER BY nombreOficial;	
 
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vBancoFirmante]
+
+CREATE VIEW [dbo].[vBancoFirmante] AS  
+
+
+	SELECT	'com.massoftware.model.BancoFirmante'												AS ClassBancoFirmante
+			-----------------------------------------------------------------------------------------------------			
+			, CAST([BancosFirmantes].[CODIGO] AS VARCHAR)										AS id					-- String NOT NULL PK					
+			-----------------------------------------------------------------------------------------------------
+			, CAST([BancosFirmantes].[CODIGO] AS INTEGER)										AS codigo				-- Integer NOT NULL UN [ 1 - 255] 
+			, LTRIM(RTRIM(CAST([BancosFirmantes].[NOMBRE] AS VARCHAR)))							AS nombre				-- String (40) NOT NULL UN 
+			, LTRIM(RTRIM(CAST([BancosFirmantes].[CARGO] AS VARCHAR)))							AS cargo				-- String (20) 
+			, [BancosFirmantes].[ACTIVO]														AS activo				-- Boolean
+  
+	FROM	[dbo].[BancosFirmantes];
+
+
+	-- SELECT * FROM dbo.vBancoFirmante;	
+	-- SELECT * FROM dbo.vBancoFirmante ORDER BY codigo, nombre;	
 	
 
 --=============================================================================================================
@@ -1064,27 +1086,6 @@ CREATE VIEW [dbo].[vAsientoModeloItem] AS
 
 
 
--------------------------------------------------------------
-
--- DROP VIEW [dbo].[vBancoFirmante]
-
-CREATE VIEW [dbo].[vBancoFirmante] AS  
-
-
-	SELECT	'com.massoftware.model.BancoFirmante'												AS ClassBancoFirmante
-			-----------------------------------------------------------------------------------------------------			
-			, CAST([BancosFirmantes].[CODIGO] AS VARCHAR)										AS id	-- String NOT NULL PK					
-			-----------------------------------------------------------------------------------------------------
-			, CAST([BancosFirmantes].[CODIGO] AS INTEGER)										AS codigo -- Integer NOT NULL UN [ 1 - 255] 
-			, LTRIM(RTRIM(CAST([BancosFirmantes].[NOMBRE] AS VARCHAR)))							AS nombre -- String (40) NOT NULL UN 
-			, LTRIM(RTRIM(CAST([BancosFirmantes].[CARGO] AS VARCHAR)))							AS cargo -- String (20) 
-			, [BancosFirmantes].[ACTIVO]														AS activo -- Boolean
-  
-	FROM	[dbo].[BancosFirmantes];
-
-
-	-- SELECT * FROM dbo.vBancoFirmante;	
-	-- SELECT * FROM dbo.vBancoFirmante ORDER BY codigo, nombre;	
 
 -------------------------------------------------------------
 
