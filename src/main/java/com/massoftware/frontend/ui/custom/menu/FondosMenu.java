@@ -118,8 +118,7 @@ public class FondosMenu extends AbstractMenu {
 				open(TipoCbteControl.class)).setEnabled(false);
 		a1.addItem("Prueba Tipo de comprobante AFIP", open(TipoCbteAFIP.class))
 				.setEnabled(false);
-		a1.addItem("Prueba Moneda AFIP", open(MonedaAFIP.class)).setEnabled(
-				false);
+		
 		a1.addItem("Prueba Mantenimiento de módulos y puertas",
 				open(SeguridadPuerta.class)).setEnabled(false);
 

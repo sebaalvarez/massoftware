@@ -11,6 +11,7 @@ import com.massoftware.model.Ciudad;
 import com.massoftware.model.CodigoConvenioMultilateral;
 import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.MonedaAFIP;
 import com.massoftware.model.MotivoComentario;
 import com.massoftware.model.MotivoNotaDeCredito;
 import com.massoftware.model.Pais;
@@ -73,17 +74,21 @@ public class SuperMenu extends AbstractMenu {
 		a11.addItem("Codigos convenio multilateral",
 				open(CodigoConvenioMultilateral.class));
 		a11.addItem("Firmantes (cheques propios) ...",
-				open(BancoFirmante.class));
-		a11.addItem("Cajas", open(Caja.class));
+				open(BancoFirmante.class));		
+		a11.addItem("Moneda AFIP", open(MonedaAFIP.class));
 
 		a13.addItem("Ejercicios contables", open(EjercicioContable.class));
 
 		a14.addItem("Centros de costo - Proyectos",
 				open(CentroDeCostoProyecto.class)).setEnabled(false);
 
+		
+		a21.addItem("Cajas", open(Caja.class));
+		
 		a24.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class))
 				.setEnabled(false);
-		;
+		
+		
 
 		a25.addItem("Centros de costos contables",
 				open(CentroDeCostoContable.class));
