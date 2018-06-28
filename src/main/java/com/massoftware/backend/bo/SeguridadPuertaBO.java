@@ -29,14 +29,13 @@ public class SeguridadPuertaBO extends GenericBO<SeguridadPuerta> {
 	public List<SeguridadPuerta> findAll(SeguridadModulo seguridadModulo)
 			throws Exception {
 
-		if(seguridadModulo != null){
+		if (seguridadModulo != null) {
 			return find("codigo, nombre", "seguridadModulo_codigo = ?",
-					seguridadModulo.getCodigo());	
+					seguridadModulo.getCodigo());
 		}
-		
+
 		return new ArrayList<SeguridadPuerta>();
-		
-		
+
 	}
 
 	@Override
@@ -48,12 +47,15 @@ public class SeguridadPuertaBO extends GenericBO<SeguridadPuerta> {
 
 		} else if (attName.equalsIgnoreCase(ATT_NAME_NOMBRE)) {
 
-			checkUnique(attName, "LOWER(" + ATT_NAME_NOMBRE + ") = ?", value
-					.toString().toLowerCase());
+			checkUnique(attName, "LOWER(dbo.Translate(" + ATT_NAME_NOMBRE
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
+					value.toString().toLowerCase());
 
 		} else if (attName.equalsIgnoreCase(ATT_NAME_IGUALACION_ID)) {
 
-			checkUnique(attName, "LOWER(" + ATT_NAME_IGUALACION_ID + ") = ?",
+			checkUnique(attName, "LOWER(dbo.Translate("
+					+ ATT_NAME_IGUALACION_ID
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
 					value.toString().toLowerCase());
 
 		}
@@ -62,12 +64,10 @@ public class SeguridadPuertaBO extends GenericBO<SeguridadPuerta> {
 
 	public boolean delete(SeguridadPuerta seguridadPuerta) throws Exception {
 
-		Object codigoArg = null;
+		Object codigoArg = Integer.class;
 
 		if (seguridadPuerta.getCodigo() != null) {
 			codigoArg = seguridadPuerta.getCodigo();
-		} else {
-			codigoArg = Integer.class;
 		}
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
@@ -93,12 +93,10 @@ public class SeguridadPuertaBO extends GenericBO<SeguridadPuerta> {
 			SeguridadPuerta seguridadPuertaOriginal, Usuario usuario)
 			throws Exception {
 
-		Object codigoArg = null;
+		Object codigoArg = Integer.class;
 
 		if (seguridadPuertaOriginal.getCodigo() != null) {
 			codigoArg = seguridadPuertaOriginal.getCodigo();
-		} else {
-			codigoArg = Integer.class;
 		}
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {

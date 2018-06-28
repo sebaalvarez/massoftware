@@ -12,6 +12,7 @@ import com.massoftware.frontend.ui.custom.menu.ContabilidadGeneralMenu;
 import com.massoftware.frontend.ui.custom.menu.FondosMenu;
 import com.massoftware.frontend.ui.custom.menu.GeneralMenu;
 import com.massoftware.frontend.ui.custom.menu.StockMenu;
+import com.massoftware.frontend.ui.custom.menu.SuperMenu;
 import com.massoftware.frontend.ui.custom.menu.VentasMenu;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.windows.custom.properties.PropertiesFormUi;
@@ -271,7 +272,7 @@ public class MasSoftware extends UI {
 		navigator.addView("i", new FondosMenu(sessionVar));
 		navigator.addView("j", new FondosMenu(sessionVar));
 		navigator.addView("k", new FondosMenu(sessionVar));
-		navigator.addView("l", new GeneralMenu(sessionVar));
+		navigator.addView("l", new SuperMenu(sessionVar));
 
 		String f = Page.getCurrent().getUriFragment();
 		if (f == null || f.equals("")) {

@@ -14,7 +14,8 @@ public class SeguridadModuloBO extends GenericBO<SeguridadModulo> {
 	private final String ATT_NAME_CODIGO = "codigo";
 	private final String ATT_NAME_NOMBRE = "nombre";
 
-	public SeguridadModuloBO(DataSourceWrapper dataSourceWrapper, BackendContext cx) {
+	public SeguridadModuloBO(DataSourceWrapper dataSourceWrapper,
+			BackendContext cx) {
 		super(SeguridadModulo.class, dataSourceWrapper, cx);
 	}
 
@@ -31,20 +32,19 @@ public class SeguridadModuloBO extends GenericBO<SeguridadModulo> {
 
 		} else if (attName.equalsIgnoreCase(ATT_NAME_NOMBRE)) {
 
-			checkUnique(attName, "LOWER(" + ATT_NAME_NOMBRE + ") = ?", value
-					.toString().toLowerCase());
+			checkUnique(attName, "LOWER(dbo.Translate(" + ATT_NAME_NOMBRE
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
+					value.toString().toLowerCase());
 
 		}
 	}
 
 	public boolean delete(SeguridadModulo dto) throws Exception {
 
-		Object codigoArg = null;
+		Object codigoArg = Integer.class;
 
 		if (dto.getCodigo() != null) {
 			codigoArg = dto.getCodigo();
-		} else {
-			codigoArg = Integer.class;
 		}
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
@@ -60,20 +60,19 @@ public class SeguridadModuloBO extends GenericBO<SeguridadModulo> {
 
 	}
 
-	public SeguridadModulo insert(SeguridadModulo dto, Usuario usuario) throws Exception {
+	public SeguridadModulo insert(SeguridadModulo dto, Usuario usuario)
+			throws Exception {
 
 		return insertByReflection(dto, usuario);
 	}
 
-	public SeguridadModulo update(SeguridadModulo dto, SeguridadModulo dtoOriginal, Usuario usuario)
-			throws Exception {
+	public SeguridadModulo update(SeguridadModulo dto,
+			SeguridadModulo dtoOriginal, Usuario usuario) throws Exception {
 
-		Object codigoArg = null;
+		Object codigoArg = Integer.class;
 
 		if (dtoOriginal.getCodigo() != null) {
 			codigoArg = dtoOriginal.getCodigo();
-		} else {
-			codigoArg = Integer.class;
 		}
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
@@ -81,7 +80,8 @@ public class SeguridadModuloBO extends GenericBO<SeguridadModulo> {
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
 
 			return updateByReflection(
-					dto, usuario,
+					dto,
+					usuario,
 					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_CODIGO))
 							+ " = ?", codigoArg);
 		}

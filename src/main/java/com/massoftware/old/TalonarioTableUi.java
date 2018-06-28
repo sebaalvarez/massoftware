@@ -10,7 +10,7 @@ import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
 import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.frontend.ui.util.YesNoDialog;
-import com.massoftware.model.Sucursal;
+import com.massoftware.model.Entity;
 import com.massoftware.model.Talonario;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.sort.SortOrder;
@@ -421,7 +421,7 @@ class TalonarioTableUi extends CustomComponent {
 
 				Talonario item = (Talonario) talonarioGRD.getSelectedRow();
 
-				Talonario itemNew = item.clone();
+				Talonario itemNew = (Talonario) ((Entity)item).clone();
 
 				TalonarioFormUi ui = new TalonarioFormUi(
 						StandardFormUi.COPY_MODE, cx, itemNew, this);

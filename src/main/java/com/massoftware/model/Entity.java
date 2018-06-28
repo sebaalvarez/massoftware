@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.massoftware.annotation.model.FieldNotCopiableAnont;
-import com.massoftware.annotation.model.FieldUniqueAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNotCopiableAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldUniqueAnont;
 
 public class Entity implements Cloneable, Valuable {
 

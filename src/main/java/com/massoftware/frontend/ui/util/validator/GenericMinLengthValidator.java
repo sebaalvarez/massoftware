@@ -2,8 +2,8 @@ package com.massoftware.frontend.ui.util.validator;
 
 import java.lang.reflect.Field;
 
-import com.massoftware.annotation.model.FieldLabelAnont;
 import com.massoftware.frontend.ui.util.LogAndNotification;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
 import com.vaadin.data.validator.AbstractValidator;
 
 @SuppressWarnings("rawtypes")

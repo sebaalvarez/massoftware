@@ -3,25 +3,25 @@ package com.massoftware.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
-import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.annotation.model.ClassFormSourceAnont;
-import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
-import com.massoftware.annotation.model.ClassPluralLabelAnont;
-import com.massoftware.annotation.model.ClassTableMSAnont;
-import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
-import com.massoftware.annotation.model.FieldColumnsAnont;
-import com.massoftware.annotation.model.FieldLabelAnont;
-import com.massoftware.annotation.model.FieldMaxLengthAnont;
-import com.massoftware.annotation.model.FieldMaxValueBigDecimalAnont;
-import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
-import com.massoftware.annotation.model.FieldMinValueBigDecimalAnont;
-import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
-import com.massoftware.annotation.model.FieldNameMSAnont;
-import com.massoftware.annotation.model.FieldOptionsStringAnont;
-import com.massoftware.annotation.model.FieldRequiredAnont;
-import com.massoftware.annotation.model.FieldSubNameFKAnont;
-import com.massoftware.annotation.model.FieldUniqueAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassFormSourceAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassPluralLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassTableMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnsAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxLengthAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxValueBigDecimalAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxValueIntegerAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMinValueBigDecimalAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMinValueIntegerAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNameMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldOptionsStringAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldRequiredAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldSubNameFKAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldUniqueAnont;
 
 @SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "Talonario")
@@ -366,54 +366,54 @@ public class Talonario extends EntityId implements Cloneable,
 		this.puertaCambiar = puertaCambiar;
 	}
 
-	@Override
-	public Talonario clone() throws CloneNotSupportedException {
-
-		Talonario other = new Talonario();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-		other.setLetra(this.getLetra());
-		if (this.getSucursal() != null) {
-			other.setSucursal(this.getSucursal().clone());
-		} else {
-			other.setSucursal(null);
-		}
-		other.setAutonumeracion(this.getAutonumeracion());
-		other.setNumeracionPreImpresa(this.getNumeracionPreImpresa());
-		other.setAsociadoAlRG10098(this.getAsociadoAlRG10098());
-		other.setAsociadoAControladorFiscal(this
-				.getAsociadoAControladorFiscal());
-		other.setPrimerNumero(this.getPrimerNumero());
-		other.setProximoNumero(this.getProximoNumero());
-		other.setUltimoNumero(this.getUltimoNumero());
-		other.setCantidadMinimaComprobantes(this
-				.getCantidadMinimaComprobantes());
-		if (this.getUltimaFecha() != null) {
-			other.setUltimaFecha((Date) this.getUltimaFecha().clone());
-		} else {
-			other.setUltimaFecha(null);
-		}
-		if (this.getNumeroCAI() != null) {
-			other.setNumeroCAI(new BigDecimal(this.getNumeroCAI().toString()));
-		} else {
-			other.setNumeroCAI(null);
-		}
-		if (this.getVencimientoCAI() != null) {
-			other.setVencimientoCAI((Date) this.getVencimientoCAI().clone());
-		} else {
-			other.setVencimientoCAI(null);
-		}
-		other.setDiasAvisoVencimiento(this.getDiasAvisoVencimiento());
-		if (this.getPuertaCambiar() != null) {
-			other.setPuertaCambiar(this.getPuertaCambiar().clone());
-		} else {
-			other.setPuertaCambiar(null);
-		}
-
-		return other;
-	}
+//	@Override
+//	public Talonario clone() throws CloneNotSupportedException {
+//
+//		Talonario other = new Talonario();
+//
+//		other.setId(this.getId());
+//		other.setCodigo(this.getCodigo());
+//		other.setNombre(this.getNombre());
+//		other.setLetra(this.getLetra());
+//		if (this.getSucursal() != null) {
+//			other.setSucursal(this.getSucursal().clone());
+//		} else {
+//			other.setSucursal(null);
+//		}
+//		other.setAutonumeracion(this.getAutonumeracion());
+//		other.setNumeracionPreImpresa(this.getNumeracionPreImpresa());
+//		other.setAsociadoAlRG10098(this.getAsociadoAlRG10098());
+//		other.setAsociadoAControladorFiscal(this
+//				.getAsociadoAControladorFiscal());
+//		other.setPrimerNumero(this.getPrimerNumero());
+//		other.setProximoNumero(this.getProximoNumero());
+//		other.setUltimoNumero(this.getUltimoNumero());
+//		other.setCantidadMinimaComprobantes(this
+//				.getCantidadMinimaComprobantes());
+//		if (this.getUltimaFecha() != null) {
+//			other.setUltimaFecha((Date) this.getUltimaFecha().clone());
+//		} else {
+//			other.setUltimaFecha(null);
+//		}
+//		if (this.getNumeroCAI() != null) {
+//			other.setNumeroCAI(new BigDecimal(this.getNumeroCAI().toString()));
+//		} else {
+//			other.setNumeroCAI(null);
+//		}
+//		if (this.getVencimientoCAI() != null) {
+//			other.setVencimientoCAI((Date) this.getVencimientoCAI().clone());
+//		} else {
+//			other.setVencimientoCAI(null);
+//		}
+//		other.setDiasAvisoVencimiento(this.getDiasAvisoVencimiento());
+//		if (this.getPuertaCambiar() != null) {
+//			other.setPuertaCambiar(this.getPuertaCambiar().clone());
+//		} else {
+//			other.setPuertaCambiar(null);
+//		}
+//
+//		return other;
+//	}
 
 	@Override
 	public int compareTo(Talonario o) {

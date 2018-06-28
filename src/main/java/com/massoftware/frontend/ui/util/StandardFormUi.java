@@ -8,20 +8,20 @@ import java.util.Map;
 import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.ex.crud.UniqueException;
 
-import com.massoftware.annotation.model.ClassFormSourceAnont;
-import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
-import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
-import com.massoftware.annotation.model.FieldLabelAnont;
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.ui.util.build.BuildComponentsUtil;
 import com.massoftware.frontend.ui.util.xmd.BuilderXMD;
 import com.massoftware.frontend.ui.util.xmd.ComponentXMD;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassFormSourceAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldAutoMaxValueAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
 import com.massoftware.model.Entity;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
@@ -32,6 +32,7 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class StandardFormUi<T> extends CustomComponent {
 
@@ -250,7 +251,7 @@ public class StandardFormUi<T> extends CustomComponent {
 
 		// ----------------------------------------------
 
-		updateBTN = BuildComponentsUtil.buildUptaqteBTN(mode);
+		updateBTN = buildUptaqteBTN(mode);
 
 		updateBTN.addClickListener(e -> {
 			updateBTNClick();
@@ -260,6 +261,22 @@ public class StandardFormUi<T> extends CustomComponent {
 
 		// --------------------------------------------------
 
+	}
+	
+	private static Button buildUptaqteBTN(String mode) {
+		Button btn = new Button();
+		btn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+		btn.addStyleName(ValoTheme.BUTTON_TINY);
+		btn.setIcon(FontAwesome.CHECK);
+		if (StandardFormUi.INSERT_MODE.equalsIgnoreCase(mode)) {
+			btn.setCaption("Agregar");
+		} else if (StandardFormUi.UPDATE_MODE.equalsIgnoreCase(mode)) {
+			btn.setCaption("Modificar");
+		} else if (StandardFormUi.COPY_MODE.equalsIgnoreCase(mode)) {
+			btn.setCaption("Copiar");
+		}
+
+		return btn;
 	}
 
 	protected void buildBodyControls() throws Exception {

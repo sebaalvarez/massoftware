@@ -91,8 +91,7 @@ public class VentasMenu extends AbstractMenu {
 		a1.addItem("Sucursales ...", open(MotivoNotaDeCredito.class))
 				.setEnabled(false);
 		a1.addItem("Tipos de documentos AFIP ...", open(TipoDocumentoAFIP.class));
-		a1.addItem("Zonas ...", open(MotivoNotaDeCredito.class)).setEnabled(
-				false);
+		a11.addItem("Motivos notas de creditos", open(MotivoNotaDeCredito.class));
 		a1.addItem("Motivos comentarios", open(MotivoComentario.class));
 		a1.addItem("Motivos notas de crédito", open(MotivoNotaDeCredito.class));
 		a1.addItem("Perfil de facturación ...", open(MotivoNotaDeCredito.class))

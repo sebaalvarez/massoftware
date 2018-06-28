@@ -1,20 +1,20 @@
 package com.massoftware.model;
 
-import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
-import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
-import com.massoftware.annotation.model.ClassPluralLabelAnont;
-import com.massoftware.annotation.model.ClassTableMSAnont;
-import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
-import com.massoftware.annotation.model.FieldColumnsAnont;
-import com.massoftware.annotation.model.FieldLabelAnont;
-import com.massoftware.annotation.model.FieldMaxLengthAnont;
-import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
-import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
-import com.massoftware.annotation.model.FieldNameMSAnont;
-import com.massoftware.annotation.model.FieldRequiredAnont;
-import com.massoftware.annotation.model.FieldSubNameFKAnont;
-import com.massoftware.annotation.model.FieldUniqueAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassPluralLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassTableMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnsAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxLengthAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxValueIntegerAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMinValueIntegerAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNameMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldRequiredAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldSubNameFKAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldUniqueAnont;
 
 @SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "Depósito")
@@ -199,45 +199,45 @@ public class Deposito extends EntityId implements Cloneable,
 		this.puertaConsulta = puertaConsulta;
 	}
 
-	@Override
-	public Deposito clone() throws CloneNotSupportedException {
-
-		Deposito other = new Deposito();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-		other.setAbreviatura(this.getAbreviatura());
-		other.setDepositoActivo(this.getDepositoActivo());
-		if (this.getSucursal() != null) {
-			other.setSucursal(this.getSucursal().clone());
-		} else {
-			other.setSucursal(null);
-		}
-		// other.setCaja(this.getCaja());
-		if (this.getModulo() != null) {
-			other.setModulo(this.getModulo().clone());
-		} else {
-			other.setModulo(null);
-		}
-//		if (this.getDepositoAgrupacion() != null) {
-//			other.setDepositoAgrupacion(this.getDepositoAgrupacion().clone());
+//	@Override
+//	public Deposito clone() throws CloneNotSupportedException {
+//
+//		Deposito other = new Deposito();
+//
+//		other.setId(this.getId());
+//		other.setCodigo(this.getCodigo());
+//		other.setNombre(this.getNombre());
+//		other.setAbreviatura(this.getAbreviatura());
+//		other.setDepositoActivo(this.getDepositoActivo());
+//		if (this.getSucursal() != null) {
+//			other.setSucursal(this.getSucursal().clone());
 //		} else {
-//			other.setDepositoAgrupacion(null);
+//			other.setSucursal(null);
 //		}
-		if (this.getPuertaOperativo() != null) {
-			other.setPuertaOperativo(this.getPuertaOperativo().clone());
-		} else {
-			other.setPuertaOperativo(null);
-		}
-		if (this.getPuertaConsulta() != null) {
-			other.setPuertaConsulta(this.getPuertaConsulta().clone());
-		} else {
-			other.setPuertaConsulta(null);
-		}
-
-		return other;
-	}
+//		// other.setCaja(this.getCaja());
+//		if (this.getModulo() != null) {
+//			other.setModulo(this.getModulo().clone());
+//		} else {
+//			other.setModulo(null);
+//		}
+////		if (this.getDepositoAgrupacion() != null) {
+////			other.setDepositoAgrupacion(this.getDepositoAgrupacion().clone());
+////		} else {
+////			other.setDepositoAgrupacion(null);
+////		}
+//		if (this.getPuertaOperativo() != null) {
+//			other.setPuertaOperativo(this.getPuertaOperativo().clone());
+//		} else {
+//			other.setPuertaOperativo(null);
+//		}
+//		if (this.getPuertaConsulta() != null) {
+//			other.setPuertaConsulta(this.getPuertaConsulta().clone());
+//		} else {
+//			other.setPuertaConsulta(null);
+//		}
+//
+//		return other;
+//	}
 
 	@Override
 	public int compareTo(Deposito o) {

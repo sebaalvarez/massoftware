@@ -15,14 +15,14 @@ import org.cendra.ex.crud.UniqueException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
-import com.massoftware.annotation.model.ClassTableMSAnont;
-import com.massoftware.annotation.model.FieldLabelAnont;
-import com.massoftware.annotation.model.FieldNameMSAnont;
-import com.massoftware.annotation.model.FieldNowTimestampForInsertUpdate;
-import com.massoftware.annotation.model.FieldSubNameFKAnont;
-import com.massoftware.annotation.model.FieldUserForInsertUpdate;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.Traslate;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassTableMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNameMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNowTimestampForInsertUpdate;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldSubNameFKAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldUserForInsertUpdate;
 import com.massoftware.model.Usuario;
 
 public abstract class GenericBO<T> {

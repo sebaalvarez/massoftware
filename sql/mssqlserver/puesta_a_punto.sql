@@ -337,7 +337,7 @@ CREATE VIEW [dbo].[vMotivoComentario] AS
 CREATE VIEW [dbo].[vMotivoNotaDeCredito] AS  
 
 
-	SELECT	'com.massoftware.model.MotivoNotaDeCredito'										AS ClassMotivoNotaDeCredito
+	SELECT	'com.massoftware.model.MotivoNotaDeCredito'											AS ClassMotivoNotaDeCredito
 			-----------------------------------------------------------------------------------------------------			
 			, CAST([TablaMotivosNotasDeCredito].[MOTIVO] AS VARCHAR)							AS id	-- String NOT NULL PK					
 			-----------------------------------------------------------------------------------------------------
@@ -391,8 +391,10 @@ CREATE VIEW [dbo].[vCentroDeCostoProyectoTipo] AS
 
 CREATE VIEW [dbo].[vEjercicioContable] AS
 
-	SELECT	'com.massoftware.model.EjercicioContable'									AS ClassEjercicioContable			
+	SELECT	'com.massoftware.model.EjercicioContable'									AS ClassEjercicioContable	
+			-----------------------------------------------------------------------------------------------------		
 			, CAST([EjerciciosContables].[EJERCICIO] AS VARCHAR)						AS id			
+			-----------------------------------------------------------------------------------------------------
 			
 			, CAST([EjerciciosContables].[EJERCICIO] AS INT)							AS ejercicio				-- Integer NOT NULL UN [ 1 - Integer.MAX_VALUE]  		
 			, LTRIM(RTRIM(CAST([EjerciciosContables].[COMENTARIO] AS VARCHAR)))			AS comentario				-- String (255) 
@@ -414,8 +416,10 @@ CREATE VIEW [dbo].[vEjercicioContable] AS
 
 CREATE VIEW [dbo].[vCentroDeCostoContable] AS        
 
-	SELECT	'com.massoftware.model.CentroDeCostoContable' AS ClassCentroDeCostoContable			
+	SELECT	'com.massoftware.model.CentroDeCostoContable'																							AS ClassCentroDeCostoContable			
+			-----------------------------------------------------------------------------------------------------
 			, CONCAT ( CAST([vEjercicioContable].[ejercicio] AS VARCHAR), '-', CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS VARCHAR) )	AS id										-- String NOT NULL PK					
+			-----------------------------------------------------------------------------------------------------
 
 			, CAST([CentrosDeCostoContable].[CENTRODECOSTOCONTABLE] AS INT)																			AS numero									-- Integer NOT NULL UN [ 1 - Short.MAX_VALUE] 		 
 			, LTRIM(RTRIM(CAST([CentrosDeCostoContable].[NOMBRE] AS VARCHAR)))																		AS nombre			 						-- String (30) NOT NULL UN 		
@@ -471,8 +475,10 @@ CREATE VIEW [dbo].[vPuntoDeEquilibrioTipo] AS
 
 CREATE VIEW [dbo].[vPuntoDeEquilibrio] AS        
 
-	SELECT	'com.massoftware.model.PuntoDeEquilibrio' AS ClassPuntoDeEquilibrio			
+	SELECT	'com.massoftware.model.PuntoDeEquilibrio'																	AS ClassPuntoDeEquilibrio			
+			-----------------------------------------------------------------------------------------------------
 			, CONCAT ( [vEjercicioContable].[ejercicio], '-', CAST(PuntoDeEquilibrio.PUNTODEEQUILIBRIO AS VARCHAR) )	AS id
+			-----------------------------------------------------------------------------------------------------
 			
 			--,[PuntoDeEquilibrio].[EJERCICIO]   																														-- NOT NULL FK
 				,vEjercicioContable.id																					AS ejercicioContable_id							-- String NOT NULL PK	
@@ -511,8 +517,10 @@ CREATE VIEW [dbo].[vPuntoDeEquilibrio] AS
 
 CREATE VIEW [dbo].[vProvincia] AS        
 
-	SELECT	'com.massoftware.model.Provincia' AS ClassProvincia			
+	SELECT	'com.massoftware.model.Provincia'												AS ClassProvincia			
+			-----------------------------------------------------------------------------------------------------
 			, CONCAT ( [vPais].[codigo], '-', CAST([Provincias].[PROVINCIA] AS VARCHAR) )	AS id
+			-----------------------------------------------------------------------------------------------------
 
 			-- [PAIS]																		AS FK NOT NULL
 			, [vPais].id																	AS pais_id
@@ -541,9 +549,10 @@ CREATE VIEW [dbo].[vProvincia] AS
 
 CREATE VIEW [dbo].[vCiudad] AS        
 
-	SELECT	'com.massoftware.model.Ciudad'													AS ClassCiudad			
+	SELECT	'com.massoftware.model.Ciudad'													AS ClassCiudad	
+			-----------------------------------------------------------------------------------------------------		
 			, CAST([Ciudades].[CIUDAD] AS VARCHAR)											AS id
-
+			-----------------------------------------------------------------------------------------------------
 
 			-- [PROVINCIA]																	AS FK NOT NULL
 			, [vProvincia].id																AS provincia_id
@@ -713,6 +722,61 @@ CREATE VIEW [dbo].[vSucursal] AS
 	-- SELECT * FROM dbo.vSucursal;	
 	-- SELECT * FROM dbo.vSucursal ORDER BY codigo, nombre;	
 
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vSeguridadModulo]
+
+CREATE VIEW [dbo].[vSeguridadModulo] AS  
+
+
+	SELECT	'com.massoftware.model.SeguridadModulo'								AS ClassSeguridadModulo
+			-----------------------------------------------------------------------------------------------------
+			, CAST([SSECUR_DoorGroup].[NO] AS VARCHAR)							AS id			
+			-----------------------------------------------------------------------------------------------------
+			
+			, CAST([SSECUR_DoorGroup].[NO] AS INTEGER)							AS codigo					-- Integer [ 1 - Integer.MAX_VALUE ] NOT NULL UN
+			, LTRIM(RTRIM(CAST([SSECUR_DoorGroup].[NAME] AS VARCHAR)))			AS nombre					-- String (30) NOT NULL UN
+			, [SSECUR_DoorGroup].[FREEZE]										AS congelado				-- Boolean  			
+
+	FROM	[dbo].[SSECUR_DoorGroup];
+  
+	-- SELECT * FROM dbo.SSECUR_DoorGroup;	
+	-- SELECT * FROM dbo.vSeguridadModulo;	
+	-- SELECT * FROM dbo.vSeguridadModulo ORDER BY codigo, nombre;	
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vSeguridadPuerta]
+
+CREATE VIEW [dbo].[vSeguridadPuerta] AS  
+
+
+	SELECT	'com.massoftware.model.SeguridadPuerta'										AS ClassSeguridadPuerta
+			-----------------------------------------------------------------------------------------------------
+			, CAST([SSECUR_Door].[NO] AS VARCHAR)										AS id			
+			-----------------------------------------------------------------------------------------------------
+			, CAST([SSECUR_Door].[NO] AS INTEGER)										AS codigo -- Integer  NOT NULL UN [ 1 - Short.MAX_VALUE ]
+			-----------------------------------------------------------------------------------------------------
+				-- , [DGRPNO]															AS seguridadModulo			-- NOT NULL
+				, [vSeguridadModulo].[id]												AS seguridadModulo_id		
+				, [vSeguridadModulo].[codigo]											AS seguridadModulo_codigo 
+				, [vSeguridadModulo].[nombre]											AS seguridadModulo_nombre 
+				, [vSeguridadModulo].[congelado]										AS seguridadModulo_congelado 
+			-----------------------------------------------------------------------------------------------------
+			, LTRIM(RTRIM(CAST([EQUATE] AS VARCHAR)))									AS igualacionID -- String (30) NOT NULL UN
+			, LTRIM(RTRIM(CAST([DESCRIPTION] AS VARCHAR)))								AS nombre -- String (60) NOT NULL UN
+			, [SSECUR_Door].[FREEZE]													AS congelado -- Boolean  	
+
+	FROM	[dbo].[SSECUR_Door]
+
+	LEFT JOIN	[dbo].[vSeguridadModulo] 
+		ON [dbo].[vSeguridadModulo].[codigo] = CAST([dbo].[SSECUR_Door].[DGRPNO] AS INTEGER);
+
+	-- SELECT * FROM dbo.vSeguridadPuerta;	
+	-- SELECT * FROM dbo.vSeguridadPuerta ORDER BY codigo, nombre;	
+
+
 	
 
 --=============================================================================================================
@@ -804,55 +868,6 @@ CREATE VIEW [dbo].[vCentroDeCostoProyecto] AS
 
 
 	
--------------------------------------------------------------
-
--- DROP VIEW [dbo].[vSeguridadModulo]
-
-CREATE VIEW [dbo].[vSeguridadModulo] AS  
-
-
-	SELECT	'com.massoftware.model.SeguridadModulo'								AS ClassSeguridadModulo
-			-----------------------------------------------------------------------------------------------------
-			, CAST([SSECUR_DoorGroup].[NO] AS VARCHAR)							AS id			
-			-----------------------------------------------------------------------------------------------------
-			, CAST([SSECUR_DoorGroup].[NO] AS INTEGER)							AS codigo -- Integer [ 1 - N ] NOT NULL
-			, LTRIM(RTRIM(CAST([SSECUR_DoorGroup].[NAME] AS VARCHAR)))			AS nombre -- String (30) NOT NULL UN
-			, [SSECUR_DoorGroup].[FREEZE]										AS congelado -- Boolean  			
-	FROM	[dbo].[SSECUR_DoorGroup];
-  
-	-- SELECT * FROM dbo.vSeguridadModulo;	
-	-- SELECT * FROM dbo.vSeguridadModulo ORDER BY codigo, nombre;	
-
--------------------------------------------------------------
-
--- DROP VIEW [dbo].[vSeguridadPuerta]
-
-CREATE VIEW [dbo].[vSeguridadPuerta] AS  
-
-
-	SELECT	'com.massoftware.model.SeguridadPuerta'										AS ClassSeguridadPuerta
-			-----------------------------------------------------------------------------------------------------
-			, CAST([SSECUR_Door].[NO] AS VARCHAR)										AS id			
-			-----------------------------------------------------------------------------------------------------
-			, CAST([SSECUR_Door].[NO] AS INTEGER)										AS codigo -- Integer  NOT NULL UN [ 1 - Short.MAX_VALUE ]
-			-----------------------------------------------------------------------------------------------------
-				-- , [DGRPNO]															AS seguridadModulo			-- NOT NULL
-				, [vSeguridadModulo].[id]												AS seguridadModulo_id		
-				, [vSeguridadModulo].[codigo]											AS seguridadModulo_codigo 
-				, [vSeguridadModulo].[nombre]											AS seguridadModulo_nombre 
-				, [vSeguridadModulo].[congelado]										AS seguridadModulo_congelado 
-			-----------------------------------------------------------------------------------------------------
-			, LTRIM(RTRIM(CAST([EQUATE] AS VARCHAR)))									AS igualacionID -- String (30) NOT NULL UN
-			, LTRIM(RTRIM(CAST([DESCRIPTION] AS VARCHAR)))								AS nombre -- String (60) NOT NULL UN
-			, [SSECUR_Door].[FREEZE]													AS congelado -- Boolean  	
-
-	FROM	[dbo].[SSECUR_Door]
-
-	LEFT JOIN	[dbo].[vSeguridadModulo] 
-		ON [dbo].[vSeguridadModulo].[codigo] = CAST([dbo].[SSECUR_Door].[DGRPNO] AS INTEGER);
-
-	-- SELECT * FROM dbo.vSeguridadPuerta;	
-	-- SELECT * FROM dbo.vSeguridadPuerta ORDER BY codigo, nombre;	
 
 
 

@@ -9,11 +9,11 @@ import java.util.List;
 
 import org.cendra.ex.crud.DeleteForeingObjectConflictException;
 
-import com.massoftware.annotation.model.ClassPluralLabelAnont;
-import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
-import com.massoftware.annotation.model.FieldLabelAnont;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.xmd.BuilderXMD;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassPluralLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.Entity;
 import com.massoftware.model.EntityId;

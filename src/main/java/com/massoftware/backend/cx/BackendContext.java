@@ -479,9 +479,7 @@ public class BackendContext extends AbstractContext {
 
 				return new CiudadBO(dataSourceWrapper, this);
 
-			}
-
-			else if (classModel == Banco.class) {
+			} else if (classModel == Banco.class) {
 
 				return new BancoBO(dataSourceWrapper, this);
 
@@ -497,17 +495,25 @@ public class BackendContext extends AbstractContext {
 
 				return new SucursalBO(dataSourceWrapper, this);
 
-			} else if (classModel == Talonario.class) {
-
-				return new TalonarioBO(dataSourceWrapper, this);
-
 			} else if (classModel == SeguridadPuerta.class) {
 
 				return new SeguridadPuertaBO(dataSourceWrapper, this);
 
-			} else if (classModel == Modulo.class) {
+			}  else if (classModel == SeguridadModulo.class) {
+
+				return new SeguridadModuloBO(dataSourceWrapper, this);
+
+			}
+			
+			
+			
+			else if (classModel == Modulo.class) {
 
 				return new ModuloBO(dataSourceWrapper, this);
+
+			}	else if (classModel == Talonario.class) {
+
+				return new TalonarioBO(dataSourceWrapper, this);
 
 			} else if (classModel == Deposito.class) {
 
@@ -573,10 +579,6 @@ public class BackendContext extends AbstractContext {
 			} else if (classModel == CuentaDeFondoTipoBanco.class) {
 
 				return new CuentaDeFondoTipoBancoBO(dataSourceWrapper, this);
-
-			} else if (classModel == SeguridadModulo.class) {
-
-				return new SeguridadModuloBO(dataSourceWrapper, this);
 
 			} else if (classModel == Chequera.class) {
 

@@ -6,13 +6,13 @@ import com.massoftware.frontend.ui.custom.windows.CiudadTableUi;
 import com.massoftware.frontend.ui.custom.windows.EjercicioContableTableUi;
 import com.massoftware.frontend.ui.custom.windows.ProvinciaTableUi;
 import com.massoftware.frontend.ui.custom.windows.PuntoDeEquilibrioTableUi;
+import com.massoftware.frontend.ui.custom.windows.SeguridadPuertaTableUi;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.StandardTableUi;
 import com.massoftware.frontend.ui.windows.custom.centro_de_costo_proyecto.CentroDeCostoProyectoTableUi;
 import com.massoftware.frontend.ui.windows.custom.chequera.ChequeraTableUi;
 import com.massoftware.frontend.ui.windows.custom.cuenta_contable.CuentaContableTableUi;
 import com.massoftware.frontend.ui.windows.custom.cuenta_de_fondo.CuentaDeFondoTableUi;
-import com.massoftware.frontend.ui.windows.custom.seguridad.SeguridadPuertaTableUi;
 import com.massoftware.model.Banco;
 import com.massoftware.model.BancoFirmante;
 import com.massoftware.model.Caja;
@@ -142,32 +142,20 @@ public class FrontendContext {
 
 				new PuntoDeEquilibrioTableUi(shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario,
-						PuntoDeEquilibrio.class, pidFiltering,
-						searchFilter, searchProperty);
+						PuntoDeEquilibrio.class, pidFiltering, searchFilter,
+						searchProperty);
 
 			} else if (classModel == Provincia.class) {
 
-				new ProvinciaTableUi(shortcut, agregar, modificar,
-						copiar, eliminar, win, cx, usuario,
-						Provincia.class, pidFiltering,
+				new ProvinciaTableUi(shortcut, agregar, modificar, copiar,
+						eliminar, win, cx, usuario, Provincia.class,
+						pidFiltering, searchFilter, searchProperty);
+
+			} else if (classModel == Ciudad.class) {
+
+				new CiudadTableUi(shortcut, agregar, modificar, copiar,
+						eliminar, win, cx, usuario, Ciudad.class, pidFiltering,
 						searchFilter, searchProperty);
-
-			}  else if (classModel == Ciudad.class) {
-
-				new CiudadTableUi(shortcut, agregar, modificar,
-						copiar, eliminar, win, cx, usuario,
-						Ciudad.class, pidFiltering,
-						searchFilter, searchProperty);
-
-			}
-
-
-			else if (classModel == SeguridadPuerta.class) {
-
-				new SeguridadPuertaTableUi(shortcut, agregar, modificar,
-						copiar, eliminar, win, cx, usuario,
-						SeguridadPuerta.class, pidFiltering, searchFilter,
-						searchProperty);
 
 			} else if (classModel == Sucursal.class) {
 
@@ -175,7 +163,23 @@ public class FrontendContext {
 						copiar, eliminar, win, cx, usuario, Sucursal.class,
 						pidFiltering, searchFilter, searchProperty);
 
-			} else if (classModel == Talonario.class) {
+			} else if (classModel == SeguridadPuerta.class) {
+
+				new SeguridadPuertaTableUi(shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario,
+						SeguridadPuerta.class, pidFiltering, searchFilter,
+						searchProperty);
+
+			}  else if (classModel == BancoFirmante.class) {
+
+				new StandardTableUi<BancoFirmante>(shortcut, agregar,
+						modificar, copiar, eliminar, win, cx, usuario,
+						BancoFirmante.class, pidFiltering, searchFilter,
+						searchProperty);
+
+			} 
+
+			else if (classModel == Talonario.class) {
 
 				new StandardTableUi<Talonario>(shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario, Talonario.class,
@@ -219,14 +223,7 @@ public class FrontendContext {
 						MonedaCotizacion.class, pidFiltering, searchFilter,
 						searchProperty);
 
-			} else if (classModel == BancoFirmante.class) {
-
-				new StandardTableUi<BancoFirmante>(shortcut, agregar,
-						modificar, copiar, eliminar, win, cx, usuario,
-						BancoFirmante.class, pidFiltering, searchFilter,
-						searchProperty);
-
-			} else if (classModel == Caja.class) {
+			}else if (classModel == Caja.class) {
 
 				new StandardTableUi<Caja>(shortcut, agregar, modificar, copiar,
 						eliminar, win, cx, usuario, Caja.class, pidFiltering,

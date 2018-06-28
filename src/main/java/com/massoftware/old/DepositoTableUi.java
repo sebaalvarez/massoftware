@@ -12,8 +12,8 @@ import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
 import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.frontend.ui.util.YesNoDialog;
 import com.massoftware.model.Deposito;
+import com.massoftware.model.Entity;
 import com.massoftware.model.Sucursal;
-import com.massoftware.model.Talonario;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItemContainer;
@@ -456,7 +456,7 @@ class DepositoTableUi extends CustomComponent {
 
 				Deposito item = (Deposito) depositoGRD.getSelectedRow();
 
-				Deposito itemNew = item.clone();
+				Deposito itemNew = (Deposito) ((Entity)item).clone();
 
 				DepositoFormUi ui = new DepositoFormUi(
 						StandardFormUi.COPY_MODE, cx, itemNew, this);

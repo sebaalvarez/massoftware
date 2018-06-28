@@ -1,23 +1,23 @@
 package com.massoftware.model;
 
-import com.massoftware.annotation.model.ClassArticleLabelInPluralAnont;
-import com.massoftware.annotation.model.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
-import com.massoftware.annotation.model.ClassPluralLabelAnont;
-import com.massoftware.annotation.model.ClassTableMSAnont;
-import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
-import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
-import com.massoftware.annotation.model.FieldColumnsAnont;
-import com.massoftware.annotation.model.FieldLabelAnont;
-import com.massoftware.annotation.model.FieldMaxLengthAnont;
-import com.massoftware.annotation.model.FieldMaxValueIntegerAnont;
-import com.massoftware.annotation.model.FieldMinValueIntegerAnont;
-import com.massoftware.annotation.model.FieldNameMSAnont;
-import com.massoftware.annotation.model.FieldRequiredAnont;
-import com.massoftware.annotation.model.FieldSubNameFKAnont;
-import com.massoftware.annotation.model.FieldUniqueAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassPluralLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassTableMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldAutoMaxValueAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnsAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxLengthAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxValueIntegerAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMinValueIntegerAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNameMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldRequiredAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldSubNameFKAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldUniqueAnont;
 
-@SuppressWarnings("serial")
+
 @ClassLabelInTheSingularAnont(value = "Puerta")
 @ClassPluralLabelAnont(value = "Puertas")
 @ClassArticleLabelInTheSingularAnont(value = "la")
@@ -118,24 +118,24 @@ public class SeguridadPuerta extends EntityId implements Cloneable,
 		this.congelado = congelado;
 	}
 
-	@Override
-	public SeguridadPuerta clone() throws CloneNotSupportedException {
-
-		SeguridadPuerta other = new SeguridadPuerta();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		if (this.getSeguridadModulo() != null) {
-			other.setSeguridadModulo(this.getSeguridadModulo().clone());
-		} else {
-			other.setSeguridadModulo(null);
-		}
-		other.setIgualacionID(this.getIgualacionID());
-		other.setNombre(this.getNombre());
-		other.setCongelado(this.getCongelado());
-
-		return other;
-	}
+//	@Override
+//	public SeguridadPuerta clone() throws CloneNotSupportedException {
+//
+//		SeguridadPuerta other = new SeguridadPuerta();
+//
+//		other.setId(this.getId());
+//		other.setCodigo(this.getCodigo());
+//		if (this.getSeguridadModulo() != null) {
+//			other.setSeguridadModulo(this.getSeguridadModulo().clone());
+//		} else {
+//			other.setSeguridadModulo(null);
+//		}
+//		other.setIgualacionID(this.getIgualacionID());
+//		other.setNombre(this.getNombre());
+//		other.setCongelado(this.getCongelado());
+//
+//		return other;
+//	}
 
 	@Override
 	public int compareTo(SeguridadPuerta o) {
