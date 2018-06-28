@@ -610,7 +610,7 @@ class SucursalTableUi extends CustomComponent {
 	public void updateModelViewPort768x1024() throws Exception {
 		try {
 
-			List<Sucursal> items = cx.buildSucursalBO().findAll();
+			List<Sucursal> items = cx.buildBO(Sucursal.class).findAll();
 
 			sucursalBIC.removeAllItems();
 			for (Sucursal item : items) {

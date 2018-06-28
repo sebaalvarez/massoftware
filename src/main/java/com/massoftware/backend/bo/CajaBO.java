@@ -31,22 +31,20 @@ public class CajaBO extends GenericBO<Caja> {
 
 		} else if (attName.equalsIgnoreCase(ATT_NAME_NOMBRE)) {
 
-			checkUnique(attName, "LOWER(" + ATT_NAME_NOMBRE + ") = ?", value
-					.toString().toLowerCase());
+			checkUnique(attName, "LOWER(dbo.Translate(" + ATT_NAME_NOMBRE
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
+					value.toString().toLowerCase());
 
 		}
 	}
 
 	public boolean delete(Caja dto) throws Exception {
 
-		Object codigoArg = null;
+		Object codigoArg = Integer.class;
 
 		if (dto.getCodigo() != null) {
 			codigoArg = dto.getCodigo();
-		} else {
-			codigoArg = Integer.class;
 		}
-
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
 			return delete(ATT_NAME_CODIGO + " = ?", codigoArg);
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
@@ -65,14 +63,13 @@ public class CajaBO extends GenericBO<Caja> {
 		return insertByReflection(dto, usuario);
 	}
 
-	public Caja update(Caja dto, Caja dtoOriginal, Usuario usuario) throws Exception {
+	public Caja update(Caja dto, Caja dtoOriginal, Usuario usuario)
+			throws Exception {
 
-		Object codigoArg = null;
+		Object codigoArg = Integer.class;
 
 		if (dtoOriginal.getCodigo() != null) {
 			codigoArg = dtoOriginal.getCodigo();
-		} else {
-			codigoArg = Integer.class;
 		}
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
@@ -80,7 +77,8 @@ public class CajaBO extends GenericBO<Caja> {
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
 
 			return updateByReflection(
-					dto, usuario,
+					dto,
+					usuario,
 					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_CODIGO))
 							+ " = ?", codigoArg);
 		}

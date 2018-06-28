@@ -955,6 +955,10 @@ public class StandardTableUi<T> extends CustomComponent {
 
 			boolean enabled = itemsBIC.size() > 0;
 
+//			if(enabled){
+//				itemsGRD.select(itemsGRD.getSelectedRow());	
+//			}
+			
 			itemsGRD.setEnabled(enabled);
 			if (modificar) {
 				modificarBTN.setEnabled(enabled);

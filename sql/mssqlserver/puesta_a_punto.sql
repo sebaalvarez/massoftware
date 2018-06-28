@@ -777,6 +777,61 @@ CREATE VIEW [dbo].[vSeguridadPuerta] AS
 	-- SELECT * FROM dbo.vSeguridadPuerta ORDER BY codigo, nombre;	
 
 
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vCaja]
+
+CREATE VIEW [dbo].[vCaja] AS  
+
+
+	SELECT	'com.massoftware.model.Caja'														AS ClassCaja
+			-----------------------------------------------------------------------------------------------------			
+			, CAST([Cajas].[CAJA] AS VARCHAR)													AS id					-- String NOT NULL PK					
+			-----------------------------------------------------------------------------------------------------
+			, CAST([Cajas].[CAJA] AS INTEGER)													AS codigo				-- Integer NOT NULL UN [ 0 - 255] 
+			, LTRIM(RTRIM(CAST([Cajas].[NOMBRE] AS VARCHAR)))									AS nombre				-- String (20) NOT NULL UN 			
+			--, [Cajas].[CONTROLSTOCK]															AS controlStock			-- Boolean
+			-----------------------------------------------------------------------------------------------------		
+			--  , [Cajas].[DOORNOPERMISO]      														AS seguridadPuerta
+				, [vSeguridadPuerta].id																AS seguridadPuerta_id
+				, [vSeguridadPuerta].codigo															AS seguridadPuerta_codigo
+					, [vSeguridadPuerta].seguridadModulo_id											AS seguridadPuerta_seguridadModulo_id
+					, [vSeguridadPuerta].seguridadModulo_codigo										AS seguridadPuerta_seguridadModulo_codigo 
+					, [vSeguridadPuerta].seguridadModulo_nombre										AS seguridadPuerta_seguridadModulo_nombre 
+					, [vSeguridadPuerta].seguridadModulo_congelado									AS seguridadPuerta_seguridadModulo_congelado
+				, [vSeguridadPuerta].igualacionID													AS seguridadPuerta_igualacionID
+				, [vSeguridadPuerta].nombre															AS seguridadPuerta_nombre
+				, [vSeguridadPuerta].congelado														AS seguridadPuerta_congelado
+			-----------------------------------------------------------------------------------------------------	
+  
+	FROM	[dbo].[Cajas]
+	LEFT JOIN	[dbo].[vSeguridadPuerta]
+			ON		[dbo].[vSeguridadPuerta].[codigo] = CAST([dbo].[Cajas].DOORNOPERMISO AS INTEGER);
+
+
+	-- SELECT * FROM dbo.vCaja;	
+	-- SELECT * FROM dbo.vCaja ORDER BY codigo, nombre;	
+
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vMonedaAFIP]
+
+CREATE VIEW [dbo].[vMonedaAFIP] AS  
+
+
+	SELECT	'com.massoftware.model.MonedaAFIP'												AS ClassMonedaAFIP
+			-----------------------------------------------------------------------------------------------------			
+			, LTRIM(RTRIM(CAST([AfipMonedas].[MONEDAAFIP] AS VARCHAR)))						AS id				-- String NOT NULL PK					
+			-----------------------------------------------------------------------------------------------------
+			, LTRIM(RTRIM(CAST([AfipMonedas].[MONEDAAFIP]  AS VARCHAR)))					AS codigo			-- String (3) NOT NULL UN 
+			, LTRIM(RTRIM(CAST([AfipMonedas].[DESCRIPCION] AS VARCHAR)))					AS nombre			-- String (30) NOT NULL UN 
+  
+	FROM	[dbo].[AfipMonedas];
+
+
+	-- SELECT * FROM dbo.vMonedaAFIP;	
+	-- SELECT * FROM dbo.vMonedaAFIP ORDER BY codigo, nombre;	
 	
 
 --=============================================================================================================
@@ -1169,40 +1224,7 @@ CREATE VIEW [dbo].[vAsientoModeloItem] AS
 
 
 
--------------------------------------------------------------
 
--- DROP VIEW [dbo].[vCaja]
-
-CREATE VIEW [dbo].[vCaja] AS  
-
-
-	SELECT	'com.massoftware.model.Caja'														AS ClassCaja
-			-----------------------------------------------------------------------------------------------------			
-			, CAST([Cajas].[CAJA] AS VARCHAR)													AS id	-- String NOT NULL PK					
-			-----------------------------------------------------------------------------------------------------
-			, CAST([Cajas].[CAJA] AS INTEGER)													AS codigo -- Integer NOT NULL UN [ 1 - 255] 
-			, LTRIM(RTRIM(CAST([Cajas].[NOMBRE] AS VARCHAR)))									AS nombre -- String (20) NOT NULL UN 			
-			--, [Cajas].[CONTROLSTOCK]															AS controlStock -- Boolean
-			-----------------------------------------------------------------------------------------------------		
-			--  , [Cajas].[DOORNOPERMISO]      														AS seguridadPuerta
-				, [vSeguridadPuerta].id																AS seguridadPuerta_id
-				, [vSeguridadPuerta].codigo															AS seguridadPuerta_codigo
-					, [vSeguridadPuerta].seguridadModulo_id											AS seguridadPuerta_seguridadModulo_id
-					, [vSeguridadPuerta].seguridadModulo_codigo										AS seguridadPuerta_seguridadModulo_codigo 
-					, [vSeguridadPuerta].seguridadModulo_nombre										AS seguridadPuerta_seguridadModulo_nombre 
-					, [vSeguridadPuerta].seguridadModulo_congelado									AS seguridadPuerta_seguridadModulo_congelado
-				, [vSeguridadPuerta].igualacionID													AS seguridadPuerta_igualacionID
-				, [vSeguridadPuerta].nombre															AS seguridadPuerta_nombre
-				, [vSeguridadPuerta].congelado														AS seguridadPuerta_congelado
-			-----------------------------------------------------------------------------------------------------	
-  
-	FROM	[dbo].[Cajas]
-	LEFT JOIN	[dbo].[vSeguridadPuerta]
-			ON		[dbo].[vSeguridadPuerta].[codigo] = CAST([dbo].[Cajas].DOORNOPERMISO AS INTEGER);
-
-
-	-- SELECT * FROM dbo.vCaja;	
-	-- SELECT * FROM dbo.vCaja ORDER BY codigo, nombre;	
 
 	
 	
@@ -1476,25 +1498,7 @@ CREATE VIEW [dbo].[vTipoCbteControl] AS
 
 
 
--------------------------------------------------------------
 
--- DROP VIEW [dbo].[vMonedaAFIP]
-
-CREATE VIEW [dbo].[vMonedaAFIP] AS  
-
-
-	SELECT	'com.massoftware.model.MonedaAFIP'												AS ClassMonedaAFIP
-			-----------------------------------------------------------------------------------------------------			
-			, LTRIM(RTRIM(CAST([AfipMonedas].[MONEDAAFIP] AS VARCHAR)))						AS id	-- String NOT NULL PK					
-			-----------------------------------------------------------------------------------------------------
-			, LTRIM(RTRIM(CAST([AfipMonedas].[MONEDAAFIP]  AS VARCHAR)))					AS codigo -- String (3) NOT NULL UN 
-			, LTRIM(RTRIM(CAST([AfipMonedas].[DESCRIPCION] AS VARCHAR)))					AS nombre -- String (30) NOT NULL UN 
-  
-	FROM	[dbo].[AfipMonedas];
-
-
-	-- SELECT * FROM dbo.vMonedaAFIP;	
-	-- SELECT * FROM dbo.vMonedaAFIP ORDER BY codigo, nombre;	
 
 -------------------------------------------------------------
 

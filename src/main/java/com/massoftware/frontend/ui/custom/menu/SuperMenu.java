@@ -4,6 +4,7 @@ import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.ui.util.AbstractMenu;
 import com.massoftware.model.Banco;
 import com.massoftware.model.BancoFirmante;
+import com.massoftware.model.Caja;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CentroDeCostoProyecto;
 import com.massoftware.model.Ciudad;
@@ -41,21 +42,19 @@ public class SuperMenu extends AbstractMenu {
 		menubar.setWidth("100%");
 		menubar.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
 
-		final MenuBar.MenuItem a1 = menubar.addItem(
-				"Sin dependencias", null);		
-		final MenuBar.MenuItem a2 = menubar.addItem(
-				"Con dependencias", null);
+		final MenuBar.MenuItem a1 = menubar.addItem("Sin dependencias", null);
+		final MenuBar.MenuItem a2 = menubar.addItem("Con dependencias", null);
 
 		MenuBar.MenuItem a11 = a1.addItem("Sólo anotaciones", null);
-		MenuBar.MenuItem a12 = a1.addItem(
-				"Sólo anotaciones + JSON Layout", null);
+		MenuBar.MenuItem a12 = a1.addItem("Sólo anotaciones + JSON Layout",
+				null);
 		MenuBar.MenuItem a13 = a1.addItem("Extends StandardTableUi", null);
 		MenuBar.MenuItem a14 = a1.addItem(
 				"Extends StandardTableUi + StandardFormUi", null);
-		
+
 		MenuBar.MenuItem a21 = a2.addItem("Sólo anotaciones", null);
-		MenuBar.MenuItem a22 = a2.addItem(
-				"Sólo anotaciones + JSON Layout", null);
+		MenuBar.MenuItem a22 = a2.addItem("Sólo anotaciones + JSON Layout",
+				null);
 		MenuBar.MenuItem a23 = a2.addItem("Extends StandardTableUi", null);
 		MenuBar.MenuItem a24 = a2.addItem(
 				"Extends StandardTableUi + StandardFormUi", null);
@@ -65,8 +64,6 @@ public class SuperMenu extends AbstractMenu {
 		a11.addItem("Zonas", open(Zona.class));
 		a11.addItem("Países", open(Pais.class));
 		a11.addItem("Tipos de cliente", open(TipoCliente.class));
-		// a11.addItem("Tipos de cliente",
-		// open(TipoCliente.class)).setEnabled(false);
 		a11.addItem("Tipos de documentos AFIP", open(TipoDocumentoAFIP.class));
 		a11.addItem("Tipos de cbtes. AFIP", open(TipoCbteAFIP.class))
 				.setEnabled(false);
@@ -75,23 +72,28 @@ public class SuperMenu extends AbstractMenu {
 				open(MotivoNotaDeCredito.class));
 		a11.addItem("Codigos convenio multilateral",
 				open(CodigoConvenioMultilateral.class));
-		a11.addItem("Firmantes (cheques propios) ...", open(BancoFirmante.class));
+		a11.addItem("Firmantes (cheques propios) ...",
+				open(BancoFirmante.class));
+		a11.addItem("Cajas", open(Caja.class));
 
 		a13.addItem("Ejercicios contables", open(EjercicioContable.class));
 
 		a14.addItem("Centros de costo - Proyectos",
 				open(CentroDeCostoProyecto.class)).setEnabled(false);
-		
-		a24.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class)).setEnabled(false);;
-		
-		a25.addItem("Centros de costos contables", open(CentroDeCostoContable.class));
+
+		a24.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class))
+				.setEnabled(false);
+		;
+
+		a25.addItem("Centros de costos contables",
+				open(CentroDeCostoContable.class));
 		a25.addItem("Puntos de equilibrio ...", open(PuntoDeEquilibrio.class));
 		a25.addItem("Provincias ...", open(Provincia.class));
 		a25.addItem("Ciudades ...", open(Ciudad.class));
-		
+
 		a12.addItem("Bancos ...", open(Banco.class));
 		a12.addItem("Sucursales ...", open(Sucursal.class));
-		
+
 		a23.addItem("Puertas ...", open(SeguridadPuerta.class));
 
 		return menubar;

@@ -93,7 +93,7 @@ public class FondosMenu extends AbstractMenu {
 		a1.addItem("Chequeras ...", open(Chequera.class)).setEnabled(false);
 		a1.addItem("Bancos ...", open(Banco.class));
 		a1.addItem("Firmantes (cheques propios) ...", open(BancoFirmante.class));
-		a1.addItem("Cajas", open(Caja.class)).setEnabled(false);
+		a1.addItem("Cajas", open(Caja.class));
 		a1.addItem("Monedas ...", open(Moneda.class));
 		a1.addItem("Cotizaciones de monedas ...", open(MonedaCotizacion.class))
 				.setEnabled(false);

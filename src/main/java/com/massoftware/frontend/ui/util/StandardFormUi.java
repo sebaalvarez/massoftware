@@ -9,13 +9,16 @@ import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.ex.crud.UniqueException;
 
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.cx.FrontendContext;
 import com.massoftware.frontend.ui.util.xmd.BuilderXMD;
 import com.massoftware.frontend.ui.util.xmd.ComponentXMD;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassFormSourceAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassLabelInTheSingularAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldAutoMaxValueAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldCBBox;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
 import com.massoftware.model.Entity;
+import com.massoftware.model.SeguridadPuerta;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
@@ -30,6 +33,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
@@ -165,6 +169,26 @@ public class StandardFormUi<T> extends CustomComponent {
 	}
 
 	protected void shortcutListener(Object target) {
+		
+		if (target instanceof TextField) {
+			TextField txt = (TextField) target;
+			
+			Field[] fields = classModel.getDeclaredFields();
+			for (Field field : fields) {
+				if (isCBBox(field)) {
+					if (txt.getDescription().equals(getLabel(field))) {
+						FrontendContext.openWindows(true, true, true, true, true, this,
+								field.getType(), cx, usuario, getCBBoxAttName(field),
+								((TextField) target).getValue(),
+								dtoBI.getItemProperty(field.getName()));
+					}
+				}
+			}
+			
+			
+		}
+		
+		
 	}
 
 	private void exit() {
@@ -474,4 +498,22 @@ public class StandardFormUi<T> extends CustomComponent {
 		return getLabel(field);
 	}
 
+	private static boolean isCBBox(Field field) {
+
+		FieldCBBox[] a = field.getAnnotationsByType(FieldCBBox.class);
+
+		return (a != null && a.length > 0);
+
+	}
+
+	private static String getCBBoxAttName(Field field) {
+		FieldCBBox[] a = field.getAnnotationsByType(FieldCBBox.class);
+		if (a != null && a.length > 0) {
+			return a[0].attName();
+		}
+
+		return null;
+	}
+	
+	
 } // END CLASS ///////////////////////////////////////////////////////////

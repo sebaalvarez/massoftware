@@ -177,34 +177,19 @@ public class FrontendContext {
 						BancoFirmante.class, pidFiltering, searchFilter,
 						searchProperty);
 
-			} 
-
-			else if (classModel == Talonario.class) {
-
-				new StandardTableUi<Talonario>(shortcut, agregar, modificar,
-						copiar, eliminar, win, cx, usuario, Talonario.class,
-						pidFiltering, searchFilter, searchProperty);
-
-			} else if (classModel == Deposito.class) {
-
-				new StandardTableUi<Deposito>(shortcut, agregar, modificar,
-						copiar, eliminar, win, cx, usuario, Deposito.class,
-						pidFiltering, searchFilter, searchProperty);
-
 			} else if (classModel == Banco.class) {
 
 				new StandardTableUi<Banco>(shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario, Banco.class,
 						pidFiltering, searchFilter, searchProperty);
 
-			} else if (classModel == TipoCbteControl.class) {
+			} else if (classModel == Caja.class) {
 
-				new StandardTableUi<TipoCbteControl>(shortcut, agregar,
-						modificar, copiar, eliminar, win, cx, usuario,
-						TipoCbteControl.class, pidFiltering, searchFilter,
-						searchProperty);
+				new StandardTableUi<Caja>(shortcut, agregar, modificar, copiar,
+						eliminar, win, cx, usuario, Caja.class, pidFiltering,
+						searchFilter, searchProperty);
 
-			} else if (classModel == MonedaAFIP.class) {
+			}  else if (classModel == MonedaAFIP.class) {
 
 				new StandardTableUi<MonedaAFIP>(shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario, MonedaAFIP.class,
@@ -223,13 +208,28 @@ public class FrontendContext {
 						MonedaCotizacion.class, pidFiltering, searchFilter,
 						searchProperty);
 
-			}else if (classModel == Caja.class) {
+			}
 
-				new StandardTableUi<Caja>(shortcut, agregar, modificar, copiar,
-						eliminar, win, cx, usuario, Caja.class, pidFiltering,
-						searchFilter, searchProperty);
+			else if (classModel == Talonario.class) {
 
-			} else if (classModel == CuentaDeFondo.class) {
+				new StandardTableUi<Talonario>(shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario, Talonario.class,
+						pidFiltering, searchFilter, searchProperty);
+
+			} else if (classModel == Deposito.class) {
+
+				new StandardTableUi<Deposito>(shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario, Deposito.class,
+						pidFiltering, searchFilter, searchProperty);
+
+			}  else if (classModel == TipoCbteControl.class) {
+
+				new StandardTableUi<TipoCbteControl>(shortcut, agregar,
+						modificar, copiar, eliminar, win, cx, usuario,
+						TipoCbteControl.class, pidFiltering, searchFilter,
+						searchProperty);
+
+			}else if (classModel == CuentaDeFondo.class) {
 
 				new CuentaDeFondoTableUi(shortcut, agregar, modificar, copiar,
 						eliminar, win, cx, usuario, CuentaDeFondoA.class,

@@ -144,11 +144,11 @@ public class MigradorMSToPG {
 		// cxPG.buildPlanDeCuentaBO().insert(
 		// cxMSSQL.buildPlanDeCuentaBO().findAll());
 
-		List<SucursalTipo> sucursalTipoList = cxMSSQL.buildSucursalTipoBO()
+		List<SucursalTipo> sucursalTipoList = cxMSSQL.buildBO(SucursalTipo.class)
 				.findAll();
 		System.out.println(sucursalTipoList);
 
-		List<Sucursal> sucursalList = cxMSSQL.buildSucursalBO().findAll();
+		List<Sucursal> sucursalList = cxMSSQL.buildBO(Sucursal.class).findAll();
 		System.out.println(sucursalList);
 
 		List<Talonario> talonarioList = cxMSSQL.buildTalonarioBO().findAll();

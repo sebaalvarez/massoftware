@@ -499,19 +499,33 @@ public class BackendContext extends AbstractContext {
 
 				return new SeguridadPuertaBO(dataSourceWrapper, this);
 
-			}  else if (classModel == SeguridadModulo.class) {
+			} else if (classModel == SeguridadModulo.class) {
 
 				return new SeguridadModuloBO(dataSourceWrapper, this);
 
+			} else if (classModel == Caja.class) {
+
+				return new CajaBO(dataSourceWrapper, this);
+
+			} else if (classModel == MonedaAFIP.class) {
+
+				return new MonedaAFIPBO(dataSourceWrapper, this);
+
+			} else if (classModel == Moneda.class) {
+
+				return new MonedaBO(dataSourceWrapper, this);
+
+			} else if (classModel == MonedaCotizacion.class) {
+
+				return new MonedaCotizacionBO(dataSourceWrapper, this);
+
 			}
-			
-			
-			
+
 			else if (classModel == Modulo.class) {
 
 				return new ModuloBO(dataSourceWrapper, this);
 
-			}	else if (classModel == Talonario.class) {
+			} else if (classModel == Talonario.class) {
 
 				return new TalonarioBO(dataSourceWrapper, this);
 
@@ -522,22 +536,6 @@ public class BackendContext extends AbstractContext {
 			} else if (classModel == TipoCbteControl.class) {
 
 				return new TipoCbteControlBO(dataSourceWrapper, this);
-
-			} else if (classModel == MonedaAFIP.class) {
-
-				return new MonedaAFIPBO(dataSourceWrapper, this);
-
-			} else if (classModel == Moneda.class) {
-
-				return new MonedaBO(dataSourceWrapper, this);
-
-			} else if (classModel == Caja.class) {
-
-				return new CajaBO(dataSourceWrapper, this);
-
-			} else if (classModel == MonedaCotizacion.class) {
-
-				return new MonedaCotizacionBO(dataSourceWrapper, this);
 
 			} else if (classModel == Usuario.class) {
 
@@ -648,34 +646,6 @@ public class BackendContext extends AbstractContext {
 
 		try {
 			return new AsientoModeloBO(dataSourceWrapper);
-		} catch (Exception e) {
-			e.printStackTrace();
-			new LogPrinter().print(AbstractContext.class.getName(),
-					LogPrinter.LEVEL_FATAL, e);
-		}
-
-		return null;
-
-	}
-
-	public SucursalTipoBO buildSucursalTipoBO() {
-
-		try {
-			return new SucursalTipoBO(dataSourceWrapper, this);
-		} catch (Exception e) {
-			e.printStackTrace();
-			new LogPrinter().print(AbstractContext.class.getName(),
-					LogPrinter.LEVEL_FATAL, e);
-		}
-
-		return null;
-
-	}
-
-	public SucursalBO buildSucursalBO() {
-
-		try {
-			return new SucursalBO(dataSourceWrapper, this);
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),

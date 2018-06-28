@@ -109,7 +109,7 @@ class SucursalFormUi extends StandardFormUi<Sucursal> {
 		sucursalTipoBIC = new BeanItemContainer<SucursalTipo>(
 				SucursalTipo.class, new ArrayList<SucursalTipo>());
 
-		List<SucursalTipo> sucursalesTipos = cx.buildSucursalTipoBO().findAll();
+		List<SucursalTipo> sucursalesTipos = cx.buildBO(SucursalTipo.class).findAll();
 		sucursalTipoBIC.removeAllItems();
 		for (SucursalTipo sucursalTipo : sucursalesTipos) {
 			sucursalTipoBIC.addBean(sucursalTipo);

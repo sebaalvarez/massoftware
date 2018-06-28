@@ -629,7 +629,7 @@ class DepositoTableUi extends CustomComponent {
 	private void loadModelViewPort768x1024() throws Exception {
 		try {
 
-			SucursalBO sucursalBO = cx.buildSucursalBO();
+			SucursalBO sucursalBO = (SucursalBO) cx.buildBO(Sucursal.class);
 
 			List<Sucursal> sucursales = sucursalBO.findAll();
 			sucursalesBIC.removeAllItems();

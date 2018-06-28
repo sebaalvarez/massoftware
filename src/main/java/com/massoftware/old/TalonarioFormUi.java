@@ -129,7 +129,7 @@ class TalonarioFormUi extends StandardFormUi<Talonario> {
 		sucursalesBIC = new BeanItemContainer<Sucursal>(Sucursal.class,
 				new ArrayList<Sucursal>());
 
-		List<Sucursal> sucursales = cx.buildSucursalBO().findAll();
+		List<Sucursal> sucursales = cx.buildBO(Sucursal.class).findAll();
 		sucursalesBIC.removeAllItems();
 		for (Sucursal sucursal : sucursales) {
 			sucursalesBIC.addBean(sucursal);

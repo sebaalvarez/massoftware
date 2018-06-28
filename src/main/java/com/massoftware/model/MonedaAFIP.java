@@ -13,15 +13,13 @@ import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNameMSAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldRequiredAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldUniqueAnont;
 
-@SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "Moneda AFIP")
 @ClassPluralLabelAnont(value = "Monedas AFIP")
 @ClassArticleLabelInTheSingularAnont(value = "la")
 @ClassArticleLabelInPluralAnont(value = "las")
 // @ClassFormSourceAnont(value = "Deposito")
 @ClassTableMSAnont(nameTableDB = "[AfipMonedas]")
-public class MonedaAFIP extends EntityId implements Cloneable,
-		Comparable<MonedaAFIP> {
+public class MonedaAFIP extends EntityId implements Comparable<MonedaAFIP> {
 
 	@FieldLabelAnont(value = "Moneda")
 	@FieldRequiredAnont()
@@ -59,17 +57,17 @@ public class MonedaAFIP extends EntityId implements Cloneable,
 		this.nombre = nombre;
 	}
 
-	@Override
-	public MonedaAFIP clone() throws CloneNotSupportedException {
-
-		MonedaAFIP other = new MonedaAFIP();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-
-		return other;
-	}
+//	@Override
+//	public MonedaAFIP clone() throws CloneNotSupportedException {
+//
+//		MonedaAFIP other = new MonedaAFIP();
+//
+//		other.setId(this.getId());
+//		other.setCodigo(this.getCodigo());
+//		other.setNombre(this.getNombre());
+//
+//		return other;
+//	}
 
 	@Override
 	public int compareTo(MonedaAFIP o) {

@@ -31,21 +31,20 @@ public class MonedaAFIPBO extends GenericBO<MonedaAFIP> {
 
 		} else if (attName.equalsIgnoreCase(ATT_NAME_NOMBRE)) {
 
-			checkUnique(attName, "LOWER(" + ATT_NAME_NOMBRE + ") = ?", value
-					.toString().toLowerCase());
+			checkUnique(attName, "LOWER(dbo.Translate(" + ATT_NAME_NOMBRE
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
+					value.toString().toLowerCase());
 
 		}
 	}
 
 	public boolean delete(MonedaAFIP dto) throws Exception {
 
-		Object codigoArg = null;
+		Object codigoArg = Integer.class;
 
 		if (dto.getCodigo() != null) {
 			codigoArg = dto.getCodigo();
-		} else {
-			codigoArg = Integer.class;
-		}
+		} 
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
 			return delete(ATT_NAME_CODIGO + " = ?", codigoArg);
@@ -68,13 +67,11 @@ public class MonedaAFIPBO extends GenericBO<MonedaAFIP> {
 	public MonedaAFIP update(MonedaAFIP dto, MonedaAFIP dtoOriginal, Usuario usuario)
 			throws Exception {
 
-		Object codigoArg = null;
+		Object codigoArg = Integer.class;
 
 		if (dtoOriginal.getCodigo() != null) {
 			codigoArg = dtoOriginal.getCodigo();
-		} else {
-			codigoArg = Integer.class;
-		}
+		} 
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
 

@@ -136,7 +136,7 @@ public abstract class GenericBO<T> {
 	public Integer maxValue(String attName) throws Exception {
 		return maxValueInteger(attName, null);
 	}
-	
+
 	public Integer maxValue(String attName, T dto) throws Exception {
 		return maxValueInteger(attName, dto);
 	}
@@ -163,8 +163,6 @@ public abstract class GenericBO<T> {
 
 	}
 
-	
-	
 	public void checkUnique(T dto, T dtoOriginal) throws Exception {
 
 	}
@@ -378,8 +376,6 @@ public abstract class GenericBO<T> {
 							&& isPrimitive(fields[i].getType()) == false) {
 
 						String newFieldName = getSubNameFK(fields[i]);
-
-						System.out.println("XXXXXXXXXXXXXX " + newFieldName);
 
 						methodName = "get"
 								+ newFieldName.substring(0, 1).toUpperCase()
