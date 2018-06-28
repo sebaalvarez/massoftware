@@ -646,6 +646,73 @@ CREATE VIEW [dbo].[vBancoFirmante] AS
 
 	-- SELECT * FROM dbo.vBancoFirmante;	
 	-- SELECT * FROM dbo.vBancoFirmante ORDER BY codigo, nombre;	
+
+
+-------------------------------------------------------------
+
+	-- DROP VIEW [dbo].[vSucursalTipo]
+
+CREATE VIEW [dbo].[vSucursalTipo] AS  
+
+		
+	SELECT 'com.massoftware.model.SucursalTipo' AS ClassCostoDeVenta, '1' AS id, 1 AS codigo, 'Centralizador' AS nombre
+	UNION ALL
+	SELECT 'com.massoftware.model.SucursalTipo' AS ClassCostoDeVenta, '2' AS id, 2, 'Casa central'
+	UNION ALL
+	SELECT 'com.massoftware.model.SucursalTipo' AS ClassCostoDeVenta, '3' AS id, 3, 'Sucursal'
+	UNION ALL
+	SELECT 'com.massoftware.model.SucursalTipo' AS ClassCostoDeVenta, '4' AS id, 4, 'Punto de venta'; 
+
+	-- SELECT * FROM dbo.vSucursalTipo;	
+	-- SELECT * FROM dbo.vSucursalTipo ORDER BY codigo, nombre;	
+
+	
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vSucursal]
+
+CREATE VIEW [dbo].[vSucursal] AS  
+
+
+	SELECT	'com.massoftware.model.Sucursal'												AS ClassSucursal
+			-----------------------------------------------------------------------------------------------------
+			, CAST([Sucursales].[SUCURSAL] AS VARCHAR)										AS id									-- String NOT NULL PK
+			-----------------------------------------------------------------------------------------------------
+			, CAST([Sucursales].[SUCURSAL] AS INTEGER)										AS codigo								-- Integer NOT NULL PK [ 1 - 99 ]
+			, LTRIM(RTRIM(CAST([Sucursales].[NOMBRE] AS VARCHAR)))							AS nombre								-- String (35) NOT NULL UN
+			, LTRIM(RTRIM(CAST([Sucursales].[ABREVIATURA] AS VARCHAR)))						AS abreviatura							-- String (4) NOT NULL UN
+			-----------------------------------------------------------------------------------------------------
+				--, [Sucursales].[TIPOSUCURSAL]												AS sucursalTipo							-- Integer			
+				, vSucursalTipo.id															AS sucursalTipo_id						-- NOT NULL		
+				, vSucursalTipo.codigo														AS sucursalTipo_codigo
+				, vSucursalTipo.nombre														AS sucursalTipo_nombre
+			-- ---------------------------------------------------------------------
+			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASCLIENTESDESDE] AS VARCHAR)))			AS cuentaClientesDesde					-- String (6)
+			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASCLIENTESHASTA] AS VARCHAR)))			AS cuentaClientesHasta					-- String (6)
+			, CAST([Sucursales].[CANTIDADCARACTERESCLIENTES] AS INTEGER)					AS cantidadCaracteresClientes			-- Integer NOT NULL [ 3 | 4 | 5 | 6 ]  DEFAULT 6 
+			, [Sucursales].[NUMERICOCLIENTES] 												AS identificacionNumericaClientes		-- Boolean 
+			, [Sucursales].[PERMITECAMBIARCLIENTES]											AS permiteCambiarClientes				-- Boolean      
+			-- ---------------------------------------------------------------------
+			, CAST([Sucursales].[CUENTASCLIENTESOCASIONALESDESDE] AS INTEGER)				AS clientesOcasionalesDesde				-- Integer [0 - Integer.MAX_VALUE]
+			, CAST([Sucursales].[CUENTASCLIENTESOCASIONALESHASTA] AS INTEGER)				AS clientesOcasionalesHasta				-- Integer [0 - Integer.MAX_VALUE]    
+			-- ---------------------------------------------------------------------
+			, CAST([Sucursales].[NROCOBRANZADESDE] AS INTEGER)								AS nroCobranzaDesde						-- Integer [0 - Short.MAX_VALUE]
+			, CAST([Sucursales].[NROCOBRANZAHASTA] AS INTEGER)								AS nroCobranzaHasta						-- Integer [0 - Short.MAX_VALUE]       	        
+			-- ---------------------------------------------------------------------
+			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASPROVEEDORESDESDE] AS VARCHAR)))			AS proveedoresDesde						-- String (6) 
+			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASPROVEEDORESHASTA] AS VARCHAR)))			AS proveedoresHasta						-- String (6)
+			, CAST([Sucursales].[CANTIDADCARACTERESPROVEEDOR] AS INTEGER)					AS cantidadCaracteresProveedor			-- Integer NOT NULL [ 3 | 4 | 5 | 6 ]  DEFAULT 6 
+			, [Sucursales].[NUMERICOPROVEEDOR]												AS identificacionNumericaProveedores	-- Boolean	  
+			, [Sucursales].[PERMITECAMBIARPROVEEDOR]										AS permiteCambiarProveedores			-- Boolean      
+			-- ---------------------------------------------------------------------      
+  
+		FROM	[dbo].[Sucursales]
+		LEFT JOIN	[dbo].[vSucursalTipo]
+				ON	[dbo].[vSucursalTipo].[codigo] = CAST([dbo].[Sucursales].[TIPOSUCURSAL] AS INTEGER);
+
+	-- SELECT * FROM dbo.vSucursal;	
+	-- SELECT * FROM dbo.vSucursal ORDER BY codigo, nombre;	
+
 	
 
 --=============================================================================================================
@@ -1122,70 +1189,6 @@ CREATE VIEW [dbo].[vCaja] AS
 	-- SELECT * FROM dbo.vCaja;	
 	-- SELECT * FROM dbo.vCaja ORDER BY codigo, nombre;	
 
--------------------------------------------------------------
-
-	-- DROP VIEW [dbo].[vSucursalTipo]
-
-CREATE VIEW [dbo].[vSucursalTipo] AS  
-
-		
-	SELECT 'com.massoftware.model.SucursalTipo' AS ClassCostoDeVenta, '1' AS id, 1 AS codigo, 'Centralizador' AS nombre
-	UNION ALL
-	SELECT 'com.massoftware.model.SucursalTipo' AS ClassCostoDeVenta, '2' AS id, 2, 'Casa central'
-	UNION ALL
-	SELECT 'com.massoftware.model.SucursalTipo' AS ClassCostoDeVenta, '3' AS id, 3, 'Sucursal'
-	UNION ALL
-	SELECT 'com.massoftware.model.SucursalTipo' AS ClassCostoDeVenta, '4' AS id, 4, 'Punto de venta'; 
-
-	-- SELECT * FROM dbo.vSucursalTipo;	
-	-- SELECT * FROM dbo.vSucursalTipo ORDER BY codigo, nombre;	
-
-	
--------------------------------------------------------------
-
--- DROP VIEW [dbo].[vSucursal]
-
-CREATE VIEW [dbo].[vSucursal] AS  
-
-
-	SELECT	'com.massoftware.model.Sucursal'												AS ClassSucursal
-			-----------------------------------------------------------------------------------------------------
-			, CAST([Sucursales].[SUCURSAL] AS VARCHAR)										AS id									-- String NOT NULL PK
-			-----------------------------------------------------------------------------------------------------
-			, CAST([Sucursales].[SUCURSAL] AS INTEGER)										AS codigo								-- Integer NOT NULL PK [ 0 - 99 ]
-			, LTRIM(RTRIM(CAST([Sucursales].[NOMBRE] AS VARCHAR)))							AS nombre								-- String (35) NOT NULL UN
-			, LTRIM(RTRIM(CAST([Sucursales].[ABREVIATURA] AS VARCHAR)))						AS abreviatura							-- String (4) NOT NULL UN
-			-----------------------------------------------------------------------------------------------------
-				--, [Sucursales].[TIPOSUCURSAL]												AS sucursalTipo							-- Integer			
-				, vSucursalTipo.id															AS sucursalTipo_id						-- NOT NULL		
-				, vSucursalTipo.codigo														AS sucursalTipo_codigo
-				, vSucursalTipo.nombre														AS sucursalTipo_nombre
-			-- ---------------------------------------------------------------------
-			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASCLIENTESDESDE] AS VARCHAR)))			AS cuentaClientesDesde					-- String (6)
-			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASCLIENTESHASTA] AS VARCHAR)))			AS cuentaClientesHasta					-- String (6)
-			, CAST([Sucursales].[CANTIDADCARACTERESCLIENTES] AS INTEGER)					AS cantidadCaracteresClientes			-- Integer NOT NULL [ 3 | 4 | 5 | 6 ]  DEFAULT 6 
-			, [Sucursales].[NUMERICOCLIENTES] 												AS identificacionNumericaClientes		-- Boolean 
-			, [Sucursales].[PERMITECAMBIARCLIENTES]											AS permiteCambiarClientes				-- Boolean      
-			-- ---------------------------------------------------------------------
-			, CAST([Sucursales].[CUENTASCLIENTESOCASIONALESDESDE] AS INTEGER)				AS clientesOcasionalesDesde				-- Integer [9999999999 - (-99999999)]
-			, CAST([Sucursales].[CUENTASCLIENTESOCASIONALESHASTA] AS INTEGER)				AS clientesOcasionalesHasta				-- Integer [9999999999 - (-99999999)]    
-			-- ---------------------------------------------------------------------
-			, CAST([Sucursales].[NROCOBRANZADESDE] AS INTEGER)								AS nroCobranzaDesde						-- Integer [9999999999 - (-99999999)]
-			, CAST([Sucursales].[NROCOBRANZAHASTA] AS INTEGER)								AS nroCobranzaHasta						-- Integer [9999999999 - (-99999999)]       	        
-			-- ---------------------------------------------------------------------
-			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASPROVEEDORESDESDE] AS VARCHAR)))			AS proveedoresDesde						-- String (6) 
-			, LTRIM(RTRIM(CAST([Sucursales].[CUENTASPROVEEDORESHASTA] AS VARCHAR)))			AS proveedoresHasta						-- String (6)
-			, CAST([Sucursales].[CANTIDADCARACTERESPROVEEDOR] AS INTEGER)					AS cantidadCaracteresProveedor			-- Integer NOT NULL [ 3 | 4 | 5 | 6 ]  DEFAULT 6 
-			, [Sucursales].[NUMERICOPROVEEDOR]												AS identificacionNumericaProveedores	-- Boolean	  
-			, [Sucursales].[PERMITECAMBIARPROVEEDOR]										AS permiteCambiarProveedores			-- Boolean      
-			-- ---------------------------------------------------------------------      
-  
-		FROM	[dbo].[Sucursales]
-		LEFT JOIN	[dbo].[vSucursalTipo]
-				ON	[dbo].[vSucursalTipo].[codigo] = CAST([dbo].[Sucursales].[TIPOSUCURSAL] AS INTEGER);
-
-	-- SELECT * FROM dbo.vSucursal;	
-	-- SELECT * FROM dbo.vSucursal ORDER BY codigo, nombre;	
 	
 	
 -------------------------------------------------------------

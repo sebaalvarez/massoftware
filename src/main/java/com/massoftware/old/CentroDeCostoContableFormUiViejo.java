@@ -5,7 +5,7 @@ import org.vaadin.inputmask.InputMask;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.windows.cuenta_contable.CuentaContableFormUi;
+import com.massoftware.frontend.ui.windows.custom.cuenta_contable.CuentaContableFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.vaadin.data.Validator.InvalidValueException;

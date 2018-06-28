@@ -6,11 +6,11 @@ import java.util.List;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
+import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.frontend.ui.util.build.BuildComponentsUtil;
 import com.massoftware.frontend.ui.util.build.PropertiesComponentBigDecimal;
 import com.massoftware.frontend.ui.util.build.PropertiesComponentInteger;
 import com.massoftware.frontend.ui.util.build.PropertiesComponentString;
-import com.massoftware.frontend.ui.windows.StandardFormUi;
 import com.massoftware.model.Sucursal;
 import com.massoftware.model.Talonario;
 import com.vaadin.data.util.BeanItem;

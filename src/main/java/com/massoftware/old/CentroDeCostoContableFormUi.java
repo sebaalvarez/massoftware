@@ -1,8 +1,8 @@
 package com.massoftware.old;
 
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.ui.windows.StandardFormUi;
-import com.massoftware.frontend.ui.windows.custom.CentroDeCostoContableTableUi;
+import com.massoftware.frontend.ui.custom.windows.CentroDeCostoContableTableUi;
+import com.massoftware.frontend.ui.util.StandardFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Usuario;

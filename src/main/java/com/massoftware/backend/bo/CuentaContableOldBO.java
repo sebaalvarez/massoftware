@@ -10,7 +10,7 @@ import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
-import com.massoftware.frontend.ui.windows.cuenta_contable.FormatCuentaContableCodigoCuenta;
+import com.massoftware.frontend.ui.windows.custom.cuenta_contable.FormatCuentaContableCodigoCuenta;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.EjercicioContable;

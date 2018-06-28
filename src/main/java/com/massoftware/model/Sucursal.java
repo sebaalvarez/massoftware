@@ -6,6 +6,7 @@ import com.massoftware.annotation.model.ClassFormSourceAnont;
 import com.massoftware.annotation.model.ClassLabelInTheSingularAnont;
 import com.massoftware.annotation.model.ClassPluralLabelAnont;
 import com.massoftware.annotation.model.ClassTableMSAnont;
+import com.massoftware.annotation.model.FieldAutoMaxValueAnont;
 import com.massoftware.annotation.model.FieldColumnMetaDataAnont;
 import com.massoftware.annotation.model.FieldColumnsAnont;
 import com.massoftware.annotation.model.FieldLabelAnont;
@@ -18,7 +19,6 @@ import com.massoftware.annotation.model.FieldRequiredAnont;
 import com.massoftware.annotation.model.FieldSubNameFKAnont;
 import com.massoftware.annotation.model.FieldUniqueAnont;
 
-@SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "Sucursal")
 @ClassPluralLabelAnont(value = "Sucursales")
 @ClassArticleLabelInTheSingularAnont(value = "la")
@@ -37,6 +37,7 @@ public class Sucursal extends EntityId implements Cloneable,
 	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[SUCURSAL]", classAttDB = Integer.class)
+	@FieldAutoMaxValueAnont()
 	private Integer codigo;
 
 	@FieldLabelAnont(value = "Nombre")
@@ -78,7 +79,7 @@ public class Sucursal extends EntityId implements Cloneable,
 	@FieldNameMSAnont(nameAttDB = "[CUENTASCLIENTESHASTA]", classAttDB = String.class)
 	private String cuentaClientesHasta;
 
-	@FieldLabelAnont(value = "Cuenta clientes - Cant. caracteres", visible = false)	
+	@FieldLabelAnont(value = "Cuenta clientes - Cant. caracteres", visible = false)
 	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldOptionsIntegerAnont(values = { 3, 4, 5, 6 }, defaultValue = 6)
 	@FieldNameMSAnont(nameAttDB = "[CANTIDADCARACTERESCLIENTES]", classAttDB = Integer.class)
@@ -96,7 +97,7 @@ public class Sucursal extends EntityId implements Cloneable,
 	@FieldLabelAnont(value = "Clientes ocacionales - Desde", visible = false)
 	@FieldMaxLengthAnont(value = 9)
 	@FieldColumnsAnont(value = 9)
-	@FieldMinValueIntegerAnont(value = -99999999)
+	@FieldMinValueIntegerAnont(value = 0)
 	@FieldMaxValueIntegerAnont(value = Integer.MAX_VALUE)
 	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldNameMSAnont(nameAttDB = "[CUENTASCLIENTESOCASIONALESDESDE]", classAttDB = Integer.class)
@@ -105,7 +106,7 @@ public class Sucursal extends EntityId implements Cloneable,
 	@FieldLabelAnont(value = "Clientes ocacionales - Hasta", visible = false)
 	@FieldMaxLengthAnont(value = 9)
 	@FieldColumnsAnont(value = 9)
-	@FieldMinValueIntegerAnont(value = -99999999)
+	@FieldMinValueIntegerAnont(value = 0)
 	@FieldMaxValueIntegerAnont(value = Integer.MAX_VALUE)
 	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldNameMSAnont(nameAttDB = "[CUENTASCLIENTESOCASIONALESHASTA]", classAttDB = Integer.class)
@@ -114,7 +115,7 @@ public class Sucursal extends EntityId implements Cloneable,
 	@FieldLabelAnont(value = "Nro. cobranza - Desde", visible = false)
 	@FieldMaxLengthAnont(value = 6)
 	@FieldColumnsAnont(value = 6)
-	@FieldMinValueIntegerAnont(value = Short.MIN_VALUE)
+	@FieldMinValueIntegerAnont(value = 0)
 	@FieldMaxValueIntegerAnont(value = Short.MAX_VALUE)
 	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldNameMSAnont(nameAttDB = "[NROCOBRANZADESDE]", classAttDB = Integer.class)
@@ -123,7 +124,7 @@ public class Sucursal extends EntityId implements Cloneable,
 	@FieldLabelAnont(value = "Nro. cobranza - Hasta", visible = false)
 	@FieldMaxLengthAnont(value = 6)
 	@FieldColumnsAnont(value = 6)
-	@FieldMinValueIntegerAnont(value = Short.MIN_VALUE)
+	@FieldMinValueIntegerAnont(value = 0)
 	@FieldMaxValueIntegerAnont(value = Short.MAX_VALUE)
 	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldNameMSAnont(nameAttDB = "[NROCOBRANZAHASTA]", classAttDB = Integer.class)

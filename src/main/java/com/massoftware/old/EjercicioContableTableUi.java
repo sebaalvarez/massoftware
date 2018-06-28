@@ -9,8 +9,8 @@ import org.apache.commons.lang3.ArrayUtils;
 
 
 
+
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.ui.util.TableUi;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.EntityId;
 import com.massoftware.model.Usuario;
