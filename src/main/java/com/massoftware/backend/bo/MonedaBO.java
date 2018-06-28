@@ -32,12 +32,14 @@ public class MonedaBO extends GenericBO<Moneda> {
 
 		} else if (attName.equalsIgnoreCase(ATT_NAME_NOMBRE)) {
 
-			checkUnique(attName, "LOWER(" + ATT_NAME_NOMBRE + ") = ?", value
-					.toString().toLowerCase());
+			checkUnique(attName, "LOWER(dbo.Translate(" + ATT_NAME_NOMBRE
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
+					value.toString().toLowerCase());
 
 		} else if (attName.equalsIgnoreCase(ATT_NAME_ABREVIATURA)) {
 
-			checkUnique(attName, "LOWER(" + ATT_NAME_ABREVIATURA + ") = ?",
+			checkUnique(attName, "LOWER(dbo.Translate(" + ATT_NAME_ABREVIATURA
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
 					value.toString().toLowerCase());
 		}
 	}

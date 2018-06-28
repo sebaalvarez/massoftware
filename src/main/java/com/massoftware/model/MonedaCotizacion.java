@@ -139,45 +139,45 @@ public class MonedaCotizacion extends EntityId implements Cloneable,
 		this.usuario = usuario;
 	}
 
-	@Override
-	public MonedaCotizacion clone() throws CloneNotSupportedException {
-
-		MonedaCotizacion other = new MonedaCotizacion();
-
-		other.setId(this.getId());		
-		if (this.getMoneda() != null) {
-			other.setMoneda(this.getMoneda().clone());
-		} else {
-			other.setMoneda(null);
-		}
-		if (this.getFecha() != null) {
-			other.setFecha((Date) this.getFecha().clone());
-		} else {
-			other.setFecha(null);
-		}
-		if (this.getCompra() != null) {
-			other.setCompra(new BigDecimal(getCompra().toString()));
-		} else {
-			other.setCompra(null);
-		}
-		if (this.getVenta() != null) {
-			other.setVenta(new BigDecimal(getVenta().toString()));
-		} else {
-			other.setVenta(null);
-		}
-		if (this.getFechaIngreso() != null) {
-			other.setFechaIngreso((Timestamp) this.getFechaIngreso().clone());
-		} else {
-			other.setFechaIngreso(null);
-		}		
-		if (this.getUsuario() != null) {
-			other.setUsuario(getUsuario());
-		} else {
-			other.setUsuario(null);
-		}
-
-		return other;
-	}
+//	@Override
+//	public MonedaCotizacion clone() throws CloneNotSupportedException {
+//
+//		MonedaCotizacion other = new MonedaCotizacion();
+//
+//		other.setId(this.getId());		
+//		if (this.getMoneda() != null) {
+//			other.setMoneda(this.getMoneda().clone());
+//		} else {
+//			other.setMoneda(null);
+//		}
+//		if (this.getFecha() != null) {
+//			other.setFecha((Date) this.getFecha().clone());
+//		} else {
+//			other.setFecha(null);
+//		}
+//		if (this.getCompra() != null) {
+//			other.setCompra(new BigDecimal(getCompra().toString()));
+//		} else {
+//			other.setCompra(null);
+//		}
+//		if (this.getVenta() != null) {
+//			other.setVenta(new BigDecimal(getVenta().toString()));
+//		} else {
+//			other.setVenta(null);
+//		}
+//		if (this.getFechaIngreso() != null) {
+//			other.setFechaIngreso((Timestamp) this.getFechaIngreso().clone());
+//		} else {
+//			other.setFechaIngreso(null);
+//		}		
+//		if (this.getUsuario() != null) {
+//			other.setUsuario(getUsuario());
+//		} else {
+//			other.setUsuario(null);
+//		}
+//
+//		return other;
+//	}
 
 	@Override
 	public int compareTo(MonedaCotizacion o) {

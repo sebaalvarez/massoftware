@@ -27,7 +27,7 @@ public class MonedaAFIP extends EntityId implements Comparable<MonedaAFIP> {
 	@FieldColumnsAnont(value = 5)
 	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
 	@FieldUniqueAnont()
-	@FieldNameMSAnont(nameAttDB = "[MONEDAAFIP]", classAttDB = String.class)
+	@FieldNameMSAnont(nameAttDB = "[MONEDAAFIP]", classAttDB = String.class)	
 	private String codigo;
 
 	@FieldLabelAnont(value = "Descripción")

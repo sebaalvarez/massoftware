@@ -10,6 +10,7 @@ import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassLabelInTheSing
 import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassPluralLabelAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassTableMSAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldAllowDecimalAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldAutoMaxValueAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnMetaDataAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnsAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
@@ -19,18 +20,27 @@ import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxValueIntege
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMinValueBigDecimalAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMinValueIntegerAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNameMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldReadOnly;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldRequiredAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldSubNameFKAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldUniqueAnont;
 
-@SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "Moneda")
 @ClassPluralLabelAnont(value = "Monedas")
 @ClassArticleLabelInTheSingularAnont(value = "la")
 @ClassArticleLabelInPluralAnont(value = "las")
 // @ClassFormSourceAnont(value = "Deposito")
 @ClassTableMSAnont(nameTableDB = "[Monedas]")
-public class Moneda extends EntityId implements Cloneable, Comparable<Moneda> {
+public class Moneda extends EntityId implements Comparable<Moneda> {
+	
+	
+
+	public Moneda() {
+		super();
+		setCotizacion(new BigDecimal("1.0000"));
+		 setFecha(new Date(System.currentTimeMillis()));
+		
+	}
 
 	@FieldLabelAnont(value = "Moneda")
 	@FieldRequiredAnont()
@@ -41,6 +51,7 @@ public class Moneda extends EntityId implements Cloneable, Comparable<Moneda> {
 	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[MONEDA]", classAttDB = Integer.class)
+	@FieldAutoMaxValueAnont()
 	private Integer codigo;
 
 	@FieldLabelAnont(value = "Descripción")
@@ -69,11 +80,13 @@ public class Moneda extends EntityId implements Cloneable, Comparable<Moneda> {
 	@FieldAllowDecimalAnont()
 	@FieldColumnMetaDataAnont(attSize = 120)
 	@FieldNameMSAnont(nameAttDB = "[COTIZACION]", classAttDB = BigDecimal.class)
+	@FieldReadOnly()
 	private BigDecimal cotizacion;
 
 	@FieldLabelAnont(value = "Fecha")
 	@FieldColumnMetaDataAnont(attSize = 80)
 	@FieldNameMSAnont(nameAttDB = "[FECHASQL]", classAttDB = Date.class)
+	@FieldReadOnly()
 	private Date fecha;
 
 	@FieldLabelAnont(value = "Control de actualizacion")
@@ -146,34 +159,34 @@ public class Moneda extends EntityId implements Cloneable, Comparable<Moneda> {
 		this.monedaAFIP = monedaAFIP;
 	}
 
-	@Override
-	public Moneda clone() throws CloneNotSupportedException {
-
-		Moneda other = new Moneda();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-		other.setAbreviatura(getAbreviatura());
-		if (this.getCotizacion() != null) {
-			other.setCotizacion(new BigDecimal(getCotizacion().toString()));
-		} else {
-			other.setCotizacion(null);
-		}
-		if (this.getFecha() != null) {
-			other.setFecha((Date) this.getFecha().clone());
-		} else {
-			other.setFecha(null);
-		}
-		other.setControlDeActualizacion(getControlDeActualizacion());
-		if (this.getMonedaAFIP() != null) {
-			other.setMonedaAFIP(getMonedaAFIP());
-		} else {
-			other.setMonedaAFIP(null);
-		}
-
-		return other;
-	}
+//	@Override
+//	public Moneda clone() throws CloneNotSupportedException {
+//
+//		Moneda other = new Moneda();
+//
+//		other.setId(this.getId());
+//		other.setCodigo(this.getCodigo());
+//		other.setNombre(this.getNombre());
+//		other.setAbreviatura(getAbreviatura());
+//		if (this.getCotizacion() != null) {
+//			other.setCotizacion(new BigDecimal(getCotizacion().toString()));
+//		} else {
+//			other.setCotizacion(null);
+//		}
+//		if (this.getFecha() != null) {
+//			other.setFecha((Date) this.getFecha().clone());
+//		} else {
+//			other.setFecha(null);
+//		}
+//		other.setControlDeActualizacion(getControlDeActualizacion());
+//		if (this.getMonedaAFIP() != null) {
+//			other.setMonedaAFIP(getMonedaAFIP());
+//		} else {
+//			other.setMonedaAFIP(null);
+//		}
+//
+//		return other;
+//	}
 
 	@Override
 	public int compareTo(Moneda o) {

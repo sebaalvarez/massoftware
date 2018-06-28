@@ -832,6 +832,36 @@ CREATE VIEW [dbo].[vMonedaAFIP] AS
 
 	-- SELECT * FROM dbo.vMonedaAFIP;	
 	-- SELECT * FROM dbo.vMonedaAFIP ORDER BY codigo, nombre;	
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vMoneda]
+
+CREATE VIEW [dbo].[vMoneda] AS  
+
+
+	SELECT	'com.massoftware.model.Moneda'												AS ClassMoneda
+			-----------------------------------------------------------------------------------------------------			
+			, CAST([Monedas].[MONEDA] AS VARCHAR)										AS id						-- String NOT NULL PK	
+			-----------------------------------------------------------------------------------------------------
+			, CAST([Monedas].[MONEDA] AS INTEGER)										AS codigo					-- Integer NOT NULL UN [ 1 - Short.MAX_VALUE]				 
+			, LTRIM(RTRIM(CAST([Monedas].[DESCRIPCION] AS VARCHAR)))					AS nombre					-- String (30) NOT NULL UN 
+			, LTRIM(RTRIM(CAST([Monedas].[ABREVIATURA] AS VARCHAR)))					AS abreviatura				-- String (5) NOT NULL UN 
+			, [Monedas].[COTIZACION]													AS cotizacion				-- BigDecimal (9,4) [0 - 999999999] 
+			, CAST([Monedas].[FECHASQL] AS DATE)										AS fecha					-- Date     
+			, [Monedas].[CONTROLDEACTUALIZACION]										AS controlDeActualizacion	-- Boolean
+			------------------------------------------------------------------------------------------------------
+				-- , [Monedas].[MONEDAAFIP]												AS monedaAFIP
+				, [vMonedaAFIP].id														AS monedaAFIP_id
+				, [vMonedaAFIP].codigo													AS monedaAFIP_codigo 
+				, [vMonedaAFIP].nombre													AS monedaAFIP_nombre 
+  
+	FROM	[dbo].[Monedas]
+	LEFT JOIN	[dbo].[vMonedaAFIP]
+			ON		[dbo].[vMonedaAFIP].[codigo] =  LTRIM(RTRIM(CAST([dbo].[Monedas].[MONEDAAFIP] AS VARCHAR)));
+
+	-- SELECT * FROM dbo.vMoneda;	
+	-- SELECT * FROM dbo.vMoneda ORDER BY codigo, nombre;	
 	
 
 --=============================================================================================================
@@ -1500,35 +1530,7 @@ CREATE VIEW [dbo].[vTipoCbteControl] AS
 
 
 
--------------------------------------------------------------
 
--- DROP VIEW [dbo].[vMoneda]
-
-CREATE VIEW [dbo].[vMoneda] AS  
-
-
-	SELECT	'com.massoftware.model.Moneda'												AS ClassMoneda
-			-----------------------------------------------------------------------------------------------------			
-			, CAST([Monedas].[MONEDA] AS VARCHAR)										AS id	-- String NOT NULL PK	
-			-----------------------------------------------------------------------------------------------------
-			, CAST([Monedas].[MONEDA] AS INTEGER)										AS codigo -- Integer NOT NULL UN [ 1 - Short.MAX_VALUE]				 
-			, LTRIM(RTRIM(CAST([Monedas].[DESCRIPCION] AS VARCHAR)))					AS nombre -- String (30) NOT NULL UN 
-			, LTRIM(RTRIM(CAST([Monedas].[ABREVIATURA] AS VARCHAR)))					AS abreviatura -- String (5) NOT NULL UN 
-			, [Monedas].[COTIZACION]													AS cotizacion -- BigDecimal (9,4) [0 - 999999999] 
-			, CAST([Monedas].[FECHASQL] AS DATE)										AS fecha  -- Date     
-			, [Monedas].[CONTROLDEACTUALIZACION]										AS controlDeActualizacion -- Boolean
-			------------------------------------------------------------------------------------------------------
-				-- , [Monedas].[MONEDAAFIP]												AS monedaAFIP
-				, [vMonedaAFIP].id														AS monedaAFIP_id
-				, [vMonedaAFIP].codigo													AS monedaAFIP_codigo 
-				, [vMonedaAFIP].nombre													AS monedaAFIP_nombre 
-  
-	FROM	[dbo].[Monedas]
-	LEFT JOIN	[dbo].[vMonedaAFIP]
-			ON		[dbo].[vMonedaAFIP].[codigo] =  LTRIM(RTRIM(CAST([dbo].[Monedas].[MONEDAAFIP] AS VARCHAR)));
-
-	-- SELECT * FROM dbo.vMoneda;	
-	-- SELECT * FROM dbo.vMoneda ORDER BY codigo, nombre;	
 
 -------------------------------------------------------------
 

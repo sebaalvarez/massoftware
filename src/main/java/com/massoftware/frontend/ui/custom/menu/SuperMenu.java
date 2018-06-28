@@ -11,6 +11,7 @@ import com.massoftware.model.Ciudad;
 import com.massoftware.model.CodigoConvenioMultilateral;
 import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.Moneda;
 import com.massoftware.model.MonedaAFIP;
 import com.massoftware.model.MotivoComentario;
 import com.massoftware.model.MotivoNotaDeCredito;
@@ -84,6 +85,7 @@ public class SuperMenu extends AbstractMenu {
 
 		
 		a21.addItem("Cajas", open(Caja.class));
+		a21.addItem("Monedas ...", open(Moneda.class));
 		
 		a24.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class))
 				.setEnabled(false);
