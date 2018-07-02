@@ -2,7 +2,7 @@ package com.massoftware.old;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StandardFormUi;
+import com.massoftware.frontend.ui.util.window.StandardFormUi;
 import com.massoftware.model.TipoCbteControl;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.AbstractField;

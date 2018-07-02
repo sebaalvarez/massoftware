@@ -4,8 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.ui.util.StandardFormUi;
-import com.massoftware.frontend.ui.util.StandardTableUi;
+import com.massoftware.frontend.ui.util.window.StandardFormUi;
+import com.massoftware.frontend.ui.util.window.StandardTableUi;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;

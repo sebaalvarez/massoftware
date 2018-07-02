@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.massoftware.backend.bo.SeguridadPuertaBO;
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.ui.util.StandardFormUi;
-import com.massoftware.frontend.ui.util.StandardTableUi;
+import com.massoftware.frontend.ui.util.window.StandardFormUi;
+import com.massoftware.frontend.ui.util.window.StandardTableUi;
 import com.massoftware.model.Ciudad;
 import com.massoftware.model.Provincia;
 import com.massoftware.model.SeguridadModulo;

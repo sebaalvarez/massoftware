@@ -1,21 +1,21 @@
 package com.massoftware.model;
 
-import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassPluralLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassTableMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldAutoMaxValueAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnsAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxLengthAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxValueIntegerAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMinValueIntegerAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNameMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldReadOnly;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldRequiredAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldUniqueAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldAutoMaxValueAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxValueIntegerAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMinValueIntegerAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldReadOnly;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldUniqueAnont;
 
 @ClassLabelInTheSingularAnont(value = "Módulo")
 @ClassPluralLabelAnont(value = "Módulos")

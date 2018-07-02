@@ -10,7 +10,6 @@ import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.JurisdiccionConvenioMultilateral;
 import com.massoftware.model.Moneda;
-import com.massoftware.model.MonedaAFIP;
 import com.massoftware.model.MonedaCotizacion;
 import com.massoftware.model.SeguridadPuerta;
 import com.massoftware.model.Sucursal;
@@ -95,8 +94,7 @@ public class FondosMenu extends AbstractMenu {
 		a1.addItem("Firmantes (cheques propios) ...", open(BancoFirmante.class));
 		a1.addItem("Cajas", open(Caja.class));
 		a1.addItem("Monedas ...", open(Moneda.class));
-		a1.addItem("Cotizaciones de monedas ...", open(MonedaCotizacion.class))
-				.setEnabled(false);
+		a1.addItem("Cotizaciones de monedas ...", open(MonedaCotizacion.class));
 		a1.addItem("Modelos de comprobantes", null).setEnabled(false);
 		a1.addItem("Sucursales ...", open(Sucursal.class));
 		a1.addItem("Juridicciones convenio multilateral",

@@ -17,12 +17,13 @@ import org.cendra.jdbc.DataSourceWrapper;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.Traslate;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassTableMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNameMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNowTimestampForInsertUpdate;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldSubNameFKAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldUserForInsertUpdate;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldNowTimestampForInsertUpdate;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldSubNameFKAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldTimestamp;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldUserForInsertUpdate;
 import com.massoftware.model.Usuario;
 
 public abstract class GenericBO<T> {
@@ -195,7 +196,14 @@ public abstract class GenericBO<T> {
 
 				Method method = classModel.getMethod(methodName);
 
-				if (fields[i].getType() == Timestamp.class
+				if (fields[i].getType() == java.util.Date.class
+						&& GenericBO.isFieldTimestamp(fields[i])) {
+
+					args[i] = method.invoke(arg);
+					args[i] = new Timestamp(
+							((java.util.Date) args[i]).getTime());
+
+				} else if (fields[i].getType() == Timestamp.class
 						&& isFieldNowTimestampForInsertUpdate(fields[i])) {
 
 					args[i] = new Timestamp(System.currentTimeMillis());
@@ -356,7 +364,14 @@ public abstract class GenericBO<T> {
 					Method method = classModel.getMethod(methodName);
 					Object val = null;
 
-					if (fields[i].getType() == Timestamp.class
+					if (fields[i].getType() == java.util.Date.class
+							&& GenericBO.isFieldTimestamp(fields[i])) {
+
+						val = method.invoke(arg);
+						val = new Timestamp(
+								((java.util.Date) val).getTime());
+
+					} else if (fields[i].getType() == Timestamp.class
 							&& isFieldNowTimestampForInsertUpdate(fields[i])) {
 
 						val = new Timestamp(System.currentTimeMillis());
@@ -653,6 +668,14 @@ public abstract class GenericBO<T> {
 
 		FieldUserForInsertUpdate[] a = field
 				.getAnnotationsByType(FieldUserForInsertUpdate.class);
+
+		return (a != null && a.length > 0);
+
+	}
+
+	private static boolean isFieldTimestamp(Field field) {
+
+		FieldTimestamp[] a = field.getAnnotationsByType(FieldTimestamp.class);
 
 		return (a != null && a.length > 0);
 

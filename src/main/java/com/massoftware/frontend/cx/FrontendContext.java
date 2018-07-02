@@ -4,11 +4,12 @@ import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.custom.windows.CentroDeCostoContableTableUi;
 import com.massoftware.frontend.ui.custom.windows.CiudadTableUi;
 import com.massoftware.frontend.ui.custom.windows.EjercicioContableTableUi;
+import com.massoftware.frontend.ui.custom.windows.MonedaCotizacionTableUi;
 import com.massoftware.frontend.ui.custom.windows.ProvinciaTableUi;
 import com.massoftware.frontend.ui.custom.windows.PuntoDeEquilibrioTableUi;
 import com.massoftware.frontend.ui.custom.windows.SeguridadPuertaTableUi;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StandardTableUi;
+import com.massoftware.frontend.ui.util.window.StandardTableUi;
 import com.massoftware.frontend.ui.windows.custom.centro_de_costo_proyecto.CentroDeCostoProyectoTableUi;
 import com.massoftware.frontend.ui.windows.custom.chequera.ChequeraTableUi;
 import com.massoftware.frontend.ui.windows.custom.cuenta_contable.CuentaContableTableUi;
@@ -203,7 +204,7 @@ public class FrontendContext {
 
 			} else if (classModel == MonedaCotizacion.class) {
 
-				new StandardTableUi<MonedaCotizacion>(shortcut, agregar,
+				new MonedaCotizacionTableUi(shortcut, agregar,
 						modificar, copiar, eliminar, win, cx, usuario,
 						MonedaCotizacion.class, pidFiltering, searchFilter,
 						searchProperty);

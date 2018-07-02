@@ -1,6 +1,6 @@
 package com.massoftware.model;
 
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
 
 @SuppressWarnings("serial")
 public class CuentaContable extends EntityId implements Cloneable,

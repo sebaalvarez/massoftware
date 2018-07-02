@@ -16,30 +16,32 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.vaadin.inputmask.InputMask;
 
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.ui.util.StandardFormUi;
+import com.massoftware.backend.util.bo.GenericBO;
 import com.massoftware.frontend.ui.util.UtilDate;
+import com.massoftware.frontend.ui.util.converter.StringToBigDecimalConverterUnspecifiedLocale;
+import com.massoftware.frontend.ui.util.converter.StringToIntegerConverterUnspecifiedLocale;
 import com.massoftware.frontend.ui.util.validator.GenericMinLengthValidator;
 import com.massoftware.frontend.ui.util.validator.GenericUniqueValidator;
-import com.massoftware.frontend.ui.util.validator.StringToBigDecimalConverterUnspecifiedLocale;
-import com.massoftware.frontend.ui.util.validator.StringToIntegerConverterUnspecifiedLocale;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldAllowDecimalAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldCBBox;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnsAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldInputMaskAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxLengthAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxValueBigDecimalAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxValueIntegerAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMinLengthAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMinValueBigDecimalAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMinValueIntegerAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNotVisibleCopy;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNotVisibleInsert;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldOptionsIntegerAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldOptionsStringAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldReadOnly;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldRequiredAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldUniqueAnont;
+import com.massoftware.frontend.ui.util.window.StandardFormUi;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldAllowDecimalAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldCBBox;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldInputMaskAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxValueBigDecimalAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxValueIntegerAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMinLengthAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMinValueBigDecimalAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMinValueIntegerAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldNotVisibleCopy;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldNotVisibleInsert;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldOptionsIntegerAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldOptionsStringAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldReadOnly;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldTimestamp;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldUniqueAnont;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -364,33 +366,47 @@ public class BuilderXMD {
 
 	private static DateField buildDF(boolean timestamp) {
 
-		DateField df = new DateField() {
+		DateField df = null;
 
-			private static final long serialVersionUID = -1814526872789903256L;
+		if (timestamp) {
+			df = new DateField();
+			df.setConversionError("Se espera un valor dd/MM/yyyy HH:mm:ss ej 12/11/1979 22:36:54");
+		} else {
 
-			@Override
-			protected Date handleUnparsableDateString(String dateString)
-					throws Converter.ConversionException {
+			df = new DateField() {
 
-				return UtilDate.parseDate(dateString);
-			}
+				private static final long serialVersionUID = -1814526872789903256L;
 
-			public void changeVariables(Object source,
-					Map<String, Object> variables) {
+				@Override
+				protected Date handleUnparsableDateString(String dateString)
+						throws Converter.ConversionException {
 
-				if (variables.containsKey("dateString") == false) {
-					variables.put("dateString",
-							variables.get("day") + "/" + variables.get("month")
-									+ "/" + variables.get("year"));
+					return UtilDate.parseDate(dateString);
+					// return new Timestamp(System.currentTimeMillis());
 				}
 
-				variables.put("day", -1);
-				variables.put("year", -1);
-				variables.put("month", -1);
-				super.changeVariables(source, variables);
-			}
+				public void changeVariables(Object source,
+						Map<String, Object> variables) {
 
-		};
+					if (variables.containsKey("dateString") == false) {
+						variables.put(
+								"dateString",
+								variables.get("day") + "/"
+										+ variables.get("month") + "/"
+										+ variables.get("year"));
+					}
+
+					variables.put("day", -1);
+					variables.put("year", -1);
+					variables.put("month", -1);
+					// variables.put("sec", -1);
+					// variables.put("min", -1);
+					// variables.put("hour", -1);
+					super.changeVariables(source, variables);
+				}
+
+			};
+		}
 
 		df.addStyleName(ValoTheme.TEXTAREA_TINY);
 		df.setLocale(new Locale("es", "AR"));
@@ -417,7 +433,8 @@ public class BuilderXMD {
 
 		Field field = getField(clazz, attName);
 
-		DateField df = buildDF(field.getType() == Timestamp.class);
+		DateField df = buildDF(field.getType() == Timestamp.class
+				|| isFieldTimestamp(field));
 
 		if (getLabelVisible(field)) {
 			df.setCaption(getLabel(field));
@@ -426,6 +443,10 @@ public class BuilderXMD {
 		df.setRequired(getRequired(field));
 		df.setRequiredError("El campo '" + getLabel(field)
 				+ "' es requerido. Es decir no debe estar vacio.");
+
+		// df.setConverter(Timestamp.class);
+
+		// .setConverter(new StringToTimestampConverterUnspecifiedLocale());
 
 		df.setPropertyDataSource(dtoBI.getItemProperty(attName));
 
@@ -570,7 +591,7 @@ public class BuilderXMD {
 		//
 		// Collection list = window.getListeners(MyShortcutListener.class);
 		//
-		// System.out.println(list);
+
 		//
 
 		//
@@ -588,9 +609,7 @@ public class BuilderXMD {
 		//
 		// if (target instanceof TextField) {
 		//
-		// System.out.println(sender + "CCCCCCCCCCCCCCCCCCCCCCCCCC "
-		// + ((TextField) target).getCaption() + " == "
-		// + getLabel(field2));
+
 		//
 		// if (((TextField) target).getCaption().equals(
 		// getLabel(field2))) {
@@ -687,11 +706,10 @@ public class BuilderXMD {
 				og.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
 			}
 
-			if(dtoBI.getItemProperty(attName).getValue() == null){
+			if (dtoBI.getItemProperty(attName).getValue() == null) {
 				dtoBI.getItemProperty(attName).setValue(
-						getOptionDefaultInteger(field));	
+						getOptionDefaultInteger(field));
 			}
-			
 
 			// og.setValue(getOptionDefaultInteger(field));
 
@@ -709,9 +727,9 @@ public class BuilderXMD {
 				og.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
 			}
 
-			if(dtoBI.getItemProperty(attName).getValue() == null){
+			if (dtoBI.getItemProperty(attName).getValue() == null) {
 				dtoBI.getItemProperty(attName).setValue(
-						getOptionDefaultString(field));	
+						getOptionDefaultString(field));
 			}
 
 			// og.setValue(getOptionDefaultString(field));
@@ -957,8 +975,8 @@ public class BuilderXMD {
 						+ attName.substring(1, attName.length());
 
 				@SuppressWarnings("unchecked")
-				Method method = clazz.getMethod(methodName);				
-				Object originalValueDTO = method.invoke(originalDTO);								
+				Method method = clazz.getMethod(methodName);
+				Object originalValueDTO = method.invoke(originalDTO);
 
 				txt.addValidator(new GenericUniqueValidator(field.getType(),
 						attName, true, true, cx.buildBO(clazz),
@@ -1368,6 +1386,14 @@ public class BuilderXMD {
 		}
 
 		return null;
+	}
+
+	private static boolean isFieldTimestamp(Field field) {
+
+		FieldTimestamp[] a = field.getAnnotationsByType(FieldTimestamp.class);
+
+		return (a != null && a.length > 0);
+
 	}
 
 }

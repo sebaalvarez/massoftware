@@ -13,6 +13,7 @@ import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Moneda;
 import com.massoftware.model.MonedaAFIP;
+import com.massoftware.model.MonedaCotizacion;
 import com.massoftware.model.MotivoComentario;
 import com.massoftware.model.MotivoNotaDeCredito;
 import com.massoftware.model.Pais;
@@ -102,6 +103,7 @@ public class SuperMenu extends AbstractMenu {
 		a12.addItem("Sucursales ...", open(Sucursal.class));
 
 		a23.addItem("Puertas ...", open(SeguridadPuerta.class));
+		a23.addItem("Cotizaciones de monedas ...", open(MonedaCotizacion.class));
 
 		return menubar;
 	}

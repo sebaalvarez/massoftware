@@ -146,53 +146,53 @@
 			<version>6.1.6.jre8-preview</version>
 		</dependency>
 
-		<dependency>
-			<groupId>cendra_log</groupId>
-			<artifactId>cendralog</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>D:\dev\source\cendralog\target\cendralog-0.0.1-SNAPSHOT.jar</systemPath>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>cendra_log</groupId> -->
+<!-- 			<artifactId>cendralog</artifactId> -->
+<!-- 			<version>0.0.1-SNAPSHOT</version> -->
+<!-- 			<scope>system</scope> -->
+<!-- 			<systemPath>D:\dev\source\cendralog\target\cendralog-0.0.1-SNAPSHOT.jar</systemPath> -->
+<!-- 		</dependency> -->
 
-		<dependency>
-			<groupId>cendra_jdbc</groupId>
-			<artifactId>cendrajdbc</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>D:\dev\source\cendrajdbc\target\cendrajdbc-0.0.1-SNAPSHOT.jar</systemPath>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>cendra_jdbc</groupId> -->
+<!-- 			<artifactId>cendrajdbc</artifactId> -->
+<!-- 			<version>0.0.1-SNAPSHOT</version> -->
+<!-- 			<scope>system</scope> -->
+<!-- 			<systemPath>D:\dev\source\cendrajdbc\target\cendrajdbc-0.0.1-SNAPSHOT.jar</systemPath> -->
+<!-- 		</dependency> -->
 
-		<dependency>
-			<groupId>cendra_common_model</groupId>
-			<artifactId>cendracommonmodel</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>D:\dev\source\cendracommonmodel\target\cendracommonmodel-0.0.1-SNAPSHOT.jar</systemPath>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>cendra_common_model</groupId> -->
+<!-- 			<artifactId>cendracommonmodel</artifactId> -->
+<!-- 			<version>0.0.1-SNAPSHOT</version> -->
+<!-- 			<scope>system</scope> -->
+<!-- 			<systemPath>D:\dev\source\cendracommonmodel\target\cendracommonmodel-0.0.1-SNAPSHOT.jar</systemPath> -->
+<!-- 		</dependency> -->
 
-		<dependency>
-			<groupId>cendra_environment</groupId>
-			<artifactId>cendraenvironment</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>D:\dev\source\cendraenvironment\target\cendraenvironment-0.0.1-SNAPSHOT.jar</systemPath>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>cendra_environment</groupId> -->
+<!-- 			<artifactId>cendraenvironment</artifactId> -->
+<!-- 			<version>0.0.1-SNAPSHOT</version> -->
+<!-- 			<scope>system</scope> -->
+<!-- 			<systemPath>D:\dev\source\cendraenvironment\target\cendraenvironment-0.0.1-SNAPSHOT.jar</systemPath> -->
+<!-- 		</dependency> -->
 
-		<dependency>
-			<groupId>cendra_crudex</groupId>
-			<artifactId>cendracrudex</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>D:\dev\source\cendracrudex\target\cendracrudex-0.0.1-SNAPSHOT.jar</systemPath>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>cendra_crudex</groupId> -->
+<!-- 			<artifactId>cendracrudex</artifactId> -->
+<!-- 			<version>0.0.1-SNAPSHOT</version> -->
+<!-- 			<scope>system</scope> -->
+<!-- 			<systemPath>D:\dev\source\cendracrudex\target\cendracrudex-0.0.1-SNAPSHOT.jar</systemPath> -->
+<!-- 		</dependency> -->
 
-		<dependency>
-			<groupId>cendra_cx</groupId>
-			<artifactId>cendracx</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>D:\dev\source\cendracx\target\cendracx-0.0.1-SNAPSHOT.jar</systemPath>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>cendra_cx</groupId> -->
+<!-- 			<artifactId>cendracx</artifactId> -->
+<!-- 			<version>0.0.1-SNAPSHOT</version> -->
+<!-- 			<scope>system</scope> -->
+<!-- 			<systemPath>D:\dev\source\cendracx\target\cendracx-0.0.1-SNAPSHOT.jar</systemPath> -->
+<!-- 		</dependency> -->
 
 		<!-- <dependency> -->
 		<!-- <groupId>com.massoftware.model</groupId> -->

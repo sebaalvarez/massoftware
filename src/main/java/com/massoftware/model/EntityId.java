@@ -1,6 +1,6 @@
 package com.massoftware.model;
 
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldUniqueAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldUniqueAnont;
 
 public class EntityId extends Entity implements Identifiable {
 

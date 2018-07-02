@@ -3,12 +3,23 @@ package a.a;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import com.massoftware.model.Zona;
 
 public class Pruebas {
 
 	public static void main(String[] args) throws Exception {
+		
+		Timestamp t = new Timestamp(System.currentTimeMillis());
+		System.out.println(t);
+		Date d = new Date(t.getTime());
+		System.out.println(d);
+		Timestamp tt = new Timestamp(d.getTime());
+		System.out.println(tt);
+		
+		System.exit(0);
 		
 		Zona z = new Zona();
 		z.setId("123");

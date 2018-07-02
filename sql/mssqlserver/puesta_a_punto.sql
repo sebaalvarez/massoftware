@@ -862,6 +862,111 @@ CREATE VIEW [dbo].[vMoneda] AS
 
 	-- SELECT * FROM dbo.vMoneda;	
 	-- SELECT * FROM dbo.vMoneda ORDER BY codigo, nombre;	
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vUsuario];
+	
+CREATE VIEW [dbo].[vUsuario] AS
+
+	SELECT	'com.massoftware.model.Usuario'																			AS ClassUsuario	
+			-----------------------------------------------------------------------------------------------------					
+			, CAST([SSECUR_User].[NO] AS VARCHAR)																	AS id			
+			-----------------------------------------------------------------------------------------------------			
+			, CAST([SSECUR_User].[NO] AS INTEGER)																	AS numero										-- Integer NOT NULL UN [ 1 - Integer.MAX_VALUE]					
+			, LTRIM(RTRIM(CAST([SSECUR_User].[LASTNAME] AS VARCHAR)))												AS nombre										-- String (25) NOT NULL UN 
+			--,[SSECUR_User].[DEFAULT_EJERCICIO_CONTABLE]
+				, vEjercicioContable.id																				AS ejercicioContable_id			
+				, vEjercicioContable.ejercicio																		AS ejercicioContable_ejercicio		
+				, vEjercicioContable.fechaApertura																	AS ejercicioContable_fechaApertura
+				, vEjercicioContable.fechaCierre																	AS ejercicioContable_fechaCierre
+				, vEjercicioContable.ejercicioCerrado																AS ejercicioContable_ejercicioCerrado
+				, vEjercicioContable.ejercicioCerradoModulos														AS ejercicioContable_ejercicioCerradoModulos
+				, vEjercicioContable.comentario																		AS ejercicioContable_comentario
+	FROM	[dbo].[SSECUR_User] 
+	LEFT JOIN	[dbo].[vEjercicioContable] 
+		ON [dbo].[vEjercicioContable].ejercicio = CAST([dbo].[SSECUR_User].[DEFAULT_EJERCICIO_CONTABLE] AS INTEGER);
+
+	-- SELECT * FROM dbo.[SSECUR_User] ;
+	-- SELECT * FROM dbo.[vUsuario] ;
+	-- SELECT * FROM dbo.vUsuario WHERE nombre = 'Administrador';
+
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vMonedaCotizacion]
+
+CREATE VIEW [dbo].[vMonedaCotizacion] AS  
+
+	SELECT	'com.massoftware.model.MonedaCotizacion'																				AS ClassMonedaCotizacion
+			-----------------------------------------------------------------------------------------------------			
+			, CONCAT ( CAST([MonedasCotizaciones].[MONEDA] AS VARCHAR), '-', CAST([MonedasCotizaciones].[FECHASQL] AS VARCHAR) )	AS id	-- String NOT NULL PK	
+			-----------------------------------------------------------------------------------------------------
+				--, [MonedasCotizaciones].[MONEDA]													AS moneda								-- NOT NULL
+				, [vMoneda].id																		AS moneda_id
+				, [vMoneda].codigo																	AS moneda_codigo
+				, [vMoneda].nombre																	AS moneda_nombre
+				, [vMoneda].abreviatura																AS moneda_abreviatura
+				, [vMoneda].cotizacion																AS moneda_cotizacion
+				, [vMoneda].fecha																	AS moneda_fecha
+				, [vMoneda].controlDeActualizacion													AS moneda_controlDeActualizacion		
+				------------------------------------------------------------------------------------------------------					
+					, [vMoneda].monedaAFIP_id														AS moneda_monedaAFIP_id	
+					, [vMoneda].monedaAFIP_codigo													AS moneda_monedaAFIP_codigo	
+					, [vMoneda].monedaAFIP_nombre													AS moneda_monedaAFIP_nombre
+			-----------------------------------------------------------------------------------------------------
+			, CAST([MonedasCotizaciones].[FECHASQL] AS DATETIME)									AS fecha								-- Timestamp NOT NULL 
+			, [MonedasCotizaciones].[COMPRA]														AS compra								-- BigDecimal (9,4) NOT NULL [0 - 999999999] 
+			, [MonedasCotizaciones].[VENTA]															AS venta								-- BigDecimal (9,4) NOT NULL [0 - 999999999] 
+			, CAST([MonedasCotizaciones].[FECHAINGRESOSQL] AS DATETIME)								AS fechaIngreso							-- Timestamp NOT NULL 
+			--, CAST([MonedasCotizaciones].[FECHAINGRESOSQL] AS DATE)								AS fechaIngreso							-- Date 
+			--, CAST([MonedasCotizaciones].[FECHAINGRESOSQL] AS TIME)								AS horaIngreso							-- Time 
+			-----------------------------------------------------------------------------------------------------
+				--, [MonedasCotizaciones].[USUARIO]													AS usuario								-- NOT NULL 
+				, [vUsuario].id																		AS usuario_id
+				, [vUsuario].numero																	AS usuario_numero
+				, [vUsuario].nombre																	AS usuario_nombre
+					, [vUsuario].ejercicioContable_id												AS usuario_ejercicioContable_id				
+					, [vUsuario].ejercicioContable_ejercicio										AS usuario_ejercicioContable_ejercicio
+					, [vUsuario].ejercicioContable_fechaApertura									AS usuario_ejercicioContable_fechaApertura
+					, [vUsuario].ejercicioContable_fechaCierre										AS usuario_ejercicioContable_fechaCierre	
+					, [vUsuario].ejercicioContable_ejercicioCerrado									AS usuario_ejercicioContable_ejercicioCerrado
+					, [vUsuario].ejercicioContable_ejercicioCerradoModulos							AS usuario_ejercicioContable_ejercicioCerradoModulos
+					, [vUsuario].ejercicioContable_comentario										AS usuario_ejercicioContable_comentario      
+
+
+	FROM [dbo].[MonedasCotizaciones]
+	LEFT JOIN	[dbo].[vUsuario] 
+		ON [dbo].[vUsuario].[numero] = CAST([dbo].[MonedasCotizaciones].[USUARIO] AS INTEGER)
+	LEFT JOIN	[dbo].[vMoneda] 
+		ON [dbo].[vMoneda].[codigo] = CAST([dbo].[MonedasCotizaciones].[MONEDA] AS INTEGER);	
+
+
+	-- SELECT * FROM dbo.vMonedaCotizacion;	
+	-- SELECT COUNT(*) FROM dbo.vMonedaCotizacion;	
+	-- SELECT * FROM dbo.vMonedaCotizacion ORDER BY fecha DESC, moneda_codigo;	
+	-- SELECT fecha AS f, * FROM dbo.vMonedaCotizacion WHERE moneda_codigo = 6 ORDER BY fecha DESC, moneda_codigo;	
+	-- SELECT fechaIngreso FROM dbo.vMonedaCotizacion ORDER BY moneda_codigo, fecha DESC ;	
+	-- SELECT fecha FROM dbo.vMonedaCotizacion ORDER BY moneda_codigo, fecha DESC ;	
+
+	-- SELECT fecha as f, * FROM dbo.vMonedaCotizacion WHERE moneda_codigo = 6 AND fecha = '2018-06-29T03:03:03.000';
+	-- SELECT fecha as f, * FROM dbo.vMonedaCotizacion WHERE moneda_codigo = 11 AND fecha = '2018-06-30T13:00:24.0';	
+	-- SELECT * FROM dbo.vMonedaCotizacion WHERE moneda_codigo = 11 AND fecha = '2018-06-30T13:00:24.0';	
+	-- SELECT fecha as f, * FROM dbo.vMonedaCotizacion WHERE CAST(fecha AS DATE) <= '2018-06-30T13:00:24.0' AND CAST(fecha AS DATE) >='2013-01-30T13:00:24.0';
+	-- SELECT fecha as f, * FROM dbo.vMonedaCotizacion WHERE moneda_codigo = 5 AND CAST(fecha AS DATE) <= '2018-06-30T13:00:24.0' AND CAST(fecha AS DATE) >='2013-01-30T13:00:24.0';
+	-- SELECT DISTINCT YEAR ( fecha )  as year FROM dbo.vMonedaCotizacion WHERE moneda_codigo = 5;
+	-- SELECT * FROM dbo.vMonedaCotizacion WHERE moneda_codigo = 5 AND YEAR(fecha) >= 2010;	
+	-- SELECT * FROM dbo.vMonedaCotizacion WHERE moneda_codigo = 5 AND YEAR(fecha) >= 2011;
+	-- SELECT * FROM dbo.vMonedaCotizacion WHERE moneda_codigo = 5 AND YEAR(fecha) >= 2012;
+	-- SELECT * FROM dbo.vMonedaCotizacion WHERE moneda_codigo = 5 AND YEAR(fecha) >= 2013;
+	-- SELECT * FROM dbo.vMonedaCotizacion WHERE moneda_codigo = 5 AND YEAR(fecha) >= 2014;
+	-- SELECT * FROM dbo.vMonedaCotizacion WHERE moneda_codigo = 5 AND YEAR(fecha) >= 2015;
+	-- SELECT * FROM dbo.vMonedaCotizacion WHERE moneda_codigo = 5 AND YEAR(fecha) >= 2016;
+
+
+	
+	 
+	
 	
 
 --=============================================================================================================
@@ -957,31 +1062,7 @@ CREATE VIEW [dbo].[vCentroDeCostoProyecto] AS
 
 
 
--------------------------------------------------------------
 
--- DROP VIEW [dbo].[vUsuario];
-	
-CREATE VIEW [dbo].[vUsuario] AS
-
-	SELECT	'com.massoftware.model.Usuario' AS ClassUsuario			
-			, CAST([SSECUR_User].[NO] AS VARCHAR) AS id			
-			, CAST([SSECUR_User].[NO] AS INTEGER) AS numero			
-			, LTRIM(RTRIM(CAST([SSECUR_User].[LASTNAME] AS VARCHAR))) AS nombre
-			--,[SSECUR_User].[DEFAULT_EJERCICIO_CONTABLE]
-				, vEjercicioContable.id  AS ejercicioContable_id			
-				, vEjercicioContable.ejercicio AS ejercicioContable_ejercicio		
-				, vEjercicioContable.fechaApertura AS ejercicioContable_fechaApertura
-				, vEjercicioContable.fechaCierre AS ejercicioContable_fechaCierre
-				, vEjercicioContable.ejercicioCerrado AS ejercicioContable_ejercicioCerrado
-				, vEjercicioContable.ejercicioCerradoModulos AS ejercicioContable_ejercicioCerradoModulos
-				, vEjercicioContable.comentario AS ejercicioContable_comentario
-	FROM	[dbo].[SSECUR_User] 
-	LEFT JOIN	[dbo].[vEjercicioContable] 
-		ON [dbo].[vEjercicioContable].ejercicio = CAST([dbo].[SSECUR_User].[DEFAULT_EJERCICIO_CONTABLE] AS INTEGER);
-
-	-- SELECT * FROM dbo.[SSECUR_User] ;
-	-- SELECT * FROM dbo.[vUsuario] ;
-	-- SELECT * FROM dbo.vUsuario WHERE nombre = 'Administrador';
 
 	
 
@@ -1532,60 +1613,6 @@ CREATE VIEW [dbo].[vTipoCbteControl] AS
 
 
 
--------------------------------------------------------------
-
--- DROP VIEW [dbo].[vMonedaCotizacion]
-
-CREATE VIEW [dbo].[vMonedaCotizacion] AS  
-
-	SELECT	'com.massoftware.model.MonedaCotizacion'																				AS ClassMonedaCotizacion
-			-----------------------------------------------------------------------------------------------------			
-			, CONCAT ( CAST([MonedasCotizaciones].[MONEDA] AS VARCHAR), '-', CAST([MonedasCotizaciones].[FECHASQL] AS VARCHAR) )	AS id	-- String NOT NULL PK	
-			-----------------------------------------------------------------------------------------------------
-				--, [MonedasCotizaciones].[MONEDA]													AS moneda	-- NOT NULL
-				, [vMoneda].id																		AS moneda_id
-				, [vMoneda].codigo																	AS moneda_codigo
-				, [vMoneda].nombre																	AS moneda_nombre
-				, [vMoneda].abreviatura																AS moneda_abreviatura
-				, [vMoneda].cotizacion																AS moneda_cotizacion
-				, [vMoneda].fecha																	AS moneda_fecha
-				, [vMoneda].controlDeActualizacion													AS moneda_controlDeActualizacion		
-				------------------------------------------------------------------------------------------------------					
-					, [vMoneda].monedaAFIP_id														AS moneda_monedaAFIP_id	
-					, [vMoneda].monedaAFIP_codigo													AS moneda_monedaAFIP_codigo	
-					, [vMoneda].monedaAFIP_nombre													AS moneda_monedaAFIP_nombre
-			-----------------------------------------------------------------------------------------------------
-			, CAST([MonedasCotizaciones].[FECHASQL] AS DATE)										AS fecha		-- Date NOT NULL 
-			, [MonedasCotizaciones].[COMPRA]														AS compra		-- BigDecimal (9,4) [0 - 999999999] 
-			, [MonedasCotizaciones].[VENTA]															AS venta		-- BigDecimal (9,4) [0 - 999999999] 
-			, CAST([MonedasCotizaciones].[FECHAINGRESOSQL] AS DATETIME)								AS fechaIngreso	-- Date NOT NULL 
-			--, CAST([MonedasCotizaciones].[FECHAINGRESOSQL] AS DATE)								AS fechaIngreso	-- Date 
-			--, CAST([MonedasCotizaciones].[FECHAINGRESOSQL] AS TIME)								AS horaIngreso	-- Time 
-			-----------------------------------------------------------------------------------------------------
-				--, [MonedasCotizaciones].[USUARIO]													AS usuario -- NOT NULL 
-				, [vUsuario].id																		AS usuario_id
-				, [vUsuario].numero																	AS usuario_numero
-				, [vUsuario].nombre																	AS usuario_nombre
-					, [vUsuario].ejercicioContable_id												AS usuario_ejercicioContable_id				
-					, [vUsuario].ejercicioContable_ejercicio										AS usuario_ejercicioContable_ejercicio
-					, [vUsuario].ejercicioContable_fechaApertura									AS usuario_ejercicioContable_fechaApertura
-					, [vUsuario].ejercicioContable_fechaCierre										AS usuario_ejercicioContable_fechaCierre	
-					, [vUsuario].ejercicioContable_ejercicioCerrado									AS usuario_ejercicioContable_ejercicioCerrado
-					, [vUsuario].ejercicioContable_ejercicioCerradoModulos							AS usuario_ejercicioContable_ejercicioCerradoModulos
-					, [vUsuario].ejercicioContable_comentario										AS usuario_ejercicioContable_comentario      
-
-
-	FROM [dbo].[MonedasCotizaciones]
-	LEFT JOIN	[dbo].[vUsuario] 
-		ON [dbo].[vUsuario].[numero] = CAST([dbo].[MonedasCotizaciones].[USUARIO] AS INTEGER)
-	LEFT JOIN	[dbo].[vMoneda] 
-		ON [dbo].[vMoneda].[codigo] = CAST([dbo].[MonedasCotizaciones].[MONEDA] AS INTEGER);	
-
-
-	-- SELECT * FROM dbo.vMonedaCotizacion;	
-	-- SELECT COUNT(*) FROM dbo.vMonedaCotizacion;	
-	-- SELECT * FROM dbo.vMonedaCotizacion ORDER BY fecha, moneda_codigo;	
-	-- SELECT fechaIngreso FROM dbo.vMonedaCotizacion ORDER BY moneda_codigo, fecha DESC ;	
 
 
 -------------------------------------------------------------

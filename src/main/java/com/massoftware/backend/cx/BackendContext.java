@@ -517,7 +517,7 @@ public class BackendContext extends AbstractContext {
 
 			} else if (classModel == MonedaCotizacion.class) {
 
-				return new MonedaCotizacionBO(dataSourceWrapper, this);
+				return new MonedaCotizacionBO(dataSourceWrapper, this, new MonedaBO(dataSourceWrapper, this));
 
 			}
 

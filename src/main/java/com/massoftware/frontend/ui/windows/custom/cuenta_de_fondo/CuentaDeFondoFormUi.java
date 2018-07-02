@@ -3,7 +3,7 @@ package com.massoftware.frontend.ui.windows.custom.cuenta_de_fondo;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.cx.FrontendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StandardFormUi;
+import com.massoftware.frontend.ui.util.window.StandardFormUi;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.CuentaDeFondoA;

@@ -1,12 +1,6 @@
 package com.massoftware.model;
 
-
-public class Usuario extends EntityId implements Cloneable, Comparable<Usuario> {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 809942438468897333L;
+public class Usuario extends EntityId implements Comparable<Usuario> {
 
 	private Integer numero;
 	private String nombre;
@@ -16,9 +10,9 @@ public class Usuario extends EntityId implements Cloneable, Comparable<Usuario> 
 
 	}
 
-//	public Usuario(Object[] row) {
-//		setterByArray(row);
-//	}
+	// public Usuario(Object[] row) {
+	// setterByArray(row);
+	// }
 
 	public Integer getNumero() {
 		return numero;
@@ -46,55 +40,51 @@ public class Usuario extends EntityId implements Cloneable, Comparable<Usuario> 
 		this.ejercicioContable = ejercicioContable;
 	}
 
-//	public void setterByArray(Object[] row) {
-//
-//		int column = 0;
-//
-//		if (row[column] != null) {
-//			this.setNumero((Integer) row[column]);
-//		}
-//
-//		column++;
-//
-//		if (row[column] != null) {
-//			this.setNombre((String) row[column]);
-//		}
-//
-//		EjercicioContable ejercicioContable = new EjercicioContable(
-//				ArrayUtils.subarray(row, 2, 8));
-//
-//		if (ejercicioContable.getEjercicio() != null) {
-//			this.setEjercicioContable(ejercicioContable);
-//		}
-//
-//	}
+	// public void setterByArray(Object[] row) {
+	//
+	// int column = 0;
+	//
+	// if (row[column] != null) {
+	// this.setNumero((Integer) row[column]);
+	// }
+	//
+	// column++;
+	//
+	// if (row[column] != null) {
+	// this.setNombre((String) row[column]);
+	// }
+	//
+	// EjercicioContable ejercicioContable = new EjercicioContable(
+	// ArrayUtils.subarray(row, 2, 8));
+	//
+	// if (ejercicioContable.getEjercicio() != null) {
+	// this.setEjercicioContable(ejercicioContable);
+	// }
+	//
+	// }
 
-//	public Usuario clone() throws CloneNotSupportedException {
-//		Usuario other = (Usuario) super.clone();
-//
-//		other.setNumero(numero);
-//		other.setNombre(nombre);
-//		if (this.getEjercicioContable() != null) {
-//			other.setEjercicioContable(getEjercicioContable().clone());
-//		} else {
-//			other.setEjercicioContable(null);
-//		}
-//
-//		return other;
-//	}
+	// public Usuario clone() throws CloneNotSupportedException {
+	// Usuario other = (Usuario) super.clone();
+	//
+	// other.setNumero(numero);
+	// other.setNombre(nombre);
+	// if (this.getEjercicioContable() != null) {
+	// other.setEjercicioContable(getEjercicioContable().clone());
+	// } else {
+	// other.setEjercicioContable(null);
+	// }
+	//
+	// return other;
+	// }
 
 	@Override
 	public int compareTo(Usuario o) {
-		if (this.getNombre() != null && o != null) {
+		if (this.getNombre() != null && o != null && o.getNombre() != null) {
 			return this.getNombre().toLowerCase()
 					.compareTo(((Usuario) o).getNombre().toLowerCase());
 		}
 
-		if (this.getNombre() != null && o == null) {
-			return this.getNombre().toLowerCase().compareTo("");
-		}
-
-		return "".compareTo(((Usuario) o).getNombre());
+		return 0;
 	}
 
 	@Override

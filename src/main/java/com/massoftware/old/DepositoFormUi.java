@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StandardFormUi;
+import com.massoftware.frontend.ui.util.window.StandardFormUi;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.Modulo;
 import com.massoftware.model.Sucursal;

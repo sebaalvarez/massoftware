@@ -588,14 +588,8 @@ public class CuentaContableOldBO {
 				if (item.getCuentaContableEstado() != null
 						&& item.getCuentaContableEstado().getId() != null) {
 					planDeCuentaEstado = item.getCuentaContableEstado().getId();
-					System.out.println("6666 "
-							+ item.getCuentaContableEstado().getId()
-							+ " 999999999 " + planDeCuentaEstado);
 				} else {
 					planDeCuentaEstado = String.class;
-					System.out.println("6666 "
-							+ item.getCuentaContableEstado().getId()
-							+ " 999999999 99888 " + planDeCuentaEstado);
 				}
 				Object cuentaConApropiacion = null;
 				if (item.getCuentaConApropiacion() != null) {

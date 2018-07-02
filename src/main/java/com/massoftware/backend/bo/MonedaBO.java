@@ -74,13 +74,11 @@ public class MonedaBO extends GenericBO<Moneda> {
 
 	public Moneda update(Moneda dto, Moneda dtoOriginal, Usuario usuario) throws Exception {
 
-		Object codigoArg = null;
+		Object codigoArg = Integer.class;
 
 		if (dtoOriginal.getCodigo() != null) {
 			codigoArg = dtoOriginal.getCodigo();
-		} else {
-			codigoArg = Integer.class;
-		}
+		} 
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
 

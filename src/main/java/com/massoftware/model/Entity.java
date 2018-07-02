@@ -4,12 +4,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNotCopiableAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldUniqueAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldNotCopiableAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldNowTimestampForInsertUpdate;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldUniqueAnont;
 
 public class Entity implements Cloneable, Valuable {
 
@@ -104,7 +106,8 @@ public class Entity implements Cloneable, Valuable {
 		for (Field field : fields) {
 
 			if (field.getName().startsWith("_") == false
-					&& (full || (getUnique(field) == false && getNotCopiable(field) == false))) {
+					&& (full || (getUnique(field) == false
+							&& getNotCopiable(field) == false && getNowTimestampForInsertUpdate(field) == false))) {
 
 				@SuppressWarnings("unchecked")
 				Method methodGet = clazz.getDeclaredMethod("get"
@@ -176,6 +179,15 @@ public class Entity implements Cloneable, Valuable {
 
 					methodSet.invoke(other, value);
 
+				} else if (field.getType() == Timestamp.class) {
+					Timestamp value = (Timestamp) methodGet
+							.invoke(originalIsntance);
+					if (value != null) {
+						value = new Timestamp(value.getTime());
+					}
+
+					methodSet.invoke(other, value);
+
 				} else {
 
 					Object value = methodGet.invoke(originalIsntance);
@@ -183,21 +195,21 @@ public class Entity implements Cloneable, Valuable {
 					if (value != null && value instanceof Entity) {
 
 						value = ((Entity) value).clone();
-						
+
 						// Object other2 = field.getType().newInstance();
-//						if (value != null) {
-							// value = clone(value, field.getType(), other2,
-							// full);
-//							value = ((Entity) value).clone();
-//						}
+						// if (value != null) {
+						// value = clone(value, field.getType(), other2,
+						// full);
+						// value = ((Entity) value).clone();
+						// }
 
 						methodSet.invoke(other, value);
 					} else {
 						if (value != null) {
 							throw new RuntimeException(field.getType()
-									+ " not found.");	
+									+ " not found.");
 						}
-						
+
 					}
 				}
 
@@ -250,6 +262,14 @@ public class Entity implements Cloneable, Valuable {
 		}
 
 		return false;
+
+	}
+
+	private static boolean getNowTimestampForInsertUpdate(Field field) {
+		FieldNowTimestampForInsertUpdate[] a = field
+				.getAnnotationsByType(FieldNowTimestampForInsertUpdate.class);
+
+		return (a != null && a.length > 0);
 
 	}
 

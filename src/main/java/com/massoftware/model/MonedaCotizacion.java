@@ -4,48 +4,51 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassPluralLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.ClassTableMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldAllowDecimalAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldColumnsAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxLengthAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMaxValueBigDecimalAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldMinValueBigDecimalAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNameMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNotVisibleCopy;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNotVisibleInsert;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldNowTimestampForInsertUpdate;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldReadOnly;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldRequiredAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldSubNameFKAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.model.FieldUserForInsertUpdate;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldAllowDecimalAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxValueBigDecimalAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMinValueBigDecimalAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldNotVisibleCopy;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldNotVisibleInsert;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldNowTimestampForInsertUpdate;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldReadOnly;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldSubNameFKAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldTimestamp;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldUniqueAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldUserForInsertUpdate;
 
-@SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "Cotizacion de moneda")
 @ClassPluralLabelAnont(value = "Cotizaciones de monedas")
 @ClassArticleLabelInTheSingularAnont(value = "la")
 @ClassArticleLabelInPluralAnont(value = "las")
 // @ClassFormSourceAnont(value = "Deposito")
 @ClassTableMSAnont(nameTableDB = "[MonedasCotizaciones]")
-public class MonedaCotizacion extends EntityId implements Cloneable,
+public class MonedaCotizacion extends EntityId implements
 		Comparable<MonedaCotizacion> {
 
 	@FieldLabelAnont(value = "Moneda")
 	@FieldRequiredAnont()
-	@FieldColumnMetaDataAnont(attSize = 350)
+	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldSubNameFKAnont(value = "codigo")
 	@FieldNameMSAnont(nameAttDB = "[MONEDA]", classAttDB = Integer.class)
 	private Moneda moneda;
 
 	@FieldLabelAnont(value = "Fecha")
 	@FieldRequiredAnont()
-	@FieldColumnMetaDataAnont(attSize = 150)
-	@FieldNameMSAnont(nameAttDB = "[FECHASQL]", classAttDB = Date.class)
+	@FieldColumnMetaDataAnont(attSize = 150, pidFilteringStart = true, ascOrderByStart = false)
+	@FieldNameMSAnont(nameAttDB = "[FECHASQL]", classAttDB = Timestamp.class)
+	@FieldTimestamp()
+	@FieldUniqueAnont()
 	private Date fecha;
 
 	@FieldLabelAnont(value = "Compra")
@@ -75,7 +78,7 @@ public class MonedaCotizacion extends EntityId implements Cloneable,
 	@FieldReadOnly()
 	@FieldNowTimestampForInsertUpdate()
 	@FieldLabelAnont(value = "Ingreso")
-//	@FieldRequiredAnont()
+	// @FieldRequiredAnont()
 	@FieldColumnMetaDataAnont(attSize = 250)
 	@FieldNameMSAnont(nameAttDB = "[FECHAINGRESOSQL]", classAttDB = Timestamp.class)
 	private Timestamp fechaIngreso;
@@ -85,7 +88,7 @@ public class MonedaCotizacion extends EntityId implements Cloneable,
 	@FieldReadOnly()
 	@FieldUserForInsertUpdate()
 	@FieldLabelAnont(value = "Usuario")
-//	@FieldRequiredAnont()
+	// @FieldRequiredAnont()
 	@FieldColumnMetaDataAnont(attSize = 250)
 	@FieldSubNameFKAnont(value = "numero")
 	@FieldNameMSAnont(nameAttDB = "[USUARIO]", classAttDB = Integer.class)
@@ -139,45 +142,45 @@ public class MonedaCotizacion extends EntityId implements Cloneable,
 		this.usuario = usuario;
 	}
 
-//	@Override
-//	public MonedaCotizacion clone() throws CloneNotSupportedException {
-//
-//		MonedaCotizacion other = new MonedaCotizacion();
-//
-//		other.setId(this.getId());		
-//		if (this.getMoneda() != null) {
-//			other.setMoneda(this.getMoneda().clone());
-//		} else {
-//			other.setMoneda(null);
-//		}
-//		if (this.getFecha() != null) {
-//			other.setFecha((Date) this.getFecha().clone());
-//		} else {
-//			other.setFecha(null);
-//		}
-//		if (this.getCompra() != null) {
-//			other.setCompra(new BigDecimal(getCompra().toString()));
-//		} else {
-//			other.setCompra(null);
-//		}
-//		if (this.getVenta() != null) {
-//			other.setVenta(new BigDecimal(getVenta().toString()));
-//		} else {
-//			other.setVenta(null);
-//		}
-//		if (this.getFechaIngreso() != null) {
-//			other.setFechaIngreso((Timestamp) this.getFechaIngreso().clone());
-//		} else {
-//			other.setFechaIngreso(null);
-//		}		
-//		if (this.getUsuario() != null) {
-//			other.setUsuario(getUsuario());
-//		} else {
-//			other.setUsuario(null);
-//		}
-//
-//		return other;
-//	}
+	// @Override
+	// public MonedaCotizacion clone() throws CloneNotSupportedException {
+	//
+	// MonedaCotizacion other = new MonedaCotizacion();
+	//
+	// other.setId(this.getId());
+	// if (this.getMoneda() != null) {
+	// other.setMoneda(this.getMoneda().clone());
+	// } else {
+	// other.setMoneda(null);
+	// }
+	// if (this.getFecha() != null) {
+	// other.setFecha((Date) this.getFecha().clone());
+	// } else {
+	// other.setFecha(null);
+	// }
+	// if (this.getCompra() != null) {
+	// other.setCompra(new BigDecimal(getCompra().toString()));
+	// } else {
+	// other.setCompra(null);
+	// }
+	// if (this.getVenta() != null) {
+	// other.setVenta(new BigDecimal(getVenta().toString()));
+	// } else {
+	// other.setVenta(null);
+	// }
+	// if (this.getFechaIngreso() != null) {
+	// other.setFechaIngreso((Timestamp) this.getFechaIngreso().clone());
+	// } else {
+	// other.setFechaIngreso(null);
+	// }
+	// if (this.getUsuario() != null) {
+	// other.setUsuario(getUsuario());
+	// } else {
+	// other.setUsuario(null);
+	// }
+	//
+	// return other;
+	// }
 
 	@Override
 	public int compareTo(MonedaCotizacion o) {
@@ -195,15 +198,15 @@ public class MonedaCotizacion extends EntityId implements Cloneable,
 
 		super.validate();
 
-//		if (this.codigo == null) {
-//			throw new IllegalArgumentException(this.getClass()
-//					.getCanonicalName() + ".codigo es nulo.");
-//		}
-//
-//		if (this.nombre == null) {
-//			throw new IllegalArgumentException(this.getClass()
-//					.getCanonicalName() + ".nombre es nulo.");
-//		}
+		// if (this.codigo == null) {
+		// throw new IllegalArgumentException(this.getClass()
+		// .getCanonicalName() + ".codigo es nulo.");
+		// }
+		//
+		// if (this.nombre == null) {
+		// throw new IllegalArgumentException(this.getClass()
+		// .getCanonicalName() + ".nombre es nulo.");
+		// }
 
 		return true;
 	}

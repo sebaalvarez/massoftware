@@ -2,7 +2,7 @@ package com.massoftware.frontend.ui.windows.custom.centro_de_costo_proyecto;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.util.StandardFormUi;
+import com.massoftware.frontend.ui.util.window.StandardFormUi;
 import com.massoftware.model.CentroDeCostoProyecto;
 import com.massoftware.model.CentroDeCostoProyectoTipo;
 import com.massoftware.model.Usuario;
