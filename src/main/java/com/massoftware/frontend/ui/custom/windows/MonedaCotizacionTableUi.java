@@ -35,15 +35,17 @@ public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 	private ComboBox filtroAnioCBX;
 	private BeanItemContainer<IntegerValue> aniosBIC;
 
-	public MonedaCotizacionTableUi(boolean shortcut, boolean agregar,
+	public MonedaCotizacionTableUi(boolean paged, boolean pagedCount,
+			boolean pagedOrder, boolean shortcut, boolean agregar,
 			boolean modificar, boolean copiar, boolean eliminar, Window window,
 			BackendContext cx, Usuario usuario,
 			Class<MonedaCotizacion> classModel, String pidFiltering,
 			Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(shortcut, agregar, modificar, copiar, eliminar, window, cx,
-				usuario, classModel, pidFiltering, searchFilter, searchProperty);
+		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
+				copiar, eliminar, window, cx, usuario, classModel,
+				pidFiltering, searchFilter, searchProperty, null);
 
 		monedaCBXValueChange();
 
@@ -61,12 +63,12 @@ public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 		filtroAnioCBX.setRequired(true);
 		filtroAnioCBX.setNullSelectionAllowed(false);
 		filtroAnioCBX.setContainerDataSource(aniosBIC);
-//		filtroAnioCBX.setWidth("100%");
+		// filtroAnioCBX.setWidth("100%");
 
 		filaFiltro1HL.addComponent(filtroAnioCBX, 0);
 		filaFiltro1HL.setComponentAlignment(filtroAnioCBX,
 				Alignment.MIDDLE_CENTER);
-//		filaFiltro1HL.setWidth("100%");
+		// filaFiltro1HL.setWidth("100%");
 
 		Calendar cal = Calendar.getInstance();
 		int year = cal.get(Calendar.YEAR);
@@ -98,7 +100,7 @@ public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 		filaFiltro1HL.addComponent(filtroMonedaCBX, 0);
 		filaFiltro1HL.setComponentAlignment(filtroMonedaCBX,
 				Alignment.MIDDLE_CENTER);
-//		filaFiltro1HL.setWidth("100%");
+		// filaFiltro1HL.setWidth("100%");
 
 		MonedaBO monedaBO = (MonedaBO) cx.buildBO(Moneda.class);
 
@@ -170,22 +172,23 @@ public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 		return form;
 
 	}
-	
-//	@SuppressWarnings({ "unchecked", "rawtypes" })
-//	protected StandardFormUi openFormAgregar() throws Exception {
-//
-//		MonedaCotizacion item = MonedaCotizacion.class.newInstance();
-//
-//		item.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
-//				.getValue());
-//
-//		StandardFormUi<CentroDeCostoContable> form = new StandardFormUi<CentroDeCostoContable>(
-//				usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item);
-//
-//		form.setMaxValues();
-//
-//		return form;
-//
-//	}
+
+	// @SuppressWarnings({ "unchecked", "rawtypes" })
+	// protected StandardFormUi openFormAgregar() throws Exception {
+	//
+	// MonedaCotizacion item = MonedaCotizacion.class.newInstance();
+	//
+	// item.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
+	// .getValue());
+	//
+	// StandardFormUi<CentroDeCostoContable> form = new
+	// StandardFormUi<CentroDeCostoContable>(
+	// usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item);
+	//
+	// form.setMaxValues();
+	//
+	// return form;
+	//
+	// }
 
 }

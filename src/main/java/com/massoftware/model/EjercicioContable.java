@@ -18,6 +18,7 @@ import com.massoftware.frontend.ui.util.xmd.annotation.FieldNameMSAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.FieldReadOnly;
 import com.massoftware.frontend.ui.util.xmd.annotation.FieldRequiredAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.FieldUniqueAnont;
+import com.massoftware.util.FormatDate;
 
 @ClassLabelInTheSingularAnont(value = "ejercicio contable")
 @ClassPluralLabelAnont(value = "Ejercicios contables")
@@ -196,28 +197,28 @@ public class EjercicioContable extends EntityId implements
 	// }
 	// }
 
-//	@Override
-//	public EjercicioContable clone() throws CloneNotSupportedException {
-//		EjercicioContable other = new EjercicioContable();
-//
-//		other.setId(this.getId());
-//		other.setEjercicio(this.getEjercicio());
-//		if (this.getFechaApertura() != null) {
-//			other.setFechaApertura((Date) this.getFechaApertura().clone());
-//		} else {
-//			other.setFechaApertura(null);
-//		}
-//		if (this.getFechaCierre() != null) {
-//			other.setFechaCierre((Date) this.getFechaCierre().clone());
-//		} else {
-//			other.setFechaCierre(null);
-//		}
-//		other.setEjercicioCerrado(this.getEjercicioCerrado());
-//		other.setEjercicioCerradoModulos(this.getEjercicioCerradoModulos());
-//		other.setComentario(this.getComentario());
-//
-//		return other;
-//	}
+	// @Override
+	// public EjercicioContable clone() throws CloneNotSupportedException {
+	// EjercicioContable other = new EjercicioContable();
+	//
+	// other.setId(this.getId());
+	// other.setEjercicio(this.getEjercicio());
+	// if (this.getFechaApertura() != null) {
+	// other.setFechaApertura((Date) this.getFechaApertura().clone());
+	// } else {
+	// other.setFechaApertura(null);
+	// }
+	// if (this.getFechaCierre() != null) {
+	// other.setFechaCierre((Date) this.getFechaCierre().clone());
+	// } else {
+	// other.setFechaCierre(null);
+	// }
+	// other.setEjercicioCerrado(this.getEjercicioCerrado());
+	// other.setEjercicioCerradoModulos(this.getEjercicioCerradoModulos());
+	// other.setComentario(this.getComentario());
+	//
+	// return other;
+	// }
 
 	public int compareTo(EjercicioContable o) {
 
@@ -225,15 +226,23 @@ public class EjercicioContable extends EntityId implements
 
 	}
 
+	private boolean _setfullToString = false;
+
+	public void _setfullToString(boolean _setfullToString) {
+		this._setfullToString = _setfullToString;
+	}
+
 	@Override
 	public String toString() {
 
-		if(this.getEjercicio() != null){
-			return this.getEjercicio().toString();	
+		if (this._setfullToString) {
+			return this.getEjercicio().toString() + " [ "
+					+ FormatDate.format(fechaApertura) + " - "
+					+ FormatDate.format(fechaCierre) + " ]";
+		} else {
+			return this.getEjercicio().toString();
 		}
-		
-		return null;
-		
+
 	}
 
 	public boolean validate() throws IllegalArgumentException {

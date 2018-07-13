@@ -1,35 +1,40 @@
-package com.massoftware.frontend.ui.windows.custom.cuenta_contable;
+package com.massoftware.frontend.ui.custom.validator;
 
+import com.massoftware.backend.bo.CuentaContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.model.CuentaContable;
+import com.massoftware.model.CuentaContableFull;
+import com.massoftware.util.FormatCuentaContableCodigoCuenta;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
 
-public class ValidatorCuentaContableCodigo extends AbstractStringValidator {
+public class CuentaContableCodigoUniqueValidator extends
+		AbstractStringValidator {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2108700714465550165L;
-	
+
 	private BackendContext cx;
 
-	protected BeanItem<CuentaContable> planDeCuentaBI;
+	protected BeanItem<CuentaContableFull> cuentaContableBI;
 	protected String codigoCuentaOriginal;
 
-	public ValidatorCuentaContableCodigo(String errorMessage, BackendContext cx,
-			BeanItem<CuentaContable> planDeCuentaBI) {
-		super(errorMessage);
+	public CuentaContableCodigoUniqueValidator(BackendContext cx,
+			BeanItem<CuentaContableFull> cuentaContableBI) {
+		super("");
 		this.cx = cx;
-		this.planDeCuentaBI = planDeCuentaBI;
+		this.cuentaContableBI = cuentaContableBI;
 	}
 
-	public ValidatorCuentaContableCodigo(String errorMessage, BackendContext cx,
-			BeanItem<CuentaContable> planDeCuentaBI, String codigoCuentaOriginal) {
-		super(errorMessage);
+	public CuentaContableCodigoUniqueValidator(BackendContext cx,
+			BeanItem<CuentaContableFull> cuentaContableBI,
+			String codigoCuentaOriginal) {
+		super("");
 		this.cx = cx;
-		this.planDeCuentaBI = planDeCuentaBI;
+		this.cuentaContableBI = cuentaContableBI;
 		this.codigoCuentaOriginal = codigoCuentaOriginal.trim().toLowerCase();
 	}
 
@@ -53,17 +58,17 @@ public class ValidatorCuentaContableCodigo extends AbstractStringValidator {
 					return true;
 				}
 
-				String codigoCuenta2 = FormatCuentaContableCodigoCuenta
+				String codigoCuentaFormateado = FormatCuentaContableCodigoCuenta
 						.format(codigoCuenta);
 
 				this.setErrorMessage("El campo Cuenta de jerarqua es incorrecto, ya existe una cuenta con la misma denominación ("
-						+ planDeCuentaBI.getBean().getEjercicioContable()
-						+ " - " + codigoCuenta2 + ")");
+						+ cuentaContableBI.getBean().getEjercicioContable()
+						+ ") " + codigoCuentaFormateado + "");
 
-				boolean b = cx.buildCuentaContableBO().ifExistsCodigoCuenta(
-						codigoCuenta,
-						planDeCuentaBI.getBean().getEjercicioContable()
-								.getEjercicio());
+				boolean b = ((CuentaContableBO) cx
+						.buildBO(CuentaContable.class)).checkUniqueCodigoCuenta(
+						codigoCuenta, cuentaContableBI.getBean()
+								.getEjercicioContable().getEjercicio());
 
 				if (b == true) {
 					return false;

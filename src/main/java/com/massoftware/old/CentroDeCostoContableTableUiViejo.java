@@ -648,8 +648,7 @@ class CentroDeCostoContableTableUiViejo extends CustomComponent {
 
 			if (ejerciciosContablesBIC.size() > 0) {
 
-				EjercicioContable ejercicioContable = usuario
-						.getEjercicioContable();
+				EjercicioContable ejercicioContable = null; // usuario.getEjercicioContable();
 
 				if (ejercicioContable != null
 						&& ejercicioContable.getEjercicio() != null) {

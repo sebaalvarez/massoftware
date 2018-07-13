@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.custom.asiento_modelo;
+package com.massoftware.old;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class AsientoModeloFormUi extends CustomComponent {
+class AsientoModeloFormUi extends CustomComponent {
 
 	/**
 	 * 
@@ -138,39 +138,32 @@ public class AsientoModeloFormUi extends CustomComponent {
 		// MODELOS
 		if (asientoModelo != null) {
 
-			List<AsientoModeloItem> asientosModeloItems = cx
-					.buildAsientoModeloBO()
-					.findAllItems(
-							asientoModelo.getEjercicioContable().getEjercicio(),
-							asientoModelo.getNumero());
-			asientoModelo.setCuentasContables(asientosModeloItems);
+			List<AsientoModeloItem> asientosModeloItems = null;//cx.buildAsientoModeloBO().findAllItems(asientoModelo.getEjercicioContable().getEjercicio(),asientoModelo.getNumero());
+//			asientoModelo.setCuentasContables(asientosModeloItems);
 
 			asientoModeloBI = new BeanItem<AsientoModelo>(asientoModelo);
 			planDeCuentasBIC = new BeanItemContainer<CuentaContable>(
 					CuentaContable.class, new ArrayList<CuentaContable>());
 		} else {
 			asientoModelo = new AsientoModelo();
-			asientoModelo.setEjercicioContable(ejercicioContable);
+//			asientoModelo.setEjercicioContable(ejercicioContable);
 			asientoModeloBI = new BeanItem<AsientoModelo>(asientoModelo);
 		}
 
 		List<CuentaContable> cuentasContables = new ArrayList<CuentaContable>();
-		for (AsientoModeloItem item : asientoModelo.getCuentasContables()) {
-			cuentasContables.add(item.getCuentaContable());
-		}
+//		for (AsientoModeloItem item : asientoModelo.getCuentasContables()) {
+//			cuentasContables.add(item.getCuentaContable());
+//		}
 		planDeCuentasBIC = new BeanItemContainer<CuentaContable>(
 				CuentaContable.class, cuentasContables);
 
-		ejercicioContableBI = new BeanItem<EjercicioContable>(
-				asientoModelo.getEjercicioContable());
+//		ejercicioContableBI = new BeanItem<EjercicioContable>(asientoModelo.getEjercicioContable());
 
 		ejercicioOriginal = ejercicioContableBI.getBean().getEjercicio();
 		numeroOriginal = asientoModeloBI.getBean().getNumero();
 
 		if (isForInsertForm) {
-			Integer maxNumero = cx.buildAsientoModeloBO().findMaxNumero(
-					asientoModeloBI.getBean().getEjercicioContable()
-							.getEjercicio());
+			Integer maxNumero = null;//cx.buildAsientoModeloBO().findMaxNumero(asientoModeloBI.getBean().getEjercicioContable().getEjercicio());
 			if (maxNumero == null || maxNumero < 1) {
 				maxNumero = 1;
 			}

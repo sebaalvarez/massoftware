@@ -246,7 +246,7 @@ public class UtilDate {
 			return c.getTime();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			throw new Converter.ConversionException(
 					"La fecha ingresada es inválida. Usted ingresó el valor \""
 							+ dateString + "\".");

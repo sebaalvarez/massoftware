@@ -102,45 +102,45 @@ public class CuentaDeFondoFormUi extends StandardFormUi<CuentaDeFondo> {
 
 			if (txt.getDescription().equals("Cuenta contable")) {
 
-				FrontendContext.openWindows(true, true, true, true, true, this,
+				FrontendContext.openWindows(false, false, false, true, true, true, true, true, this,
 						CuentaContable.class, cx, usuario, "cuentaContable",
 						((TextField) target).getValue(),
-						dtoBI.getItemProperty("cuentaContable"));
+						dtoBI.getItemProperty("cuentaContable"), null);
 
 			} else if (txt.getDescription().equals("Cuenta diferidos")) {
 
-				FrontendContext.openWindows(false, false, false, false, false, this,
+				FrontendContext.openWindows(false, false, false, false, false, false, false, false, this,
 						CuentaDeFondoA.class, cx, usuario, "codigo",
 						((TextField) target).getValue(),
-						dtoBI.getItemProperty("cuentaDiferidos"));
+						dtoBI.getItemProperty("cuentaDiferidos"), null);
 
 			} else if (txt.getDescription().equals("Cuenta caución")) {
 
-				FrontendContext.openWindows(false, false, false, false, false, this,
+				FrontendContext.openWindows(false, false, false, false, false, false, false, false, this,
 						CuentaDeFondoA.class, cx, usuario, "codigo",
 						((TextField) target).getValue(),
-						dtoBI.getItemProperty("cuentaCaucion"));
+						dtoBI.getItemProperty("cuentaCaucion"), null);
 				
 			} else if (txt.getDescription().equals("Puerta para uso de cta.")) {
 
-				FrontendContext.openWindows(true, true, true, true, true, this,
+				FrontendContext.openWindows(false, false, false, true, true, true, true, true, this,
 						SeguridadPuerta.class, cx, usuario, "codigo",
 						((TextField) target).getValue(),
-						dtoBI.getItemProperty("seguridadPuerta"));
+						dtoBI.getItemProperty("seguridadPuerta"), null);
 				
 			}else if (txt.getDescription().equals("Puerta para consulta")) {
 
-				FrontendContext.openWindows(true, true, true, true, true, this,
+				FrontendContext.openWindows(false, false, false, true, true, true, true, true, this,
 						SeguridadPuerta.class, cx, usuario, "codigo",
 						((TextField) target).getValue(),
-						dtoBI.getItemProperty("puertaConsulta"));
+						dtoBI.getItemProperty("puertaConsulta"), null);
 				
 			}else if (txt.getDescription().equals("Puerta, derecho para superar límite")) {
 
-				FrontendContext.openWindows(true, true, true, true, true, this,
+				FrontendContext.openWindows(false, false, false, true, true, true, true, true, this,
 						SeguridadPuerta.class, cx, usuario, "codigo",
 						((TextField) target).getValue(),
-						dtoBI.getItemProperty("puertaLimite"));
+						dtoBI.getItemProperty("puertaLimite"), null);
 			}
 
 

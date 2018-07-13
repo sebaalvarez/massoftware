@@ -1,5 +1,7 @@
 package com.massoftware.frontend.ui.util;
 
+import java.io.File;
+
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.cx.FrontendContext;
 import com.vaadin.navigator.View;
@@ -21,12 +23,16 @@ public abstract class AbstractMenu extends VerticalLayout implements View {
 	private static final long serialVersionUID = 1980557664437735354L;
 
 	protected SessionVar sessionVar;
+	
+	protected String iconosPath;
 
-	public AbstractMenu(String title, SessionVar sessionVar) {
+	public AbstractMenu( String title, String iconosPath, SessionVar sessionVar) {
 
 		try {
 
 			this.sessionVar = sessionVar;
+			
+			this.iconosPath = iconosPath;
 			
 			preinit();
 
@@ -76,9 +82,9 @@ public abstract class AbstractMenu extends VerticalLayout implements View {
 
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				FrontendContext.openWindows(true, true, true, true, true,
+				FrontendContext.openWindows(false, false, false, true, true, true, true, true,
 						getThis(), classModel, sessionVar.getCx(),
-						sessionVar.getUsuario(), null, null, null);
+						sessionVar.getUsuario(), null, null, null, null);
 
 			}
 		};

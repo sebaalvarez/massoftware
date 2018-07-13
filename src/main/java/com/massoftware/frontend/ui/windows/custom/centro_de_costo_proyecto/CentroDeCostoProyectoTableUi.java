@@ -16,15 +16,17 @@ public class CentroDeCostoProyectoTableUi extends
 	 */
 	private static final long serialVersionUID = 4960961261883256758L;
 
-	public CentroDeCostoProyectoTableUi(boolean shortcut, boolean agregar,
+	public CentroDeCostoProyectoTableUi(boolean paged, boolean pagedCount,
+			boolean pagedOrder, boolean shortcut, boolean agregar,
 			boolean modificar, boolean copiar, boolean eliminar, Window window,
 			BackendContext cx, Usuario usuario,
 			Class<CentroDeCostoProyecto> classModel, String pidFiltering,
 			Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(shortcut, agregar, modificar, copiar, eliminar, window, cx,
-				usuario, classModel, pidFiltering, searchFilter, searchProperty);
+		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
+				copiar, eliminar, window, cx, usuario, classModel,
+				pidFiltering, searchFilter, searchProperty, null);
 
 	}
 

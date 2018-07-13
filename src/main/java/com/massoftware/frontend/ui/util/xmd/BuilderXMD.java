@@ -16,7 +16,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.vaadin.inputmask.InputMask;
 
 import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.backend.util.bo.GenericBO;
 import com.massoftware.frontend.ui.util.UtilDate;
 import com.massoftware.frontend.ui.util.converter.StringToBigDecimalConverterUnspecifiedLocale;
 import com.massoftware.frontend.ui.util.converter.StringToIntegerConverterUnspecifiedLocale;
@@ -364,7 +363,7 @@ public class BuilderXMD {
 
 	}
 
-	private static DateField buildDF(boolean timestamp) {
+	public static DateField buildDF(boolean timestamp) {
 
 		DateField df = null;
 
@@ -855,7 +854,7 @@ public class BuilderXMD {
 		return chk;
 	}
 
-	private static TextField buildTXT() {
+	public static TextField buildTXT() {
 		TextField txt = new TextField();
 
 		txt.addStyleName(ValoTheme.TEXTFIELD_TINY);
@@ -1075,8 +1074,8 @@ public class BuilderXMD {
 	@SuppressWarnings("rawtypes")
 	private static Field getField(Class clazz, String attNamne)
 			throws SecurityException, ClassNotFoundException,
-			NoSuchFieldException {
-
+			NoSuchFieldException {		
+		
 		return Class.forName(clazz.getCanonicalName()).getDeclaredField(
 				attNamne);
 

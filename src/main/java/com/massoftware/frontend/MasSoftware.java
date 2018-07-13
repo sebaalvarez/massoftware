@@ -261,18 +261,18 @@ public class MasSoftware extends UI {
 
 		navigator = new Navigator(this, viewDisplay);
 		
-		navigator.addView("a", new GeneralMenu(sessionVar));
-		navigator.addView("b", new VentasMenu(sessionVar));
-		navigator.addView("c", new StockMenu(sessionVar));
-		navigator.addView("d", new FondosMenu(sessionVar));
-		navigator.addView("e", new FondosMenu(sessionVar));
-		navigator.addView("f", new ContabilidadGeneralMenu(sessionVar));
-		navigator.addView("g", new FondosMenu(sessionVar));
-		navigator.addView("h", new FondosMenu(sessionVar));
-		navigator.addView("i", new FondosMenu(sessionVar));
-		navigator.addView("j", new FondosMenu(sessionVar));
-		navigator.addView("k", new FondosMenu(sessionVar));
-		navigator.addView("l", new SuperMenu(sessionVar));
+		navigator.addView("a", new GeneralMenu(iconosPath, sessionVar));
+		navigator.addView("b", new VentasMenu(iconosPath, sessionVar));
+		navigator.addView("c", new StockMenu(iconosPath, sessionVar));
+		navigator.addView("d", new FondosMenu(iconosPath, sessionVar));
+		navigator.addView("e", new FondosMenu(iconosPath, sessionVar));
+		navigator.addView("f", new ContabilidadGeneralMenu(iconosPath, sessionVar));
+		navigator.addView("g", new FondosMenu(iconosPath, sessionVar));
+		navigator.addView("h", new FondosMenu(iconosPath, sessionVar));
+		navigator.addView("i", new FondosMenu(iconosPath, sessionVar));
+		navigator.addView("j", new FondosMenu(iconosPath, sessionVar));
+		navigator.addView("k", new FondosMenu(iconosPath, sessionVar));
+		navigator.addView("l", new SuperMenu(iconosPath, sessionVar));
 
 		String f = Page.getCurrent().getUriFragment();
 		if (f == null || f.equals("")) {
@@ -280,7 +280,7 @@ public class MasSoftware extends UI {
 			navigator.navigateTo("l");
 		}
 
-		navigator.setErrorView(new FondosMenu(sessionVar));
+		navigator.setErrorView(new FondosMenu(iconosPath, sessionVar));
 
 		navigator.addViewChangeListener(new ViewChangeListener() {
 
@@ -350,15 +350,15 @@ public class MasSoftware extends UI {
 		MenuBar settings = new MenuBar();
 		settings.addStyleName("user-menu");
 
-		File f = new File(fotosUsuariosPath + File.separatorChar
+		File fileImg = new File(fotosUsuariosPath + File.separatorChar
 				+ sessionVar.getUsuario().getId());
 
-		if (f.exists() == false) {
-			f = new File(iconosPath + File.separatorChar
+		if (fileImg.exists() == false) {
+			fileImg = new File(iconosPath + File.separatorChar
 					+ "round-account-button-with-user-inside (1).png");
 		}
 
-		FileResource resource = new FileResource(f);
+		FileResource resource = new FileResource(fileImg);
 
 		MenuItem settingsItem = settings.addItem(this.sessionVar.getUsuario()
 				.getNombre(), resource, null);
@@ -385,7 +385,7 @@ public class MasSoftware extends UI {
 				menuItemsLayout.addComponent(label);
 			}
 
-			Button b = new Button(item.getValue(), new ClickListener() {
+			Button button = new Button(item.getValue(), new ClickListener() {
 
 				/**
 				 * 
@@ -402,45 +402,45 @@ public class MasSoftware extends UI {
 				}
 			});
 //			b.setEnabled(false);
-			b.setHtmlContentAllowed(true);
-			b.setPrimaryStyleName(ValoTheme.MENU_ITEM);
+			button.setHtmlContentAllowed(true);
+			button.setPrimaryStyleName(ValoTheme.MENU_ITEM);
 			if (item.getKey().equals("a")) {
-				f = new File(iconosPath + File.separatorChar + "menu.png");
+				fileImg = new File(iconosPath + File.separatorChar + "menu.png");
 			} else if (item.getKey().equals("b")) {
-				f = new File(iconosPath + File.separatorChar
+				fileImg = new File(iconosPath + File.separatorChar
 						+ "shopping-cart.png");
 			} else if (item.getKey().equals("c")) {
-				f = new File(iconosPath + File.separatorChar
+				fileImg = new File(iconosPath + File.separatorChar
 						+ "factory-stock-house.png");
 			} else if (item.getKey().equals("d")) {
-				f = new File(iconosPath + File.separatorChar + "money-bags.png");
+				fileImg = new File(iconosPath + File.separatorChar + "money-bags.png");
 			} else if (item.getKey().equals("e")) {
-				f = new File(iconosPath + File.separatorChar
+				fileImg = new File(iconosPath + File.separatorChar
 						+ "worker-loading-boxes.png");
 			} else if (item.getKey().equals("f")) {
-				f = new File(iconosPath + File.separatorChar
+				fileImg = new File(iconosPath + File.separatorChar
 						+ "budget-calculator.png");
 			} else if (item.getKey().equals("g")) {
-				f = new File(iconosPath + File.separatorChar + "group.png");
+				fileImg = new File(iconosPath + File.separatorChar + "group.png");
 			} else if (item.getKey().equals("h")) {
-				f = new File(iconosPath + File.separatorChar
+				fileImg = new File(iconosPath + File.separatorChar
 						+ "screen-with-network-graph.png");
 			} else if (item.getKey().equals("i")) {
-				f = new File(iconosPath + File.separatorChar
+				fileImg = new File(iconosPath + File.separatorChar
 						+ "oceanic-cargo-ship-global-distribution.png");
 			} else if (item.getKey().equals("j")) {
-				f = new File(iconosPath + File.separatorChar
+				fileImg = new File(iconosPath + File.separatorChar
 						+ "hand-holding-up-a-sack-of-money.png");
 			} else if (item.getKey().equals("k")) {
-				f = new File(iconosPath + File.separatorChar + "earth-grid.png");
+				fileImg = new File(iconosPath + File.separatorChar + "earth-grid.png");
 			} else if (item.getKey().equals("l")) {
-				f = new File(iconosPath + File.separatorChar + "menu.png");
-				b.setEnabled(true);
+				fileImg = new File(iconosPath + File.separatorChar + "menu.png");
+				button.setEnabled(true);
 			}
 
 			// b.setIcon(testIcon.get());
-			b.setIcon(new FileResource(f));
-			menuItemsLayout.addComponent(b);
+			button.setIcon(new FileResource(fileImg));
+			menuItemsLayout.addComponent(button);
 
 		}
 

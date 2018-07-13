@@ -346,41 +346,41 @@ public class Sucursal extends EntityId implements Cloneable,
 		this.permiteCambiarProveedores = permiteCambiarProveedores;
 	}
 
-	@Override
-	public Sucursal clone() throws CloneNotSupportedException {
-
-		Sucursal other = new Sucursal();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-		other.setAbreviatura(this.getAbreviatura());
-		if (this.getSucursalTipo() != null) {
-			other.setSucursalTipo(this.getSucursalTipo().clone());
-		} else {
-			other.setSucursalTipo(null);
-		}
-		other.setCuentaClientesDesde(this.getCuentaClientesDesde());
-		other.setCuentaClientesHasta(this.getCuentaClientesHasta());
-		other.setCantidadCaracteresClientes(this
-				.getCantidadCaracteresClientes());
-		other.setIdentificacionNumericaClientes(this
-				.getIdentificacionNumericaClientes());
-		other.setPermiteCambiarClientes(this.getPermiteCambiarClientes());
-		other.setClientesOcasionalesDesde(this.getClientesOcasionalesDesde());
-		other.setClientesOcasionalesHasta(this.getClientesOcasionalesHasta());
-		other.setNroCobranzaDesde(this.getNroCobranzaDesde());
-		other.setNroCobranzaHasta(this.getNroCobranzaHasta());
-		other.setProveedoresDesde(this.getProveedoresDesde());
-		other.setProveedoresHasta(this.getProveedoresHasta());
-		other.setCantidadCaracteresProveedor(this
-				.getCantidadCaracteresProveedor());
-		other.setIdentificacionNumericaProveedores(this
-				.getIdentificacionNumericaProveedores());
-		other.setPermiteCambiarProveedores(this.getPermiteCambiarProveedores());
-
-		return other;
-	}
+//	@Override
+//	public Sucursal clone() throws CloneNotSupportedException {
+//
+//		Sucursal other = new Sucursal();
+//
+//		other.setId(this.getId());
+//		other.setCodigo(this.getCodigo());
+//		other.setNombre(this.getNombre());
+//		other.setAbreviatura(this.getAbreviatura());
+//		if (this.getSucursalTipo() != null) {
+//			other.setSucursalTipo(this.getSucursalTipo().clone());
+//		} else {
+//			other.setSucursalTipo(null);
+//		}
+//		other.setCuentaClientesDesde(this.getCuentaClientesDesde());
+//		other.setCuentaClientesHasta(this.getCuentaClientesHasta());
+//		other.setCantidadCaracteresClientes(this
+//				.getCantidadCaracteresClientes());
+//		other.setIdentificacionNumericaClientes(this
+//				.getIdentificacionNumericaClientes());
+//		other.setPermiteCambiarClientes(this.getPermiteCambiarClientes());
+//		other.setClientesOcasionalesDesde(this.getClientesOcasionalesDesde());
+//		other.setClientesOcasionalesHasta(this.getClientesOcasionalesHasta());
+//		other.setNroCobranzaDesde(this.getNroCobranzaDesde());
+//		other.setNroCobranzaHasta(this.getNroCobranzaHasta());
+//		other.setProveedoresDesde(this.getProveedoresDesde());
+//		other.setProveedoresHasta(this.getProveedoresHasta());
+//		other.setCantidadCaracteresProveedor(this
+//				.getCantidadCaracteresProveedor());
+//		other.setIdentificacionNumericaProveedores(this
+//				.getIdentificacionNumericaProveedores());
+//		other.setPermiteCambiarProveedores(this.getPermiteCambiarProveedores());
+//
+//		return other;
+//	}
 
 	@Override
 	public int compareTo(Sucursal o) {

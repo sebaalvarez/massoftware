@@ -32,8 +32,8 @@ public abstract class GenericBO<T> {
 	protected DataSourceWrapper dataSourceWrapper;
 	protected BackendContext cx;
 
-	private String dtoName;
-	protected String viewName;
+	// private String dtoName;
+	// protected String viewName;
 
 	public GenericBO(Class<T> classModel, DataSourceWrapper dataSourceWrapper,
 			BackendContext cx) {
@@ -41,14 +41,51 @@ public abstract class GenericBO<T> {
 		this.classModel = classModel;
 		this.dataSourceWrapper = dataSourceWrapper;
 		this.cx = cx;
-		dtoName = this.getClass().getSimpleName()
-				.substring(0, this.getClass().getSimpleName().length() - 2);
-		viewName = "v" + dtoName;
+		// dtoName = getDtoName(this.getClass());
+		// viewName = "v" + dtoName;
+	}
+	
+	public Integer count() throws Exception {
+		String where = null;
+		return count(where, new Object[0]);
 	}
 
+	public Integer count(String where, Object... args) throws Exception {
+
+		String viewName = getView();
+		
+		String sql = "SELECT COUNT(*) FROM " + viewName;
+		
+		if (where != null && where.trim().length() > 0) {
+			sql += " WHERE " + where;
+		}
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {											
+
+			Object[][] table = null;
+			
+			if (args.length == 0) {
+				table = connectionWrapper.findToTable(sql);
+			} else {
+				table = connectionWrapper.findToTable(sql, args);
+			}
+
+			return (Integer) table[0][0];
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
+	}
+	
 	public List<T> findAll() throws Exception {
-		// return find(null, null, new Object[0]);
-		return null;
+		return find(null, null, new Object[0]);
+		// return null;
 	}
 
 	protected List<T> findAll(String orderBy) throws Exception {
@@ -59,15 +96,66 @@ public abstract class GenericBO<T> {
 		return find(null, where, args);
 	}
 
-	@SuppressWarnings("unchecked")
 	protected List<T> find(String orderBy, String where, Object... args)
 			throws Exception {
+
+		String viewName = getView();
+
+		return find(viewName, orderBy, where, args);
+
+	}
+
+	@SuppressWarnings("unchecked")
+	protected List<T> find(String viewName, String orderBy, String where,
+			Object... args) throws Exception {
+		return findTLess(viewName, orderBy, where, args);
+	}
+
+	@SuppressWarnings({ "rawtypes" })
+	protected List findTLess(String viewName, String orderBy, String where,
+			Object... args) throws Exception {
+		return findTLessPaged(viewName, orderBy, where, -1, -1, args);
+	}
+
+	// -------------------------
+
+	public List<T> findAllPaged(int limit, int offset) throws Exception {
+		return findPaged(null, null, limit, offset, new Object[0]);
+		// return null;
+	}
+
+	public List<T> findAllPaged(String orderBy, int limit, int offset)
+			throws Exception {
+		return findPaged(orderBy, null, limit, offset, new Object[0]);
+	}
+
+	public List<T> findPaged(String where, int limit, int offset, Object... args)
+			throws Exception {
+		return findPaged(null, where, limit, offset, args);
+	}
+
+	public List<T> findPaged(String orderBy, String where, int limit, int offset,
+			Object... args) throws Exception {
+
+		String viewName = getView();		
+
+		return findPaged(viewName, orderBy, where, limit, offset, args);
+
+	}
+
+	@SuppressWarnings("unchecked")
+	protected List<T> findPaged(String viewName, String orderBy, String where,
+			int limit, int offset, Object... args) throws Exception {
+		return findTLessPaged(viewName, orderBy, where, limit, offset, args);
+	}
+
+	@SuppressWarnings({ "rawtypes" })
+	protected List findTLessPaged(String viewName, String orderBy, String where,
+			int limit, int offset, Object... args) throws Exception {
 
 		if (args == null) {
 			args = new Object[0];
 		}
-
-		String viewName = getViewName();
 
 		String sql = "SELECT * FROM " + viewName;
 
@@ -75,8 +163,22 @@ public abstract class GenericBO<T> {
 			sql += " WHERE " + where;
 		}
 
+		// if (orderBy == null || orderBy.trim().length() == 0) {
+		// throw new Exception("orderBy not found.");
+		// }
+
 		if (orderBy != null && orderBy.trim().length() > 0) {
-			sql += " ORDER BY " + orderBy + ";";
+			sql += " ORDER BY " + orderBy;
+		} else {
+			sql += " ORDER BY " + 1;	
+		}
+		
+		if (offset > -1 && limit > -1) {
+			
+			
+			
+			sql += " OFFSET " + offset + " ROWS FETCH NEXT " + limit
+					+ " ROWS ONLY ";
 		}
 
 		sql += ";";
@@ -86,8 +188,8 @@ public abstract class GenericBO<T> {
 
 		try {
 
-			List<T> list = null;
-
+			List list = null;
+			
 			if (args.length == 0) {
 				list = connectionWrapper.findToListByCendraConvention(sql);
 			} else {
@@ -95,7 +197,7 @@ public abstract class GenericBO<T> {
 						.findToListByCendraConvention(sql, args);
 			}
 
-			for (T item : list) {
+			for (Object item : list) {
 				if (item instanceof Valuable) {
 					((Valuable) item).validate();
 				}
@@ -104,6 +206,7 @@ public abstract class GenericBO<T> {
 			return list;
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw e;
 		} finally {
 			connectionWrapper.close(connectionWrapper);
@@ -113,7 +216,7 @@ public abstract class GenericBO<T> {
 
 	protected Boolean ifExists(String where, Object... args) throws Exception {
 
-		List<T> items = find(where, args);
+		List<T> items = find(where, -1, -1, args);
 
 		return items.size() == 1;
 
@@ -144,7 +247,7 @@ public abstract class GenericBO<T> {
 
 	protected Integer maxValueInteger(String attName, T dto) throws Exception {
 
-		String viewName = getViewName();
+		String viewName = getView();
 		String sql = "SELECT MAX(" + attName + ") + 1 FROM " + viewName;
 
 		ConnectionWrapper connectionWrapper = dataSourceWrapper
@@ -368,8 +471,7 @@ public abstract class GenericBO<T> {
 							&& GenericBO.isFieldTimestamp(fields[i])) {
 
 						val = method.invoke(arg);
-						val = new Timestamp(
-								((java.util.Date) val).getTime());
+						val = new Timestamp(((java.util.Date) val).getTime());
 
 					} else if (fields[i].getType() == Timestamp.class
 							&& isFieldNowTimestampForInsertUpdate(fields[i])) {
@@ -582,7 +684,25 @@ public abstract class GenericBO<T> {
 		}
 	}
 
-	protected String getViewName() {
+	protected String getView() {
+		return getView(this.getClass());
+	}
+
+	@SuppressWarnings("rawtypes")
+	protected String getDtoName(Class clazz) {
+		int c = 0;
+
+		if (clazz.getSimpleName().endsWith("BO")) {
+			c = 2;
+		}
+
+		return clazz.getSimpleName().substring(0,
+				clazz.getSimpleName().length() - c);
+	}
+
+	@SuppressWarnings("rawtypes")
+	protected String getView(Class clazz) {
+		String viewName = "v" + getDtoName(clazz);
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
 			return "massoftware." + viewName;
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {

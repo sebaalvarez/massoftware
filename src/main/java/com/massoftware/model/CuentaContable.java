@@ -1,9 +1,34 @@
 package com.massoftware.model;
 
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
+import java.math.BigDecimal;
 
-@SuppressWarnings("serial")
-public class CuentaContable extends EntityId implements Cloneable,
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassFormSourceAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldAllowDecimalAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldInputMaskAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxValueBigDecimalAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldMinValueBigDecimalAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldSubNameFKAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldUniqueAnont;
+import com.massoftware.util.FormatCuentaContableCodigoCuenta;
+
+@ClassLabelInTheSingularAnont(value = "Cuenta contable")
+@ClassPluralLabelAnont(value = "Cuentas contables")
+@ClassArticleLabelInTheSingularAnont(value = "la")
+@ClassArticleLabelInPluralAnont(value = "las")
+@ClassFormSourceAnont(value = "CuentaContable")
+@ClassTableMSAnont(nameTableDB = "[PlanDeCuentas]")
+public class CuentaContable extends EntityId implements
 		Comparable<CuentaContable> {
 
 	// Al crear controlar
@@ -23,28 +48,121 @@ public class CuentaContable extends EntityId implements Cloneable,
 	// private static final long serialVersionUID = -6146349571117309204L;
 
 	// --------------------------------------------------------------------------
-	private EjercicioContable ejercicioContable;
+	@FieldLabelAnont(value = "Ejercicio")
+	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldSubNameFKAnont(value = "ejercicio")
+	// @FieldNameMSAnont(nameAttDB = "[CUENTA]", classAttDB = String.class)
+	// @FieldCBBox(attName = "ejercicio")
+	protected EjercicioContable ejercicioContable;
 
-	private String codigoCuentaPadre; // integra; // cuenta padre
+	@FieldLabelAnont(value = "Integra")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 16)
+	@FieldColumnsAnont(value = 16)
+	@FieldColumnMetaDataAnont(hidden = true, simpleStringTraslateFilterMode = "STARTS_WITCH")
+	// @FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[CUENTAINTEGRADORA]", classAttDB = String.class)
+	// @FieldReadOnly()
+	@FieldInputMaskAnont(mask = "9.99.99.99.99.99")
+	protected String codigoCuentaPadre; // integra; // cuenta padre
 										// 6.40.00.00.00.00
+	@FieldLabelAnont(value = "Cuenta de jerarquia")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 16)
+	@FieldColumnsAnont(value = 16)
+	@FieldColumnMetaDataAnont(attSize = 100, simpleStringTraslateFilterMode = "ENDS_WITCH")
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[CUENTADEJERARQUIAIND]", classAttDB = String.class)
+	@FieldInputMaskAnont(mask = "9.99.99.99.99.99")
+	protected String codigoCuenta; // cuentaDeJerarquia; 6.40.00.00.00.01
 
-	private String codigoCuenta; // cuentaDeJerarquia; 6.40.00.00.00.01
+	@FieldLabelAnont(value = "Cuenta contable")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 11)
+	@FieldColumnsAnont(value = 11)
+	@FieldColumnMetaDataAnont(attSize = 90, pidFilteringStart = true)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[CUENTACONTABLE]", classAttDB = String.class)
+	protected String cuentaContable; // texto libre
 
-	@FieldLabelAnont(value = "Cta. contable")
-	private String cuentaContable; // texto libre
+	@FieldLabelAnont(value = "Nombre")
+	@FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 35)
+	@FieldColumnsAnont(value = 35)
+	@FieldColumnMetaDataAnont(attSize = 200)
+	@FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[NOMBRE]", classAttDB = String.class)
+	protected String nombre; // texto libre
 
-	private String nombre; // texto libre
 	// --------------------------------------------------------------------------
-	private Boolean imputable = false;
-	private Boolean ajustaPorInflacion = false;
-	private CuentaContableEstado cuentaContableEstado;
-	private Boolean cuentaConApropiacion = false;
+//	@FieldLabelAnont(value = "Imputable")
+//	@FieldColumnMetaDataAnont(hidden = true)
+//	@FieldNameMSAnont(nameAttDB = "[AJUSTEINF]", classAttDB = Boolean.class)
+//	private Boolean imputable = false;
+
+//	@FieldLabelAnont(value = "Ajusta por inflación")
+//	@FieldColumnMetaDataAnont(hidden = true)
+//	@FieldNameMSAnont(nameAttDB = "[IMPUTABLE]", classAttDB = Boolean.class)
+//	private Boolean ajustaPorInflacion = false;
+
+//	@FieldLabelAnont(value = "Estado")
+//	@FieldRequiredAnont()
+//	@FieldColumnMetaDataAnont(hidden = true)
+//	@FieldSubNameFKAnont(value = "codigo")
+//	@FieldNameMSAnont(nameAttDB = "[ESTADO]", classAttDB = Integer.class)
+//	private CuentaContableEstado cuentaContableEstado;
+
+//	@FieldLabelAnont(value = "Cuenta con apropiación")
+//	@FieldColumnMetaDataAnont(hidden = true)
+//	@FieldNameMSAnont(nameAttDB = "[APROPIA]", classAttDB = Boolean.class)
+//	private Boolean cuentaConApropiacion = false;
+
 	// --------------------------------------------------------------------------
-	private CentroDeCostoContable centroDeCostoContable;
-	private String cuentaAgrupadora; // aca va cualquier texto, texto libre
-	private Double porcentaje = 0.0;
-	private PuntoDeEquilibrio puntoDeEquilibrio;
-	private CostoDeVenta costoDeVenta;
+
+//	@FieldLabelAnont(value = "Centro de costo")
+//	@FieldColumnMetaDataAnont(attSize = 150)
+//	@FieldSubNameFKAnont(value = "numero")
+//	@FieldNameMSAnont(nameAttDB = "[CENTRODECOSTOCONTABLE]", classAttDB = Integer.class)
+//	protected CentroDeCostoContable centroDeCostoContable;
+
+	@FieldLabelAnont(value = "Cuenta agrupadora")
+	@FieldMaxLengthAnont(value = 11)
+	@FieldColumnsAnont(value = 11)
+	@FieldColumnMetaDataAnont(attSize = 100)
+	@FieldNameMSAnont(nameAttDB = "[CUENTAAGRUPADORA]", classAttDB = String.class)
+	protected String cuentaAgrupadora; // aca va cualquier texto, texto libre
+
+	@FieldLabelAnont(value = "Porcentaje")
+	@FieldMaxLengthAnont(value = 9)
+	@FieldColumnsAnont(value = 9)
+	@FieldMinValueBigDecimalAnont(value = "0")
+	@FieldMaxValueBigDecimalAnont(value = "999999999")
+	@FieldAllowDecimalAnont()
+	@FieldColumnMetaDataAnont(attSize = 90)
+	@FieldNameMSAnont(nameAttDB = "[PORCENTAJE]", classAttDB = BigDecimal.class)
+	protected BigDecimal porcentaje = new BigDecimal("0.0");
+
+//	@FieldLabelAnont(value = "Punto de equilibrio")
+////	@FieldColumnMetaDataAnont(hidden = true)
+//	@FieldSubNameFKAnont(value = "puntoDeEquilibrio")
+//	@FieldNameMSAnont(nameAttDB = "[PUNTODEEQUILIBRIO]", classAttDB = Integer.class)
+//	private PuntoDeEquilibrio puntoDeEquilibrio;
+
+//	@FieldLabelAnont(value = "Costo de venta")
+//	@FieldRequiredAnont()
+//	@FieldColumnMetaDataAnont(hidden = true)
+//	@FieldSubNameFKAnont(value = "codigo")
+//	@FieldNameMSAnont(nameAttDB = "[COSTODEVENTA]", classAttDB = Integer.class)
+//	private CostoDeVenta costoDeVenta;
+
+//	@FieldLabelAnont(value = "Puerta")
+//	// @FieldRequiredAnont()
+//	@FieldColumnMetaDataAnont(hidden = true)
+//	@FieldSubNameFKAnont(value = "codigo")
+//	@FieldNameMSAnont(nameAttDB = "[DOORNOPERMISO]", classAttDB = Integer.class)
+//	@FieldCBBox(attName = "codigo")
+//	private SeguridadPuerta seguridadPuerta;
 
 	public EjercicioContable getEjercicioContable() {
 		return ejercicioContable;
@@ -94,58 +212,58 @@ public class CuentaContable extends EntityId implements Cloneable,
 		this.nombre = nombre;
 	}
 
-	public Boolean getImputable() {
-		imputable = this.nullIsFalse(imputable);
-		return imputable;
-	}
+//	public Boolean getImputable() {
+//		imputable = this.nullIsFalse(imputable);
+//		return imputable;
+//	}
 
-	public void setImputable(Boolean imputable) {
-		imputable = this.nullIsFalse(imputable);
-		this.imputable = imputable;
-	}
+//	public void setImputable(Boolean imputable) {
+//		imputable = this.nullIsFalse(imputable);
+//		this.imputable = imputable;
+//	}
 
-	public Boolean getAjustaPorInflacion() {
-		ajustaPorInflacion = this.nullIsFalse(ajustaPorInflacion);
-		return ajustaPorInflacion;
-	}
+//	public Boolean getAjustaPorInflacion() {
+//		ajustaPorInflacion = this.nullIsFalse(ajustaPorInflacion);
+//		return ajustaPorInflacion;
+//	}
 
-	public void setAjustaPorInflacion(Boolean ajustaPorInflacion) {
-		ajustaPorInflacion = this.nullIsFalse(ajustaPorInflacion);
-		this.ajustaPorInflacion = ajustaPorInflacion;
-	}
+//	public void setAjustaPorInflacion(Boolean ajustaPorInflacion) {
+//		ajustaPorInflacion = this.nullIsFalse(ajustaPorInflacion);
+//		this.ajustaPorInflacion = ajustaPorInflacion;
+//	}
 
-	public CuentaContableEstado getCuentaContableEstado() {
-		return cuentaContableEstado;
-	}
+//	public CuentaContableEstado getCuentaContableEstado() {
+//		return cuentaContableEstado;
+//	}
 
-	public void setCuentaContableEstado(
-			CuentaContableEstado cuentaContableEstado) {
-		this.cuentaContableEstado = cuentaContableEstado;
-		if (this.cuentaContableEstado != null
-				&& this.cuentaContableEstado.getId() == null) {
-			throw new IllegalArgumentException(this.cuentaContableEstado
-					.getClass().getCanonicalName() + ".id is null");
-		}
-	}
+//	public void setCuentaContableEstado(
+//			CuentaContableEstado cuentaContableEstado) {
+//		this.cuentaContableEstado = cuentaContableEstado;
+//		if (this.cuentaContableEstado != null
+//				&& this.cuentaContableEstado.getId() == null) {
+//			throw new IllegalArgumentException(this.cuentaContableEstado
+//					.getClass().getCanonicalName() + ".id is null");
+//		}
+//	}
 
-	public Boolean getCuentaConApropiacion() {
-		cuentaConApropiacion = this.nullIsFalse(cuentaConApropiacion);
-		return cuentaConApropiacion;
-	}
+//	public Boolean getCuentaConApropiacion() {
+//		cuentaConApropiacion = this.nullIsFalse(cuentaConApropiacion);
+//		return cuentaConApropiacion;
+//	}
 
-	public void setCuentaConApropiacion(Boolean cuentaConApropiacion) {
-		cuentaConApropiacion = this.nullIsFalse(cuentaConApropiacion);
-		this.cuentaConApropiacion = cuentaConApropiacion;
-	}
+//	public void setCuentaConApropiacion(Boolean cuentaConApropiacion) {
+//		cuentaConApropiacion = this.nullIsFalse(cuentaConApropiacion);
+//		this.cuentaConApropiacion = cuentaConApropiacion;
+//	}
 
-	public CentroDeCostoContable getCentroDeCostoContable() {
-		return centroDeCostoContable;
-	}
+//	public CentroDeCostoContable getCentroDeCostoContable() {
+//		return centroDeCostoContable;
+//	}
 
-	public void setCentroDeCostoContable(
-			CentroDeCostoContable centroDeCostoContable) {
-		this.centroDeCostoContable = centroDeCostoContable;
-	}
+//	public void setCentroDeCostoContable(
+//			CentroDeCostoContable centroDeCostoContable) {
+//		this.centroDeCostoContable = centroDeCostoContable;
+//	}
 
 	public String getCuentaAgrupadora() {
 		cuentaAgrupadora = formatValue(cuentaAgrupadora);
@@ -157,81 +275,110 @@ public class CuentaContable extends EntityId implements Cloneable,
 		this.cuentaAgrupadora = cuentaAgrupadora;
 	}
 
-	public Double getPorcentaje() {
+	public BigDecimal getPorcentaje() {
 		// porcentaje = nullIsZero(porcentaje);
 		return porcentaje;
 	}
 
-	public void setPorcentaje(Double porcentaje) {
+	public void setPorcentaje(BigDecimal porcentaje) {
 		// porcentaje = nullIsZero(porcentaje);
 		this.porcentaje = porcentaje;
 	}
 
-	public PuntoDeEquilibrio getPuntoDeEquilibrio() {
-		return puntoDeEquilibrio;
-	}
-
-	public void setPuntoDeEquilibrio(PuntoDeEquilibrio puntoDeEquilibrio) {
-		this.puntoDeEquilibrio = puntoDeEquilibrio;
-	}
-
-	public CostoDeVenta getCostoDeVenta() {
-		return costoDeVenta;
-	}
-
-	public void setCostoDeVenta(CostoDeVenta costoDeVenta) {
-		this.costoDeVenta = costoDeVenta;
-	}
-
-//	@Override
-//	public CuentaContable clone() throws CloneNotSupportedException {
-//		CuentaContable other = new CuentaContable();
-//
-//		other.setId(this.getId());
-//		if (this.getEjercicioContable() != null) {
-//			other.setEjercicioContable(this.getEjercicioContable().clone());
-//		} else {
-//			other.setEjercicioContable(null);
-//		}
-//		other.setCuentaContable(this.getCuentaContable());
-//		other.setCodigoCuentaPadre(this.getCodigoCuentaPadre());
-//		other.setCodigoCuenta(this.getCodigoCuenta());
-//		other.setNombre(this.getNombre());
-//		other.setImputable(this.getImputable());
-//		other.setAjustaPorInflacion(this.getAjustaPorInflacion());
-//		if (this.getCuentaContableEstado() != null) {
-//			other.setCuentaContableEstado(this.getCuentaContableEstado()
-//					.clone());
-//		} else {
-//			other.setCuentaContableEstado(null);
-//		}
-//		other.setCuentaConApropiacion(this.getCuentaConApropiacion());
-//		if (this.getCentroDeCostoContable() != null) {
-//			other.setCentroDeCostoContable(this.getCentroDeCostoContable()
-//					.clone());
-//		} else {
-//			other.setCentroDeCostoContable(null);
-//		}
-//		other.setCuentaAgrupadora(this.getCuentaAgrupadora());
-//		other.setPorcentaje(this.getPorcentaje());
-//		if (this.getPuntoDeEquilibrio() != null) {
-//			other.setPuntoDeEquilibrio(this.getPuntoDeEquilibrio().clone());
-//		} else {
-//			other.setPuntoDeEquilibrio(null);
-//		}
-//		if (this.getCostoDeVenta() != null) {
-//			other.setCostoDeVenta(this.getCostoDeVenta().clone());
-//		} else {
-//			other.setCostoDeVenta(null);
-//		}
-//
-//		return other;
+//	public PuntoDeEquilibrio getPuntoDeEquilibrio() {
+//		return puntoDeEquilibrio;
 //	}
+
+//	public void setPuntoDeEquilibrio(PuntoDeEquilibrio puntoDeEquilibrio) {
+//		this.puntoDeEquilibrio = puntoDeEquilibrio;
+//	}
+
+//	public CostoDeVenta getCostoDeVenta() {
+//		return costoDeVenta;
+//	}
+
+//	public void setCostoDeVenta(CostoDeVenta costoDeVenta) {
+//		this.costoDeVenta = costoDeVenta;
+//	}
+
+//	public SeguridadPuerta getSeguridadPuerta() {
+//		return seguridadPuerta;
+//	}
+
+//	public void setSeguridadPuerta(SeguridadPuerta seguridadPuerta) {
+//		if (seguridadPuerta != null && seguridadPuerta.getId() == null) {
+//			return;
+//		}
+//		this.seguridadPuerta = seguridadPuerta;
+//	}
+
+	// @Override
+	// public CuentaContable clone() throws CloneNotSupportedException {
+	// CuentaContable other = new CuentaContable();
+	//
+	// other.setId(this.getId());
+	// if (this.getEjercicioContable() != null) {
+	// other.setEjercicioContable(this.getEjercicioContable().clone());
+	// } else {
+	// other.setEjercicioContable(null);
+	// }
+	// other.setCuentaContable(this.getCuentaContable());
+	// other.setCodigoCuentaPadre(this.getCodigoCuentaPadre());
+	// other.setCodigoCuenta(this.getCodigoCuenta());
+	// other.setNombre(this.getNombre());
+	// other.setImputable(this.getImputable());
+	// other.setAjustaPorInflacion(this.getAjustaPorInflacion());
+	// if (this.getCuentaContableEstado() != null) {
+	// other.setCuentaContableEstado(this.getCuentaContableEstado()
+	// .clone());
+	// } else {
+	// other.setCuentaContableEstado(null);
+	// }
+	// other.setCuentaConApropiacion(this.getCuentaConApropiacion());
+	// if (this.getCentroDeCostoContable() != null) {
+	// other.setCentroDeCostoContable(this.getCentroDeCostoContable()
+	// .clone());
+	// } else {
+	// other.setCentroDeCostoContable(null);
+	// }
+	// other.setCuentaAgrupadora(this.getCuentaAgrupadora());
+	// other.setPorcentaje(this.getPorcentaje());
+	// if (this.getPuntoDeEquilibrio() != null) {
+	// other.setPuntoDeEquilibrio(this.getPuntoDeEquilibrio().clone());
+	// } else {
+	// other.setPuntoDeEquilibrio(null);
+	// }
+	// if (this.getCostoDeVenta() != null) {
+	// other.setCostoDeVenta(this.getCostoDeVenta().clone());
+	// } else {
+	// other.setCostoDeVenta(null);
+	// }
+	//
+	// return other;
+	// }
+
+	protected boolean _setfullToString = true;
+
+	public void _setfullToString(boolean _setfullToString) {
+		this._setfullToString = _setfullToString;
+	}
 
 	@Override
 	public String toString() {
-		return this.getEjercicioContable() + " " + this.getCuentaContable() + " "
-				+ this.getNombre();
+
+		if (this._setfullToString) {
+			return "(" + this.getEjercicioContable() + ") ("
+					+ this.getCuentaContable() + ") " + this.getNombre();
+		} else {
+
+			// return "(" + this.getEjercicioContable() + ") "
+			// + FormatCuentaContableCodigoCuenta.format(
+			// this.getCodigoCuenta()) + " " + this.getNombre();
+
+			return FormatCuentaContableCodigoCuenta.format(this
+					.getCodigoCuenta()) + " " + this.getNombre();
+		}
+
 	}
 
 	@Override
@@ -272,33 +419,33 @@ public class CuentaContable extends EntityId implements Cloneable,
 					.getCanonicalName() + ".nombre es nulo.");
 		}
 
-		if (this.imputable == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".imputable es nulo.");
-		}
+//		if (this.imputable == null) {
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".imputable es nulo.");
+//		}
 
-		if (this.ajustaPorInflacion == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".ajustaPorInflacion es nulo.");
-		}
+//		if (this.ajustaPorInflacion == null) {
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".ajustaPorInflacion es nulo.");
+//		}
 
-		if (this.cuentaContableEstado == null) {
+//		if (this.cuentaContableEstado == null) {
+//
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".cuentaContableEstado es nulo.");
+//		} else {
+//			this.cuentaContableEstado.validate();
+//		}
 
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".cuentaContableEstado es nulo.");
-		} else {
-			this.cuentaContableEstado.validate();
-		}
+//		if (this.cuentaConApropiacion == null) {
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".cuentaConApropiacion es nulo.");
+//		}
 
-		if (this.cuentaConApropiacion == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".cuentaConApropiacion es nulo.");
-		}
-
-		if (this.porcentaje == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".porcentaje es nulo.");
-		}
+//		if (this.porcentaje == null) {
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".porcentaje es nulo.");
+//		}
 
 		return true;
 	}

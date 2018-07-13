@@ -128,10 +128,11 @@ public class CentroDeCostoContable extends EntityId implements
 	@Override
 	public String toString() {
 		if (this.getEjercicioContable() != null) {
-			return this.getEjercicioContable() + " - " + this.getNumero() + " - "
-					+ this.getNombre();
+			return "(" + this.getEjercicioContable() + ") ("
+					+ this.getNumero() + ") " + this.getNombre();
 		}
-		return this.getNumero() + " - " + this.getNombre();
+		return "(" + this.getNumero() + ") " + this.getNombre();
+		
 	}
 
 	public boolean validate() {

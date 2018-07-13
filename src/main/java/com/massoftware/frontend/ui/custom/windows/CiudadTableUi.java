@@ -38,14 +38,16 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 
 	private ComboBox filtroPaisFormCBX;
 
-	public CiudadTableUi(boolean shortcut, boolean agregar, boolean modificar,
+	public CiudadTableUi(boolean paged, boolean pagedCount, boolean pagedOrder,
+			boolean shortcut, boolean agregar, boolean modificar,
 			boolean copiar, boolean eliminar, Window window, BackendContext cx,
 			Usuario usuario, Class<Ciudad> classModel, String pidFiltering,
 			Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(shortcut, agregar, modificar, copiar, eliminar, window, cx,
-				usuario, classModel, pidFiltering, searchFilter, searchProperty);
+		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
+				copiar, eliminar, window, cx, usuario, classModel,
+				pidFiltering, searchFilter, searchProperty, null);
 
 		paisCBXValueChange();
 

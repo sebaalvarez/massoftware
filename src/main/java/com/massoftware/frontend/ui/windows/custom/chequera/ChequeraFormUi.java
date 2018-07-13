@@ -66,10 +66,10 @@ public class ChequeraFormUi extends StandardFormUi<Chequera> {
 				if (txt.getDescription().equals(
 						this.getLabel(Chequera.class, "cuentaDeFondo"))) {
 
-					FrontendContext.openWindows(false, false, false, false,
+					FrontendContext.openWindows(false, false, false, false, false, false, false,
 							false, this, CuentaDeFondoA.class, cx, usuario,
 							"codigo", ((TextField) target).getValue(),
-							dtoBI.getItemProperty("cuentaDeFondo"));
+							dtoBI.getItemProperty("cuentaDeFondo"), null);
 
 				}
 			} catch (Exception e) {

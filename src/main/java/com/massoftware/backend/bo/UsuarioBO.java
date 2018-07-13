@@ -18,11 +18,14 @@ public class UsuarioBO extends GenericBO<Usuario> {
 	private final String ATT_NAME_NOMBRE = "nombre";
 
 	private final String SQL_PG_1 = "SELECT * FROM massoftware.vUsuario";
-//	private final String SQL_PG_3 = "UPDATE massoftware.Usuario SET ejercicioContable = ? WHERE id = ?;";
+	// private final String SQL_PG_3 =
+	// "UPDATE massoftware.Usuario SET ejercicioContable = ? WHERE id = ?;";
 	private final String SQL_PG_5 = "INSERT INTO massoftware.usuario(id, ejerciciocontable, numero, nombre)	VALUES (?, ?, ?, ?);";
 
 	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.vUsuario";
-//	private final String SQL_MS_3 = "UPDATE [dbo].[SSECUR_User] SET [DEFAULT_EJERCICIO_CONTABLE] = ? WHERE [LASTNAME] = ?;";
+
+	// private final String SQL_MS_3 =
+	// "UPDATE [dbo].[SSECUR_User] SET [DEFAULT_EJERCICIO_CONTABLE] = ? WHERE [LASTNAME] = ?;";
 
 	public UsuarioBO(DataSourceWrapper dataSourceWrapper, BackendContext cx) {
 		super(Usuario.class, dataSourceWrapper, cx);
@@ -216,13 +219,13 @@ public class UsuarioBO extends GenericBO<Usuario> {
 				} else {
 					id = String.class;
 				}
-				Object ejercicioContable = null;
-				if (item.getEjercicioContable() != null
-						&& item.getEjercicioContable().getId() != null) {
-					ejercicioContable = item.getEjercicioContable().getId();
-				} else {
-					ejercicioContable = String.class;
-				}
+//				Object ejercicioContable = null;
+//				if (item.getEjercicioContable() != null
+//						&& item.getEjercicioContable().getId() != null) {
+//					ejercicioContable = item.getEjercicioContable().getId();
+//				} else {
+//					ejercicioContable = String.class;
+//				}
 				Object numero = null;
 				if (item.getNumero() != null) {
 					numero = item.getNumero();
@@ -236,7 +239,7 @@ public class UsuarioBO extends GenericBO<Usuario> {
 					nombre = String.class;
 				}
 
-				Object[] args = { id, ejercicioContable, numero, nombre };
+				Object[] args = { id, /*ejercicioContable,*/ numero, nombre };
 
 				int rows = connectionWrapper.insert(sql, args);
 
@@ -290,12 +293,10 @@ public class UsuarioBO extends GenericBO<Usuario> {
 
 	public boolean delete(Usuario dto) throws Exception {
 
-		Object numeroArg = null;
+		Object numeroArg = Integer.class;
 
 		if (dto.getNumero() != null) {
 			numeroArg = dto.getNumero();
-		} else {
-			numeroArg = Integer.class;
 		}
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
@@ -304,7 +305,7 @@ public class UsuarioBO extends GenericBO<Usuario> {
 
 			return delete(
 					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_NUMERO))
-					+ " = ? ", numeroArg);
+							+ " = ? ", numeroArg);
 		}
 
 		return false;
@@ -316,14 +317,13 @@ public class UsuarioBO extends GenericBO<Usuario> {
 		return insertByReflection(dto, usuario);
 	}
 
-	public Usuario update(Usuario dto, Usuario dtoOriginal, Usuario usuario) throws Exception {
+	public Usuario update(Usuario dto, Usuario dtoOriginal, Usuario usuario)
+			throws Exception {
 
-		Object numeroArg = null;
+		Object numeroArg = Integer.class;
 
 		if (dto.getNumero() != null) {
 			numeroArg = dto.getNumero();
-		} else {
-			numeroArg = Integer.class;
 		}
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
@@ -331,7 +331,8 @@ public class UsuarioBO extends GenericBO<Usuario> {
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
 
 			return updateByReflection(
-					dto, usuario,
+					dto,
+					usuario,
 					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_NUMERO))
 							+ " = ? ", numeroArg);
 		}

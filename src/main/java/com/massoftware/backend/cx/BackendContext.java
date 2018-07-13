@@ -15,7 +15,10 @@ import org.cendra.jdbc.DataSourceProperties;
 import org.cendra.jdbc.DataSourceWrapper;
 import org.cendra.log.LogPrinter;
 
+import com.massoftware.backend.bo.AsientoBO;
 import com.massoftware.backend.bo.AsientoModeloBO;
+import com.massoftware.backend.bo.AsientoModeloItemBO;
+import com.massoftware.backend.bo.AsientoModuloBO;
 import com.massoftware.backend.bo.BancoBO;
 import com.massoftware.backend.bo.BancoFirmanteBO;
 import com.massoftware.backend.bo.CajaBO;
@@ -27,7 +30,7 @@ import com.massoftware.backend.bo.CiudadBO;
 import com.massoftware.backend.bo.CodigoConvenioMultilateralBO;
 import com.massoftware.backend.bo.CostoDeVentaBO;
 import com.massoftware.backend.bo.CuentaContableBO;
-import com.massoftware.backend.bo.CuentaContableOldBO;
+import com.massoftware.backend.bo.CuentaContableEstadoBO;
 import com.massoftware.backend.bo.CuentaDeFondoABO;
 import com.massoftware.backend.bo.CuentaDeFondoBO;
 import com.massoftware.backend.bo.CuentaDeFondoGrupoBO;
@@ -37,6 +40,7 @@ import com.massoftware.backend.bo.CuentaDeFondoTipoBancoBO;
 import com.massoftware.backend.bo.DepositoBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.JurisdiccionConvenioMultilateralBO;
+import com.massoftware.backend.bo.MinutaContableBO;
 import com.massoftware.backend.bo.ModeloCbteFondoBO;
 import com.massoftware.backend.bo.ModeloCbteFondoItemBO;
 import com.massoftware.backend.bo.ModeloCbteFondoItemConceptoBO;
@@ -64,6 +68,10 @@ import com.massoftware.backend.bo.TipoDocumentoAFIPBO;
 import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.backend.bo.ZonaBO;
 import com.massoftware.backend.util.bo.GenericBO;
+import com.massoftware.model.Asiento;
+import com.massoftware.model.AsientoModelo;
+import com.massoftware.model.AsientoModeloItem;
+import com.massoftware.model.AsientoModulo;
 import com.massoftware.model.Banco;
 import com.massoftware.model.BancoFirmante;
 import com.massoftware.model.Caja;
@@ -73,8 +81,10 @@ import com.massoftware.model.CentroDeCostoProyectoTipo;
 import com.massoftware.model.Chequera;
 import com.massoftware.model.Ciudad;
 import com.massoftware.model.CodigoConvenioMultilateral;
+import com.massoftware.model.CostoDeVenta;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaContableEstado;
+import com.massoftware.model.CuentaContableFull;
 import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.CuentaDeFondoA;
 import com.massoftware.model.CuentaDeFondoGrupo;
@@ -84,6 +94,7 @@ import com.massoftware.model.CuentaDeFondoTipoBanco;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.JurisdiccionConvenioMultilateral;
+import com.massoftware.model.MinutaContable;
 import com.massoftware.model.Modulo;
 import com.massoftware.model.Moneda;
 import com.massoftware.model.MonedaAFIP;
@@ -517,7 +528,41 @@ public class BackendContext extends AbstractContext {
 
 			} else if (classModel == MonedaCotizacion.class) {
 
-				return new MonedaCotizacionBO(dataSourceWrapper, this, new MonedaBO(dataSourceWrapper, this));
+				return new MonedaCotizacionBO(dataSourceWrapper, this,
+						new MonedaBO(dataSourceWrapper, this));
+
+			} else if (classModel == AsientoModelo.class) {
+
+				return new AsientoModeloBO(dataSourceWrapper, this);
+
+			} else if (classModel == AsientoModeloItem.class) {
+
+				return new AsientoModeloItemBO(dataSourceWrapper, this);
+
+			} else if (classModel == CuentaContableEstado.class) {
+
+				return new CuentaContableEstadoBO(dataSourceWrapper, this);
+
+			} else if (classModel == CostoDeVenta.class) {
+
+				return new CostoDeVentaBO(dataSourceWrapper, this);
+
+			} else if (classModel == CuentaContable.class
+					|| classModel == CuentaContableFull.class) {
+
+				return new CuentaContableBO(dataSourceWrapper, this);
+
+			} else if (classModel == Asiento.class) {
+
+				return new AsientoBO(dataSourceWrapper, this);
+
+			} else if (classModel == MinutaContable.class) {
+
+				return new MinutaContableBO(dataSourceWrapper, this);
+
+			} else if (classModel == AsientoModulo.class) {
+
+				return new AsientoModuloBO(dataSourceWrapper, this);
 
 			}
 
@@ -561,10 +606,6 @@ public class BackendContext extends AbstractContext {
 
 				return new CuentaDeFondoABO(dataSourceWrapper, this);
 
-			} else if (classModel == CuentaContable.class) {
-
-				return new CuentaContableBO(dataSourceWrapper, this);
-
 			} else if (classModel == JurisdiccionConvenioMultilateral.class) {
 
 				return new JurisdiccionConvenioMultilateralBO(
@@ -603,49 +644,6 @@ public class BackendContext extends AbstractContext {
 		try {
 
 			return new PlanDeCuentaEstadoBO(dataSourceWrapper);
-		} catch (Exception e) {
-			e.printStackTrace();
-			new LogPrinter().print(AbstractContext.class.getName(),
-					LogPrinter.LEVEL_FATAL, e);
-		}
-
-		return null;
-
-	}
-
-	public CostoDeVentaBO buildCostoDeVentaBO() {
-
-		try {
-
-			return new CostoDeVentaBO(dataSourceWrapper);
-		} catch (Exception e) {
-			e.printStackTrace();
-			new LogPrinter().print(AbstractContext.class.getName(),
-					LogPrinter.LEVEL_FATAL, e);
-		}
-
-		return null;
-
-	}
-
-	public CuentaContableOldBO buildCuentaContableBO() {
-
-		try {
-			return new CuentaContableOldBO(dataSourceWrapper);
-		} catch (Exception e) {
-			e.printStackTrace();
-			new LogPrinter().print(AbstractContext.class.getName(),
-					LogPrinter.LEVEL_FATAL, e);
-		}
-
-		return null;
-
-	}
-
-	public AsientoModeloBO buildAsientoModeloBO() {
-
-		try {
-			return new AsientoModeloBO(dataSourceWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 			new LogPrinter().print(AbstractContext.class.getName(),

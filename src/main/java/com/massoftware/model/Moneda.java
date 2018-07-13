@@ -1,7 +1,6 @@
 package com.massoftware.model;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInPluralAnont;

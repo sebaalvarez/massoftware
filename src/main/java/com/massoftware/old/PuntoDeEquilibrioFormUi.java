@@ -8,7 +8,6 @@ import org.vaadin.inputmask.InputMask;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.windows.custom.cuenta_contable.CuentaContableFormUi;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.PuntoDeEquilibrioTipo;
@@ -39,7 +38,7 @@ class PuntoDeEquilibrioFormUi extends CustomComponent {
 	protected Window window;
 	protected BackendContext cx;
 	protected PuntoDeEquilibrioTableUi puntoDeEquilibrioTableUi;
-	protected CuentaContableFormUi planDeCuantaFormUi;
+	protected CuentaContableFormUiViejo planDeCuantaFormUi;
 
 	private boolean isForInsertForm;
 
@@ -71,7 +70,7 @@ class PuntoDeEquilibrioFormUi extends CustomComponent {
 	protected Integer puntoDeEquilibrioOriginal;
 
 	public PuntoDeEquilibrioFormUi(Window window, BackendContext cx,
-			CuentaContableFormUi planDeCuantaFormUi,
+			CuentaContableFormUiViejo planDeCuantaFormUi,
 			EjercicioContable ejercicioContable) {
 		super();
 		try {

@@ -41,7 +41,7 @@ public class PuntoDeEquilibrioBO extends GenericBO<PuntoDeEquilibrio> {
 	
 	protected Integer maxValueInteger(String attName, PuntoDeEquilibrio dto) throws Exception {
 
-		String viewName = getViewName();
+		String viewName = getView();
 		String sql = "SELECT MAX(" + attName + ") + 1 FROM " + viewName + " WHERE ejercicioContable_ejercicio = ?";
 
 		ConnectionWrapper connectionWrapper = dataSourceWrapper

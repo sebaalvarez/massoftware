@@ -1,9 +1,9 @@
-package com.massoftware.frontend.ui.windows.custom.cuenta_contable;
+package com.massoftware.old;
 
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.vaadin.data.validator.AbstractStringValidator;
 
-public class ValidatorCuentaContablePorcentaje extends AbstractStringValidator {
+class ValidatorCuentaContablePorcentaje extends AbstractStringValidator {
 
 	public ValidatorCuentaContablePorcentaje() {
 		super("");

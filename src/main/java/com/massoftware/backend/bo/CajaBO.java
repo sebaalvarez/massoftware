@@ -13,13 +13,15 @@ public class CajaBO extends GenericBO<Caja> {
 
 	private final String ATT_NAME_CODIGO = "codigo";
 	private final String ATT_NAME_NOMBRE = "nombre";
+	
+	private final String ORDER_BY = ATT_NAME_CODIGO + ", " + ATT_NAME_NOMBRE;
 
 	public CajaBO(DataSourceWrapper dataSourceWrapper, BackendContext cx) {
 		super(Caja.class, dataSourceWrapper, cx);
 	}
 
 	public List<Caja> findAll() throws Exception {
-		return findAll(ATT_NAME_CODIGO + ", " + ATT_NAME_NOMBRE);
+		return findAll(ORDER_BY);
 	}
 
 	@Override

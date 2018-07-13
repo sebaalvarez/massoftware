@@ -30,14 +30,16 @@ public class ChequeraTableUi extends StandardTableUi<Chequera> {
 
 	private CuentaDeFondoATableUi cuentaDeFondoATableUi;
 
-	public ChequeraTableUi(boolean shortcut, boolean agregar, boolean modificar, boolean copiar,
-			boolean eliminar, Window window, BackendContext cx,
-			Usuario usuario, Class<Chequera> classModel, String pidFiltering,
-			Object searchFilter,
+	public ChequeraTableUi(boolean paged, boolean pagedCount,
+			boolean pagedOrder, boolean shortcut, boolean agregar,
+			boolean modificar, boolean copiar, boolean eliminar, Window window,
+			BackendContext cx, Usuario usuario, Class<Chequera> classModel,
+			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(shortcut, agregar, modificar, copiar, eliminar, window, cx, usuario,
-				classModel, pidFiltering, searchFilter, searchProperty);
+		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
+				copiar, eliminar, window, cx, usuario, classModel,
+				pidFiltering, searchFilter, searchProperty, null);
 
 		window.setWidth("1300px");
 
@@ -45,9 +47,9 @@ public class ChequeraTableUi extends StandardTableUi<Chequera> {
 		hsplit.setSplitPosition(550, Unit.PIXELS);
 		this.setCompositionRoot(hsplit);
 
-		cuentaDeFondoATableUi = new CuentaDeFondoATableUi(false, false, false, false,
-				false, null, cx, usuario, CuentaDeFondoA.class, null, null,
-				null, this);
+		cuentaDeFondoATableUi = new CuentaDeFondoATableUi(false, false, false, false, false, false,
+				false, false, null, cx, usuario, CuentaDeFondoA.class, null,
+				null, null, this);
 
 		hsplit.setFirstComponent(cuentaDeFondoATableUi);
 

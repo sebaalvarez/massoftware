@@ -13,8 +13,8 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class GeneralMenu extends AbstractMenu {
 
-	public GeneralMenu(SessionVar sessionVar) {
-		super("General", sessionVar);
+	public GeneralMenu(String iconosPath, SessionVar sessionVar) {
+		super("General", iconosPath, sessionVar);
 	}
 
 	/**

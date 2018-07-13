@@ -1,25 +1,26 @@
 package com.massoftware.frontend.ui.custom.menu;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.massoftware.backend.bo.EjercicioContableBO;
-import com.massoftware.backend.bo.UsuarioBO;
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.ui.util.AbstractMenu;
-import com.massoftware.frontend.ui.util.LogAndNotification;
+import com.massoftware.frontend.ui.util.xmd.BuilderXMD;
+import com.massoftware.model.Asiento;
+import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.MotivoNotaDeCredito;
 import com.massoftware.model.PuntoDeEquilibrio;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.server.FontAwesome;
+import com.vaadin.server.FileResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.themes.ValoTheme;
@@ -31,26 +32,27 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 	 */
 	private static final long serialVersionUID = 8506821800939861972L;
 
-	private UsuarioBO usuarioBO;
-	private EjercicioContableBO ejercicioContableBO;
+	// private UsuarioBO usuarioBO;
+	// private EjercicioContableBO ejercicioContableBO;
 
-	private ComboBox ejercicioContableCBX;
+	private ComboBox filtroEjercicioCBX;
+	private BeanItemContainer<EjercicioContable> ejerciciosContablesBIC;
 
-	public ContabilidadGeneralMenu(SessionVar sessionVar) {
-		super("Contabilidad general", sessionVar);
-		initObjectBO();
+	public ContabilidadGeneralMenu(String iconosPath, SessionVar sessionVar) {
+		super("Contabilidad general", iconosPath, sessionVar);
+		// initObjectBO();
 
 	}
 
 	protected void preinit() {
-		initObjectBO();
+		// initObjectBO();
 	}
 
-	private void initObjectBO() {
-		this.usuarioBO = (UsuarioBO) sessionVar.getCx().buildBO(Usuario.class);
-		this.ejercicioContableBO = (EjercicioContableBO) sessionVar.getCx()
-				.buildBO(EjercicioContable.class);
-	}
+	// private void initObjectBO() {
+	// this.usuarioBO = (UsuarioBO) sessionVar.getCx().buildBO(Usuario.class);
+	// this.ejercicioContableBO = (EjercicioContableBO) sessionVar.getCx()
+	// .buildBO(EjercicioContable.class);
+	// }
 
 	protected MenuBar getMenuBar() {
 
@@ -67,26 +69,28 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 		final MenuBar.MenuItem a7 = menubar.addItem("Ayuda", null);
 
 		a2.setEnabled(false);
-		a3.setEnabled(false);
+//		a3.setEnabled(false);
 		a4.setEnabled(false);
 		a5.setEnabled(false);
 		a6.setEnabled(false);
 		a7.setEnabled(false);
 
-		a1.addItem("Plan de cuentas (orden -> cta de jerarquía) ...", null)
-				.setEnabled(false);
-		a1.addItem("Plan de cuentas ...", open(CuentaContable.class))
-				.setEnabled(false);
+		// a1.addItem("Plan de cuentas (orden -> cta de jerarquía) ...", null)
+		// .setEnabled(false);
+		a1.addItem("Plan de cuentas ...", open(CuentaContable.class));
 		a1.addItem("Ejercicios contables ...", open(EjercicioContable.class));
-		a1.addItem("Modelos de asientos", null).setEnabled(false);
+		a1.addItem("Modelos de asientos", open(AsientoModeloItem.class));
 		a1.addItem("Centros de costos ...", open(CentroDeCostoContable.class));
 		a1.addItem("Puntos de equilibrio ...", open(PuntoDeEquilibrio.class));
 		a1.addSeparator();
 		a1.addItem("Parámetros generales", null).setEnabled(false);
 		a1.addItem("Fecha de cierre por módulos", null).setEnabled(false);
+		a1.addSeparator();
+		a1.addItem("Especificar impresora ...", open(MotivoNotaDeCredito.class))
+				.setEnabled(false);
 
 		// asientos.addItem("Nuevo asiento ...", null);
-		// asientos.addItem("Asientos realizados ...", null);
+		 a3.addItem("Asientos realizados ...", open(Asiento.class));
 		// asientos.addItem("Lotes de asientos importados ...", null);
 		// asientos.addItem("Anulación de asientos ...", null);
 
@@ -106,137 +110,127 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 		return menubar;
 	}
 
+	@SuppressWarnings("serial")
 	protected HorizontalLayout getControlBar() throws Exception {
 
 		HorizontalLayout row = new HorizontalLayout();
 		row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
 		row.setSpacing(true);
 
-		Button planDeCuentas = new Button("");
-		planDeCuentas.addStyleName(ValoTheme.BUTTON_HUGE);
-		planDeCuentas.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-		planDeCuentas.setDescription("Plan de cuentas (F5)");
-		planDeCuentas.setIcon(FontAwesome.APPLE);
-		planDeCuentas.addClickListener(new Button.ClickListener() {
+		Button planDeCuentasBTN = new Button("");
+		planDeCuentasBTN.addStyleName(ValoTheme.BUTTON_HUGE);
+		planDeCuentasBTN.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+		planDeCuentasBTN.setDescription("Plan de cuentas (F5)");
+		File fileImg = new File(iconosPath + File.separatorChar
+				+ "tree-table.png");
+		planDeCuentasBTN.setIcon(new FileResource(fileImg));
+		planDeCuentasBTN.addClickListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				Notification.show("Clicked "
 						+ event.getButton().getDescription());
 			}
 		});
-		row.addComponent(planDeCuentas);
 
-		Button nevoAsiento = new Button("");
-		nevoAsiento.addStyleName(ValoTheme.BUTTON_HUGE);
-		nevoAsiento.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-		nevoAsiento.setDescription("Nuevo asiento (F6)");
-		nevoAsiento.setIcon(FontAwesome.APPLE);
-		nevoAsiento.addClickListener(new Button.ClickListener() {
+		row.addComponent(planDeCuentasBTN);
+
+		Button nevoAsientoBTN = new Button("");
+		nevoAsientoBTN.addStyleName(ValoTheme.BUTTON_HUGE);
+		nevoAsientoBTN.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+		nevoAsientoBTN.setDescription("Nuevo asiento (F6)");
+		File fileImg2 = new File(iconosPath + File.separatorChar + "book.png");
+		nevoAsientoBTN.setIcon(new FileResource(fileImg2));
+		nevoAsientoBTN.addClickListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				Notification.show("Clicked "
 						+ event.getButton().getDescription());
 			}
 		});
-		row.addComponent(nevoAsiento);
+		row.addComponent(nevoAsientoBTN);
 
-		Button mayor = new Button("");
-		mayor.addStyleName(ValoTheme.BUTTON_HUGE);
-		mayor.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-		mayor.setDescription("Mayor (F7)");
-		mayor.setIcon(FontAwesome.APPLE);
-		mayor.addClickListener(new Button.ClickListener() {
+		Button mayorBTN = new Button("");
+		mayorBTN.addStyleName(ValoTheme.BUTTON_HUGE);
+		mayorBTN.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+		mayorBTN.setDescription("Mayor (F7)");
+		File fileImg3 = new File(iconosPath + File.separatorChar
+				+ "notebook.png");
+		mayorBTN.setIcon(new FileResource(fileImg3));
+		mayorBTN.addClickListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				Notification.show("Clicked "
 						+ event.getButton().getDescription());
 			}
 		});
-		row.addComponent(mayor);
+		row.addComponent(mayorBTN);
 
-		Label ejercicioContableTitle = new Label("Ejercicio contable:");
-		ejercicioContableTitle.addStyleName(ValoTheme.LABEL_COLORED);
-		ejercicioContableTitle.addStyleName(ValoTheme.TEXTAREA_ALIGN_RIGHT);
-		ejercicioContableTitle.addStyleName(ValoTheme.LABEL_H2);
-		// ejercicioContableTitle.addStyleName(ValoTheme.BUTTON_HUGE);
-		// addComponent(ejercicioContableTitle);
+		// ----------------------------------
 
-		ejercicioContableCBX = new ComboBox();
-		ejercicioContableCBX.addStyleName(ValoTheme.COMBOBOX_HUGE);
-		ejercicioContableCBX.addStyleName(ValoTheme.COMBOBOX_BORDERLESS);
-		ejercicioContableCBX.addStyleName(ValoTheme.COMBOBOX_ALIGN_CENTER);
-		ejercicioContableCBX.setNullSelectionAllowed(false);
+		ejerciciosContablesBIC = new BeanItemContainer<EjercicioContable>(
+				EjercicioContable.class, new ArrayList<EjercicioContable>());
 
-		String itemCaptionPropertyId = sessionVar.getCx()
-				.getEntityMetaData(EjercicioContable.class.getCanonicalName())
-				.getAttNames()[0];
-		ejercicioContableCBX.setItemCaptionPropertyId(itemCaptionPropertyId);
+		filtroEjercicioCBX = BuilderXMD.buildCB();
+		// filtroEjercicioCBX.setCaption("Ejercicio");
+		filtroEjercicioCBX.setDescription("Ejercicio");
+		// filtroEjercicioCBX.setRequired(true);
+		filtroEjercicioCBX.setNullSelectionAllowed(false);
+		filtroEjercicioCBX.addStyleName(ValoTheme.COMBOBOX_HUGE);
+		filtroEjercicioCBX.addStyleName(ValoTheme.COMBOBOX_BORDERLESS);
+		filtroEjercicioCBX.addStyleName(ValoTheme.COMBOBOX_ALIGN_CENTER);
+		filtroEjercicioCBX.setContainerDataSource(ejerciciosContablesBIC);
 
-		loadEjerciciosCBX();
+		EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) sessionVar
+				.getCx().buildBO(EjercicioContable.class);
 
-		EjercicioContable ejercicioContableDefault = sessionVar.getUsuario()
-				.getEjercicioContable();
-		if (ejercicioContableDefault != null
-				&& ejercicioContableDefault.getEjercicio() != null) {
-			ejercicioContableCBX.setValue(ejercicioContableDefault);
-		} else {
-			EjercicioContable maxEjercicioContable = ejercicioContableBO
-					.findMaxEjercicio();
-			ejercicioContableCBX.setValue(maxEjercicioContable);
+		List<EjercicioContable> ejerciciosContables = ejercicioContableBO
+				.findAll();
+		ejerciciosContablesBIC.removeAllItems();
+		for (EjercicioContable ejercicioContable : ejerciciosContables) {
+			ejerciciosContablesBIC.addBean(ejercicioContable);
 		}
 
-		ejercicioContableCBX.addValueChangeListener(e -> {
-			changeEjercicioContableDefault();
-		});
+		if (ejerciciosContablesBIC.size() > 0) {
 
-		HorizontalLayout ejercicioContableBlock = new HorizontalLayout();
-		// ejercicioContableBlock.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
-		ejercicioContableBlock.addComponents(ejercicioContableTitle,
-				ejercicioContableCBX);
-		ejercicioContableBlock.setSpacing(false);
-		ejercicioContableBlock.setMargin(false);
+			// EjercicioContable ejercicioContable = usuario
+			// .getEjercicioContable();
 
-		row.addComponent(ejercicioContableBlock);
+			EjercicioContable ejercicioContable = ejercicioContableBO
+					.findDefaultEjercicioContable();
+
+			if (ejercicioContable != null
+					&& ejercicioContable.getEjercicio() != null) {
+
+				filtroEjercicioCBX.setValue(ejercicioContable);
+
+			} else {
+				// EjercicioContable maxEjercicioContable =
+				// ejercicioContableBO
+				// .findMaxEjercicio();
+				// ejercicioContableCB.setValue(maxEjercicioContable);
+				ejercicioContable = ejerciciosContablesBIC.getIdByIndex(0);
+				filtroEjercicioCBX.setValue(ejercicioContable);
+			}
+		}
+
+		row.addComponent(filtroEjercicioCBX);
 
 		return row;
 	}
 
-	private void changeEjercicioContableDefault() {
-		try {
-
-			EjercicioContable ejercicioContableDefault = (EjercicioContable) ejercicioContableCBX
-					.getValue();
-
-			sessionVar.getUsuario().setEjercicioContable(
-					ejercicioContableDefault);
-
-			usuarioBO.update(sessionVar.getUsuario(), (Usuario) sessionVar
-					.getUsuario().clone(), sessionVar.getUsuario());
-
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-	}
-
-	private void loadEjerciciosCBX() {
-		try {
-
-			List<EjercicioContable> items = ejercicioContableBO.findAll();
-
-			ejercicioContableCBX
-					.setContainerDataSource(new BeanItemContainer<>(
-							EjercicioContable.class, items));
-
-			if (ejercicioContableCBX.getContainerDataSource() == null
-					|| ejercicioContableCBX.getContainerDataSource().size() == 0) {
-				ejercicioContableCBX.setEnabled(false);
-			}
-
-		} catch (Exception e) {
-			ejercicioContableCBX
-					.setContainerDataSource(new BeanItemContainer<>(
-							EjercicioContable.class, new ArrayList<>()));
-
-			LogAndNotification.print(e);
-		}
-
-	}
+	// private void changeEjercicioContableDefault() {
+	// try {
+	//
+	// EjercicioContable ejercicioContableDefault = (EjercicioContable)
+	// filtroEjercicioCBX
+	// .getValue();
+	//
+	// //
+	// sessionVar.getUsuario().setEjercicioContable(ejercicioContableDefault);
+	//
+	// // usuarioBO.update(sessionVar.getUsuario(), (Usuario) sessionVar
+	// // .getUsuario().clone(), sessionVar.getUsuario());
+	//
+	// } catch (Exception e) {
+	// LogAndNotification.print(e);
+	// }
+	// }
 
 }

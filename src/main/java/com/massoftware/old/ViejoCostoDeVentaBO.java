@@ -1,4 +1,4 @@
-package com.massoftware.backend.bo;
+package com.massoftware.old;
 
 import java.util.List;
 import java.util.UUID;
@@ -7,26 +7,26 @@ import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
-import com.massoftware.model.PuntoDeEquilibrioTipo;
+import com.massoftware.model.CostoDeVenta;
 
-public class PuntoDeEquilibrioTipoBOViejo {
+class ViejoCostoDeVentaBO {
 
 	private DataSourceWrapper dataSourceWrapper;
 
-	private final String SQL_PG_1 = "SELECT * FROM massoftware.vPuntoDeEquilibrioTipo ORDER BY codigo, nombre;";
-	private final String SQL_PG_2 = "SELECT * FROM massoftware.vPuntoDeEquilibrioTipo WHERE codigo = ?";
-	private final String SQL_PG_3 = "INSERT INTO massoftware.puntodeequilibriotipo(id, codigo, nombre)	VALUES (?, ?, ?);";
+	private final String SQL_PG_1 = "SELECT * FROM massoftware.vCostoDeVenta ORDER BY codigo, nombre;";
+	private final String SQL_PG_2 = "SELECT * FROM massoftware.vCostoDeVenta WHERE codigo = ?";
+	private final String SQL_PG_3 = "INSERT INTO massoftware.CostoDeVenta(id, codigo, nombre)	VALUES (?, ?, ?);";
 
-	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.[vPuntoDeEquilibrioTipo] ORDER BY codigo, nombre;";
-	private final String SQL_MS_2 = "SELECT * FROM VetaroRep.dbo.[vPuntoDeEquilibrioTipo] WHERE codigo = ?";
+	private final String SQL_MS_1 = "SELECT * FROM VetaroRep.dbo.[vCostoDeVenta] ORDER BY codigo, nombre;";
+	private final String SQL_MS_2 = "SELECT * FROM VetaroRep.dbo.[vCostoDeVenta] WHERE codigo = ?";
 
-	public PuntoDeEquilibrioTipoBOViejo(DataSourceWrapper dataSourceWrapper) {
+	public ViejoCostoDeVentaBO(DataSourceWrapper dataSourceWrapper) {
 		super();
 		this.dataSourceWrapper = dataSourceWrapper;
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	public List<PuntoDeEquilibrioTipo> findAll() throws Exception {
+	public List<CostoDeVenta> findAll() throws Exception {
 
 		String sql = null;
 
@@ -41,9 +41,9 @@ public class PuntoDeEquilibrioTipoBOViejo {
 
 		try {
 
-			List<PuntoDeEquilibrioTipo> list = connectionWrapper.findToListByCendraConvention(sql);
+			List<CostoDeVenta> list =  connectionWrapper.findToListByCendraConvention(sql);
 			
-			for(PuntoDeEquilibrioTipo item : list){
+			for (CostoDeVenta item : list) {
 				item.validate();
 			}
 			
@@ -57,7 +57,7 @@ public class PuntoDeEquilibrioTipoBOViejo {
 
 	}
 
-	private PuntoDeEquilibrioTipo findByTipo(Integer tipo) throws Exception {
+	private CostoDeVenta findByTipo(Integer tipo) throws Exception {
 
 		String sql = null;
 
@@ -73,7 +73,7 @@ public class PuntoDeEquilibrioTipoBOViejo {
 			}
 
 			@SuppressWarnings("unchecked")
-			List<PuntoDeEquilibrioTipo> list = connectionWrapper
+			List<CostoDeVenta> list = connectionWrapper
 					.findToListByCendraConvention(sql, tipo);
 
 			if (list.size() == 1) {
@@ -94,8 +94,7 @@ public class PuntoDeEquilibrioTipoBOViejo {
 
 	}
 
-	public PuntoDeEquilibrioTipo insert(PuntoDeEquilibrioTipo item)
-			throws Exception {
+	public CostoDeVenta insert(CostoDeVenta item) throws Exception {
 
 		String sql = null;
 
@@ -161,8 +160,7 @@ public class PuntoDeEquilibrioTipoBOViejo {
 		}
 	}
 
-	public List<PuntoDeEquilibrioTipo> insert(List<PuntoDeEquilibrioTipo> items)
-			throws Exception {
+	public List<CostoDeVenta> insert(List<CostoDeVenta> items) throws Exception {
 
 		String sql = null;
 
@@ -179,7 +177,7 @@ public class PuntoDeEquilibrioTipoBOViejo {
 
 			connectionWrapper.begin();
 
-			for (PuntoDeEquilibrioTipo item : items) {
+			for (CostoDeVenta item : items) {
 
 				if (findByTipo(item.getCodigo()) != null) {
 					throw new InsertDuplicateException(item.getCodigo());

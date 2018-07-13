@@ -1,174 +1,94 @@
 package com.massoftware.backend.bo;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
-import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
+import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.backend.util.bo.GenericBO;
 import com.massoftware.model.AsientoModelo;
-import com.massoftware.model.AsientoModeloItem;
-import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.Usuario;
 
-public class AsientoModeloBO {
+public class AsientoModeloBO extends GenericBO<AsientoModelo> {
 
-	private DataSourceWrapper dataSourceWrapper;
+	private final String ATT_NAME_NUMERO = "numero";
+	private final String ATT_NAME_DENOMINACION = "denominacion";
+	
+	private final String ORDER_BY = ATT_NAME_NUMERO + ", " + ATT_NAME_DENOMINACION;
 
-	public AsientoModeloBO(DataSourceWrapper dataSourceWrapper) {
-		super();
-		this.dataSourceWrapper = dataSourceWrapper;
+	public AsientoModeloBO(DataSourceWrapper dataSourceWrapper,
+			BackendContext cx) {
+		super(AsientoModelo.class, dataSourceWrapper, cx);
 	}
 
-	private final String SQL_MS_1 = "SELECT * FROM dbo.vAsientoModelo";
-	private final String SQL_MS_2 = "SELECT MAX(numero) FROM dbo.vAsientoModelo WHERE ejercicioContable_ejercicio = ?;";
-	private final String SQL_MS_3 = "SELECT * FROM dbo.vAsientoModeloItem WHERE asientoModelo_ejercicioContable_ejercicio = ? AND asientoModelo_numero = ? ORDER BY registro;";
+	public List<AsientoModelo> findAll() throws Exception {
+		return findAll(ORDER_BY);
+	}
 
-	@SuppressWarnings({ "unchecked" })
-	public List<AsientoModelo> findAll(Integer ejercicio) throws Exception {
+	@Override
+	public void checkUnique(String attName, Object value) throws Exception {
 
-		String sql = null;
+		if (attName.equalsIgnoreCase(ATT_NAME_NUMERO)) {
+
+			checkUnique(attName, ATT_NAME_NUMERO + " = ?", value);
+
+		} else if (attName.equalsIgnoreCase(ATT_NAME_DENOMINACION)) {
+
+			checkUnique(attName, "LOWER(dbo.Translate(" + ATT_NAME_DENOMINACION
+					+ ", null, null)) = LOWER(dbo.Translate(?, null,null))",
+					value.toString().toLowerCase());
+
+		}
+	}
+
+	public boolean delete(AsientoModelo dto) throws Exception {
+
+		Object numeroArg = Integer.class;
+
+		if (dto.getNumero() != null) {
+			numeroArg = dto.getNumero();
+		}
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
-			// sql = SQL_PG_1;
+			return delete(ATT_NAME_NUMERO + " = ?", numeroArg);
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-			sql = SQL_MS_1;
+
+			return delete(
+					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_NUMERO))
+							+ " = ?", numeroArg);
 		}
 
-		sql += " WHERE ejercicioContable_ejercicio = ?;";
-
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
-
-		try {
-
-			List<AsientoModelo> list = null;
-
-			Object ejercicioArg = null;
-			if (ejercicio != null) {
-				ejercicioArg = ejercicio;
-			} else {
-				ejercicioArg = Integer.class;
-			}
-
-			list = connectionWrapper.findToListByCendraConvention(sql,
-					ejercicioArg);
-
-			for (AsientoModelo item : list) {
-				item.validate();
-			}
-
-			return list;
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
-		}
+		return false;
 
 	}
 
-	@SuppressWarnings({ "unchecked" })
-	public List<AsientoModeloItem> findAllItems(Integer ejercicio,
-			Integer numeroAsientoModelo) throws Exception {
+	public AsientoModelo insert(AsientoModelo dto, Usuario usuario)
+			throws Exception {
 
-		String sql = null;
+		return insertByReflection(dto, usuario);
+	}
+
+	public AsientoModelo update(AsientoModelo dto,
+			AsientoModelo dtoOriginal, Usuario usuario) throws Exception {
+
+		Object numeroArg = Integer.class;
+
+		if (dtoOriginal.getNumero() != null) {
+			numeroArg = dtoOriginal.getNumero();
+		}
 
 		if (dataSourceWrapper.isDatabasePostgreSql()) {
-			// sql = SQL_PG_1;
+
 		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-			sql = SQL_MS_3;
+
+			return updateByReflection(
+					dto,
+					usuario,
+					getFieldNameMS(classModel.getDeclaredField(ATT_NAME_NUMERO))
+							+ " = ?", numeroArg);
 		}
 
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
-
-		try {
-
-			List<AsientoModeloItem> list = null;
-
-			Object ejercicioArg = null;
-			if (ejercicio != null) {
-				ejercicioArg = ejercicio;
-			} else {
-				ejercicioArg = Integer.class;
-			}
-
-			Object numeroAsientoModeloArg = null;
-			if (numeroAsientoModelo != null) {
-				numeroAsientoModeloArg = numeroAsientoModelo;
-			} else {
-				numeroAsientoModeloArg = Integer.class;
-			}
-
-			list = connectionWrapper.findToListByCendraConvention(sql,
-					ejercicioArg, numeroAsientoModeloArg);
-
-			for (AsientoModeloItem item : list) {
-				item.validate();
-			}
-
-			return list;
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
-		}
-
-	}
-
-	public Integer findMaxNumero(Integer ejercicio) throws Exception {
-
-		String sql = null;
-
-		ConnectionWrapper connectionWrapper = dataSourceWrapper
-				.getConnectionWrapper();
-
-		try {
-
-			if (dataSourceWrapper.isDatabasePostgreSql()) {
-				// sql = SQL_PG_2;
-			} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
-				sql = SQL_MS_2;
-			}
-
-			Object[][] table = connectionWrapper.findToTable(sql, ejercicio);
-
-			for (Object[] row : table) {
-
-				Integer v = (Integer) row[0];
-				if (v == null) {
-					v = 0;
-				}
-				v++;
-				return v;
-			}
-
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			connectionWrapper.close(connectionWrapper);
-		}
-
-		return 1;
-	}
-
-	// ++--------------------------------------------------------------------
-
-	public List<Object> checkRefIntegrity(EjercicioContable objectFK) {
-
-		System.out.println("exeute : " + this.getClass().getCanonicalName()
-				+ ".checkRefIntegrity(EjercicioContable objectFK)");
-
-		AsientoModelo asientoModelo = new AsientoModelo();
-		asientoModelo.setDenominacion("xxxxxxxxx");
-		ArrayList<Object> list = new ArrayList<Object>();
-		list.add(asientoModelo);
-				
-		
-		return list;
-
+		return null;
 	}
 
 }

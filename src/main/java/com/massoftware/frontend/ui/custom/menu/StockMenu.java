@@ -15,8 +15,8 @@ public class StockMenu extends AbstractMenu {
 	 */
 	private static final long serialVersionUID = 3092383121585372384L;
 
-	public StockMenu(SessionVar sessionVar) {
-		super("Stock", sessionVar);
+	public StockMenu(String iconosPath, SessionVar sessionVar) {
+		super("Stock", iconosPath, sessionVar);
 	}
 
 	protected MenuBar getMenuBar() {

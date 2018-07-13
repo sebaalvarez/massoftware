@@ -30,14 +30,16 @@ public class ProvinciaTableUi extends StandardTableUi<Provincia> {
 	private ComboBox filtroPaisCBX;
 	private BeanItemContainer<Pais> paisesBIC;
 
-	public ProvinciaTableUi(boolean shortcut, boolean agregar,
+	public ProvinciaTableUi(boolean paged, boolean pagedCount,
+			boolean pagedOrder, boolean shortcut, boolean agregar,
 			boolean modificar, boolean copiar, boolean eliminar, Window window,
 			BackendContext cx, Usuario usuario, Class<Provincia> classModel,
 			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(shortcut, agregar, modificar, copiar, eliminar, window, cx,
-				usuario, classModel, pidFiltering, searchFilter, searchProperty);
+		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
+				copiar, eliminar, window, cx, usuario, classModel,
+				pidFiltering, searchFilter, searchProperty, null);
 
 		ejercicioCBXValueChange();
 

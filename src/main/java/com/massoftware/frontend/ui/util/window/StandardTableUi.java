@@ -14,11 +14,11 @@ import com.massoftware.frontend.ui.util.ColumnMetaData;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.SimpleStringTraslateFilter;
 import com.massoftware.frontend.ui.util.YesNoDialog;
-import com.massoftware.frontend.ui.util.YesNoDialog.Callback;
 import com.massoftware.frontend.ui.util.xmd.BuilderXMD;
 import com.massoftware.frontend.ui.util.xmd.annotation.ClassPluralLabelAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnMetaDataAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
+import com.massoftware.frontend.ui.util.xmd.annotation.FieldSubNameFKAnont;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.Entity;
 import com.massoftware.model.EntityId;
@@ -32,6 +32,7 @@ import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.event.SortEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
@@ -59,6 +60,12 @@ public class StandardTableUi<T> extends CustomComponent {
 	 */
 	private static final long serialVersionUID = -2361315768472348160L;
 
+	protected boolean paged = true;
+	protected boolean pagedCount = false;
+	protected boolean pagedOrder = true;
+	protected int limit = 15;
+	protected int offset = 0;
+
 	protected Window window;
 	protected BackendContext cx;
 	protected Usuario usuario;
@@ -69,12 +76,17 @@ public class StandardTableUi<T> extends CustomComponent {
 	protected VerticalLayout rootVL;
 
 	protected HorizontalLayout filaFiltro1HL;
+	// protected HorizontalLayout filaFiltro2HL;
 
 	private HorizontalLayout filtroGenericoHL;
 	private TextField filtroGenericoTXT;
 	private Button removerFiltroGenericoBTN;
 
 	public Grid itemsGRD;
+
+	private HorizontalLayout barraDeHerramientasFila0;
+	private Button prevPageBTN;
+	private Button nextPageBTN;
 
 	private HorizontalLayout barraDeHerramientasFila1;
 	private Button agregarBTN;
@@ -103,11 +115,12 @@ public class StandardTableUi<T> extends CustomComponent {
 	// ----------------------------------------------
 	// MODELO
 
-	private BeanItemContainer<T> itemsBIC;
+	protected BeanItemContainer<T> itemsBIC;
 
 	// ----------------------------------------------
 
 	private String pidFiltering;
+	private String pidFilteringValue;
 	private Boolean orderByAsc;
 
 	// ----------------------------------------------
@@ -121,15 +134,21 @@ public class StandardTableUi<T> extends CustomComponent {
 	@SuppressWarnings("rawtypes")
 	private Property searchProperty;
 
+	protected List<Object> otrosFiltros;
+
 	// ----------------------------------------------
 
-	public StandardTableUi(boolean shortcut, boolean agregar,
+	public StandardTableUi(boolean paged, boolean pagedCount,
+			boolean pagedOrder, boolean shortcut, boolean agregar,
 			boolean modificar, boolean copiar, boolean eliminar, Window window,
 			BackendContext cx, Usuario usuario, Class<T> classModel,
-			String pidFiltering, Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty) {
+			String pidFiltering, Object valueFilter,
+			@SuppressWarnings("rawtypes") Property searchProperty,
+			List<Object> otrosFiltros) {
 		super();
 		try {
+			this.otrosFiltros = otrosFiltros;
+
 			this.shortcut = shortcut;
 			this.agregar = agregar;
 			this.modificar = modificar;
@@ -139,7 +158,7 @@ public class StandardTableUi<T> extends CustomComponent {
 			this.classModel = classModel;
 			this.cx = cx;
 			this.usuario = usuario;
-			this.searchFilter = searchFilter;
+			this.searchFilter = valueFilter;
 			this.searchProperty = searchProperty;
 
 			this.window = window;
@@ -171,13 +190,34 @@ public class StandardTableUi<T> extends CustomComponent {
 			buildControls();
 			loadData();
 
-			if (this.searchFilter != null) {
-				filtroGenericoTXT.setValue(this.searchFilter.toString());
-				filtroGenericoTXTTextChange(filtroGenericoTXT.getValue());
-			}
+			// if (this.searchFilter != null) {
+			// filtroGenericoTXT.setValue(this.searchFilter.toString());
+			// filtroGenericoTXTTextChange(filtroGenericoTXT.getValue());
+			// }
+
+			filtroGenericoTXT.addTextChangeListener(new TextChangeListener() {
+
+				private static final long serialVersionUID = 7718437652977739807L;
+
+				public void textChange(TextChangeEvent event) {
+					filtroGenericoTXTTextChange(event.getText());
+				}
+
+			});
+
+			itemsGRD.addSortListener(e -> {
+				sort(e);
+			});
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
+		}
+	}
+
+	public void filtrar() {
+		if (this.searchFilter != null) {
+			filtroGenericoTXT.setValue(this.searchFilter.toString());
+			filtroGenericoTXTTextChange(filtroGenericoTXT.getValue());
 		}
 	}
 
@@ -243,6 +283,14 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		// ----------------------------------------------
 
+		// filaFiltro2HL = new HorizontalLayout();
+		// filaFiltro2HL.setSpacing(true);
+		//
+		// rootVL.addComponent(filaFiltro2HL);
+		// rootVL.setComponentAlignment(filaFiltro2HL, Alignment.MIDDLE_CENTER);
+
+		// ----------------------------------------------
+
 		filtroGenericoHL = new HorizontalLayout();
 
 		filaFiltro1HL.addComponent(filtroGenericoHL);
@@ -251,9 +299,10 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		filtroGenericoTXT = new TextField();
 		filtroGenericoTXT.addStyleName("tiny");
-		filtroGenericoTXT.setIcon(FontAwesome.SEARCH);
+		// filtroGenericoTXT.setIcon(FontAwesome.SEARCH);
 		filtroGenericoTXT.setImmediate(true);
 		filtroGenericoTXT.setNullRepresentation("");
+		filtroGenericoHL.setVisible((paged == true && pagedCount == true));
 
 		for (ColumnMetaData columnMetaData : columnsMetaData) {
 
@@ -282,15 +331,15 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		}
 
-		filtroGenericoTXT.addTextChangeListener(new TextChangeListener() {
-
-			private static final long serialVersionUID = 7718437652977739807L;
-
-			public void textChange(TextChangeEvent event) {
-				filtroGenericoTXTTextChange(event.getText());
-			}
-
-		});
+		// filtroGenericoTXT.addTextChangeListener(new TextChangeListener() {
+		//
+		// private static final long serialVersionUID = 7718437652977739807L;
+		//
+		// public void textChange(TextChangeEvent event) {
+		// filtroGenericoTXTTextChange(event.getText());
+		// }
+		//
+		// });
 
 		filtroGenericoHL.addComponent(filtroGenericoTXT);
 
@@ -410,19 +459,51 @@ public class StandardTableUi<T> extends CustomComponent {
 		}
 
 		itemsGRD.setSortOrder(order);
+		// itemsGRD.setSortOrder(null);
 
-		itemsGRD.addSortListener(e -> {
-			sort();
-		});
+		// itemsGRD.addSortListener(e -> {
+		// sort(e);
+		// });
 
 		rootVL.addComponent(itemsGRD);
 		rootVL.setComponentAlignment(itemsGRD, Alignment.MIDDLE_CENTER);
 
+		// ----------------------------------------------
+
+		barraDeHerramientasFila0 = new HorizontalLayout();
+		barraDeHerramientasFila0.setSpacing(true);
+
+		rootVL.addComponent(barraDeHerramientasFila0);
+		rootVL.setComponentAlignment(barraDeHerramientasFila0,
+				Alignment.MIDDLE_RIGHT);
+
 		cantItemsLBL = BuilderXMD.buildLBL();
 		cantItemsLBL.setCaption("Cantidad de items: 0");
 
-		rootVL.addComponent(cantItemsLBL);
-		rootVL.setComponentAlignment(cantItemsLBL, Alignment.MIDDLE_RIGHT);
+		barraDeHerramientasFila0.addComponent(cantItemsLBL);
+		barraDeHerramientasFila0.setComponentAlignment(cantItemsLBL,
+				Alignment.MIDDLE_LEFT);
+
+		prevPageBTN = new Button();
+		prevPageBTN.addStyleName(ValoTheme.BUTTON_TINY);
+		prevPageBTN.setCaption("<");
+		prevPageBTN.setEnabled(offset > 0);
+		prevPageBTN.setDescription(prevPageBTN.getCaption() + " (Ctrl+A)");
+		prevPageBTN.addClickListener(e -> {
+			prevPageBTNClick();
+		});
+
+		barraDeHerramientasFila0.addComponent(prevPageBTN);
+
+		nextPageBTN = new Button();
+		nextPageBTN.addStyleName(ValoTheme.BUTTON_TINY);
+		nextPageBTN.setCaption(">");
+		nextPageBTN.setDescription(nextPageBTN.getCaption() + " (Ctrl+A)");
+		nextPageBTN.addClickListener(e -> {
+			nextPageBTNClick();
+		});
+
+		barraDeHerramientasFila0.addComponent(nextPageBTN);
 
 		// ----------------------------------------------
 
@@ -615,6 +696,21 @@ public class StandardTableUi<T> extends CustomComponent {
 
 	}
 
+	private void nextPageBTNClick() {
+		offset = offset + limit;
+		prevPageBTN.setEnabled(offset > 0);
+		reloadData();
+	}
+
+	private void prevPageBTNClick() {
+		offset = offset - limit;
+		if (offset < 0) {
+			offset = 0;
+		}
+		prevPageBTN.setEnabled(offset > 0);
+		reloadData();
+	}
+
 	private void agregarBTNClick() {
 		try {
 
@@ -749,7 +845,12 @@ public class StandardTableUi<T> extends CustomComponent {
 
 	private void filtroGenericoTXTTextChange(String filterValue) {
 		try {
-			filtrarEnmemoria(filterValue);
+			if (paged) {
+				pidFilteringValue = filterValue;
+				reloadData();
+			} else {
+				filtrarEnmemoria(filterValue);
+			}
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -843,7 +944,7 @@ public class StandardTableUi<T> extends CustomComponent {
 			}
 			itemsGRD.recalculateColumnWidths();
 
-			cantItemsLBL.setCaption("Cantidad de items: " + itemsBIC.size());
+			// cantItemsLBL.setCaption("Cantidad de items: " + itemsBIC.size());
 
 			boolean enabled = itemsBIC.size() > 0;
 
@@ -873,35 +974,59 @@ public class StandardTableUi<T> extends CustomComponent {
 		}
 	}
 
-	private void sort() {
+	private void sort(SortEvent sortEvent) {
 		try {
-			pidFiltering = itemsGRD.getSortOrder().get(0).getPropertyId()
-					.toString();
 
-			// pidFiltering = attName;
+			if (paged && pagedOrder) {
 
-			String caption = itemsGRD.getColumn(pidFiltering)
-					.getHeaderCaption();
+				pidFiltering = itemsGRD.getSortOrder().get(0).getPropertyId()
+						.toString();
 
-			filtroGenericoTXT.setCaption(caption);
+				// pidFiltering = attName;
 
-			for (ColumnMetaData columnMetaData : columnsMetaData) {
+				String caption = itemsGRD.getColumn(pidFiltering)
+						.getHeaderCaption();
 
-				if (columnMetaData.getAttName().equals(pidFiltering)) {
+				filtroGenericoTXT.setCaption(caption);
 
-					setInputPromptFiltroGenericoTXT(columnMetaData);
+				for (ColumnMetaData columnMetaData : columnsMetaData) {
 
-					break;
+					if (columnMetaData.getAttName().equals(pidFiltering)) {
 
+						if (sortEvent != null
+								&& sortEvent.getSortOrder().get(0)
+										.getDirection()
+										.equals(SortDirection.ASCENDING)) {
+
+							orderByAsc = true;
+
+						} else if (sortEvent != null
+								&& sortEvent.getSortOrder().get(0)
+										.getDirection()
+										.equals(SortDirection.DESCENDING)) {
+
+							orderByAsc = false;
+						}
+
+						setInputPromptFiltroGenericoTXT(columnMetaData);
+
+						break;
+
+					}
 				}
+
+				filtroGenericoTXT.setDescription(filtroGenericoTXT
+						.getInputPrompt());
+
+				removerFiltroGenericoBTNClick();
+
+				filtroGenericoTXT.focus();
+
+				if (sortEvent != null && paged && pagedOrder) {
+					reloadData();
+				}
+
 			}
-
-			filtroGenericoTXT
-					.setDescription(filtroGenericoTXT.getInputPrompt());
-
-			removerFiltroGenericoBTNClick();
-
-			filtroGenericoTXT.focus();
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -928,7 +1053,7 @@ public class StandardTableUi<T> extends CustomComponent {
 
 			if (enabled) {
 
-				sort();
+				sort(null);
 			}
 
 		} catch (Exception e) {
@@ -948,8 +1073,10 @@ public class StandardTableUi<T> extends CustomComponent {
 
 	}
 
-	public void reloadData() throws Exception {
+	public void reloadData() {
 		try {
+
+			this.rootVL.setEnabled(false);
 
 			List<T> items = reloadDataList();
 
@@ -958,9 +1085,20 @@ public class StandardTableUi<T> extends CustomComponent {
 				itemsBIC.addBean(item);
 			}
 
-			cantItemsLBL.setCaption("Cantidad de items: " + itemsBIC.size());
+			if (paged == false) {
+
+				cantItemsLBL
+						.setCaption("Cantidad de items: " + itemsBIC.size());
+			}
 
 			boolean enabled = itemsBIC.size() > 0;
+
+//			if (enabled) {
+//				offset = offset - limit;
+//				if (offset < 0) {
+//					offset = 0;
+//				}
+//			}
 
 			// if(enabled){
 			// itemsGRD.select(itemsGRD.getSelectedRow());
@@ -976,28 +1114,183 @@ public class StandardTableUi<T> extends CustomComponent {
 			if (eliminar) {
 				eliminarBTN.setEnabled(enabled);
 			}
+			if (paged) {
+				nextPageBTN.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() <= 15);
+			}
+			
+			if (paged) {
+				prevPageBTN.setEnabled(offset >= 15);				
+			}
+
+			this.rootVL.setEnabled(true);
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
 	}
 
+	private List<T> reloadDataList() throws Exception {
+
+		String orderBy = buildOrderBy();
+
+		String attName = orderBy.replace("DESC", "");
+
+		String where = null;
+
+		Object value = null;
+
+		if (pidFilteringValue != null && pidFilteringValue.trim().length() > 2) {
+
+			pidFilteringValue = pidFilteringValue.trim();
+
+			for (ColumnMetaData columnMetaData : columnsMetaData) {
+
+				if (columnMetaData.getAttName().equals(pidFiltering)) {
+
+					if (columnMetaData.getAttClass() == Boolean.class) {
+
+						Boolean b = null;
+
+						if (pidFilteringValue.equalsIgnoreCase("si")) {
+							b = true;
+							;
+						}
+						if (pidFilteringValue.equalsIgnoreCase("s")) {
+							b = true;
+						}
+						if (pidFilteringValue.equalsIgnoreCase("n")) {
+							b = false;
+						}
+						if (pidFilteringValue.equalsIgnoreCase("no")) {
+							b = false;
+						}
+
+						where = attName + " = ?";
+
+						value = b;
+
+					} else if (SimpleStringTraslateFilter.CONTAINS
+							.equals(columnMetaData
+									.getSimpleStringTraslateFilterMode())) {
+
+						pidFilteringValue = "%" + pidFilteringValue + "%";
+
+						where = "LOWER(dbo.Translate("
+								+ attName
+								+ ", null, null)) like LOWER(dbo.Translate(?, null,null))";
+
+						value = pidFilteringValue;
+
+					} else if (SimpleStringTraslateFilter.CONTAINS_WORDS_AND
+							.equals(columnMetaData
+									.getSimpleStringTraslateFilterMode())) {
+
+						pidFilteringValue = "%" + pidFilteringValue + "%";
+
+						where = "LOWER(dbo.Translate("
+								+ attName
+								+ ", null, null)) like LOWER(dbo.Translate(?, null,null))";
+
+						value = pidFilteringValue;
+
+					} else if (SimpleStringTraslateFilter.CONTAINS_WORDS_OR
+							.equals(columnMetaData
+									.getSimpleStringTraslateFilterMode())) {
+
+						pidFilteringValue = "%" + pidFilteringValue + "%";
+
+						where = "LOWER(dbo.Translate("
+								+ attName
+								+ ", null, null)) like LOWER(dbo.Translate(?, null,null))";
+
+						value = pidFilteringValue;
+
+					} else if (SimpleStringTraslateFilter.STARTS_WITCH
+							.equals(columnMetaData
+									.getSimpleStringTraslateFilterMode())) {
+
+						pidFilteringValue = pidFilteringValue + "%";
+
+						where = "LOWER(dbo.Translate("
+								+ attName
+								+ ", null, null)) like LOWER(dbo.Translate(?, null,null))";
+
+						value = pidFilteringValue;
+
+					} else if (SimpleStringTraslateFilter.ENDS_WITCH
+							.equals(columnMetaData
+									.getSimpleStringTraslateFilterMode())) {
+
+						pidFilteringValue = "%" + pidFilteringValue;
+
+						where = "LOWER(dbo.Translate("
+								+ attName
+								+ ", null, null)) like LOWER(dbo.Translate(?, null,null))";
+
+						value = pidFilteringValue;
+
+					}
+
+					break;
+
+				}
+			}
+		}
+
+		return reloadDataList(orderBy, where, value, limit, offset);
+	}
+
 	@SuppressWarnings("unchecked")
-	protected List<T> reloadDataList() throws Exception {
+	protected List<T> reloadDataList(String orderBy, String where,
+			Object value, int limit, int offset) throws Exception {
 
-		// Sucursal sucursal = (Sucursal) sucursalesCBX.getValue();
-		//
-		// List<Deposito> items = null;
-		//
-		// if (sucursal != null && sucursal.getCodigo() != null) {
-		// items = cx.buildDepositoBO()
-		// .findAllBySucursal(sucursal.getCodigo());
-		// } else {
-		// items = cx.buildDepositoBO().findAll();
-		// }
+		if (paged) {
+			if (pidFilteringValue != null
+					&& pidFilteringValue.trim().length() > 0) {
 
-		return cx.buildBO(classModel).findAll();
+				if (pagedCount) {
+					Integer count = cx.buildBO(classModel).count(where, value);
 
+					cantItemsLBL.setCaption("Cantidad de items: " + count);
+				}
+
+				return cx.buildBO(classModel).findPaged(orderBy, where, limit,
+						offset, value);
+
+			} else {
+
+				if (pagedCount) {
+					Integer count = cx.buildBO(classModel).count();
+
+					cantItemsLBL.setCaption("Cantidad de items: " + count);
+				}
+
+				return cx.buildBO(classModel).findAllPaged(orderBy, limit,
+						offset);
+			}
+
+		} else {
+			return cx.buildBO(classModel).findAll();
+		}
+
+	}
+
+	protected String buildOrderBy() throws NoSuchFieldException,
+			SecurityException {
+		String orderBy = "1";
+		Field field = this.classModel.getDeclaredField(pidFiltering);
+		String pidFiltering2 = getSubNameFK(field);
+		if (pidFiltering2 != null && pidFiltering2.trim().length() > 0) {
+			orderBy = pidFiltering + "_" + pidFiltering2;
+		} else {
+			orderBy = pidFiltering;
+		}
+		// boolean asc = getOrderByAsc(field);
+		if (orderByAsc == false) {
+			orderBy = orderBy + " DESC";
+		}
+
+		return orderBy;
 	}
 
 	private void setInputPromptFiltroGenericoTXT(ColumnMetaData columnMetaData) {
@@ -1025,7 +1318,7 @@ public class StandardTableUi<T> extends CustomComponent {
 
 	// -----------------------------------------------------
 
-	private String getLabel() {
+	protected String getLabel() {
 
 		ClassPluralLabelAnont[] a = classModel
 				.getAnnotationsByType(ClassPluralLabelAnont.class);
@@ -1052,6 +1345,16 @@ public class StandardTableUi<T> extends CustomComponent {
 				.getAnnotationsByType(FieldColumnMetaDataAnont.class);
 		if (a != null && a.length > 0) {
 			return a[0].ascOrderByStart();
+		}
+
+		return null;
+	}
+
+	private static String getSubNameFK(Field field) {
+		FieldSubNameFKAnont[] a = field
+				.getAnnotationsByType(FieldSubNameFKAnont.class);
+		if (a != null && a.length > 0) {
+			return a[0].value();
 		}
 
 		return null;

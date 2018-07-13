@@ -21,13 +21,16 @@ public class EjercicioContableTableUi extends
 	 */
 	private static final long serialVersionUID = 4960961261882226754L;
 
-	public EjercicioContableTableUi(boolean shortcut, boolean agregar,
+	public EjercicioContableTableUi(boolean paged, boolean pagedCount,
+			boolean pagedOrder, boolean shortcut, boolean agregar,
 			boolean modificar, boolean copiar, boolean eliminar, Window window,
 			BackendContext cx, Usuario usuario,
 			Class<EjercicioContable> classModel, String pidFiltering,
-			Object searchFilter, Property<EjercicioContable> searchProperty) {
-		super(shortcut, agregar, modificar, false, eliminar, window, cx,
-				usuario, classModel, pidFiltering, searchFilter, searchProperty);
+			Object searchFilter,
+			@SuppressWarnings("rawtypes") Property searchProperty) {
+		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
+				false, eliminar, window, cx, usuario, classModel, pidFiltering,
+				searchFilter, searchProperty, null);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -53,15 +56,16 @@ public class EjercicioContableTableUi extends
 
 		item.setFechaCierre(fecha);
 
-		StandardFormUi<EjercicioContable> form = new StandardFormUi<EjercicioContable>(usuario, classModel,
-				StandardFormUi.INSERT_MODE, cx, this, item);
-		
-		Label seccionLBL = new Label("Se copiaran los datos del ejercicio " + (item.getEjercicio() - 1));
+		StandardFormUi<EjercicioContable> form = new StandardFormUi<EjercicioContable>(
+				usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item);
+
+		Label seccionLBL = new Label("Se copiaran los datos del ejercicio "
+				+ (item.getEjercicio() - 1));
 		seccionLBL.addStyleName(ValoTheme.LABEL_H3);
 		seccionLBL.addStyleName(ValoTheme.LABEL_COLORED);
-		
+
 		form.rootVL.addComponent(seccionLBL, 0);
-		
+
 		return form;
 
 	}

@@ -32,8 +32,8 @@ public class FondosMenu extends AbstractMenu {
 	 */
 	private static final long serialVersionUID = -4876972158479186080L;
 
-	public FondosMenu(SessionVar sessionVar) {
-		super("Fondos", sessionVar);
+	public FondosMenu(String iconosPath, SessionVar sessionVar) {
+		super("Fondos", iconosPath, sessionVar);
 	}
 
 	// public FondosMenu(SessionVar sessionVar) {

@@ -1,12 +1,13 @@
-package com.massoftware.frontend.ui.windows.custom.cuenta_contable;
+package com.massoftware.old;
 
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.model.CuentaContable;
+import com.massoftware.util.FormatCuentaContableCodigoCuenta;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
 
-public class ValidatorCuentaContableCodigoCuentaNombre extends
+class ValidatorCuentaContableCodigoCuentaNombre extends
 		AbstractStringValidator {
 
 	/**
@@ -46,12 +47,12 @@ public class ValidatorCuentaContableCodigoCuentaNombre extends
 						+ planDeCuentaBI.getBean().getEjercicioContable()
 						+ " - " + codigoCuenta + " - " + nombre + ")");
 
-				boolean b = cx.buildCuentaContableBO()
-						.ifExistsCodigoCuentaYNombre(
-								codigoCuenta,
-								nombre,
-								planDeCuentaBI.getBean().getEjercicioContable()
-										.getEjercicio());
+				boolean b = false;// cx.buildCuentaContableBO()
+//						.ifExistsCodigoCuentaYNombre(
+//								codigoCuenta,
+//								nombre,
+//								planDeCuentaBI.getBean().getEjercicioContable()
+//										.getEjercicio());
 
 				if (b == true) {
 					return false;

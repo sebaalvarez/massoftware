@@ -20,20 +20,23 @@ public class CuentaDeFondoATableUi extends StandardTableUi<CuentaDeFondoA> {
 	private ChequeraTableUi chequeraTableUi;
 
 	@SuppressWarnings("rawtypes")
-	public CuentaDeFondoATableUi(boolean shortcut, boolean agregar, boolean modificar,
-			boolean copiar, boolean eliminar, Window window, BackendContext cx,
-			Usuario usuario, Class<CuentaDeFondoA> classModel,
-			String pidFiltering, Object searchFilter, Property searchProperty,
+	public CuentaDeFondoATableUi(boolean paged, boolean pagedCount,
+			boolean pagedOrder, boolean shortcut, boolean agregar,
+			boolean modificar, boolean copiar, boolean eliminar, Window window,
+			BackendContext cx, Usuario usuario,
+			Class<CuentaDeFondoA> classModel, String pidFiltering,
+			Object searchFilter, Property searchProperty,
 			ChequeraTableUi chequeraTableUi) {
 
-		super(shortcut, agregar, modificar, copiar, eliminar, window, cx, usuario,
-				classModel, pidFiltering, searchFilter, searchProperty);
-		
+		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
+				copiar, eliminar, window, cx, usuario, classModel,
+				pidFiltering, searchFilter, searchProperty, null);
+
 		this.itemsGRD.getColumn("cuentaDeFondoTipo").setHidden(true);
-		this.itemsGRD.setWidth( (itemsGRD.getWidth() - 150) + "px"); 
-		
+		this.itemsGRD.setWidth((itemsGRD.getWidth() - 150) + "px");
+
 		this.itemsGRD.getColumn("obsoleta").setHidden(true);
-		this.itemsGRD.setWidth( (itemsGRD.getWidth() - 80) + "px");
+		this.itemsGRD.setWidth((itemsGRD.getWidth() - 80) + "px");
 
 		this.chequeraTableUi = chequeraTableUi;
 
@@ -57,7 +60,7 @@ public class CuentaDeFondoATableUi extends StandardTableUi<CuentaDeFondoA> {
 			LogAndNotification.print(e);
 		}
 	}
-	
+
 	protected List<CuentaDeFondoA> reloadDataList() throws Exception {
 
 		return ((CuentaDeFondoABO) cx.buildBO(classModel)).findX();

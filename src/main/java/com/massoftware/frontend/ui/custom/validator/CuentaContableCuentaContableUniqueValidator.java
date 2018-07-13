@@ -1,12 +1,14 @@
-package com.massoftware.frontend.ui.windows.custom.cuenta_contable;
+package com.massoftware.frontend.ui.custom.validator;
 
+import com.massoftware.backend.bo.CuentaContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.model.CuentaContable;
+import com.massoftware.model.CuentaContableFull;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
 
-public class ValidatorCuentaContableCuentaContable extends
+public class CuentaContableCuentaContableUniqueValidator extends
 		AbstractStringValidator {
 
 	/**
@@ -15,22 +17,22 @@ public class ValidatorCuentaContableCuentaContable extends
 	private static final long serialVersionUID = -2108700714465550165L;
 	private BackendContext cx;
 
-	protected BeanItem<CuentaContable> planDeCuentaBI;
+	protected BeanItem<CuentaContableFull> cuentaContableBI;
 	protected String cuentaContableOriginal;
 
-	public ValidatorCuentaContableCuentaContable(String errorMessage,
-			BackendContext cx, BeanItem<CuentaContable> planDeCuentaBI) {
-		super(errorMessage);
+	public CuentaContableCuentaContableUniqueValidator(BackendContext cx,
+			BeanItem<CuentaContableFull> cuentaContableBI) {
+		super("");
 		this.cx = cx;
-		this.planDeCuentaBI = planDeCuentaBI;
+		this.cuentaContableBI = cuentaContableBI;
 	}
 
-	public ValidatorCuentaContableCuentaContable(String errorMessage,
-			BackendContext cx, BeanItem<CuentaContable> planDeCuentaBI,
+	public CuentaContableCuentaContableUniqueValidator(BackendContext cx,
+			BeanItem<CuentaContableFull> cuentaContableBI,
 			String cuentaContableOriginal) {
-		super(errorMessage);
+		super("");
 		this.cx = cx;
-		this.planDeCuentaBI = planDeCuentaBI;
+		this.cuentaContableBI = cuentaContableBI;
 		this.cuentaContableOriginal = cuentaContableOriginal.trim()
 				.toLowerCase();
 	}
@@ -57,12 +59,12 @@ public class ValidatorCuentaContableCuentaContable extends
 				}
 
 				this.setErrorMessage("El campo cuenta cotable es incorrecto, ya existe una cuenta con la misma denominación ("
-						+ planDeCuentaBI.getBean().getEjercicioContable()
-						+ " - " + cuentaContable + ")");
+						+ cuentaContableBI.getBean().getEjercicioContable()
+						+ ") " + cuentaContable + "");
 
-				boolean b = cx.buildCuentaContableBO().ifExistsCuentaContable(
+				boolean b = ((CuentaContableBO)cx.buildBO(CuentaContable.class)).checkUniqueCuentaContable(
 						cuentaContable,
-						planDeCuentaBI.getBean().getEjercicioContable()
+						cuentaContableBI.getBean().getEjercicioContable()
 								.getEjercicio());
 
 				if (b == true) {

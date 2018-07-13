@@ -432,7 +432,7 @@ class SucursalTableUi extends CustomComponent {
 
 				Sucursal item = (Sucursal) sucursalGRD.getSelectedRow();
 
-				Sucursal itemNew = item.clone();
+				Sucursal itemNew = (Sucursal) item.clone();
 
 				SucursalFormUi ui = new SucursalFormUi(
 						StandardFormUi.COPY_MODE, cx, itemNew, this);

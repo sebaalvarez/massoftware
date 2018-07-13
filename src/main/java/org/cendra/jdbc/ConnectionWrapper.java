@@ -241,7 +241,9 @@ public class ConnectionWrapper {
 
 		String msg = buildPrintSQLStart(sql);
 
+		System.out.println("SQL 1 " + sql);
 		ResultSet resultSet = preparedStatement.executeQuery();
+		System.out.println("SQL 2 " + sql);
 		printSQLWarning(resultSet.getWarnings());
 
 		printSQLEnd(msg);

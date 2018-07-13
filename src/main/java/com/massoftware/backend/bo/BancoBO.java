@@ -15,13 +15,15 @@ public class BancoBO extends GenericBO<Banco> {
 	private final String ATT_NAME_NOMBRE = "nombre";
 	private final String ATT_NAME_NOMBRE_OFICIAL = "nombreOficial";
 	private final String ATT_NAME_CUIT = "cuit";
+	
+	private final String ORDER_BY = "codigo, nombre";
 
 	public BancoBO(DataSourceWrapper dataSourceWrapper, BackendContext cx) {
 		super(Banco.class, dataSourceWrapper, cx);
 	}
 
 	public List<Banco> findAll() throws Exception {
-		return findAll("codigo, nombre");
+		return findAll(ORDER_BY);
 	}
 
 	@Override

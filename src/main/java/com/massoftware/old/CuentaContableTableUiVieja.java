@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.custom.cuenta_contable;
+package com.massoftware.old;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class CuentaContableTableUi extends CustomComponent {
+class CuentaContableTableUiVieja extends CustomComponent {
 
 	/**
 	 * 
@@ -113,8 +113,12 @@ public class CuentaContableTableUi extends CustomComponent {
 
 	// ----------------------------------------------
 
-	public CuentaContableTableUi(Window window, BackendContext cx,
-			Usuario usuario, String pidFiltering, Object searchFilter,
+	public CuentaContableTableUiVieja(
+			Window window,
+			BackendContext cx,
+			Usuario usuario,
+			String pidFiltering,
+			Object searchFilter,
 			@SuppressWarnings("rawtypes") Property<CuentaContable> searchProperty) {
 		super();
 		try {
@@ -715,7 +719,7 @@ public class CuentaContableTableUi extends CustomComponent {
 
 			Window win = new Window();
 
-			CuentaContableFormUi ui = new CuentaContableFormUi(win, cx, this,
+			CuentaContableFormUiViejo ui = new CuentaContableFormUiViejo(win, cx, this,
 					ejercicioContable);
 
 			win.setCaption("Agragar cuenta contable");
@@ -747,7 +751,7 @@ public class CuentaContableTableUi extends CustomComponent {
 
 				Window win = new Window();
 
-				CuentaContableFormUi ui = new CuentaContableFormUi(win, cx,
+				CuentaContableFormUiViejo ui = new CuentaContableFormUiViejo(win, cx,
 						this, planDeCuenta, false);
 
 				win.setCaption("Modificar cuenta contable");
@@ -787,12 +791,12 @@ public class CuentaContableTableUi extends CustomComponent {
 				planDeCuentaNew.setCuentaContable(planDeCuenta
 						.getCuentaContable());
 				planDeCuentaNew.setNombre(planDeCuenta.getNombre());
-				planDeCuentaNew.setCuentaConApropiacion(planDeCuenta
-						.getCuentaConApropiacion());
+//				planDeCuentaNew.setCuentaConApropiacion(planDeCuenta
+//						.getCuentaConApropiacion());
 
 				Window win = new Window();
 
-				CuentaContableFormUi ui = new CuentaContableFormUi(win, cx,
+				CuentaContableFormUiViejo ui = new CuentaContableFormUiViejo(win, cx,
 						this, planDeCuentaNew);
 
 				win.setCaption("Copiar cuenta contable");
@@ -856,9 +860,9 @@ public class CuentaContableTableUi extends CustomComponent {
 						ejercicio = ejercicioContable.getEjercicio();
 					}
 
-					cx.buildCuentaContableBO().delete(item.getId(),
-							item.getCodigoCuenta(), ejercicio,
-							item.getCuentaContable());
+//					cx.buildCuentaContableBO().delete(item.getId(),
+//							item.getCodigoCuenta(), ejercicio,
+//							item.getCuentaContable());
 
 				} catch (DeleteForeingObjectConflictException e) {
 					LogAndNotification.print(e,
@@ -1054,9 +1058,11 @@ public class CuentaContableTableUi extends CustomComponent {
 				centroDeCostoHL
 						.setEnabled(centrosDeCostosContablesBIC.size() > 0);
 
-//				List<PuntoDeEquilibrio> puntosDeEquilibrio = cx.buildBO(PuntoDeEquilibrio.class).findAllOrderByPuntoDeEquilibrio(ejercicioContable.getEjercicio());
+				// List<PuntoDeEquilibrio> puntosDeEquilibrio =
+				// cx.buildBO(PuntoDeEquilibrio.class).findAllOrderByPuntoDeEquilibrio(ejercicioContable.getEjercicio());
 				@SuppressWarnings("unchecked")
-				List<PuntoDeEquilibrio> puntosDeEquilibrio = cx.buildBO(PuntoDeEquilibrio.class).findAll();
+				List<PuntoDeEquilibrio> puntosDeEquilibrio = cx.buildBO(
+						PuntoDeEquilibrio.class).findAll();
 				puntosDeEquilibrioBIC.removeAllItems();
 				for (PuntoDeEquilibrio puntoDeEquilibrio : puntosDeEquilibrio) {
 					puntosDeEquilibrioBIC.addBean(puntoDeEquilibrio);
@@ -1076,7 +1082,8 @@ public class CuentaContableTableUi extends CustomComponent {
 	protected void loadOptionsViewPort768x1024() {
 		try {
 
-			EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) cx.buildBO(EjercicioContable.class);
+			EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) cx
+					.buildBO(EjercicioContable.class);
 
 			List<EjercicioContable> ejerciciosContables = ejercicioContableBO
 					.findAll();
@@ -1087,8 +1094,7 @@ public class CuentaContableTableUi extends CustomComponent {
 
 			if (ejerciciosContablesBIC.size() > 0) {
 
-				EjercicioContable ejercicioContable = usuario
-						.getEjercicioContable();
+				EjercicioContable ejercicioContable = null; //usuario.getEjercicioContable();
 
 				if (ejercicioContable != null
 						&& ejercicioContable.getEjercicio() != null) {
@@ -1137,9 +1143,9 @@ public class CuentaContableTableUi extends CustomComponent {
 			PuntoDeEquilibrio puntoDeEquilibrio = (PuntoDeEquilibrio) puntoDeEquilibrioCBX
 					.getValue();
 
-			List<CuentaContable> planDeCuentas = cx.buildCuentaContableBO()
-					.findAllOrderByCodigoCuenta(ejercicioContable,
-							centroDeCostoContable, puntoDeEquilibrio);
+			List<CuentaContable> planDeCuentas = null;// cx.buildCuentaContableBO()
+//					.findAllOrderByCodigoCuenta(ejercicioContable,
+//							centroDeCostoContable, puntoDeEquilibrio);
 
 			planDeCuentasBIC.removeAllItems();
 			for (CuentaContable planDeCuenta : planDeCuentas) {
@@ -1180,9 +1186,9 @@ public class CuentaContableTableUi extends CustomComponent {
 			PuntoDeEquilibrio puntoDeEquilibrio = (PuntoDeEquilibrio) puntoDeEquilibrioCBX
 					.getValue();
 
-			List<CuentaContable> planDeCuentas = cx.buildCuentaContableBO()
-					.findAllOrderByCodigoCuenta(ejercicioContable,
-							centroDeCostoContable, puntoDeEquilibrio);
+			List<CuentaContable> planDeCuentas = null; //cx.buildCuentaContableBO()
+//					.findAllOrderByCodigoCuenta(ejercicioContable,
+//							centroDeCostoContable, puntoDeEquilibrio);
 
 			planDeCuentasBIC.removeAllItems();
 			for (CuentaContable planDeCuenta : planDeCuentas) {

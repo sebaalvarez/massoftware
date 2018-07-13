@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.custom.cuenta_contable;
+package com.massoftware.old;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -11,6 +11,9 @@ import org.vaadin.inputmask.InputMask;
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.ui.custom.validator.CuentaContableCodigoPadreUniqueValidator;
+import com.massoftware.frontend.ui.custom.validator.CuentaContableCodigoUniqueValidator;
+import com.massoftware.frontend.ui.custom.validator.CuentaContableCuentaContableUniqueValidator;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.validator.StringLengthValidatorInputMask;
 import com.massoftware.model.CentroDeCostoContable;
@@ -19,6 +22,7 @@ import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaContableEstado;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
+import com.massoftware.util.FormatCuentaContableCodigoCuenta;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -45,7 +49,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class CuentaContableFormUi extends CustomComponent {
+class CuentaContableFormUiViejo extends CustomComponent {
 
 	/**
 	 * 
@@ -56,7 +60,7 @@ public class CuentaContableFormUi extends CustomComponent {
 
 	private Window window;
 	private BackendContext cx;
-	private CuentaContableTableUi planDeCuentaTableUi;
+	private CuentaContableTableUiVieja planDeCuentaTableUi;
 
 	private boolean isForInsertForm;
 
@@ -108,8 +112,8 @@ public class CuentaContableFormUi extends CustomComponent {
 	protected String cuentaContableOriginal;
 	protected String codigoCuentaOriginal;
 
-	public CuentaContableFormUi(Window window, BackendContext cx,
-			CuentaContableTableUi planDeCuentaTableUi,
+	public CuentaContableFormUiViejo(Window window, BackendContext cx,
+			CuentaContableTableUiVieja planDeCuentaTableUi,
 			EjercicioContable ejercicioContable) {
 		super();
 		try {
@@ -123,8 +127,9 @@ public class CuentaContableFormUi extends CustomComponent {
 		}
 	}
 
-	public CuentaContableFormUi(Window window, BackendContext cx,
-			CuentaContableTableUi planDeCuentaTableUi, CuentaContable planDeCuenta) {
+	public CuentaContableFormUiViejo(Window window, BackendContext cx,
+			CuentaContableTableUiVieja planDeCuentaTableUi,
+			CuentaContable planDeCuenta) {
 		super();
 		try {
 			this.isForInsertForm = true;
@@ -137,9 +142,9 @@ public class CuentaContableFormUi extends CustomComponent {
 		}
 	}
 
-	public CuentaContableFormUi(Window window, BackendContext cx,
-			CuentaContableTableUi planDeCuentaTableUi, CuentaContable planDeCuenta,
-			boolean isForUpdateForm) {
+	public CuentaContableFormUiViejo(Window window, BackendContext cx,
+			CuentaContableTableUiVieja planDeCuentaTableUi,
+			CuentaContable planDeCuenta, boolean isForUpdateForm) {
 		super();
 		try {
 			this.isForInsertForm = isForUpdateForm;
@@ -208,7 +213,8 @@ public class CuentaContableFormUi extends CustomComponent {
 
 		// OPCIONES
 		planDeCuentaEstadoBIC = new BeanItemContainer<CuentaContableEstado>(
-				CuentaContableEstado.class, new ArrayList<CuentaContableEstado>());
+				CuentaContableEstado.class,
+				new ArrayList<CuentaContableEstado>());
 		centrosDeCostosContablesBIC = new BeanItemContainer<CentroDeCostoContable>(
 				CentroDeCostoContable.class,
 				new ArrayList<CentroDeCostoContable>());
@@ -279,7 +285,7 @@ public class CuentaContableFormUi extends CustomComponent {
 			planDeCuentaEstadoBIC.addBean(planDeCuentaEstado);
 		}
 
-		List<CostoDeVenta> costosDeVenta = cx.buildCostoDeVentaBO().findAll();
+		List<CostoDeVenta> costosDeVenta = cx.buildBO(CostoDeVenta.class).findAll();
 		// costosDeVentaBIC.removeAllItems();
 		for (CostoDeVenta costoDeVenta : costosDeVenta) {
 			costosDeVentaBIC.addBean(costoDeVenta);
@@ -397,10 +403,10 @@ public class CuentaContableFormUi extends CustomComponent {
 		codigoCuentaPadreNIM.setDigitsOptional(false);
 		// codigoCuentaNIM.setJitMasking(true);
 		codigoCuentaPadreNIM.extend(codigoCuentaPadreTXT);
-		ValidatorCuentaContableCodigoPadre stringPlanDeCuentaCodigoPadreValidator = new ValidatorCuentaContableCodigoPadre(
-				"", cx, planDeCuentaBI);
-		codigoCuentaPadreTXT
-				.addValidator(stringPlanDeCuentaCodigoPadreValidator);
+//		CuentaContableCodigoPadreUniqueValidator stringPlanDeCuentaCodigoPadreValidator = new CuentaContableCodigoPadreUniqueValidator(
+//				cx, planDeCuentaBI);
+//		codigoCuentaPadreTXT
+//				.addValidator(stringPlanDeCuentaCodigoPadreValidator);
 
 		// --------------------------------------------------
 
@@ -439,16 +445,16 @@ public class CuentaContableFormUi extends CustomComponent {
 		// codigoCuentaNIM.setJitMasking(true);
 		codigoCuentaNIM.extend(codigoCuentaTXT);
 
-		ValidatorCuentaContableCodigo stringPlanDeCuentaCodigoValidator;
+		CuentaContableCodigoUniqueValidator stringPlanDeCuentaCodigoValidator;
 
 		if (isForInsertForm) {
-			stringPlanDeCuentaCodigoValidator = new ValidatorCuentaContableCodigo(
-					"", cx, planDeCuentaBI);
+//			stringPlanDeCuentaCodigoValidator = new CuentaContableCodigoUniqueValidator(
+//					cx, planDeCuentaBI);
 		} else {
-			stringPlanDeCuentaCodigoValidator = new ValidatorCuentaContableCodigo(
-					"", cx, planDeCuentaBI, codigoCuentaOriginal);
+//			stringPlanDeCuentaCodigoValidator = new CuentaContableCodigoUniqueValidator(
+//					cx, planDeCuentaBI, codigoCuentaOriginal);
 		}
-		codigoCuentaTXT.addValidator(stringPlanDeCuentaCodigoValidator);
+//		codigoCuentaTXT.addValidator(stringPlanDeCuentaCodigoValidator);
 
 		// --------------------------------------------------
 
@@ -471,14 +477,14 @@ public class CuentaContableFormUi extends CustomComponent {
 		cuentaContableTXT.setImmediate(true);
 		cuentaContableTXT.setPropertyDataSource(planDeCuentaBI
 				.getItemProperty("cuentaContable"));
-		ValidatorCuentaContableCuentaContable stringPlanDeCuentaCuentaContableValidator = null;
+		CuentaContableCuentaContableUniqueValidator stringPlanDeCuentaCuentaContableValidator = null;
 
 		if (isForInsertForm) {
-			stringPlanDeCuentaCuentaContableValidator = new ValidatorCuentaContableCuentaContable(
-					"", cx, planDeCuentaBI);
+//			stringPlanDeCuentaCuentaContableValidator = new CuentaContableCuentaContableUniqueValidator(
+//					cx, planDeCuentaBI);
 		} else {
-			stringPlanDeCuentaCuentaContableValidator = new ValidatorCuentaContableCuentaContable(
-					"", cx, planDeCuentaBI, cuentaContableOriginal);
+//			stringPlanDeCuentaCuentaContableValidator = new CuentaContableCuentaContableUniqueValidator(
+//					cx, planDeCuentaBI, cuentaContableOriginal);
 		}
 		cuentaContableTXT
 				.addValidator(stringPlanDeCuentaCuentaContableValidator);
@@ -926,31 +932,34 @@ public class CuentaContableFormUi extends CustomComponent {
 
 		imputableCKB.addValueChangeListener(listener -> imputableCKBChange());
 
-		if (planDeCuentaBI.getBean().getImputable() == true) {
-			transitionBackB();
-		} else {
-			transitionB();
-		}
+//		if (planDeCuentaBI.getBean().getImputable() == true) {
+//			transitionBackB();
+//		} else {
+//			transitionB();
+//		}
 	}
 
 	protected void loadOptionsPostLoadModelStateView() throws Exception {
-		
-		List<CentroDeCostoContable> centrosDeCostosContables = ((CentroDeCostoContableBO) cx
-				.buildBO(CentroDeCostoContable.class))
-				.findAll(planDeCuentaBI.getBean().getEjercicioContable());
 
-//		List<CentroDeCostoContable> centrosDeCostosContables = cx
-//				.buildCentroDeCostoContableBO()
-//				.findAllOrderByCentroDeCostoContable(
-//						planDeCuentaBI.getBean().getEjercicioContable()
-//								.getEjercicio());
+		List<CentroDeCostoContable> centrosDeCostosContables = ((CentroDeCostoContableBO) cx
+				.buildBO(CentroDeCostoContable.class)).findAll(planDeCuentaBI
+				.getBean().getEjercicioContable());
+
+		// List<CentroDeCostoContable> centrosDeCostosContables = cx
+		// .buildCentroDeCostoContableBO()
+		// .findAllOrderByCentroDeCostoContable(
+		// planDeCuentaBI.getBean().getEjercicioContable()
+		// .getEjercicio());
 		centrosDeCostosContablesBIC.removeAllItems();
 		for (CentroDeCostoContable centroDeCostoContable : centrosDeCostosContables) {
 			centrosDeCostosContablesBIC.addBean(centroDeCostoContable);
 		}
 
-//		List<PuntoDeEquilibrio> puntosDeEquilibrio = cx.buildPuntoDeEquilibrioBO().findAllOrderByPuntoDeEquilibrio(planDeCuentaBI.getBean().getEjercicioContable().getEjercicio());
-		List<PuntoDeEquilibrio> puntosDeEquilibrio = ((PuntoDeEquilibrioBO)cx.buildBO(PuntoDeEquilibrio.class)).findAll(planDeCuentaBI.getBean().getEjercicioContable());
+		// List<PuntoDeEquilibrio> puntosDeEquilibrio =
+		// cx.buildPuntoDeEquilibrioBO().findAllOrderByPuntoDeEquilibrio(planDeCuentaBI.getBean().getEjercicioContable().getEjercicio());
+		List<PuntoDeEquilibrio> puntosDeEquilibrio = ((PuntoDeEquilibrioBO) cx
+				.buildBO(PuntoDeEquilibrio.class)).findAll(planDeCuentaBI
+				.getBean().getEjercicioContable());
 		puntosDeEquilibrioBIC.removeAllItems();
 		for (PuntoDeEquilibrio puntoDeEquilibrio : puntosDeEquilibrio) {
 			puntosDeEquilibrioBIC.addBean(puntoDeEquilibrio);
@@ -958,64 +967,66 @@ public class CuentaContableFormUi extends CustomComponent {
 
 		if (this.isForInsertForm) {
 
-			if (planDeCuentaEstadoBIC.size() > 0) {
-				planDeCuentaBI.getBean().setCuentaContableEstado(
-						planDeCuentaEstadoBIC.getIdByIndex(1));
-			}
-
-			if (centrosDeCostosContablesBIC.size() > 0) {
-				planDeCuentaBI.getBean().setCentroDeCostoContable(
-						centrosDeCostosContablesBIC.getIdByIndex(0));
-			}
-
-			if (puntosDeEquilibrioBIC.size() > 0) {
-				planDeCuentaBI.getBean().setPuntoDeEquilibrio(
-						puntosDeEquilibrioBIC.getIdByIndex(0));
-			}
-
-			if (costosDeVentaBIC.size() > 0) {
-				planDeCuentaBI.getBean().setCostoDeVenta(
-						costosDeVentaBIC.getIdByIndex(0));
-			}
+//			if (planDeCuentaEstadoBIC.size() > 0) {
+//				planDeCuentaBI.getBean().setCuentaContableEstado(
+//						planDeCuentaEstadoBIC.getIdByIndex(1));
+//			}
+//
+//			if (centrosDeCostosContablesBIC.size() > 0) {
+//				planDeCuentaBI.getBean().setCentroDeCostoContable(
+//						centrosDeCostosContablesBIC.getIdByIndex(0));
+//			}
+//
+//			if (puntosDeEquilibrioBIC.size() > 0) {
+//				planDeCuentaBI.getBean().setPuntoDeEquilibrio(
+//						puntosDeEquilibrioBIC.getIdByIndex(0));
+//			}
+//
+//			if (costosDeVentaBIC.size() > 0) {
+//				planDeCuentaBI.getBean().setCostoDeVenta(
+//						costosDeVentaBIC.getIdByIndex(0));
+//			}
 
 		}
 	}
 
 	public void loadOptionsCCC(CentroDeCostoContable centroDeCostoContableNew)
 			throws Exception {
-		
-		List<CentroDeCostoContable> centrosDeCostosContables = ((CentroDeCostoContableBO) cx
-				.buildBO(CentroDeCostoContable.class))
-				.findAll(planDeCuentaBI.getBean().getEjercicioContable());
 
-//		List<CentroDeCostoContable> centrosDeCostosContables = cx
-//				.buildCentroDeCostoContableBO()
-//				.findAllOrderByCentroDeCostoContable(
-//						planDeCuentaBI.getBean().getEjercicioContable()
-//								.getEjercicio());
+		List<CentroDeCostoContable> centrosDeCostosContables = ((CentroDeCostoContableBO) cx
+				.buildBO(CentroDeCostoContable.class)).findAll(planDeCuentaBI
+				.getBean().getEjercicioContable());
+
+		// List<CentroDeCostoContable> centrosDeCostosContables = cx
+		// .buildCentroDeCostoContableBO()
+		// .findAllOrderByCentroDeCostoContable(
+		// planDeCuentaBI.getBean().getEjercicioContable()
+		// .getEjercicio());
 		centrosDeCostosContablesBIC.removeAllItems();
 		for (CentroDeCostoContable centroDeCostoContable : centrosDeCostosContables) {
 			centrosDeCostosContablesBIC.addBean(centroDeCostoContable);
 		}
 
 		if (centrosDeCostosContablesBIC.size() > 0) {
-			planDeCuentaBI.getBean().setCentroDeCostoContable(
-					centroDeCostoContableNew);
+//			planDeCuentaBI.getBean().setCentroDeCostoContable(centroDeCostoContableNew);
 		}
 	}
 
 	public void loadOptionsPE(PuntoDeEquilibrio puntoDeEquilibrioNew)
 			throws Exception {
 
-//		List<PuntoDeEquilibrio> puntosDeEquilibrio = cx.buildPuntoDeEquilibrioBO().findAllOrderByPuntoDeEquilibrio(planDeCuentaBI.getBean().getEjercicioContable().getEjercicio());
-		List<PuntoDeEquilibrio> puntosDeEquilibrio = ((PuntoDeEquilibrioBO)cx.buildBO(PuntoDeEquilibrio.class)).findAll(planDeCuentaBI.getBean().getEjercicioContable());
+		// List<PuntoDeEquilibrio> puntosDeEquilibrio =
+		// cx.buildPuntoDeEquilibrioBO().findAllOrderByPuntoDeEquilibrio(planDeCuentaBI.getBean().getEjercicioContable().getEjercicio());
+		List<PuntoDeEquilibrio> puntosDeEquilibrio = ((PuntoDeEquilibrioBO) cx
+				.buildBO(PuntoDeEquilibrio.class)).findAll(planDeCuentaBI
+				.getBean().getEjercicioContable());
 		puntosDeEquilibrioBIC.removeAllItems();
 		for (PuntoDeEquilibrio puntoDeEquilibrio : puntosDeEquilibrio) {
 			puntosDeEquilibrioBIC.addBean(puntoDeEquilibrio);
 		}
 
 		if (puntosDeEquilibrioBIC.size() > 0) {
-			planDeCuentaBI.getBean().setPuntoDeEquilibrio(puntoDeEquilibrioNew);
+//			planDeCuentaBI.getBean().setPuntoDeEquilibrio(puntoDeEquilibrioNew);
 		}
 	}
 
@@ -1054,15 +1065,15 @@ public class CuentaContableFormUi extends CustomComponent {
 			ajustaPorInflacionCKB.validate();
 			planDeCuentaEstadoCB.validate();
 			cuentaConApropiacionCKB.validate();
-			if (planDeCuentaBI.getBean().getImputable() == false) {
-				planDeCuentaBI.getBean().setCentroDeCostoContable(null);
-				planDeCuentaBI.getBean().setCuentaAgrupadora(null);
-				planDeCuentaBI.getBean().setPorcentaje(null);
-				planDeCuentaBI.getBean().setPuntoDeEquilibrio(null);
-				planDeCuentaBI.getBean().setCostoDeVenta(null);
-			} else {
-				porcentajeTXT.validate();
-			}
+//			if (planDeCuentaBI.getBean().getImputable() == false) {
+//				planDeCuentaBI.getBean().setCentroDeCostoContable(null);
+//				planDeCuentaBI.getBean().setCuentaAgrupadora(null);
+//				planDeCuentaBI.getBean().setPorcentaje(null);
+//				planDeCuentaBI.getBean().setPuntoDeEquilibrio(null);
+//				planDeCuentaBI.getBean().setCostoDeVenta(null);
+//			} else {
+//				porcentajeTXT.validate();
+//			}
 
 			String msg = planDeCuentaBI.getBean().getEjercicioContable()
 					+ " "
@@ -1071,13 +1082,13 @@ public class CuentaContableFormUi extends CustomComponent {
 					+ planDeCuentaBI.getBean().getNombre();
 
 			if (isForInsertForm) {
-				cx.buildCuentaContableBO().insert(planDeCuentaBI.getBean());
+//				cx.buildBO(CuentaContable.class).insert(planDeCuentaBI.getBean());
 
 				msg = "Se agregó con éxito el \"Plan de cuenta: " + msg + "\".";
 
 			} else {
-				cx.buildCuentaContableBO().update(planDeCuentaBI.getBean(),
-						ejercicioOriginal, cuentaContableOriginal);
+//				cx.buildBO(CuentaContable.class).update(planDeCuentaBI.getBean(),
+//						ejercicioOriginal, cuentaContableOriginal);
 
 				msg = "Se modificó con éxito el \"Plan de cuenta: " + msg
 						+ "\".";
@@ -1105,11 +1116,11 @@ public class CuentaContableFormUi extends CustomComponent {
 
 	protected void imputableCKBChange() {
 		try {
-			if (planDeCuentaBI.getBean().getImputable() == true) {
-				transitionBackB();
-			} else {
-				transitionB();
-			}
+//			if (planDeCuentaBI.getBean().getImputable() == true) {
+//				transitionBackB();
+//			} else {
+//				transitionB();
+//			}
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -1163,10 +1174,11 @@ public class CuentaContableFormUi extends CustomComponent {
 
 			puntoDeEquilibrioCB.select(null);
 
-			Window win = new Window();			
-			
-//			CentroDeCostoContableFormUiViejo ui = new CentroDeCostoContableFormUiViejo(
-//					win, cx, this, ejercicioContable);777
+			Window win = new Window();
+
+			// CentroDeCostoContableFormUiViejo ui = new
+			// CentroDeCostoContableFormUiViejo(
+			// win, cx, this, ejercicioContable);777
 
 			win.setCaption("Agragar centro de costo contable");
 			win.setImmediate(true);
@@ -1177,7 +1189,7 @@ public class CuentaContableFormUi extends CustomComponent {
 			win.setModal(true);
 			win.center();
 			// win.addCloseShortcut(KeyCode.ESCAPE, null);
-//			win.setContent((Component) ui);777
+			// win.setContent((Component) ui);777
 			getUI().addWindow(win);
 			win.center();
 			win.focus();
@@ -1197,7 +1209,8 @@ public class CuentaContableFormUi extends CustomComponent {
 
 			Window win = new Window();
 
-//			PuntoDeEquilibrioFormUi ui = new PuntoDeEquilibrioFormUi(win, cx, this, ejercicioContable);
+			// PuntoDeEquilibrioFormUi ui = new PuntoDeEquilibrioFormUi(win, cx,
+			// this, ejercicioContable);
 
 			win.setCaption("Agragar punto de equilibrio");
 			win.setImmediate(true);
@@ -1208,7 +1221,7 @@ public class CuentaContableFormUi extends CustomComponent {
 			win.setModal(true);
 			win.center();
 			// win.addCloseShortcut(KeyCode.ESCAPE, null);
-//			win.setContent((Component) ui);
+			// win.setContent((Component) ui);
 			getUI().addWindow(win);
 			win.center();
 			win.focus();

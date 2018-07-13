@@ -1,12 +1,15 @@
-package com.massoftware.frontend.ui.windows.custom.cuenta_contable;
+package com.massoftware.frontend.ui.custom.validator;
 
+import com.massoftware.backend.bo.CuentaContableBO;
 import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.model.CuentaContable;
+import com.massoftware.model.CuentaContableFull;
+import com.massoftware.util.FormatCuentaContableCodigoCuenta;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
 
-public class ValidatorCuentaContableCodigoPadre extends
+public class CuentaContableCodigoPadreUniqueValidator extends
 		AbstractStringValidator {
 
 	/**
@@ -15,13 +18,12 @@ public class ValidatorCuentaContableCodigoPadre extends
 	private static final long serialVersionUID = -2108700714465550165L;
 	private BackendContext cx;
 
-	protected BeanItem<CuentaContable> planDeCuentaBI;
+	protected BeanItem<CuentaContableFull> cuentaContableBI;
 
-	public ValidatorCuentaContableCodigoPadre(String errorMessage,
-			BackendContext cx, BeanItem<CuentaContable> planDeCuentaBI) {
-		super(errorMessage);
+	public CuentaContableCodigoPadreUniqueValidator(BackendContext cx, BeanItem<CuentaContableFull> cuentaContableBI) {
+		super("");
 		this.cx = cx;
-		this.planDeCuentaBI = planDeCuentaBI;
+		this.cuentaContableBI = cuentaContableBI;
 	}
 
 	/**
@@ -48,17 +50,22 @@ public class ValidatorCuentaContableCodigoPadre extends
 				// chars[2], chars[3], chars[4], chars[5], chars[6],
 				// chars[7], chars[8], chars[9], chars[10]);
 
-				String codigoCuentaPadre2 = FormatCuentaContableCodigoCuenta
+				String codigoCuentaPadreFormateado = FormatCuentaContableCodigoCuenta
 						.format(codigoCuentaPadre);
 
 				this.setErrorMessage("El campo Integra es incorrecto, no existe una cuenta padre con la denominación ("
-						+ planDeCuentaBI.getBean().getEjercicioContable()
-						+ " - " + codigoCuentaPadre2 + ")");
+						+ cuentaContableBI.getBean().getEjercicioContable()
+						+ ") " + codigoCuentaPadreFormateado);
 
-				return cx.buildCuentaContableBO().ifExistsCodigoCuenta(
+				return ((CuentaContableBO)cx.buildBO(CuentaContable.class)).checkUniqueCodigoCuenta(
 						codigoCuentaPadre,
-						planDeCuentaBI.getBean().getEjercicioContable()
+						cuentaContableBI.getBean().getEjercicioContable()
 								.getEjercicio());
+				
+//				return cx.buildCuentaContableBO().ifExistsCodigoCuenta(
+//						codigoCuentaPadre,
+//						cuentaContableBI.getBean().getEjercicioContable()
+//								.getEjercicio());
 			} catch (Exception e) {
 				LogAndNotification.print(e);
 			}

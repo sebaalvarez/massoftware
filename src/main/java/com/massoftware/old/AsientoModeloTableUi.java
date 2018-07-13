@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.custom.asiento_modelo;
+package com.massoftware.old;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class AsientoModeloTableUi extends CustomComponent {
+class AsientoModeloTableUi extends CustomComponent {
 
 	/**
 	 * 
@@ -685,8 +685,7 @@ public class AsientoModeloTableUi extends CustomComponent {
 
 			if (ejerciciosContablesBIC.size() > 0) {
 
-				EjercicioContable ejercicioContable = usuario
-						.getEjercicioContable();
+				EjercicioContable ejercicioContable = null; //usuario.getEjercicioContable();
 
 				if (ejercicioContable != null
 						&& ejercicioContable.getEjercicio() != null) {
@@ -742,8 +741,7 @@ public class AsientoModeloTableUi extends CustomComponent {
 			EjercicioContable ejercicioContable = (EjercicioContable) ejercicioContableCBX
 					.getValue();
 
-			List<AsientoModelo> asientosModelo = cx.buildAsientoModeloBO()
-					.findAll(ejercicioContable.getEjercicio());
+			List<AsientoModelo> asientosModelo = null; //cx.buildAsientoModeloBO().findAll(ejercicioContable.getEjercicio());
 
 			asientosModeloBIC.removeAllItems();
 			for (AsientoModelo asientoModelo : asientosModelo) {

@@ -42,7 +42,7 @@ public class CentroDeCostoContableBO extends GenericBO<CentroDeCostoContable> {
 	
 	protected Integer maxValueInteger(String attName, CentroDeCostoContable dto) throws Exception {
 
-		String viewName = getViewName();
+		String viewName = getView();
 		String sql = "SELECT MAX(" + attName + ") + 1 FROM " + viewName + " WHERE ejercicioContable_ejercicio = ?";
 
 		ConnectionWrapper connectionWrapper = dataSourceWrapper
@@ -141,7 +141,7 @@ public class CentroDeCostoContableBO extends GenericBO<CentroDeCostoContable> {
 		String nameTableDB = getClassTableMSAnont(classModel);
 
 		String[] nameAtts = { "[EJERCICIO]", "[CENTRODECOSTOCONTABLE]",
-				"[NOMBRE]", "[ABREVIATURA], [PRUEBA]" };
+				"[NOMBRE]", "[ABREVIATURA]", "[PRUEBA]" };
 
 		Object ejercicioContable = Integer.class;
 		Object numero = Integer.class;

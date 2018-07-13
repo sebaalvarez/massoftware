@@ -1,8 +1,13 @@
 package com.massoftware.frontend.cx;
 
+import java.util.List;
+
 import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.frontend.ui.custom.windows.AsientoModeloItemTableUi;
+import com.massoftware.frontend.ui.custom.windows.AsientoTableUi;
 import com.massoftware.frontend.ui.custom.windows.CentroDeCostoContableTableUi;
 import com.massoftware.frontend.ui.custom.windows.CiudadTableUi;
+import com.massoftware.frontend.ui.custom.windows.CuentaContableTableUi;
 import com.massoftware.frontend.ui.custom.windows.EjercicioContableTableUi;
 import com.massoftware.frontend.ui.custom.windows.MonedaCotizacionTableUi;
 import com.massoftware.frontend.ui.custom.windows.ProvinciaTableUi;
@@ -12,8 +17,9 @@ import com.massoftware.frontend.ui.util.LogAndNotification;
 import com.massoftware.frontend.ui.util.window.StandardTableUi;
 import com.massoftware.frontend.ui.windows.custom.centro_de_costo_proyecto.CentroDeCostoProyectoTableUi;
 import com.massoftware.frontend.ui.windows.custom.chequera.ChequeraTableUi;
-import com.massoftware.frontend.ui.windows.custom.cuenta_contable.CuentaContableTableUi;
 import com.massoftware.frontend.ui.windows.custom.cuenta_de_fondo.CuentaDeFondoTableUi;
+import com.massoftware.model.Asiento;
+import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.model.Banco;
 import com.massoftware.model.BancoFirmante;
 import com.massoftware.model.Caja;
@@ -53,65 +59,76 @@ import com.vaadin.ui.Window;
 public class FrontendContext {
 
 	@SuppressWarnings("rawtypes")
-	public static void openWindows(boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar,
-			Component component, Class classModel, BackendContext cx,
-			Usuario usuario, String pidFiltering, Object searchFilter,
-			Property searchProperty) {
+	public static StandardTableUi openWindows(boolean paged,
+			boolean pagedCount, boolean pagedOrder, boolean shortcut,
+			boolean agregar, boolean modificar, boolean copiar,
+			boolean eliminar, Component component, Class classModel,
+			BackendContext cx, Usuario usuario, String pidFiltering,
+			Object valueFilter, Property searchProperty,
+			List<Object> otrosFiltros) {
 		try {
 			Window win = new Window();
+			StandardTableUi standardTableUi = null;
 
 			if (classModel == Zona.class) {
 
-				new StandardTableUi<Zona>(shortcut, agregar, modificar, copiar,
+				standardTableUi = new StandardTableUi<Zona>(paged, pagedCount,
+						pagedOrder, shortcut, agregar, modificar, copiar,
 						eliminar, win, cx, usuario, Zona.class, pidFiltering,
-						searchFilter, searchProperty);
+						valueFilter, searchProperty, otrosFiltros);
 
 			} else if (classModel == Pais.class) {
 
-				new StandardTableUi<Pais>(shortcut, agregar, modificar, copiar,
+				standardTableUi = new StandardTableUi<Pais>(paged, pagedCount,
+						pagedOrder, shortcut, agregar, modificar, copiar,
 						eliminar, win, cx, usuario, Pais.class, pidFiltering,
-						searchFilter, searchProperty);
+						valueFilter, searchProperty, otrosFiltros);
 
 			} else if (classModel == TipoCliente.class) {
 
-				new StandardTableUi<TipoCliente>(shortcut, agregar, modificar,
+				standardTableUi = new StandardTableUi<TipoCliente>(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario, TipoCliente.class,
-						pidFiltering, searchFilter, searchProperty);
+						pidFiltering, valueFilter, searchProperty, otrosFiltros);
 
 			} else if (classModel == TipoDocumentoAFIP.class) {
 
-				new StandardTableUi<TipoDocumentoAFIP>(shortcut, agregar,
-						modificar, copiar, eliminar, win, cx, usuario,
-						TipoDocumentoAFIP.class, pidFiltering, searchFilter,
-						searchProperty);
+				standardTableUi = new StandardTableUi<TipoDocumentoAFIP>(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario,
+						TipoDocumentoAFIP.class, pidFiltering, valueFilter,
+						searchProperty, otrosFiltros);
 
 			} else if (classModel == TipoCbteAFIP.class) {
 
-				new StandardTableUi<TipoCbteAFIP>(shortcut, agregar, modificar,
+				standardTableUi = new StandardTableUi<TipoCbteAFIP>(shortcut,
+						paged, pagedCount, pagedOrder, agregar, modificar,
 						copiar, eliminar, win, cx, usuario, TipoCbteAFIP.class,
-						pidFiltering, searchFilter, searchProperty);
+						pidFiltering, valueFilter, searchProperty, otrosFiltros);
 
 			} else if (classModel == MotivoComentario.class) {
 
-				new StandardTableUi<MotivoComentario>(shortcut, agregar,
-						modificar, copiar, eliminar, win, cx, usuario,
-						MotivoComentario.class, pidFiltering, searchFilter,
-						searchProperty);
+				standardTableUi = new StandardTableUi<MotivoComentario>(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario,
+						MotivoComentario.class, pidFiltering, valueFilter,
+						searchProperty, otrosFiltros);
 
 			} else if (classModel == MotivoNotaDeCredito.class) {
 
-				new StandardTableUi<MotivoNotaDeCredito>(shortcut, agregar,
+				standardTableUi = new StandardTableUi<MotivoNotaDeCredito>(
+						paged, pagedCount, pagedOrder, shortcut, agregar,
 						modificar, copiar, eliminar, win, cx, usuario,
-						MotivoNotaDeCredito.class, pidFiltering, searchFilter,
-						searchProperty);
+						MotivoNotaDeCredito.class, pidFiltering, valueFilter,
+						searchProperty, otrosFiltros);
 
 			} else if (classModel == CodigoConvenioMultilateral.class) {
 
-				new StandardTableUi<CodigoConvenioMultilateral>(shortcut,
-						agregar, modificar, copiar, eliminar, win, cx, usuario,
+				standardTableUi = new StandardTableUi<CodigoConvenioMultilateral>(
+						paged, pagedCount, pagedOrder, shortcut, agregar,
+						modificar, copiar, eliminar, win, cx, usuario,
 						CodigoConvenioMultilateral.class, pidFiltering,
-						searchFilter, searchProperty);
+						valueFilter, searchProperty, otrosFiltros);
 
 			} else if (classModel == EjercicioContable.class) {
 
@@ -120,160 +137,220 @@ public class FrontendContext {
 				// EjercicioContable.class, pidFiltering,
 				// searchFilter, searchProperty);
 
-				new EjercicioContableTableUi(shortcut, agregar, modificar,
+				standardTableUi = new EjercicioContableTableUi(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario,
-						EjercicioContable.class, pidFiltering, searchFilter,
+						EjercicioContable.class, pidFiltering, valueFilter,
 						searchProperty);
 
 			} else if (classModel == CentroDeCostoProyecto.class) {
 
-				new CentroDeCostoProyectoTableUi(shortcut, agregar, modificar,
+				standardTableUi = new CentroDeCostoProyectoTableUi(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario,
-						CentroDeCostoProyecto.class, pidFiltering,
-						searchFilter, searchProperty);
+						CentroDeCostoProyecto.class, pidFiltering, valueFilter,
+						searchProperty);
 
 			} else if (classModel == CentroDeCostoContable.class) {
 
-				new CentroDeCostoContableTableUi(shortcut, agregar, modificar,
+				standardTableUi = new CentroDeCostoContableTableUi(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario,
-						CentroDeCostoContable.class, pidFiltering,
-						searchFilter, searchProperty);
+						CentroDeCostoContable.class, pidFiltering, valueFilter,
+						searchProperty);
 
 			} else if (classModel == PuntoDeEquilibrio.class) {
 
-				new PuntoDeEquilibrioTableUi(shortcut, agregar, modificar,
+				standardTableUi = new PuntoDeEquilibrioTableUi(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario,
-						PuntoDeEquilibrio.class, pidFiltering, searchFilter,
+						PuntoDeEquilibrio.class, pidFiltering, valueFilter,
 						searchProperty);
 
 			} else if (classModel == Provincia.class) {
 
-				new ProvinciaTableUi(shortcut, agregar, modificar, copiar,
+				standardTableUi = new ProvinciaTableUi(paged, pagedCount,
+						pagedOrder, shortcut, agregar, modificar, copiar,
 						eliminar, win, cx, usuario, Provincia.class,
-						pidFiltering, searchFilter, searchProperty);
+						pidFiltering, valueFilter, searchProperty);
 
 			} else if (classModel == Ciudad.class) {
 
-				new CiudadTableUi(shortcut, agregar, modificar, copiar,
+				standardTableUi = new CiudadTableUi(paged, pagedCount,
+						pagedOrder, shortcut, agregar, modificar, copiar,
 						eliminar, win, cx, usuario, Ciudad.class, pidFiltering,
-						searchFilter, searchProperty);
+						valueFilter, searchProperty);
 
 			} else if (classModel == Sucursal.class) {
 
-				new StandardTableUi<Sucursal>(shortcut, agregar, modificar,
+				standardTableUi = new StandardTableUi<Sucursal>(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario, Sucursal.class,
-						pidFiltering, searchFilter, searchProperty);
+						pidFiltering, valueFilter, searchProperty, otrosFiltros);
 
 			} else if (classModel == SeguridadPuerta.class) {
 
-				new SeguridadPuertaTableUi(shortcut, agregar, modificar,
+				standardTableUi = new SeguridadPuertaTableUi(paged, pagedCount,
+						pagedOrder, shortcut, agregar, modificar, copiar,
+						eliminar, win, cx, usuario, SeguridadPuerta.class,
+						pidFiltering, valueFilter, searchProperty);
+
+			} else if (classModel == BancoFirmante.class) {
+
+				standardTableUi = new StandardTableUi<BancoFirmante>(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario,
-						SeguridadPuerta.class, pidFiltering, searchFilter,
-						searchProperty);
-
-			}  else if (classModel == BancoFirmante.class) {
-
-				new StandardTableUi<BancoFirmante>(shortcut, agregar,
-						modificar, copiar, eliminar, win, cx, usuario,
-						BancoFirmante.class, pidFiltering, searchFilter,
-						searchProperty);
+						BancoFirmante.class, pidFiltering, valueFilter,
+						searchProperty, otrosFiltros);
 
 			} else if (classModel == Banco.class) {
 
-				new StandardTableUi<Banco>(shortcut, agregar, modificar,
-						copiar, eliminar, win, cx, usuario, Banco.class,
-						pidFiltering, searchFilter, searchProperty);
+				standardTableUi = new StandardTableUi<Banco>(paged, pagedCount,
+						pagedOrder, shortcut, agregar, modificar, copiar,
+						eliminar, win, cx, usuario, Banco.class, pidFiltering,
+						valueFilter, searchProperty, otrosFiltros);
 
 			} else if (classModel == Caja.class) {
 
-				new StandardTableUi<Caja>(shortcut, agregar, modificar, copiar,
+				standardTableUi = new StandardTableUi<Caja>(paged, pagedCount,
+						pagedOrder, shortcut, agregar, modificar, copiar,
 						eliminar, win, cx, usuario, Caja.class, pidFiltering,
-						searchFilter, searchProperty);
+						valueFilter, searchProperty, otrosFiltros);
 
-			}  else if (classModel == MonedaAFIP.class) {
+			} else if (classModel == MonedaAFIP.class) {
 
-				new StandardTableUi<MonedaAFIP>(shortcut, agregar, modificar,
+				standardTableUi = new StandardTableUi<MonedaAFIP>(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario, MonedaAFIP.class,
-						pidFiltering, searchFilter, searchProperty);
+						pidFiltering, valueFilter, searchProperty, otrosFiltros);
 
 			} else if (classModel == Moneda.class) {
 
-				new StandardTableUi<Moneda>(shortcut, agregar, modificar,
+				standardTableUi = new StandardTableUi<Moneda>(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario, Moneda.class,
-						pidFiltering, searchFilter, searchProperty);
+						pidFiltering, valueFilter, searchProperty, otrosFiltros);
 
 			} else if (classModel == MonedaCotizacion.class) {
 
-				new MonedaCotizacionTableUi(shortcut, agregar,
-						modificar, copiar, eliminar, win, cx, usuario,
-						MonedaCotizacion.class, pidFiltering, searchFilter,
+				standardTableUi = new MonedaCotizacionTableUi(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario,
+						MonedaCotizacion.class, pidFiltering, valueFilter,
 						searchProperty);
 
-			}
+			} else if (classModel == AsientoModeloItem.class) {
 
-			else if (classModel == Talonario.class) {
+				// new StandardTableUi<AsientoModeloItem>(shortcut, agregar,
+				// modificar,
+				// copiar, eliminar, win, cx, usuario, AsientoModeloItem.class,
+				// pidFiltering, searchFilter, searchProperty);
 
-				new StandardTableUi<Talonario>(shortcut, agregar, modificar,
-						copiar, eliminar, win, cx, usuario, Talonario.class,
-						pidFiltering, searchFilter, searchProperty);
-
-			} else if (classModel == Deposito.class) {
-
-				new StandardTableUi<Deposito>(shortcut, agregar, modificar,
-						copiar, eliminar, win, cx, usuario, Deposito.class,
-						pidFiltering, searchFilter, searchProperty);
-
-			}  else if (classModel == TipoCbteControl.class) {
-
-				new StandardTableUi<TipoCbteControl>(shortcut, agregar,
-						modificar, copiar, eliminar, win, cx, usuario,
-						TipoCbteControl.class, pidFiltering, searchFilter,
-						searchProperty);
-
-			}else if (classModel == CuentaDeFondo.class) {
-
-				new CuentaDeFondoTableUi(shortcut, agregar, modificar, copiar,
-						eliminar, win, cx, usuario, CuentaDeFondoA.class,
-						pidFiltering, searchFilter, searchProperty);
-
-			} else if (classModel == CuentaDeFondoA.class) {
-
-				new StandardTableUi<CuentaDeFondoA>(shortcut, agregar,
-						modificar, copiar, eliminar, win, cx, usuario,
-						CuentaDeFondoA.class, pidFiltering, searchFilter,
+				standardTableUi = new AsientoModeloItemTableUi(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario,
+						AsientoModeloItem.class, pidFiltering, valueFilter,
 						searchProperty);
 
 			} else if (classModel == CuentaContable.class) {
 
-				new CuentaContableTableUi(win, cx, usuario, pidFiltering,
-						searchFilter, searchProperty);
+				// new StandardTableUi<CuentaContable>(shortcut, agregar,
+				// modificar,
+				// copiar, eliminar, win, cx, usuario, CuentaContable.class,
+				// pidFiltering, searchFilter, searchProperty);
+
+				standardTableUi = new CuentaContableTableUi(paged, pagedCount,
+						pagedOrder, shortcut, agregar, modificar, copiar,
+						eliminar, win, cx, usuario, CuentaContable.class,
+						pidFiltering, valueFilter, searchProperty, otrosFiltros);
+
+				// new CuentaContableTableUi(win, cx, usuario, pidFiltering,
+				// searchFilter, searchProperty);
+
+			} else if (classModel == Asiento.class) {
+
+				paged = true;
+				pagedCount = false;
+				pagedOrder = true;
+
+				standardTableUi = new AsientoTableUi(paged, pagedCount,
+						pagedOrder, shortcut, agregar, modificar, copiar,
+						eliminar, win, cx, usuario,
+						/* CentroDeCostoContable.class, */pidFiltering,
+						valueFilter, searchProperty);
+			}
+
+			else if (classModel == Talonario.class) {
+
+				standardTableUi = new StandardTableUi<Talonario>(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario, Talonario.class,
+						pidFiltering, valueFilter, searchProperty, otrosFiltros);
+
+			} else if (classModel == Deposito.class) {
+
+				standardTableUi = new StandardTableUi<Deposito>(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario, Deposito.class,
+						pidFiltering, valueFilter, searchProperty, otrosFiltros);
+
+			} else if (classModel == TipoCbteControl.class) {
+
+				standardTableUi = new StandardTableUi<TipoCbteControl>(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario,
+						TipoCbteControl.class, pidFiltering, valueFilter,
+						searchProperty, otrosFiltros);
+
+			} else if (classModel == CuentaDeFondo.class) {
+
+				standardTableUi = new CuentaDeFondoTableUi(paged, pagedCount,
+						pagedOrder, shortcut, agregar, modificar, copiar,
+						eliminar, win, cx, usuario, CuentaDeFondoA.class,
+						pidFiltering, valueFilter, searchProperty);
+
+			} else if (classModel == CuentaDeFondoA.class) {
+
+				standardTableUi = new StandardTableUi<CuentaDeFondoA>(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
+						copiar, eliminar, win, cx, usuario,
+						CuentaDeFondoA.class, pidFiltering, valueFilter,
+						searchProperty, otrosFiltros);
 
 			} else if (classModel == JurisdiccionConvenioMultilateral.class) {
 
-				new StandardTableUi<JurisdiccionConvenioMultilateral>(shortcut,
-						agregar, modificar, copiar, eliminar, win, cx, usuario,
+				standardTableUi = new StandardTableUi<JurisdiccionConvenioMultilateral>(
+						paged, pagedCount, pagedOrder, shortcut, agregar,
+						modificar, copiar, eliminar, win, cx, usuario,
 						JurisdiccionConvenioMultilateral.class, pidFiltering,
-						searchFilter, searchProperty);
+						valueFilter, searchProperty, otrosFiltros);
 
 			} else if (classModel == Ticket.class) {
 
-				new StandardTableUi<Ticket>(shortcut, agregar, modificar,
+				standardTableUi = new StandardTableUi<Ticket>(paged,
+						pagedCount, pagedOrder, shortcut, agregar, modificar,
 						copiar, eliminar, win, cx, usuario, Ticket.class,
-						pidFiltering, searchFilter, searchProperty);
+						pidFiltering, valueFilter, searchProperty, otrosFiltros);
 
 			} else if (classModel == Chequera.class) {
 
-				new ChequeraTableUi(shortcut, agregar, modificar, copiar,
+				standardTableUi = new ChequeraTableUi(paged, pagedCount,
+						pagedOrder, shortcut, agregar, modificar, copiar,
 						eliminar, win, cx, usuario, Chequera.class,
-						pidFiltering, searchFilter, searchProperty);
+						pidFiltering, valueFilter, searchProperty);
 
 			}
 
 			component.getUI().addWindow(win);
 
+			standardTableUi.filtrar();
+
+			return standardTableUi;
+
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
+		return null;
 	}
 
 }

@@ -12994,7 +12994,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .mytheme .v-window-header {
-	line-height: 36px;
+	line-height: 30px;
 	padding-left: 12px;
 	margin-right: 74px;
 	overflow: hidden;
@@ -13002,4 +13002,76 @@ div.v-layout.v-horizontal.v-widget {
 	white-space: nowrap;
 	background-color: #6aaef2;
 	color: white;
+}
+
+.mytheme .v-grid-column-header-content, .mytheme .v-grid-column-footer-content {
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 16px;
+	vertical-align: baseline;
+	font-size: 14px;
+	color: #197de1;
+}
+
+.mytheme .v-grid-cell {
+	display: block;
+	float: left;
+	padding: 7px;
+	white-space: nowrap;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	overflow: hidden;
+	font-size: 13px;
+	line-height: 16px;
+}
+
+.mytheme .v-tree-node-caption {
+	height: 28px;
+	line-height: 20px;
+	overflow: hidden;
+	white-space: nowrap;
+	vertical-align: top;
+	font-size: 13px;
+}
+
+.mytheme .v-panel-caption {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0 12px;
+	line-height: 20px;
+	border-bottom: 1px solid #d5d5d5;
+	background-color: #fafafa;
+	background-image: -webkit-linear-gradient(top, #fafafa 2%, #f6f6f6 98%);
+	background-image: linear, to bottom, #fafafa 2%, #f6f6f6 98%;
+	color: #464646;
+	font-weight: 400;
+	font-size: 13px;
+	-webkit-box-shadow: inset 0 1px 0 white, inset 0 -1px 0 #eeeeee;
+	box-shadow: inset 0 1px 0 white, inset 0 -1px 0 #eeeeee;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+	border-radius: 3px 3px 0 0;
+}
+
+.mytheme .v-margin-top {
+	padding-top: 10px;
+}
+
+.mytheme .v-margin-right {
+	padding-right: 10px;
+}
+
+.mytheme .v-margin-bottom {
+	padding-bottom: 10px;
+}
+
+.mytheme .v-margin-left {
+	padding-left: 10px;
+}
+
+.mytheme .v-spacing {
+	width: 10px;
+	height: 10px;
 }

@@ -21,8 +21,8 @@ public class VentasMenu extends AbstractMenu {
 	 */
 	private static final long serialVersionUID = 3092383121985372384L;
 
-	public VentasMenu(SessionVar sessionVar) {
-		super("Ventas", sessionVar);
+	public VentasMenu(String iconosPath, SessionVar sessionVar) {
+		super("Ventas", iconosPath, sessionVar);
 	}
 
 	protected MenuBar getMenuBar() {

@@ -13,6 +13,8 @@ public class BancoFirmanteBO extends GenericBO<BancoFirmante> {
 
 	private final String ATT_NAME_CODIGO = "codigo";
 	private final String ATT_NAME_NOMBRE = "nombre";
+	
+	private final String ORDER_BY = ATT_NAME_CODIGO + ", " + ATT_NAME_NOMBRE;
 
 	public BancoFirmanteBO(DataSourceWrapper dataSourceWrapper,
 			BackendContext cx) {
@@ -20,7 +22,7 @@ public class BancoFirmanteBO extends GenericBO<BancoFirmante> {
 	}
 
 	public List<BancoFirmante> findAll() throws Exception {
-		return findAll(ATT_NAME_CODIGO + ", " + ATT_NAME_NOMBRE);
+		return findAll(ORDER_BY);
 	}
 
 	@Override

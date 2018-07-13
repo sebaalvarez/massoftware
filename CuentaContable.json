@@ -1,0 +1,61 @@
+{
+  "type": "VerticalLayout",
+  "components": [
+    {
+      "component": {
+        "type": "TabSheet",
+        "id":"pestaniasTBS",
+        "components": [
+          {
+            "component": {
+              "type": "VerticalLayout",              
+              "width": "500px",          
+              "caption": "General",
+              "classModel": "com.massoftware.model.CuentaContableFull",
+              "attsNames": [
+                "ejercicioContable",
+                "codigoCuentaPadre",
+                "codigoCuenta",
+                "cuentaContable",
+                "nombre",
+                "imputable",
+                "ajustaPorInflacion",
+                "cuentaContableEstado",
+                "cuentaConApropiacion"
+              ]
+            }
+          }, 
+          {
+            "component": {
+              "type": "VerticalLayout",
+              "id":"pestaniaCC",
+              "width": "500px",          
+              "caption": "Centro de costos",
+              "classModel": "com.massoftware.model.CuentaContableFull",
+              "attsNames": [
+                "centroDeCostoContable",
+                "cuentaAgrupadora",
+                "porcentaje",
+                "puntoDeEquilibrio",
+                "costoDeVenta"
+              ]
+            }
+          }, 
+          {
+            "component": {
+              "type": "VerticalLayout",
+              "width": "500px",          
+              "caption": "Seguridad",
+              "classModel": "com.massoftware.model.CuentaContableFull",
+              "attsNames": [
+                "seguridadPuerta"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "margin": false,
+  "spacing": false
+}

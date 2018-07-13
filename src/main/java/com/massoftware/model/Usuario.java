@@ -4,7 +4,7 @@ public class Usuario extends EntityId implements Comparable<Usuario> {
 
 	private Integer numero;
 	private String nombre;
-	private EjercicioContable ejercicioContable;
+//	private EjercicioContable ejercicioContable;
 
 	public Usuario() {
 
@@ -32,13 +32,13 @@ public class Usuario extends EntityId implements Comparable<Usuario> {
 		this.nombre = nombre;
 	}
 
-	public EjercicioContable getEjercicioContable() {
-		return ejercicioContable;
-	}
-
-	public void setEjercicioContable(EjercicioContable ejercicioContable) {
-		this.ejercicioContable = ejercicioContable;
-	}
+//	public EjercicioContable getEjercicioContable() {
+//		return ejercicioContable;
+//	}
+//
+//	public void setEjercicioContable(EjercicioContable ejercicioContable) {
+//		this.ejercicioContable = ejercicioContable;
+//	}
 
 	// public void setterByArray(Object[] row) {
 	//

@@ -24,15 +24,17 @@ public class SeguridadPuertaTableUi extends StandardTableUi<SeguridadPuerta> {
 
 	public SeguridadModulo seguridadModuloFilter;
 
-	public SeguridadPuertaTableUi(boolean shortcut, boolean agregar,
+	public SeguridadPuertaTableUi(boolean paged, boolean pagedCount,
+			boolean pagedOrder, boolean shortcut, boolean agregar,
 			boolean modificar, boolean copiar, boolean eliminar, Window window,
 			BackendContext cx, Usuario usuario,
 			Class<SeguridadPuerta> classModel, String pidFiltering,
 			Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(shortcut, agregar, modificar, copiar, eliminar, window, cx,
-				usuario, classModel, pidFiltering, searchFilter, searchProperty);
+		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
+				copiar, eliminar, window, cx, usuario, classModel,
+				pidFiltering, searchFilter, searchProperty, null);
 
 		window.setWidth("1300px");
 
@@ -40,7 +42,7 @@ public class SeguridadPuertaTableUi extends StandardTableUi<SeguridadPuerta> {
 		hsplit.setSplitPosition(550, Unit.PIXELS);
 		this.setCompositionRoot(hsplit);
 
-		SeguridadModuloTableUi seguridadModuloTableUi = new SeguridadModuloTableUi(
+		SeguridadModuloTableUi seguridadModuloTableUi = new SeguridadModuloTableUi(false, false, false,
 				true, true, true, true, true, null, cx, usuario,
 				SeguridadModulo.class, null, null, null, this);
 
@@ -58,17 +60,16 @@ public class SeguridadPuertaTableUi extends StandardTableUi<SeguridadPuerta> {
 				.findAll(seguridadModuloFilter);
 
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected StandardFormUi openFormAgregar() throws Exception {
 
 		SeguridadPuerta item = SeguridadPuerta.class.newInstance();
 
-		item.setSeguridadModulo(seguridadModuloFilter);				
+		item.setSeguridadModulo(seguridadModuloFilter);
 
-		StandardFormUi<SeguridadPuerta> form = new StandardFormUi<SeguridadPuerta>(usuario,
-				classModel, StandardFormUi.INSERT_MODE, cx, this, item);
-		
+		StandardFormUi<SeguridadPuerta> form = new StandardFormUi<SeguridadPuerta>(
+				usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item);
 
 		return form;
 

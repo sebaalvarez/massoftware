@@ -2,6 +2,7 @@ package com.massoftware.frontend.ui.custom.menu;
 
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.ui.util.AbstractMenu;
+import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.model.Banco;
 import com.massoftware.model.BancoFirmante;
 import com.massoftware.model.Caja;
@@ -9,6 +10,7 @@ import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CentroDeCostoProyecto;
 import com.massoftware.model.Ciudad;
 import com.massoftware.model.CodigoConvenioMultilateral;
+import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Moneda;
@@ -30,8 +32,8 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class SuperMenu extends AbstractMenu {
 
-	public SuperMenu(SessionVar sessionVar) {
-		super("Super menu", sessionVar);
+	public SuperMenu(String iconosPath, SessionVar sessionVar) {
+		super("Super menu", iconosPath, sessionVar);
 	}
 
 	/**
@@ -63,6 +65,8 @@ public class SuperMenu extends AbstractMenu {
 				"Extends StandardTableUi + StandardFormUi", null);
 		MenuBar.MenuItem a25 = a2.addItem(
 				"Extends StandardTableUi + StandardFormUi + DOBLE PK", null);
+		MenuBar.MenuItem a26 = a2.addItem("Extends StandardTableUi + DOBLE PK", null);
+		MenuBar.MenuItem a27 = a2.addItem("Extends StandardTableUi + TRIPLE PK", null);
 
 		a11.addItem("Zonas", open(Zona.class));
 		a11.addItem("Países", open(Pais.class));
@@ -103,7 +107,11 @@ public class SuperMenu extends AbstractMenu {
 		a12.addItem("Sucursales ...", open(Sucursal.class));
 
 		a23.addItem("Puertas ...", open(SeguridadPuerta.class));
-		a23.addItem("Cotizaciones de monedas ...", open(MonedaCotizacion.class));
+		a26.addItem("Cotizaciones de monedas ...", open(MonedaCotizacion.class));
+		
+		a27.addItem("Modelos de asientos", open(AsientoModeloItem.class));
+		
+		a25.addItem("Plan de cuentas ...", open(CuentaContable.class));
 
 		return menubar;
 	}

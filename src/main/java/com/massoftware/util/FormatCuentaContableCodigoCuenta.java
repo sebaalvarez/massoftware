@@ -1,4 +1,4 @@
-package com.massoftware.frontend.ui.windows.custom.cuenta_contable;
+package com.massoftware.util;
 
 public class FormatCuentaContableCodigoCuenta {
 

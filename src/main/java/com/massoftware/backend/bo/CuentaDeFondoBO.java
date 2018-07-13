@@ -84,9 +84,9 @@ public class CuentaDeFondoBO extends GenericBO<CuentaDeFondo> {
 	@Override
 	public void checkUnique(String attName, Object value) throws Exception {
 
-		String viewNameOld = viewName;
+		String viewNameOld = this.getView();
 
-		viewName = "vCuentaDeFondoA";
+		String viewName = "vCuentaDeFondoA";
 
 		if (attName.equalsIgnoreCase(ATT_NAME_CODIGO)) {
 

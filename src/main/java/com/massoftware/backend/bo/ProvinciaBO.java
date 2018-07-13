@@ -41,7 +41,7 @@ public class ProvinciaBO extends GenericBO<Provincia> {
 	protected Integer maxValueInteger(String attName, Provincia dto)
 			throws Exception {
 
-		String viewName = getViewName();
+		String viewName = getView();
 		String sql = "SELECT MAX(" + attName + ") + 1 FROM " + viewName
 				+ " WHERE pais_codigo = ?";
 

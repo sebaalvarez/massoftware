@@ -52,32 +52,39 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 	private HorizontalLayout treeBarraDeHerramientasFila2;
 	private Button treeEliminarBTN;
 
-	public CuentaDeFondoTableUi(boolean shortcut, boolean agregar, boolean modificar,
-			boolean copiar, boolean eliminar, Window window, BackendContext cx,
-			Usuario usuario, Class<CuentaDeFondoA> classModel,
-			String pidFiltering, Object searchFilter,
+	public CuentaDeFondoTableUi(boolean paged, boolean pagedCount,
+			boolean pagedOrder, boolean shortcut, boolean agregar,
+			boolean modificar, boolean copiar, boolean eliminar, Window window,
+			BackendContext cx, Usuario usuario,
+			Class<CuentaDeFondoA> classModel, String pidFiltering,
+			Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(shortcut, agregar, modificar, copiar, eliminar, window, cx, usuario,
-				classModel, pidFiltering, searchFilter, searchProperty);
+		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
+				copiar, eliminar, window, cx, usuario, classModel,
+				pidFiltering, searchFilter, searchProperty, null);
 
 		init(agregar, modificar, copiar, eliminar, window, cx, usuario,
 				classModel, pidFiltering, searchFilter, searchProperty, null);
 
 	}
 
-	public CuentaDeFondoTableUi(boolean shortcut, boolean agregar, boolean modificar,
-			boolean copiar, boolean eliminar, Window window, BackendContext cx,
-			Usuario usuario, Class<CuentaDeFondoA> classModel,
-			String pidFiltering, Object searchFilter,
+	public CuentaDeFondoTableUi(boolean paged, boolean pagedCount,
+			boolean pagedOrder, boolean shortcut, boolean agregar,
+			boolean modificar, boolean copiar, boolean eliminar, Window window,
+			BackendContext cx, Usuario usuario,
+			Class<CuentaDeFondoA> classModel, String pidFiltering,
+			Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty,
 			ChequeraTableUi chequeraTableUi) {
 
-		super(shortcut, agregar, modificar, copiar, eliminar, window, cx, usuario,
-				classModel, pidFiltering, searchFilter, searchProperty);
+		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
+				copiar, eliminar, window, cx, usuario, classModel,
+				pidFiltering, searchFilter, searchProperty, null);
 
 		init(agregar, modificar, copiar, eliminar, window, cx, usuario,
-				classModel, pidFiltering, searchFilter, searchProperty, chequeraTableUi);
+				classModel, pidFiltering, searchFilter, searchProperty,
+				chequeraTableUi);
 
 	}
 
@@ -380,7 +387,7 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 
 	}
 
-	public void reloadData() throws Exception {
+	public void reloadData() {
 		try {
 
 			reloadDataTree();

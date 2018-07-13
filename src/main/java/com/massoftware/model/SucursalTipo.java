@@ -1,13 +1,6 @@
 package com.massoftware.model;
 
-
-public class SucursalTipo extends EntityId implements Cloneable,
-		Comparable<SucursalTipo> {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5467523425556875587L;
+public class SucursalTipo extends EntityId implements Comparable<SucursalTipo> {
 
 	private Integer codigo;
 	private String nombre;
@@ -30,17 +23,17 @@ public class SucursalTipo extends EntityId implements Cloneable,
 		this.nombre = nombre;
 	}
 
-	@Override
-	public SucursalTipo clone() throws CloneNotSupportedException {
-
-		SucursalTipo other = new SucursalTipo();
-
-		other.setId(this.getId());
-		other.setCodigo(this.getCodigo());
-		other.setNombre(this.getNombre());
-
-		return other;
-	}
+//	@Override
+//	public SucursalTipo clone() throws CloneNotSupportedException {
+//
+//		SucursalTipo other = new SucursalTipo();
+//
+//		other.setId(this.getId());
+//		other.setCodigo(this.getCodigo());
+//		other.setNombre(this.getNombre());
+//
+//		return other;
+//	}
 
 	@Override
 	public int compareTo(SucursalTipo o) {

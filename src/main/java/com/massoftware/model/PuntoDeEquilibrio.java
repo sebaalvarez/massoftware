@@ -140,8 +140,8 @@ public class PuntoDeEquilibrio extends EntityId implements
 	@Override
 	public String toString() {
 		if (this.getEjercicioContable() != null) {
-			return this.getEjercicioContable() + " - "
-					+ this.getPuntoDeEquilibrio() + " - " + this.getNombre();
+			return "(" + this.getEjercicioContable() + ") ("
+					+ this.getPuntoDeEquilibrio() + ") " + this.getNombre();
 		}
 		return this.getPuntoDeEquilibrio() + " - " + this.getNombre();
 	}

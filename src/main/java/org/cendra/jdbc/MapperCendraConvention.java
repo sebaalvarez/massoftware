@@ -47,15 +47,18 @@ class MapperCendraConvention {
 
 		for (int j = 0; j < c; j++) {
 			String colName = resultSet.getMetaData().getColumnName((j + 1));
-			Object cellValue = resultSet.getObject((j + 1));
+			if (colName.startsWith("x_") == false) {
+				Object cellValue = resultSet.getObject((j + 1));
 
-			if (j != 0) {
+				if (j != 0) {
 
-				atts(objClass, colName, obj, cellValue);
+					atts(objClass, colName, obj, cellValue);
 
-			} else {
-				objClass = Class.forName(cellValue.toString());
-				obj = objClass.newInstance();
+				} else {
+					objClass = Class.forName(cellValue.toString());
+					obj = objClass.newInstance();
+
+				}
 
 			}
 		}
@@ -287,7 +290,7 @@ class MapperCendraConvention {
 
 		if (cc.equals(String.class)) {
 			if (cellValue != null) {
-//				method.invoke(obj, cellValue);666
+				// method.invoke(obj, cellValue);666
 				invoke(cellValue, method, obj);
 			}
 		} else if (cc.equals(Boolean.class)) {
@@ -295,41 +298,41 @@ class MapperCendraConvention {
 			if (cellValue != null
 					&& cellValue.getClass().getName()
 							.equals(Integer.class.getName())) {
-				
+
 				Integer cellValueInteger = (Integer) cellValue;
 				Boolean b = (cellValue != null && cellValueInteger == 1);
-//				method.invoke(obj, b);			
+				// method.invoke(obj, b);
 				invoke(b, method, obj);
 			} else if (cellValue != null
 					&& cellValue.getClass().getName()
 							.equals(Short.class.getName())) {
-				
+
 				Short cellValueShort = (Short) cellValue;
 				Boolean b = (cellValue != null && cellValueShort == 1);
-//				method.invoke(obj, b);
+				// method.invoke(obj, b);
 				invoke(b, method, obj);
 			} else if (cellValue != null
 					&& cellValue.getClass().getName()
 							.equals(Long.class.getName())) {
-				
+
 				Long cellValueLong = (Long) cellValue;
 				Boolean b = (cellValue != null && cellValueLong == 1);
-//				method.invoke(obj, b);
+				// method.invoke(obj, b);
 				invoke(b, method, obj);
 			} else if (cellValue != null
 					&& cellValue.getClass().getName()
 							.equals(String.class.getName())) {
-				
+
 				String cellValueString = (String) cellValue;
 				Boolean b = (cellValue != null && (cellValueString
 						.equalsIgnoreCase("true")
 						|| cellValueString.equalsIgnoreCase("t") || cellValueString
 						.equalsIgnoreCase("1")));
-//				method.invoke(obj, b);
+				// method.invoke(obj, b);
 				invoke(b, method, obj);
 			} else {
 				if (cellValue != null) {
-//					method.invoke(obj, cellValue);
+					// method.invoke(obj, cellValue);
 					invoke(cellValue, method, obj);
 				}
 			}

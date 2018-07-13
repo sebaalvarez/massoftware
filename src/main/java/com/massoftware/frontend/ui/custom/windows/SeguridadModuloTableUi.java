@@ -14,25 +14,28 @@ import com.vaadin.ui.Window;
 public class SeguridadModuloTableUi extends StandardTableUi<SeguridadModulo> {
 
 	private SeguridadPuertaTableUi seguridadPuertaTableUi;
-	
+
 	@SuppressWarnings("rawtypes")
-	public SeguridadModuloTableUi(boolean shortcut, boolean agregar, boolean modificar,
-			boolean copiar, boolean eliminar, Window window, BackendContext cx,
-			Usuario usuario, Class<SeguridadModulo> classModel,
-			String pidFiltering, Object searchFilter, Property searchProperty,
+	public SeguridadModuloTableUi(boolean paged, boolean pagedCount,
+			boolean pagedOrder, boolean shortcut, boolean agregar,
+			boolean modificar, boolean copiar, boolean eliminar, Window window,
+			BackendContext cx, Usuario usuario,
+			Class<SeguridadModulo> classModel, String pidFiltering,
+			Object searchFilter, Property searchProperty,
 			SeguridadPuertaTableUi seguridadPuertaTableUi) {
 
-		super(shortcut, agregar, modificar, copiar, eliminar, window, cx, usuario,
-				classModel, pidFiltering, searchFilter, searchProperty);
-		
+		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
+				false, eliminar, window, cx, usuario, classModel, pidFiltering,
+				searchFilter, searchProperty, null);
+
 		this.seguridadPuertaTableUi = seguridadPuertaTableUi;
 
 		this.itemsGRD.addItemClickListener(new ItemClickListener() {
 			@Override
 			public void itemClick(ItemClickEvent event) {
-//				if (event.isDoubleClick()) {					
-					reloadDataSeguridadPuerta(event.getItemId());					
-//				}
+				// if (event.isDoubleClick()) {
+				reloadDataSeguridadPuerta(event.getItemId());
+				// }
 			}
 		});
 

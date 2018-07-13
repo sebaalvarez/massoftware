@@ -3,6 +3,7 @@ package com.massoftware.frontend.ui.util.window;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.cendra.ex.crud.InsertDuplicateException;
@@ -19,7 +20,6 @@ import com.massoftware.frontend.ui.util.xmd.annotation.FieldAutoMaxValueAnont;
 import com.massoftware.frontend.ui.util.xmd.annotation.FieldCBBox;
 import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
 import com.massoftware.model.Entity;
-import com.massoftware.model.SeguridadPuerta;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
@@ -58,7 +58,7 @@ public class StandardFormUi<T> extends CustomComponent {
 	protected String msg;
 	protected String dtoLabel;
 	public Object originalDTO;
-	protected BeanItem<T> dtoBI;
+	public BeanItem<T> dtoBI;
 	protected Class<T> classModel;
 	protected Usuario usuario;
 
@@ -115,7 +115,7 @@ public class StandardFormUi<T> extends CustomComponent {
 	@SuppressWarnings("rawtypes")
 	private void init(Usuario usuario, Class<T> classModel, String mode,
 			BackendContext cx, StandardTableUi tableUi, T object) {
-		try {
+		try {			
 
 			this.tableUi = tableUi;
 
@@ -169,6 +169,7 @@ public class StandardFormUi<T> extends CustomComponent {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void shortcutListener(Object target) {
 		
 		if (target instanceof TextField) {
@@ -177,11 +178,12 @@ public class StandardFormUi<T> extends CustomComponent {
 			Field[] fields = classModel.getDeclaredFields();
 			for (Field field : fields) {
 				if (isCBBox(field)) {
-					if (txt.getDescription().equals(getLabel(field))) {
-						FrontendContext.openWindows(true, true, true, true, true, this,
+					if (txt.getDescription().equals(getLabel(field))) {											
+						
+						FrontendContext.openWindows(false, false, false, true, true, true, true, true, this,
 								field.getType(), cx, usuario, getCBBoxAttName(field),
 								((TextField) target).getValue(),
-								dtoBI.getItemProperty(field.getName()));
+								dtoBI.getItemProperty(field.getName()), getOtrosFiltros());
 					}
 				}
 			}
@@ -190,6 +192,11 @@ public class StandardFormUi<T> extends CustomComponent {
 		}
 		
 		
+	}
+	
+	@SuppressWarnings("rawtypes")
+	protected List getOtrosFiltros(){
+		return null;
 	}
 
 	private void exit() {
@@ -385,6 +392,11 @@ public class StandardFormUi<T> extends CustomComponent {
 		validateAllFields(rootVL);
 
 	}
+	
+	protected void validateAllFields() throws Exception {
+		validateAllFields(rootVL);
+	}
+	
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void validateAllFields(AbstractComponentContainer componentContainer)

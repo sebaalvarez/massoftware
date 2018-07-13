@@ -1,4 +1,4 @@
-package com.massoftware.backend.bo;
+package com.massoftware.old;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,13 +10,13 @@ import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
 
-import com.massoftware.frontend.ui.windows.custom.cuenta_contable.FormatCuentaContableCodigoCuenta;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
+import com.massoftware.util.FormatCuentaContableCodigoCuenta;
 
-public class CuentaContableOldBO {
+class ViejoCuentaContableBO {
 
 	private DataSourceWrapper dataSourceWrapper;
 
@@ -30,7 +30,7 @@ public class CuentaContableOldBO {
 	private final String SQL_MS_3 = "UPDATE [dbo].[PlanDeCuentas] SET [CUENTACONTABLE] = ?, [CUENTAINTEGRADORA] = ?, [C1] = ?, [C2] = ?, [C3] = ?, [C4] = ?, [C5] = ?, [C6] = ?, [CUENTADEJERARQUIAIND] = ?, [NOMBRE] = ?, [IMPUTABLE] = ?, [APROPIA] = ?, [AJUSTEINF] = ?, [DOORNO] = ?, [ESTADO] = ?, [CENTRODECOSTOCONTABLE] = ?, [PUNTODEEQUILIBRIO] = ?, [COSTODEVENTA] = ?, [CUENTAAGRUPADORA] = ?, [PORCENTAJE] = ?, [EJERCICIO] = ? WHERE [EJERCICIO] = ? AND [CUENTACONTABLE] = ?;";
 	private final String SQL_MS_4 = "DELETE FROM [dbo].[PlanDeCuentas] WHERE [EJERCICIO] = ? AND [CUENTACONTABLE] = ?";
 
-	public CuentaContableOldBO(DataSourceWrapper dataSourceWrapper) {
+	public ViejoCuentaContableBO(DataSourceWrapper dataSourceWrapper) {
 		super();
 		this.dataSourceWrapper = dataSourceWrapper;
 	}
@@ -573,38 +573,38 @@ public class CuentaContableOldBO {
 					nombre = String.class;
 				}
 				Object imputable = null;
-				if (item.getImputable() != null) {
-					imputable = item.getImputable();
-				} else {
-					imputable = Boolean.class;
-				}
+//				if (item.getImputable() != null) {
+//					imputable = item.getImputable();
+//				} else {
+//					imputable = Boolean.class;
+//				}
 				Object ajustaPorInflacion = null;
-				if (item.getAjustaPorInflacion() != null) {
-					ajustaPorInflacion = item.getAjustaPorInflacion();
-				} else {
-					ajustaPorInflacion = Boolean.class;
-				}
+//				if (item.getAjustaPorInflacion() != null) {
+//					ajustaPorInflacion = item.getAjustaPorInflacion();
+//				} else {
+//					ajustaPorInflacion = Boolean.class;
+//				}
 				Object planDeCuentaEstado = null;
-				if (item.getCuentaContableEstado() != null
-						&& item.getCuentaContableEstado().getId() != null) {
-					planDeCuentaEstado = item.getCuentaContableEstado().getId();
-				} else {
-					planDeCuentaEstado = String.class;
-				}
+//				if (item.getCuentaContableEstado() != null
+//						&& item.getCuentaContableEstado().getId() != null) {
+//					planDeCuentaEstado = item.getCuentaContableEstado().getId();
+//				} else {
+//					planDeCuentaEstado = String.class;
+//				}
 				Object cuentaConApropiacion = null;
-				if (item.getCuentaConApropiacion() != null) {
-					cuentaConApropiacion = item.getCuentaConApropiacion();
-				} else {
-					cuentaConApropiacion = Boolean.class;
-				}
+//				if (item.getCuentaConApropiacion() != null) {
+//					cuentaConApropiacion = item.getCuentaConApropiacion();
+//				} else {
+//					cuentaConApropiacion = Boolean.class;
+//				}
 				Object centroDeCostoContable = null;
-				if (item.getCentroDeCostoContable() != null
-						&& item.getCentroDeCostoContable().getId() != null) {
-					centroDeCostoContable = item.getCentroDeCostoContable()
-							.getId();
-				} else {
-					centroDeCostoContable = String.class;
-				}
+//				if (item.getCentroDeCostoContable() != null
+//						&& item.getCentroDeCostoContable().getId() != null) {
+//					centroDeCostoContable = item.getCentroDeCostoContable()
+//							.getId();
+//				} else {
+//					centroDeCostoContable = String.class;
+//				}
 				Object cuentaAgrupadora = null;
 				if (item.getCuentaAgrupadora() != null) {
 					cuentaAgrupadora = item.getCuentaAgrupadora();
@@ -618,19 +618,19 @@ public class CuentaContableOldBO {
 					porcentaje = Double.class;
 				}
 				Object puntoDeEquilibrio = null;
-				if (item.getPuntoDeEquilibrio() != null
-						&& item.getPuntoDeEquilibrio().getId() != null) {
-					puntoDeEquilibrio = item.getPuntoDeEquilibrio().getId();
-				} else {
-					puntoDeEquilibrio = String.class;
-				}
+//				if (item.getPuntoDeEquilibrio() != null
+//						&& item.getPuntoDeEquilibrio().getId() != null) {
+//					puntoDeEquilibrio = item.getPuntoDeEquilibrio().getId();
+//				} else {
+//					puntoDeEquilibrio = String.class;
+//				}
 				Object costoDeVenta = null;
-				if (item.getCostoDeVenta() != null
-						&& item.getCostoDeVenta().getId() != null) {
-					costoDeVenta = item.getCostoDeVenta().getId();
-				} else {
-					costoDeVenta = String.class;
-				}
+//				if (item.getCostoDeVenta() != null
+//						&& item.getCostoDeVenta().getId() != null) {
+//					costoDeVenta = item.getCostoDeVenta().getId();
+//				} else {
+//					costoDeVenta = String.class;
+//				}
 
 				int rows = -1;
 
@@ -770,80 +770,80 @@ public class CuentaContableOldBO {
 
 			// [IMPUTABLE],
 			Object imputable = null;
-			if (item.getImputable() != null) {
-				if (item.getImputable() == true) {
-					imputable = "S";
-				} else {
-					imputable = "N";
-				}
-			} else {
-				imputable = String.class;
-			}
+//			if (item.getImputable() != null) {
+////				if (item.getImputable() == true) {
+////					imputable = "S";
+////				} else {
+////					imputable = "N";
+////				}
+//			} else {
+//				imputable = String.class;
+//			}
 
 			// [APROPIA],
 			Object cuentaConApropiacion = null;
-			if (item.getCuentaConApropiacion() != null) {
-				if (item.getCuentaConApropiacion() == true) {
-					cuentaConApropiacion = (short) 1;
-				} else {
-					cuentaConApropiacion = (short) 0;
-				}
-			} else {
-				cuentaConApropiacion = Short.class;
-			}
+//			if (item.getCuentaConApropiacion() != null) {
+//				if (item.getCuentaConApropiacion() == true) {
+//					cuentaConApropiacion = (short) 1;
+//				} else {
+//					cuentaConApropiacion = (short) 0;
+//				}
+//			} else {
+//				cuentaConApropiacion = Short.class;
+//			}
 
 			// [AJUSTEINF],
 			Object ajustaPorInflacion = null;
-			if (item.getAjustaPorInflacion() != null) {
-				if (item.getAjustaPorInflacion() == true) {
-					ajustaPorInflacion = "S";
-				} else {
-					ajustaPorInflacion = "N";
-				}
-			} else {
-				ajustaPorInflacion = String.class;
-			}
+//			if (item.getAjustaPorInflacion() != null) {
+//				if (item.getAjustaPorInflacion() == true) {
+//					ajustaPorInflacion = "S";
+//				} else {
+//					ajustaPorInflacion = "N";
+//				}
+//			} else {
+//				ajustaPorInflacion = String.class;
+//			}
 
 			// [DOORNO] ???????????????????????????
 			Object DOORNO = 0;
 
 			// [ESTADO]
 			Object planDeCuentaEstado = null;
-			if (item.getCuentaContableEstado() != null
-					&& item.getCuentaContableEstado().getCodigo() != null) {
-				planDeCuentaEstado = item.getCuentaContableEstado().getCodigo();
-			} else {
-				planDeCuentaEstado = Integer.class;
-			}
+//			if (item.getCuentaContableEstado() != null
+//					&& item.getCuentaContableEstado().getCodigo() != null) {
+//				planDeCuentaEstado = item.getCuentaContableEstado().getCodigo();
+//			} else {
+//				planDeCuentaEstado = Integer.class;
+//			}
 
 			// [CENTRODECOSTOCONTABLE]
 			Object centroDeCostoContable = null;
-			if (item.getCentroDeCostoContable() != null
-					&& item.getCentroDeCostoContable().getNumero() != null) {
-				centroDeCostoContable = item.getCentroDeCostoContable()
-						.getNumero();
-			} else {
-				centroDeCostoContable = Integer.class;
-			}
+//			if (item.getCentroDeCostoContable() != null
+//					&& item.getCentroDeCostoContable().getNumero() != null) {
+//				centroDeCostoContable = item.getCentroDeCostoContable()
+//						.getNumero();
+//			} else {
+//				centroDeCostoContable = Integer.class;
+//			}
 
 			// [PUNTODEEQUILIBRIO]
 			Object puntoDeEquilibrio = null;
-			if (item.getPuntoDeEquilibrio() != null
-					&& item.getPuntoDeEquilibrio().getPuntoDeEquilibrio() != null) {
-				puntoDeEquilibrio = item.getPuntoDeEquilibrio()
-						.getPuntoDeEquilibrio();
-			} else {
-				puntoDeEquilibrio = Integer.class;
-			}
+//			if (item.getPuntoDeEquilibrio() != null
+//					&& item.getPuntoDeEquilibrio().getPuntoDeEquilibrio() != null) {
+//				puntoDeEquilibrio = item.getPuntoDeEquilibrio()
+//						.getPuntoDeEquilibrio();
+//			} else {
+//				puntoDeEquilibrio = Integer.class;
+//			}
 
 			// [COSTODEVENTA]
 			Object costoDeVenta = null;
-			if (item.getCostoDeVenta() != null
-					&& item.getCostoDeVenta().getCodigo() != null) {
-				costoDeVenta = item.getCostoDeVenta().getCodigo();
-			} else {
-				costoDeVenta = Integer.class;
-			}
+//			if (item.getCostoDeVenta() != null
+//					&& item.getCostoDeVenta().getCodigo() != null) {
+//				costoDeVenta = item.getCostoDeVenta().getCodigo();
+//			} else {
+//				costoDeVenta = Integer.class;
+//			}
 
 			// [CUENTAAGRUPADORA]
 			Object cuentaAgrupadora = null;
@@ -953,37 +953,37 @@ public class CuentaContableOldBO {
 				nombre = String.class;
 			}
 			Object imputable = null;
-			if (item.getImputable() != null) {
-				imputable = item.getImputable();
-			} else {
-				imputable = Boolean.class;
-			}
+//			if (item.getImputable() != null) {
+//				imputable = item.getImputable();
+//			} else {
+//				imputable = Boolean.class;
+//			}
 			Object ajustaPorInflacion = null;
-			if (item.getAjustaPorInflacion() != null) {
-				ajustaPorInflacion = item.getAjustaPorInflacion();
-			} else {
-				ajustaPorInflacion = Boolean.class;
-			}
+//			if (item.getAjustaPorInflacion() != null) {
+//				ajustaPorInflacion = item.getAjustaPorInflacion();
+//			} else {
+//				ajustaPorInflacion = Boolean.class;
+//			}
 			Object planDeCuentaEstado = null;
-			if (item.getCuentaContableEstado() != null
-					&& item.getCuentaContableEstado().getId() != null) {
-				planDeCuentaEstado = item.getCuentaContableEstado().getId();
-			} else {
-				planDeCuentaEstado = String.class;
-			}
+//			if (item.getCuentaContableEstado() != null
+//					&& item.getCuentaContableEstado().getId() != null) {
+//				planDeCuentaEstado = item.getCuentaContableEstado().getId();
+//			} else {
+//				planDeCuentaEstado = String.class;
+//			}
 			Object cuentaConApropiacion = null;
-			if (item.getCuentaConApropiacion() != null) {
-				cuentaConApropiacion = item.getCuentaConApropiacion();
-			} else {
-				cuentaConApropiacion = Boolean.class;
-			}
+//			if (item.getCuentaConApropiacion() != null) {
+//				cuentaConApropiacion = item.getCuentaConApropiacion();
+//			} else {
+//				cuentaConApropiacion = Boolean.class;
+//			}
 			Object centroDeCostoContable = null;
-			if (item.getCentroDeCostoContable() != null
-					&& item.getCentroDeCostoContable().getId() != null) {
-				centroDeCostoContable = item.getCentroDeCostoContable().getId();
-			} else {
-				centroDeCostoContable = String.class;
-			}
+//			if (item.getCentroDeCostoContable() != null
+//					&& item.getCentroDeCostoContable().getId() != null) {
+//				centroDeCostoContable = item.getCentroDeCostoContable().getId();
+//			} else {
+//				centroDeCostoContable = String.class;
+//			}
 			Object cuentaAgrupadora = null;
 			if (item.getCuentaAgrupadora() != null) {
 				cuentaAgrupadora = item.getCuentaAgrupadora();
@@ -997,19 +997,19 @@ public class CuentaContableOldBO {
 				porcentaje = Double.class;
 			}
 			Object puntoDeEquilibrio = null;
-			if (item.getPuntoDeEquilibrio() != null
-					&& item.getPuntoDeEquilibrio().getId() != null) {
-				puntoDeEquilibrio = item.getPuntoDeEquilibrio().getId();
-			} else {
-				puntoDeEquilibrio = String.class;
-			}
+//			if (item.getPuntoDeEquilibrio() != null
+//					&& item.getPuntoDeEquilibrio().getId() != null) {
+//				puntoDeEquilibrio = item.getPuntoDeEquilibrio().getId();
+//			} else {
+//				puntoDeEquilibrio = String.class;
+//			}
 			Object costoDeVenta = null;
-			if (item.getCostoDeVenta() != null
-					&& item.getCostoDeVenta().getId() != null) {
-				costoDeVenta = item.getCostoDeVenta().getId();
-			} else {
-				costoDeVenta = String.class;
-			}
+//			if (item.getCostoDeVenta() != null
+//					&& item.getCostoDeVenta().getId() != null) {
+//				costoDeVenta = item.getCostoDeVenta().getId();
+//			} else {
+//				costoDeVenta = String.class;
+//			}
 
 			// ------------------------------------------------------
 
@@ -1144,81 +1144,81 @@ public class CuentaContableOldBO {
 
 			// [IMPUTABLE],
 			Object imputableArg = null;
-			if (item.getImputable() != null) {
-				if (item.getImputable() == true) {
-					imputableArg = "S";
-				} else {
-					imputableArg = "N";
-				}
-			} else {
-				imputableArg = String.class;
-			}
+//			if (item.getImputable() != null) {
+//				if (item.getImputable() == true) {
+//					imputableArg = "S";
+//				} else {
+//					imputableArg = "N";
+//				}
+//			} else {
+//				imputableArg = String.class;
+//			}
 
 			// [APROPIA],
 			Object cuentaConApropiacionArg = null;
-			if (item.getCuentaConApropiacion() != null) {
-				if (item.getCuentaConApropiacion() == true) {
-					cuentaConApropiacionArg = (short) 1;
-				} else {
-					cuentaConApropiacionArg = (short) 0;
-				}
-			} else {
-				cuentaConApropiacionArg = Short.class;
-			}
+//			if (item.getCuentaConApropiacion() != null) {
+//				if (item.getCuentaConApropiacion() == true) {
+//					cuentaConApropiacionArg = (short) 1;
+//				} else {
+//					cuentaConApropiacionArg = (short) 0;
+//				}
+//			} else {
+//				cuentaConApropiacionArg = Short.class;
+//			}
 
 			// [AJUSTEINF],
 			Object ajustaPorInflacionArg = null;
-			if (item.getAjustaPorInflacion() != null) {
-				if (item.getAjustaPorInflacion() == true) {
-					ajustaPorInflacionArg = "S";
-				} else {
-					ajustaPorInflacionArg = "N";
-				}
-			} else {
-				ajustaPorInflacionArg = String.class;
-			}
+//			if (item.getAjustaPorInflacion() != null) {
+//				if (item.getAjustaPorInflacion() == true) {
+//					ajustaPorInflacionArg = "S";
+//				} else {
+//					ajustaPorInflacionArg = "N";
+//				}
+//			} else {
+//				ajustaPorInflacionArg = String.class;
+//			}
 
 			// [DOORNO] ???????????????????????????
 			Object DOORNO = 0;
 
 			// [ESTADO]
 			Object planDeCuentaEstadoArg = null;
-			if (item.getCuentaContableEstado() != null
-					&& item.getCuentaContableEstado().getCodigo() != null) {
-				planDeCuentaEstadoArg = item.getCuentaContableEstado()
-						.getCodigo();
-			} else {
-				planDeCuentaEstadoArg = Integer.class;
-			}
+//			if (item.getCuentaContableEstado() != null
+//					&& item.getCuentaContableEstado().getCodigo() != null) {
+//				planDeCuentaEstadoArg = item.getCuentaContableEstado()
+//						.getCodigo();
+//			} else {
+//				planDeCuentaEstadoArg = Integer.class;
+//			}
 
 			// [CENTRODECOSTOCONTABLE]
 			Object centroDeCostoContableArg = null;
-			if (item.getCentroDeCostoContable() != null
-					&& item.getCentroDeCostoContable().getNumero() != null) {
-				centroDeCostoContableArg = item.getCentroDeCostoContable()
-						.getNumero();
-			} else {
-				centroDeCostoContableArg = Integer.class;
-			}
+//			if (item.getCentroDeCostoContable() != null
+//					&& item.getCentroDeCostoContable().getNumero() != null) {
+//				centroDeCostoContableArg = item.getCentroDeCostoContable()
+//						.getNumero();
+//			} else {
+//				centroDeCostoContableArg = Integer.class;
+//			}
 
 			// [PUNTODEEQUILIBRIO]
 			Object puntoDeEquilibrioArg = null;
-			if (item.getPuntoDeEquilibrio() != null
-					&& item.getPuntoDeEquilibrio().getPuntoDeEquilibrio() != null) {
-				puntoDeEquilibrioArg = item.getPuntoDeEquilibrio()
-						.getPuntoDeEquilibrio();
-			} else {
-				puntoDeEquilibrioArg = Integer.class;
-			}
+//			if (item.getPuntoDeEquilibrio() != null
+//					&& item.getPuntoDeEquilibrio().getPuntoDeEquilibrio() != null) {
+//				puntoDeEquilibrioArg = item.getPuntoDeEquilibrio()
+//						.getPuntoDeEquilibrio();
+//			} else {
+//				puntoDeEquilibrioArg = Integer.class;
+//			}
 
 			// [COSTODEVENTA]
 			Object costoDeVentaArg = null;
-			if (item.getCostoDeVenta() != null
-					&& item.getCostoDeVenta().getCodigo() != null) {
-				costoDeVentaArg = item.getCostoDeVenta().getCodigo();
-			} else {
-				costoDeVentaArg = Integer.class;
-			}
+//			if (item.getCostoDeVenta() != null
+//					&& item.getCostoDeVenta().getCodigo() != null) {
+//				costoDeVentaArg = item.getCostoDeVenta().getCodigo();
+//			} else {
+//				costoDeVentaArg = Integer.class;
+//			}
 
 			// [CUENTAAGRUPADORA]
 			Object cuentaAgrupadoraArg = null;
@@ -1329,37 +1329,37 @@ public class CuentaContableOldBO {
 				nombre = String.class;
 			}
 			Object imputable = null;
-			if (item.getImputable() != null) {
-				imputable = item.getImputable();
-			} else {
-				imputable = Boolean.class;
-			}
+//			if (item.getImputable() != null) {
+//				imputable = item.getImputable();
+//			} else {
+//				imputable = Boolean.class;
+//			}
 			Object ajustaPorInflacion = null;
-			if (item.getAjustaPorInflacion() != null) {
-				ajustaPorInflacion = item.getAjustaPorInflacion();
-			} else {
-				ajustaPorInflacion = Boolean.class;
-			}
+//			if (item.getAjustaPorInflacion() != null) {
+//				ajustaPorInflacion = item.getAjustaPorInflacion();
+//			} else {
+//				ajustaPorInflacion = Boolean.class;
+//			}
 			Object planDeCuentaEstado = null;
-			if (item.getCuentaContableEstado() != null
-					&& item.getCuentaContableEstado().getId() != null) {
-				planDeCuentaEstado = item.getCuentaContableEstado().getId();
-			} else {
-				planDeCuentaEstado = String.class;
-			}
+//			if (item.getCuentaContableEstado() != null
+//					&& item.getCuentaContableEstado().getId() != null) {
+//				planDeCuentaEstado = item.getCuentaContableEstado().getId();
+//			} else {
+//				planDeCuentaEstado = String.class;
+//			}
 			Object cuentaConApropiacion = null;
-			if (item.getCuentaConApropiacion() != null) {
-				cuentaConApropiacion = item.getCuentaConApropiacion();
-			} else {
-				cuentaConApropiacion = Boolean.class;
-			}
+//			if (item.getCuentaConApropiacion() != null) {
+//				cuentaConApropiacion = item.getCuentaConApropiacion();
+//			} else {
+//				cuentaConApropiacion = Boolean.class;
+//			}
 			Object centroDeCostoContable = null;
-			if (item.getCentroDeCostoContable() != null
-					&& item.getCentroDeCostoContable().getId() != null) {
-				centroDeCostoContable = item.getCentroDeCostoContable().getId();
-			} else {
-				centroDeCostoContable = String.class;
-			}
+//			if (item.getCentroDeCostoContable() != null
+//					&& item.getCentroDeCostoContable().getId() != null) {
+//				centroDeCostoContable = item.getCentroDeCostoContable().getId();
+//			} else {
+//				centroDeCostoContable = String.class;
+//			}
 			Object cuentaAgrupadora = null;
 			if (item.getCuentaAgrupadora() != null) {
 				cuentaAgrupadora = item.getCuentaAgrupadora();
@@ -1373,19 +1373,19 @@ public class CuentaContableOldBO {
 				porcentaje = Double.class;
 			}
 			Object puntoDeEquilibrio = null;
-			if (item.getPuntoDeEquilibrio() != null
-					&& item.getPuntoDeEquilibrio().getId() != null) {
-				puntoDeEquilibrio = item.getPuntoDeEquilibrio().getId();
-			} else {
-				puntoDeEquilibrio = String.class;
-			}
+//			if (item.getPuntoDeEquilibrio() != null
+//					&& item.getPuntoDeEquilibrio().getId() != null) {
+//				puntoDeEquilibrio = item.getPuntoDeEquilibrio().getId();
+//			} else {
+//				puntoDeEquilibrio = String.class;
+//			}
 			Object costoDeVenta = null;
-			if (item.getCostoDeVenta() != null
-					&& item.getCostoDeVenta().getId() != null) {
-				costoDeVenta = item.getCostoDeVenta().getId();
-			} else {
-				costoDeVenta = String.class;
-			}
+//			if (item.getCostoDeVenta() != null
+//					&& item.getCostoDeVenta().getId() != null) {
+//				costoDeVenta = item.getCostoDeVenta().getId();
+//			} else {
+//				costoDeVenta = String.class;
+//			}
 
 			// ------------------------------------------------------
 

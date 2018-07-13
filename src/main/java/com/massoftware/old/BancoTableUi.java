@@ -30,8 +30,8 @@ class BancoTableUi extends StandardTableUi<Banco> {
 	public BancoTableUi(Window window, BackendContext cx, Usuario usuario,
 			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
-		super(true, true, true,  true, true, window, cx, usuario, Banco.class, pidFiltering, searchFilter,
-				searchProperty);
+		super(false, false, false, true, true, true,  true, true, window, cx, usuario, Banco.class, pidFiltering, searchFilter,
+				searchProperty, null);
 	}
 
 	// protected List<ColumnMetaData> buildColumnsMetaData() throws Exception {
