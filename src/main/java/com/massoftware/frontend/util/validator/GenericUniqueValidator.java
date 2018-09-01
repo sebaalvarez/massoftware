@@ -3,9 +3,9 @@ package com.massoftware.frontend.util.validator;
 import org.cendra.jdbc.ex.crud.UniqueException;
 
 import com.massoftware.backend.util.GenericBO;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.Traslate;
-import com.massoftware.frontend.util.window.StandardFormUi;
 import com.vaadin.data.validator.AbstractValidator;
 
 @SuppressWarnings("rawtypes")

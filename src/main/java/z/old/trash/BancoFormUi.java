@@ -1,7 +1,7 @@
 package z.old.trash;
 
 import com.massoftware.backend.BackendContext;
-import com.massoftware.frontend.util.window.StandardFormUi;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.model.Banco;
 
 class BancoFormUi extends StandardFormUi<Banco> {

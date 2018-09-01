@@ -8,20 +8,16 @@ import java.util.List;
 import org.cendra.jdbc.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ex.crud.UniqueException;
 
-import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.AsientoBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.frontend.util.converter.StringToIntegerConverterUnspecifiedLocale;
-import com.massoftware.frontend.util.window.StandardFormUi;
-import com.massoftware.frontend.util.window.StandardTableUi;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.CostoDeVenta;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Entity;
-import com.massoftware.model.Usuario;
-import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.IntegerRangeValidator;
@@ -34,7 +30,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -77,16 +72,16 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 
 	private AsientoItemTableUi asientoItemTableUi;
 
-	public AsientoTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario, String pidFiltering,
-			Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty) {
+	public AsientoTableUi(SessionVar sessionVar, Window window) {
 
-		super(true, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				copiar, eliminar, window, cx, usuario, Asiento.class,
-				pidFiltering, searchFilter, searchProperty, null);
+		super(new StandarTableUiPagedConf(true, false, true), true, true, true,
+				true, true, window, sessionVar, Asiento.class, null, null,
+				null, null);
+
+		build();
+	}
+
+	private void build() {
 
 		loadMesAnio();
 		filtroMesAnioCBXValueChange(filtroDesdeTXT, filtroMesAnioDesdeCBX);
@@ -102,17 +97,7 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 
 		// hsplit.setFirstComponent(rootVL);
 
-		asientoItemTableUi = new AsientoItemTableUi(false, false, false, false,
-				false, false, false, false, null, cx, usuario, null, null, null);
-
-		asientoItemTableUi.rootVL.setMargin(false);
-		asientoItemTableUi.rootVL.setSpacing(false);
-		asientoItemTableUi.rootVL
-				.removeComponent(asientoItemTableUi.filaFiltro1HL);
-		asientoItemTableUi.rootVL.removeComponent(barraDeHerramientasFila0);
-		asientoItemTableUi.rootVL.removeComponent(barraDeHerramientasFila1);
-		asientoItemTableUi.rootVL.removeComponent(barraDeHerramientasFila2);
-//		asientoItemTableUi.rootVL.removeComponent(barraDeHerramientasFila3);
+		asientoItemTableUi = new AsientoItemTableUi(sessionVar);
 
 		// hsplit.setSecondComponent(asientoItemTableUi);
 
@@ -132,10 +117,9 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 			}
 		});
 
-		if(this.itemsBIC.size() > 0){
-			reloadDataAsientoItem(this.itemsBIC.getIdByIndex(0));	
+		if (this.itemsBIC.size() > 0) {
+			reloadDataAsientoItem(this.itemsBIC.getIdByIndex(0));
 		}
-		
 
 	}
 
@@ -163,8 +147,8 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 		filtroEjercicioCBX.setNullSelectionAllowed(false);
 		filtroEjercicioCBX.setContainerDataSource(ejerciciosContablesBIC);
 
-		EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) cx
-				.buildBO(EjercicioContable.class);
+		EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) sessionVar
+				.getCx().buildBO(EjercicioContable.class);
 
 		List<EjercicioContable> ejerciciosContables = ejercicioContableBO
 				.findAll();
@@ -545,7 +529,8 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 	private void loadMesAnio() {
 
 		try {
-			AsientoBO asientoBO = (AsientoBO) cx.buildBO(Asiento.class);
+			AsientoBO asientoBO = (AsientoBO) sessionVar.getCx().buildBO(
+					Asiento.class);
 
 			List<String> mesesAnios = asientoBO
 					.findMesesAnios(((EjercicioContable) filtroEjercicioCBX
@@ -692,8 +677,8 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 			args.add(dateHasta);
 		}
 
-		return cx.buildBO(classModel).findPaged(orderBy, where, limit, offset,
-				args.toArray());
+		return sessionVar.getCx().buildBO(classModel)
+				.findPaged(orderBy, where, limit, offset, args.toArray());
 
 	}
 
@@ -709,8 +694,8 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 			item.getEjercicioContable()._setfullToString(true);
 		}
 
-		StandardFormUi<Asiento> form = new StandardFormUi<Asiento>(usuario,
-				classModel, StandardFormUi.INSERT_MODE, cx, this, item);
+		AsientoFormUi form = new AsientoFormUi(sessionVar,
+				StandardFormUi.INSERT_MODE, this, item);
 
 		form.setMaxValues();
 
@@ -760,8 +745,8 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 		o.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
 				.getValue());
 
-		StandardFormUi<Asiento> form = new StandardFormUi<Asiento>(usuario,
-				classModel, StandardFormUi.COPY_MODE, cx, this, o, item);
+		StandardFormUi<Asiento> form = new StandardFormUi<Asiento>(sessionVar,
+				classModel, StandardFormUi.COPY_MODE, this, o, item);
 
 		form.setMaxValues();
 

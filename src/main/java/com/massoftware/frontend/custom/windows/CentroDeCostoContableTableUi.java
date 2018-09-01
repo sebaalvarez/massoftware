@@ -3,17 +3,14 @@ package com.massoftware.frontend.custom.windows;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.builder.BuilderXMD;
-import com.massoftware.frontend.util.window.StandardFormUi;
-import com.massoftware.frontend.util.window.StandardTableUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Entity;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Alignment;
@@ -31,17 +28,15 @@ public class CentroDeCostoContableTableUi extends
 	private ComboBox filtroEjercicioCBX;
 	private BeanItemContainer<EjercicioContable> ejerciciosContablesBIC;
 
-	public CentroDeCostoContableTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
+	public CentroDeCostoContableTableUi(StandarTableUiPagedConf pagedConf, boolean shortcut, boolean agregar,
 			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario,
-			Class<CentroDeCostoContable> classModel, String pidFiltering,
-			Object searchFilter,
+			SessionVar sessionVar, Class<CentroDeCostoContable> classModel,
+			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				copiar, eliminar, window, cx, usuario, classModel,
-				pidFiltering, searchFilter, searchProperty, null);
+		super(pagedConf, shortcut, agregar, modificar,
+				copiar, eliminar, window, sessionVar, classModel, pidFiltering,
+				searchFilter, searchProperty, null);
 
 		ejercicioCBXValueChange();
 
@@ -64,8 +59,8 @@ public class CentroDeCostoContableTableUi extends
 		filaFiltro1HL.setComponentAlignment(filtroEjercicioCBX,
 				Alignment.MIDDLE_CENTER);
 
-		EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) cx
-				.buildBO(EjercicioContable.class);
+		EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) sessionVar
+				.getCx().buildBO(EjercicioContable.class);
 
 		List<EjercicioContable> ejerciciosContables = ejercicioContableBO
 				.findAll();
@@ -116,7 +111,8 @@ public class CentroDeCostoContableTableUi extends
 
 	protected List<CentroDeCostoContable> reloadDataList() throws Exception {
 
-		return ((CentroDeCostoContableBO) cx.buildBO(classModel))
+		return ((CentroDeCostoContableBO) sessionVar.getCx()
+				.buildBO(classModel))
 				.findAll((EjercicioContable) filtroEjercicioCBX.getValue());
 
 	}
@@ -130,7 +126,7 @@ public class CentroDeCostoContableTableUi extends
 				.getValue());
 
 		StandardFormUi<CentroDeCostoContable> form = new StandardFormUi<CentroDeCostoContable>(
-				usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item);
+				sessionVar, classModel, StandardFormUi.INSERT_MODE, this, item);
 
 		form.setMaxValues();
 
@@ -149,8 +145,7 @@ public class CentroDeCostoContableTableUi extends
 				.getValue());
 
 		StandardFormUi<CentroDeCostoContable> form = new StandardFormUi<CentroDeCostoContable>(
-				usuario, classModel, StandardFormUi.COPY_MODE, cx, this, o,
-				item);
+				sessionVar, classModel, StandardFormUi.COPY_MODE, this, o, item);
 
 		form.setMaxValues();
 

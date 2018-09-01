@@ -1663,7 +1663,16 @@ SELECT	'com.massoftware.model.AsientoItem' AS ClassAsientoItem
 		, vCuentaContable.codigoCuenta										AS cuentaContable_codigoCuenta
 		, vCuentaContable.cuentaContable									AS cuentaContable_cuentaContable
 		, vCuentaContable.nombre											AS cuentaContable_nombre
-
+		
+		/*
+		,vEjercicioContable.ejercicioContable_id							AS cuentaContable_ejercicioContable_id			
+		,vEjercicioContable.ejercicioContable_ejercicio					    AS cuentaContable_ejercicioContable_ejercicio		
+		,vEjercicioContable.ejercicioContable_fechaApertura					AS cuentaContable_ejercicioContable_fechaApertura
+		,vEjercicioContable.ejercicioContable_fechaCierre					AS cuentaContable_ejercicioContable_fechaCierre
+		,vEjercicioContable.ejercicioContable_ejercicioCerrado				AS cuentaContable_ejercicioContable_ejercicioCerrado
+		,vEjercicioContable.ejercicioContable_ejercicioCerradoModulos		AS cuentaContable_ejercicioContable_ejercicioCerradoModulos
+		,vEjercicioContable.ejercicioContable_comentario					AS cuentaContable_ejercicioContable_comentario
+		*/
 
 		-----------------------------------------------------------------------------------------------------      
 		, [MovContabilidad].[DEBE]											AS debe			-- BigDecimal (11,2) NOT NULL [ 0 - 99999999999.99] default 0.00 

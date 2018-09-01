@@ -3,14 +3,11 @@ package com.massoftware.frontend.custom.windows;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.AsientoModeloItemBO;
-import com.massoftware.frontend.util.window.StandardFormUi;
-import com.massoftware.frontend.util.window.StandardTableUi;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.AsientoModelo;
 import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.model.EjercicioContable;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Window;
@@ -25,17 +22,16 @@ public class AsientoModeloItemTableUi extends
 
 	public AsientoModelo asientoModeloFilter;
 
-	public AsientoModeloItemTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario,
-			Class<AsientoModeloItem> classModel, String pidFiltering,
-			Object searchFilter,
+	public AsientoModeloItemTableUi(StandarTableUiPagedConf pagedConf,
+			boolean shortcut, boolean agregar, boolean modificar,
+			boolean copiar, boolean eliminar, Window window,
+			SessionVar sessionVar, Class<AsientoModeloItem> classModel,
+			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				copiar, eliminar, window, cx, usuario, classModel,
-				pidFiltering, searchFilter, searchProperty, null);
+		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
+				window, sessionVar, classModel, pidFiltering, searchFilter,
+				searchProperty, null);
 
 		window.setWidth("1300px");
 
@@ -44,8 +40,8 @@ public class AsientoModeloItemTableUi extends
 		this.setCompositionRoot(hsplit);
 
 		AsientoModeloTableUi asientoModeloTableUi = new AsientoModeloTableUi(
-				false, false, false, true, true, true, true, true, null, cx,
-				usuario, AsientoModelo.class, null, null, null, this);
+				true, true, true, true, true, null, sessionVar,
+				AsientoModelo.class, null, null, null, this);
 
 		hsplit.setFirstComponent(asientoModeloTableUi);
 
@@ -57,7 +53,7 @@ public class AsientoModeloItemTableUi extends
 
 	protected List<AsientoModeloItem> reloadDataList() throws Exception {
 
-		return ((AsientoModeloItemBO) cx.buildBO(classModel))
+		return ((AsientoModeloItemBO) sessionVar.getCx().buildBO(classModel))
 				.findAll(asientoModeloFilter);
 
 	}
@@ -70,7 +66,7 @@ public class AsientoModeloItemTableUi extends
 		item.setAsientoModelo(asientoModeloFilter);
 
 		StandardFormUi<AsientoModeloItem> form = new StandardFormUi<AsientoModeloItem>(
-				usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item) {
+				sessionVar, classModel, StandardFormUi.INSERT_MODE, this, item) {
 
 			protected List getOtrosFiltros() {
 
@@ -108,8 +104,7 @@ public class AsientoModeloItemTableUi extends
 		o._setEjercicioContable(item._getEjercicioContable());
 
 		StandardFormUi<AsientoModeloItem> form = new StandardFormUi<AsientoModeloItem>(
-				usuario, classModel, StandardFormUi.COPY_MODE, cx, this, o,
-				item) {
+				sessionVar, classModel, StandardFormUi.COPY_MODE, this, o, item) {
 
 			protected List getOtrosFiltros() {
 				EjercicioContable ejercicioContable = dtoBI.getBean()
@@ -131,7 +126,7 @@ public class AsientoModeloItemTableUi extends
 			throws Exception {
 
 		StandardFormUi<AsientoModeloItem> form = new StandardFormUi<AsientoModeloItem>(
-				usuario, classModel, StandardFormUi.UPDATE_MODE, cx, this, item) {
+				sessionVar, classModel, StandardFormUi.UPDATE_MODE, this, item) {
 
 			protected List getOtrosFiltros() {
 				EjercicioContable ejercicioContable = dtoBI.getBean()

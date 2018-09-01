@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.massoftware.backend.BackendContext;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.window.StandardFormUi;
 import com.massoftware.model.Sucursal;
 import com.massoftware.model.SucursalTipo;
 import com.vaadin.data.util.BeanItem;

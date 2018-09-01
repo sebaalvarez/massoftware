@@ -4,21 +4,21 @@ import java.util.List;
 
 import org.cendra.jdbc.ex.crud.DeleteForeingObjectConflictException;
 
-import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.CuentaDeFondoABO;
 import com.massoftware.backend.bo.CuentaDeFondoBO;
 import com.massoftware.backend.bo.CuentaDeFondoGrupoBO;
+import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.StandarTableUiPagedConf;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
+import com.massoftware.frontend.custom.windows.StandardTableUi;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.YesNoDialog;
 import com.massoftware.frontend.util.builder.BuilderXMD;
-import com.massoftware.frontend.util.window.StandardFormUi;
-import com.massoftware.frontend.util.window.StandardTableUi;
 import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.CuentaDeFondoA;
 import com.massoftware.model.CuentaDeFondoGrupo;
 import com.massoftware.model.CuentaDeFondoRubro;
 import com.massoftware.model.EntityId;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.FontAwesome;
@@ -51,46 +51,44 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 	private HorizontalLayout treeBarraDeHerramientasFila2;
 	private Button treeEliminarBTN;
 
-	public CuentaDeFondoTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario,
-			Class<CuentaDeFondoA> classModel, String pidFiltering,
-			Object searchFilter,
+	public CuentaDeFondoTableUi(StandarTableUiPagedConf pagedConf,
+			boolean shortcut, boolean agregar, boolean modificar,
+			boolean copiar, boolean eliminar, Window window,
+			SessionVar sessionVar, Class<CuentaDeFondoA> classModel,
+			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				copiar, eliminar, window, cx, usuario, classModel,
-				pidFiltering, searchFilter, searchProperty, null);
+		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
+				window, sessionVar, classModel, pidFiltering, searchFilter,
+				searchProperty, null);
 
-		init(agregar, modificar, copiar, eliminar, window, cx, usuario,
+		init(agregar, modificar, copiar, eliminar, window, sessionVar,
 				classModel, pidFiltering, searchFilter, searchProperty, null);
 
 	}
 
-	public CuentaDeFondoTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario,
-			Class<CuentaDeFondoA> classModel, String pidFiltering,
-			Object searchFilter,
+	public CuentaDeFondoTableUi(StandarTableUiPagedConf pagedConf,
+			boolean shortcut, boolean agregar, boolean modificar,
+			boolean copiar, boolean eliminar, Window window,
+			SessionVar sessionVar, Class<CuentaDeFondoA> classModel,
+			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty,
 			ChequeraTableUi chequeraTableUi) {
 
-		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				copiar, eliminar, window, cx, usuario, classModel,
-				pidFiltering, searchFilter, searchProperty, null);
+		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
+				window, sessionVar, classModel, pidFiltering, searchFilter,
+				searchProperty, null);
 
-		init(agregar, modificar, copiar, eliminar, window, cx, usuario,
+		init(agregar, modificar, copiar, eliminar, window, sessionVar,
 				classModel, pidFiltering, searchFilter, searchProperty,
 				chequeraTableUi);
 
 	}
 
 	public void init(boolean agregar, boolean modificar, boolean copiar,
-			boolean eliminar, Window window, BackendContext cx,
-			Usuario usuario, Class<CuentaDeFondoA> classModel,
-			String pidFiltering, Object searchFilter,
+			boolean eliminar, Window window, SessionVar sessionVar,
+			Class<CuentaDeFondoA> classModel, String pidFiltering,
+			Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty,
 			ChequeraTableUi chequeraTableUi) {
 
@@ -348,8 +346,8 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 
 		tree.removeAllItems();
 
-		List<CuentaDeFondoRubro> rubros = cx.buildBO(CuentaDeFondoRubro.class)
-				.findAll();
+		List<CuentaDeFondoRubro> rubros = sessionVar.getCx()
+				.buildBO(CuentaDeFondoRubro.class).findAll();
 
 		tree.addItem("Todos");
 
@@ -360,9 +358,9 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 			tree.addItem(rubro);
 			tree.setParent(rubro, "Todos");
 
-			List<CuentaDeFondoGrupo> grupos = ((CuentaDeFondoGrupoBO) cx
-					.buildBO(CuentaDeFondoGrupo.class)).findByRubro(rubro
-					.getCodigo());
+			List<CuentaDeFondoGrupo> grupos = ((CuentaDeFondoGrupoBO) sessionVar
+					.getCx().buildBO(CuentaDeFondoGrupo.class))
+					.findByRubro(rubro.getCodigo());
 
 			for (CuentaDeFondoGrupo grupo : grupos) {
 				grupo._setfullToString(false);
@@ -406,34 +404,39 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 
 			if (filtroTodasCHK.getValue() == true) {
 
-				return ((CuentaDeFondoABO) cx.buildBO(CuentaDeFondoA.class))
+				return ((CuentaDeFondoABO) sessionVar.getCx().buildBO(
+						CuentaDeFondoA.class))
 						.findAll((CuentaDeFondoGrupo) item);
 
 			} else {
-				return ((CuentaDeFondoABO) cx.buildBO(CuentaDeFondoA.class))
+				return ((CuentaDeFondoABO) sessionVar.getCx().buildBO(
+						CuentaDeFondoA.class))
 						.findActivas((CuentaDeFondoGrupo) item);
 			}
 		} else if (item instanceof CuentaDeFondoRubro) {
 
 			if (filtroTodasCHK.getValue() == true) {
 
-				return ((CuentaDeFondoABO) cx.buildBO(CuentaDeFondoA.class))
+				return ((CuentaDeFondoABO) sessionVar.getCx().buildBO(
+						CuentaDeFondoA.class))
 						.findAll((CuentaDeFondoRubro) item);
 
 			} else {
-				return ((CuentaDeFondoABO) cx.buildBO(CuentaDeFondoA.class))
+				return ((CuentaDeFondoABO) sessionVar.getCx().buildBO(
+						CuentaDeFondoA.class))
 						.findActivas((CuentaDeFondoRubro) item);
 			}
 		} else if (item.equals("Todos")) {
 
 			if (filtroTodasCHK.getValue() == true) {
 
-				return cx.buildBO(CuentaDeFondoA.class).findAll();
+				return sessionVar.getCx().buildBO(CuentaDeFondoA.class)
+						.findAll();
 
 			} else {
 
-				return ((CuentaDeFondoABO) cx.buildBO(CuentaDeFondoA.class))
-						.findActivas();
+				return ((CuentaDeFondoABO) sessionVar.getCx().buildBO(
+						CuentaDeFondoA.class)).findActivas();
 			}
 		}
 		return null;
@@ -517,16 +520,16 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private StandardFormUi openFormAgregarRubro() throws Exception {
 
-		return new StandardFormUi(usuario, CuentaDeFondoRubro.class,
-				StandardFormUi.INSERT_MODE, cx, this,
+		return new StandardFormUi(sessionVar, CuentaDeFondoRubro.class,
+				StandardFormUi.INSERT_MODE, this,
 				CuentaDeFondoRubro.class.newInstance());
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private StandardFormUi openFormAgregarGrupo() throws Exception {
 
-		return new StandardFormUi(usuario, CuentaDeFondoGrupo.class,
-				StandardFormUi.INSERT_MODE, cx, this,
+		return new StandardFormUi(sessionVar, CuentaDeFondoGrupo.class,
+				StandardFormUi.INSERT_MODE, this,
 				CuentaDeFondoGrupo.class.newInstance());
 	}
 
@@ -535,15 +538,15 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 
 		if (item instanceof CuentaDeFondoGrupo) {
 
-			return new StandardFormUi<CuentaDeFondoGrupo>(usuario,
-					CuentaDeFondoGrupo.class, StandardFormUi.UPDATE_MODE, cx,
-					this, (CuentaDeFondoGrupo) item);
+			return new StandardFormUi<CuentaDeFondoGrupo>(sessionVar,
+					CuentaDeFondoGrupo.class, StandardFormUi.UPDATE_MODE, this,
+					(CuentaDeFondoGrupo) item);
 
 		} else if (item instanceof CuentaDeFondoRubro) {
 
-			return new StandardFormUi<CuentaDeFondoRubro>(usuario,
-					CuentaDeFondoRubro.class, StandardFormUi.UPDATE_MODE, cx,
-					this, (CuentaDeFondoRubro) item);
+			return new StandardFormUi<CuentaDeFondoRubro>(sessionVar,
+					CuentaDeFondoRubro.class, StandardFormUi.UPDATE_MODE, this,
+					(CuentaDeFondoRubro) item);
 
 		}
 		return null;
@@ -588,7 +591,8 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 					try {
 
 						// deleteItem(item);
-						cx.buildBO(CuentaDeFondoGrupo.class).delete(item);
+						sessionVar.getCx().buildBO(CuentaDeFondoGrupo.class)
+								.delete(item);
 
 					} catch (DeleteForeingObjectConflictException e) {
 						LogAndNotification.print(e, "Ítem " + tree.getValue());
@@ -603,7 +607,8 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 
 						// deleteItem(item);
 
-						cx.buildBO(CuentaDeFondoRubro.class).delete(item);
+						sessionVar.getCx().buildBO(CuentaDeFondoRubro.class)
+								.delete(item);
 
 					} catch (DeleteForeingObjectConflictException e) {
 						LogAndNotification.print(e, "Ítem " + tree.getValue());
@@ -647,7 +652,7 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected StandardFormUi openFormAgregar() throws Exception {
 
-		return new CuentaDeFondoFormUi(usuario, StandardFormUi.INSERT_MODE, cx,
+		return new CuentaDeFondoFormUi(sessionVar, StandardFormUi.INSERT_MODE,
 				this, CuentaDeFondo.class.newInstance());
 	}
 
@@ -655,10 +660,10 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 	protected StandardFormUi openFormModificar(CuentaDeFondoA item)
 			throws Exception {
 
-		CuentaDeFondo cuentaDeFondo = ((CuentaDeFondoBO) cx
+		CuentaDeFondo cuentaDeFondo = ((CuentaDeFondoBO) sessionVar.getCx()
 				.buildBO(CuentaDeFondo.class)).findByCodigo(item.getCodigo());
 
-		return new CuentaDeFondoFormUi(usuario, StandardFormUi.UPDATE_MODE, cx,
+		return new CuentaDeFondoFormUi(sessionVar, StandardFormUi.UPDATE_MODE,
 				this, cuentaDeFondo);
 	}
 
@@ -668,10 +673,10 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 
 		CuentaDeFondoA o = (CuentaDeFondoA) ((EntityId) item).clone();
 
-		CuentaDeFondo cuentaDeFondo = ((CuentaDeFondoBO) cx
+		CuentaDeFondo cuentaDeFondo = ((CuentaDeFondoBO) sessionVar.getCx()
 				.buildBO(CuentaDeFondo.class)).findByCodigo(o.getCodigo());
 
-		return new CuentaDeFondoFormUi(usuario, StandardFormUi.COPY_MODE, cx,
+		return new CuentaDeFondoFormUi(sessionVar, StandardFormUi.COPY_MODE,
 				this, cuentaDeFondo);
 	}
 

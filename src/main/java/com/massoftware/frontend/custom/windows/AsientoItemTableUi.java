@@ -3,14 +3,10 @@ package com.massoftware.frontend.custom.windows;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.AsientoItemBO;
-import com.massoftware.frontend.util.window.StandardTableUi;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.AsientoItem;
-import com.massoftware.model.Usuario;
-import com.vaadin.data.Property;
-import com.vaadin.ui.Window;
 
 public class AsientoItemTableUi extends StandardTableUi<AsientoItem> {
 
@@ -19,27 +15,34 @@ public class AsientoItemTableUi extends StandardTableUi<AsientoItem> {
 	 */
 	private static final long serialVersionUID = 4960961261883226752L;
 
-	public Asiento asientoFilter;
+	protected Asiento asientoFilter;
 
-	public AsientoItemTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario, String pidFiltering,
-			Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty) {
+	protected AsientoItemTableUi(SessionVar sessionVar) {
 
-		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				copiar, eliminar, window, cx, usuario, AsientoItem.class,
-				pidFiltering, searchFilter, searchProperty, null);
+		super(null, false, false, false, false, false, null, sessionVar,
+				AsientoItem.class, null, null, null, null);
 
+		build();
+	}
+
+	private void build() {
+
+		rootVL.setMargin(false);
+		rootVL.setSpacing(false);
+		rootVL.removeComponent(filaFiltro1HL);
+		rootVL.removeComponent(barraDeHerramientasFila0);
+		rootVL.removeComponent(barraDeHerramientasFila1);
+		rootVL.removeComponent(barraDeHerramientasFila2);
+		// rootVL.removeComponent(barraDeHerramientasFila3);
 	}
 
 	protected List<AsientoItem> reloadDataList() throws Exception {
 
-		if(asientoFilter != null){
-			return ((AsientoItemBO) cx.buildBO(classModel)).findAll(asientoFilter);	
+		if (asientoFilter != null) {
+			return ((AsientoItemBO) sessionVar.getCx().buildBO(classModel))
+					.findAll(asientoFilter);
 		}
-		
+
 		return new ArrayList<AsientoItem>();
 
 	}

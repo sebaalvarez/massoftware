@@ -1,7 +1,6 @@
 package com.massoftware.frontend.custom.menu;
 
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.util.AbstractMenu;
 import com.massoftware.model.CodigoConvenioMultilateral;
 import com.massoftware.model.MotivoNotaDeCredito;
 import com.massoftware.model.Zona;

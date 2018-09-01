@@ -2,13 +2,10 @@ package com.massoftware.frontend.custom.windows;
 
 import java.util.List;
 
-import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.SeguridadPuertaBO;
-import com.massoftware.frontend.util.window.StandardFormUi;
-import com.massoftware.frontend.util.window.StandardTableUi;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.SeguridadModulo;
 import com.massoftware.model.SeguridadPuerta;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Window;
@@ -22,17 +19,16 @@ public class SeguridadPuertaTableUi extends StandardTableUi<SeguridadPuerta> {
 
 	public SeguridadModulo seguridadModuloFilter;
 
-	public SeguridadPuertaTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario,
-			Class<SeguridadPuerta> classModel, String pidFiltering,
-			Object searchFilter,
+	public SeguridadPuertaTableUi(StandarTableUiPagedConf pagedConf,
+			boolean shortcut, boolean agregar, boolean modificar,
+			boolean copiar, boolean eliminar, Window window,
+			SessionVar sessionVar, Class<SeguridadPuerta> classModel,
+			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				copiar, eliminar, window, cx, usuario, classModel,
-				pidFiltering, searchFilter, searchProperty, null);
+		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
+				window, sessionVar, classModel, pidFiltering, searchFilter,
+				searchProperty, null);
 
 		window.setWidth("1300px");
 
@@ -40,8 +36,8 @@ public class SeguridadPuertaTableUi extends StandardTableUi<SeguridadPuerta> {
 		hsplit.setSplitPosition(550, Unit.PIXELS);
 		this.setCompositionRoot(hsplit);
 
-		SeguridadModuloTableUi seguridadModuloTableUi = new SeguridadModuloTableUi(false, false, false,
-				true, true, true, true, true, null, cx, usuario,
+		SeguridadModuloTableUi seguridadModuloTableUi = new SeguridadModuloTableUi(
+				null, true, true, true, true, true, null, sessionVar,
 				SeguridadModulo.class, null, null, null, this);
 
 		hsplit.setFirstComponent(seguridadModuloTableUi);
@@ -54,7 +50,7 @@ public class SeguridadPuertaTableUi extends StandardTableUi<SeguridadPuerta> {
 
 	protected List<SeguridadPuerta> reloadDataList() throws Exception {
 
-		return ((SeguridadPuertaBO) cx.buildBO(classModel))
+		return ((SeguridadPuertaBO) sessionVar.getCx().buildBO(classModel))
 				.findAll(seguridadModuloFilter);
 
 	}
@@ -67,7 +63,7 @@ public class SeguridadPuertaTableUi extends StandardTableUi<SeguridadPuerta> {
 		item.setSeguridadModulo(seguridadModuloFilter);
 
 		StandardFormUi<SeguridadPuerta> form = new StandardFormUi<SeguridadPuerta>(
-				usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item);
+				sessionVar, classModel, StandardFormUi.INSERT_MODE, this, item);
 
 		return form;
 

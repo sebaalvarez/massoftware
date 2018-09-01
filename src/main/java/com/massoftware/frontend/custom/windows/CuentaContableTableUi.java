@@ -3,21 +3,18 @@ package com.massoftware.frontend.custom.windows;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.CuentaContableBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.builder.BuilderXMD;
-import com.massoftware.frontend.util.window.StandardFormUi;
-import com.massoftware.frontend.util.window.StandardTableUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaContableFull;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Alignment;
@@ -56,28 +53,27 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 	private String itemTodas = "Todas las cuentas";
 
-	public CuentaContableTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario,
-			Class<CuentaContable> classModel, String pidFiltering,
-			Object searchFilter,
+	public CuentaContableTableUi(StandarTableUiPagedConf pagedConf,
+			boolean shortcut, boolean agregar, boolean modificar,
+			boolean copiar, boolean eliminar, Window window,
+			SessionVar sessionVar, Class<CuentaContable> classModel,
+			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty,
 			List<Object> otrosFiltros) {
 
-		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				copiar, eliminar, window, cx, usuario, classModel,
-				pidFiltering, searchFilter, searchProperty, otrosFiltros);
+		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
+				window, sessionVar, classModel, pidFiltering, searchFilter,
+				searchProperty, otrosFiltros);
 
-		init(agregar, modificar, copiar, eliminar, window, cx, usuario,
+		init(agregar, modificar, copiar, eliminar, window, sessionVar,
 				classModel, pidFiltering, searchFilter, searchProperty, null);
 
 	}
 
 	public void init(boolean agregar, boolean modificar, boolean copiar,
-			boolean eliminar, Window window, BackendContext cx,
-			Usuario usuario, Class<CuentaContable> classModel,
-			String pidFiltering, Object searchFilter,
+			boolean eliminar, Window window, SessionVar sessionVar,
+			Class<CuentaContable> classModel, String pidFiltering,
+			Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty,
 			CuentaContableTableUi cuentaContableTableUi) {
 
@@ -213,7 +209,8 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 	protected void addControlsFilters() throws Exception {
 
-		cuentaContableBO = ((CuentaContableBO) cx.buildBO(CuentaContable.class));
+		cuentaContableBO = ((CuentaContableBO) sessionVar.getCx().buildBO(
+				CuentaContable.class));
 
 		// ----------------------------------
 		title = new Label();
@@ -232,8 +229,8 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 		filtroEjercicioCBX.setNullSelectionAllowed(false);
 		filtroEjercicioCBX.setContainerDataSource(ejerciciosContablesBIC);
 
-		EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) cx
-				.buildBO(EjercicioContable.class);
+		EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) sessionVar
+				.getCx().buildBO(EjercicioContable.class);
 
 		List<EjercicioContable> ejerciciosContables = ejercicioContableBO
 				.findAll();
@@ -340,8 +337,8 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 				// ----------------------------------
 
-				CentroDeCostoContableBO centroDeCostoContableBO = (CentroDeCostoContableBO) cx
-						.buildBO(CentroDeCostoContable.class);
+				CentroDeCostoContableBO centroDeCostoContableBO = (CentroDeCostoContableBO) sessionVar
+						.getCx().buildBO(CentroDeCostoContable.class);
 
 				List<CentroDeCostoContable> centroDeCostosContable = centroDeCostoContableBO
 						.findAll(ejercicioContable);
@@ -356,8 +353,8 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 				// ----------------------------------
 
-				PuntoDeEquilibrioBO puntoDeEquilibrioBO = (PuntoDeEquilibrioBO) cx
-						.buildBO(PuntoDeEquilibrio.class);
+				PuntoDeEquilibrioBO puntoDeEquilibrioBO = (PuntoDeEquilibrioBO) sessionVar
+						.getCx().buildBO(PuntoDeEquilibrio.class);
 
 				List<PuntoDeEquilibrio> puntosDeEquilibrio = puntoDeEquilibrioBO
 						.findAll(ejercicioContable);
@@ -423,9 +420,9 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 			title.setValue(itemTodas + " de " + cuentaContable);
 			// + ", del ejercicio " + ejercicioContable);
 
-			return ((CuentaContableBO) cx.buildBO(classModel)).findAll(
-					ejercicioContable, centroDeCostoContable,
-					puntoDeEquilibrio, cuentaContable.getCodigoCuenta());
+			return ((CuentaContableBO) sessionVar.getCx().buildBO(classModel))
+					.findAll(ejercicioContable, centroDeCostoContable,
+							puntoDeEquilibrio, cuentaContable.getCodigoCuenta());
 
 		} else {
 
@@ -433,9 +430,9 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 			// title.setValue(itemTodas + " del ejercicio " +
 			// ejercicioContable);
 
-			return ((CuentaContableBO) cx.buildBO(classModel)).findAll(
-					ejercicioContable, centroDeCostoContable,
-					puntoDeEquilibrio, null);
+			return ((CuentaContableBO) sessionVar.getCx().buildBO(classModel))
+					.findAll(ejercicioContable, centroDeCostoContable,
+							puntoDeEquilibrio, null);
 
 		}
 
@@ -452,8 +449,8 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 		// StandardFormUi<CuentaContable>(
 		// usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item);
 
-		CuentaContableFullFormUi form = new CuentaContableFullFormUi(usuario,
-				StandardFormUi.INSERT_MODE, cx, this, item);
+		CuentaContableFullFormUi form = new CuentaContableFullFormUi(
+				sessionVar, StandardFormUi.INSERT_MODE, this, item);
 
 		// form.setMaxValues();
 
@@ -471,8 +468,8 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 		o.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
 				.getValue());
 
-		CuentaContableFullFormUi form = new CuentaContableFullFormUi(usuario,
-				StandardFormUi.COPY_MODE, cx, this, o, item);
+		CuentaContableFullFormUi form = new CuentaContableFullFormUi(
+				sessionVar, StandardFormUi.COPY_MODE, this, o, item);
 
 		// form.setMaxValues();
 
@@ -486,8 +483,8 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 		CuentaContableFull item = cuentaContableBO.findById(itemArg.getId());
 
-		CuentaContableFullFormUi form = new CuentaContableFullFormUi(usuario,
-				StandardFormUi.UPDATE_MODE, cx, this, item);
+		CuentaContableFullFormUi form = new CuentaContableFullFormUi(
+				sessionVar, StandardFormUi.UPDATE_MODE, this, item);
 
 		// form.setMaxValues();
 

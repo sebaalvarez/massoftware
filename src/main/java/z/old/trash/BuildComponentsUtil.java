@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.massoftware.backend.BackendContext;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.util.UtilDate;
 import com.massoftware.frontend.util.builder.annotation.FieldAllowDecimalAnont;
 import com.massoftware.frontend.util.builder.annotation.FieldColumnsAnont;
@@ -19,7 +20,6 @@ import com.massoftware.frontend.util.builder.annotation.FieldMinValueIntegerAnon
 import com.massoftware.frontend.util.builder.annotation.FieldRequiredAnont;
 import com.massoftware.frontend.util.converter.StringToBigDecimalConverterUnspecifiedLocale;
 import com.massoftware.frontend.util.converter.StringToIntegerConverterUnspecifiedLocale;
-import com.massoftware.frontend.util.window.StandardFormUi;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;

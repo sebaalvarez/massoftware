@@ -3,11 +3,8 @@ package com.massoftware.frontend.custom.windows;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.massoftware.backend.BackendContext;
-import com.massoftware.frontend.util.window.StandardFormUi;
-import com.massoftware.frontend.util.window.StandardTableUi;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.EjercicioContable;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
@@ -21,15 +18,13 @@ public class EjercicioContableTableUi extends
 	 */
 	private static final long serialVersionUID = 4960961261882226754L;
 
-	public EjercicioContableTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
+	public EjercicioContableTableUi(StandarTableUiPagedConf pagedConf, boolean shortcut, boolean agregar,
 			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario,
-			Class<EjercicioContable> classModel, String pidFiltering,
-			Object searchFilter,
+			SessionVar sessionVar, Class<EjercicioContable> classModel,
+			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
-		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				false, eliminar, window, cx, usuario, classModel, pidFiltering,
+		super(pagedConf, shortcut, agregar, modificar,
+				false, eliminar, window, sessionVar, classModel, pidFiltering,
 				searchFilter, searchProperty, null);
 	}
 
@@ -38,7 +33,8 @@ public class EjercicioContableTableUi extends
 
 		EjercicioContable item = EjercicioContable.class.newInstance();
 
-		Integer maxNumero = cx.buildBO(classModel).maxValue("ejercicio");
+		Integer maxNumero = sessionVar.getCx().buildBO(classModel)
+				.maxValue("ejercicio");
 		if (maxNumero == null || maxNumero < 1) {
 			maxNumero = 1;
 		}
@@ -57,7 +53,7 @@ public class EjercicioContableTableUi extends
 		item.setFechaCierre(fecha);
 
 		StandardFormUi<EjercicioContable> form = new StandardFormUi<EjercicioContable>(
-				usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item);
+				sessionVar, classModel, StandardFormUi.INSERT_MODE, this, item);
 
 		Label seccionLBL = new Label("Se copiaran los datos del ejercicio "
 				+ (item.getEjercicio() - 1));

@@ -1,10 +1,11 @@
 package z.old.deprecated;
 
 import com.massoftware.backend.BackendContext;
-import com.massoftware.frontend.FrontendContext;
+import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
+import com.massoftware.frontend.custom.windows.WindowsFactory;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.builder.BuilderXMD;
-import com.massoftware.frontend.util.window.StandardFormUi;
 import com.massoftware.model.Chequera;
 import com.massoftware.model.CuentaDeFondoA;
 import com.massoftware.model.Usuario;
@@ -21,37 +22,36 @@ public class ChequeraFormUi extends StandardFormUi<Chequera> {
 
 	// private ComboBox tipoCB;
 
-	public ChequeraFormUi(Usuario usuario, String mode, BackendContext cx,
+	public ChequeraFormUi(SessionVar sessionVar, String mode,
 			ChequeraTableUi chequeraTableUi) {
 
-		super(usuario, Chequera.class, mode, cx, chequeraTableUi, null);
+		super(sessionVar, Chequera.class, mode, chequeraTableUi, null);
 		init();
 	}
 
-	public ChequeraFormUi(Usuario usuario, String mode, BackendContext cx,
+	public ChequeraFormUi(SessionVar sessionVar, String mode,
 			ChequeraTableUi chequeraTableUi, Chequera object) {
 
-		super(usuario, Chequera.class, mode, cx, chequeraTableUi, object);
+		super(sessionVar, Chequera.class, mode, chequeraTableUi, object);
 		init();
 	}
 
 	private void init() {
 		this.setCompositionRoot(null);
-		
-		VerticalLayout vl = BuilderXMD.buildVL();					
-		
+
+		VerticalLayout vl = BuilderXMD.buildVL();
+
 		TabSheet ts = new TabSheet();
 		vl.addComponent(ts);
-		
-						
+
 		rootVL.setCaption("General");
 		window.setWidth("1300px");
 		ts.addComponent(rootVL);
-		
+
 		VerticalLayout valoresAnuladosVL = BuilderXMD.buildVL();
 		valoresAnuladosVL.setCaption("Valores anulados");
 		ts.addComponent(valoresAnuladosVL);
-		
+
 		this.setCompositionRoot(vl);
 	}
 
@@ -66,10 +66,17 @@ public class ChequeraFormUi extends StandardFormUi<Chequera> {
 				if (txt.getDescription().equals(
 						this.getLabel(Chequera.class, "cuentaDeFondo"))) {
 
-					FrontendContext.openWindows(false, false, false, false, false, false, false,
-							false, this, CuentaDeFondoA.class, cx, usuario,
-							"codigo", ((TextField) target).getValue(),
-							dtoBI.getItemProperty("cuentaDeFondo"), null);
+					// WindowsFactory.openWindow(false, false, false, false,
+					// false, false, false,
+					// false, this, CuentaDeFondoA.class, cx, usuario,
+					// "codigo", ((TextField) target).getValue(),
+					// dtoBI.getItemProperty("cuentaDeFondo"), null);
+
+					WindowsFactory.openWindowFromForm(this,
+							CuentaDeFondoA.class, sessionVar, "codigo",
+							((TextField) target).getValue(),
+							dtoBI.getItemProperty("cuentaDeFondo"),
+							getOtrosFiltros());
 
 				}
 			} catch (Exception e) {

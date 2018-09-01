@@ -1,12 +1,10 @@
-package com.massoftware.frontend.util;
+package com.massoftware.frontend.custom.menu;
 
-import java.io.File;
-
-import com.massoftware.frontend.FrontendContext;
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.WindowsFactory;
+import com.massoftware.frontend.util.LogAndNotification;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
@@ -23,17 +21,17 @@ public abstract class AbstractMenu extends VerticalLayout implements View {
 	private static final long serialVersionUID = 1980557664437735354L;
 
 	protected SessionVar sessionVar;
-	
+
 	protected String iconosPath;
 
-	public AbstractMenu( String title, String iconosPath, SessionVar sessionVar) {
+	public AbstractMenu(String title, String iconosPath, SessionVar sessionVar) {
 
 		try {
 
 			this.sessionVar = sessionVar;
-			
+
 			this.iconosPath = iconosPath;
-			
+
 			preinit();
 
 			setMargin(true);
@@ -67,7 +65,7 @@ public abstract class AbstractMenu extends VerticalLayout implements View {
 		return null;
 	}
 
-	protected Component getThis() {
+	protected AbstractMenu getThis() {
 		return this;
 	}
 
@@ -82,9 +80,9 @@ public abstract class AbstractMenu extends VerticalLayout implements View {
 
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				FrontendContext.openWindows(false, false, false, true, true, true, true, true,
-						getThis(), classModel, sessionVar.getCx(),
-						sessionVar.getUsuario(), null, null, null, null);
+
+				WindowsFactory.openWindowFromMenu(getThis(), classModel,
+						sessionVar);
 
 			}
 		};

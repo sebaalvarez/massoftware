@@ -3,19 +3,16 @@ package com.massoftware.frontend.custom.windows;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.CiudadBO;
 import com.massoftware.backend.bo.PaisBO;
 import com.massoftware.backend.bo.ProvinciaBO;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.builder.BuilderXMD;
-import com.massoftware.frontend.util.window.StandardFormUi;
-import com.massoftware.frontend.util.window.StandardTableUi;
 import com.massoftware.model.Ciudad;
 import com.massoftware.model.Entity;
 import com.massoftware.model.Pais;
 import com.massoftware.model.Provincia;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -38,16 +35,15 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 
 	private ComboBox filtroPaisFormCBX;
 
-	public CiudadTableUi(boolean paged, boolean pagedCount, boolean pagedOrder,
-			boolean shortcut, boolean agregar, boolean modificar,
-			boolean copiar, boolean eliminar, Window window, BackendContext cx,
-			Usuario usuario, Class<Ciudad> classModel, String pidFiltering,
-			Object searchFilter,
+	public CiudadTableUi(StandarTableUiPagedConf pagedConf, boolean shortcut,
+			boolean agregar, boolean modificar, boolean copiar,
+			boolean eliminar, Window window, SessionVar sessionVar,
+			Class<Ciudad> classModel, String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				copiar, eliminar, window, cx, usuario, classModel,
-				pidFiltering, searchFilter, searchProperty, null);
+		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
+				window, sessionVar, classModel, pidFiltering, searchFilter,
+				searchProperty, null);
 
 		paisCBXValueChange();
 
@@ -88,7 +84,7 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 		filaFiltro1HL.setComponentAlignment(filtroPaisCBX,
 				Alignment.MIDDLE_CENTER);
 
-		PaisBO paisBO = (PaisBO) cx.buildBO(Pais.class);
+		PaisBO paisBO = (PaisBO) sessionVar.getCx().buildBO(Pais.class);
 
 		List<Pais> paises = paisBO.findAll();
 		paisBIC.removeAllItems();
@@ -111,7 +107,8 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 	private void paisCBXValueChange() {
 		try {
 
-			ProvinciaBO provinciaBO = (ProvinciaBO) cx.buildBO(Provincia.class);
+			ProvinciaBO provinciaBO = (ProvinciaBO) sessionVar.getCx().buildBO(
+					Provincia.class);
 
 			List<Provincia> provincias = provinciaBO
 					.findAll((Pais) filtroPaisCBX.getValue());
@@ -145,7 +142,7 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 
 	protected List<Ciudad> reloadDataList() throws Exception {
 
-		return ((CiudadBO) cx.buildBO(classModel))
+		return ((CiudadBO) sessionVar.getCx().buildBO(classModel))
 				.findAll((Provincia) filtroProvinciaCBX.getValue());
 
 	}
@@ -157,8 +154,8 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 
 		item.setProvincia((Provincia) filtroProvinciaCBX.getValue());
 
-		StandardFormUi<Ciudad> form = new StandardFormUi<Ciudad>(usuario,
-				classModel, StandardFormUi.INSERT_MODE, cx, this, item);
+		StandardFormUi<Ciudad> form = new StandardFormUi<Ciudad>(sessionVar,
+				classModel, StandardFormUi.INSERT_MODE, this, item);
 
 		addPaisCBX(form);
 
@@ -173,8 +170,8 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 
 		o.setProvincia((Provincia) filtroProvinciaCBX.getValue());
 
-		StandardFormUi<Ciudad> form = new StandardFormUi<Ciudad>(usuario,
-				classModel, StandardFormUi.COPY_MODE, cx, this, o, item);
+		StandardFormUi<Ciudad> form = new StandardFormUi<Ciudad>(sessionVar,
+				classModel, StandardFormUi.COPY_MODE, this, o, item);
 
 		addPaisCBX(form);
 
@@ -185,8 +182,8 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 	protected StandardFormUi<Ciudad> openFormModificar(Ciudad item)
 			throws Exception {
 
-		StandardFormUi<Ciudad> form = new StandardFormUi<Ciudad>(usuario,
-				classModel, StandardFormUi.UPDATE_MODE, cx, this, item);
+		StandardFormUi<Ciudad> form = new StandardFormUi<Ciudad>(sessionVar,
+				classModel, StandardFormUi.UPDATE_MODE, this, item);
 
 		addPaisCBX(form);
 
@@ -209,7 +206,7 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 		((AbstractOrderedLayout) form.rootVL.getComponent(0)).addComponent(
 				filtroPaisFormCBX, 0);
 
-		PaisBO paisBO = (PaisBO) cx.buildBO(Pais.class);
+		PaisBO paisBO = (PaisBO) sessionVar.getCx().buildBO(Pais.class);
 
 		List<Pais> paises = paisBO.findAll();
 		paisFormBIC.removeAllItems();
@@ -239,7 +236,8 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 			BeanItemContainer<Provincia> provinciaFormBIC = (BeanItemContainer<Provincia>) provinciaCBX
 					.getContainerDataSource();
 
-			ProvinciaBO provinciaBO = (ProvinciaBO) cx.buildBO(Provincia.class);
+			ProvinciaBO provinciaBO = (ProvinciaBO) sessionVar.getCx().buildBO(
+					Provincia.class);
 
 			List<Provincia> provincias = provinciaBO
 					.findAll((Pais) filtroPaisFormCBX.getValue());

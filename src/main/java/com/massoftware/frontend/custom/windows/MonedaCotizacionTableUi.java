@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.MonedaBO;
 import com.massoftware.backend.bo.MonedaCotizacionBO;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.IntegerValue;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.builder.BuilderXMD;
-import com.massoftware.frontend.util.window.StandardFormUi;
-import com.massoftware.frontend.util.window.StandardTableUi;
 import com.massoftware.model.Entity;
 import com.massoftware.model.Moneda;
 import com.massoftware.model.MonedaCotizacion;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Alignment;
@@ -35,17 +32,16 @@ public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 	private ComboBox filtroAnioCBX;
 	private BeanItemContainer<IntegerValue> aniosBIC;
 
-	public MonedaCotizacionTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario,
-			Class<MonedaCotizacion> classModel, String pidFiltering,
-			Object searchFilter,
+	public MonedaCotizacionTableUi(StandarTableUiPagedConf pagedConf,
+			boolean shortcut, boolean agregar, boolean modificar,
+			boolean copiar, boolean eliminar, Window window,
+			SessionVar sessionVar, Class<MonedaCotizacion> classModel,
+			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				copiar, eliminar, window, cx, usuario, classModel,
-				pidFiltering, searchFilter, searchProperty, null);
+		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
+				window, sessionVar, classModel, pidFiltering, searchFilter,
+				searchProperty, null);
 
 		monedaCBXValueChange();
 
@@ -102,7 +98,7 @@ public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 				Alignment.MIDDLE_CENTER);
 		// filaFiltro1HL.setWidth("100%");
 
-		MonedaBO monedaBO = (MonedaBO) cx.buildBO(Moneda.class);
+		MonedaBO monedaBO = (MonedaBO) sessionVar.getCx().buildBO(Moneda.class);
 
 		List<Moneda> monedas = monedaBO.findAll();
 		monedasBIC.removeAllItems();
@@ -133,9 +129,9 @@ public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 
 	protected List<MonedaCotizacion> reloadDataList() throws Exception {
 
-		return ((MonedaCotizacionBO) cx.buildBO(classModel)).findAll(
-				(Moneda) filtroMonedaCBX.getValue(),
-				((IntegerValue) filtroAnioCBX.getValue()).getValue());
+		return ((MonedaCotizacionBO) sessionVar.getCx().buildBO(classModel))
+				.findAll((Moneda) filtroMonedaCBX.getValue(),
+						((IntegerValue) filtroAnioCBX.getValue()).getValue());
 
 	}
 
@@ -147,7 +143,7 @@ public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 		item.setMoneda((Moneda) filtroMonedaCBX.getValue());
 
 		StandardFormUi<MonedaCotizacion> form = new StandardFormUi<MonedaCotizacion>(
-				usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item);
+				sessionVar, classModel, StandardFormUi.INSERT_MODE, this, item);
 
 		form.setMaxValues();
 
@@ -164,8 +160,7 @@ public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 		o.setMoneda((Moneda) filtroMonedaCBX.getValue());
 
 		StandardFormUi<MonedaCotizacion> form = new StandardFormUi<MonedaCotizacion>(
-				usuario, classModel, StandardFormUi.COPY_MODE, cx, this, o,
-				item);
+				sessionVar, classModel, StandardFormUi.COPY_MODE, this, o, item);
 
 		form.setMaxValues();
 

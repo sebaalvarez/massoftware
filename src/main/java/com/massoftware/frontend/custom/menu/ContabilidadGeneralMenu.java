@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.util.AbstractMenu;
 import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.AsientoModeloItem;

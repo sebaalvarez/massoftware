@@ -1,4 +1,4 @@
-package com.massoftware.frontend.util.window;
+package com.massoftware.frontend.custom.windows;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -9,8 +9,7 @@ import java.util.Map;
 import org.cendra.jdbc.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ex.crud.UniqueException;
 
-import com.massoftware.backend.BackendContext;
-import com.massoftware.frontend.FrontendContext;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.frontend.util.builder.ComponentXMD;
@@ -20,7 +19,6 @@ import com.massoftware.frontend.util.builder.annotation.FieldAutoMaxValueAnont;
 import com.massoftware.frontend.util.builder.annotation.FieldCBBox;
 import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
 import com.massoftware.model.Entity;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -54,13 +52,12 @@ public class StandardFormUi<T> extends CustomComponent {
 
 	protected String mode;
 	protected Window window;
-	protected BackendContext cx;
+	protected SessionVar sessionVar;
 	protected String msg;
 	protected String dtoLabel;
 	public Object originalDTO;
 	public BeanItem<T> dtoBI;
 	protected Class<T> classModel;
-	protected Usuario usuario;
 
 	@SuppressWarnings("rawtypes")
 	protected StandardTableUi tableUi;
@@ -77,50 +74,50 @@ public class StandardFormUi<T> extends CustomComponent {
 	// ----------------------------------------------
 
 	@SuppressWarnings("rawtypes")
-	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
-			BackendContext cx, StandardTableUi tableUi) {
+	public StandardFormUi(SessionVar sessionVar, Class<T> classModel,
+			String mode, StandardTableUi tableUi) {
 		super();
-		init(usuario, classModel, mode, cx, tableUi, null);
+		init(sessionVar, classModel, mode, tableUi, null);
 	}
 
 	@SuppressWarnings("rawtypes")
-	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
-			BackendContext cx, StandardTableUi tableUi, T objectClone, T object) {
+	public StandardFormUi(SessionVar sessionVar, Class<T> classModel,
+			String mode, StandardTableUi tableUi, T objectClone, T object) {
 		super();
-		init(usuario, classModel, mode, cx, tableUi, objectClone);
+		init(sessionVar, classModel, mode, tableUi, objectClone);
 		if (StandardFormUi.COPY_MODE.equalsIgnoreCase(mode)) {
 			this.window.setCaption("Copiar " + dtoLabel + " : " + object);
 		}
 	}
 
 	@SuppressWarnings("rawtypes")
-	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
-			BackendContext cx, StandardTableUi tableUi, T objectClone) {
+	public StandardFormUi(SessionVar sessionVar, Class<T> classModel,
+			String mode, StandardTableUi tableUi, T objectClone) {
 		super();
-		init(usuario, classModel, mode, cx, tableUi, objectClone);
+		init(sessionVar, classModel, mode, tableUi, objectClone);
 	}
 
-	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
-			BackendContext cx) {
+	public StandardFormUi(SessionVar sessionVar, Class<T> classModel,
+			String mode) {
 		super();
-		init(usuario, classModel, mode, cx, null, null);
+		init(sessionVar, classModel, mode, null, null);
 	}
 
-	public StandardFormUi(Usuario usuario, Class<T> classModel, String mode,
-			BackendContext cx, T object) {
+	public StandardFormUi(SessionVar sessionVar, Class<T> classModel,
+			String mode, T object) {
 		super();
-		init(usuario, classModel, mode, cx, null, object);
+		init(sessionVar, classModel, mode, null, object);
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void init(Usuario usuario, Class<T> classModel, String mode,
-			BackendContext cx, StandardTableUi tableUi, T object) {
-		try {			
+	private void init(SessionVar sessionVar, Class<T> classModel, String mode,
+			StandardTableUi tableUi, T object) {
+		try {
 
 			this.tableUi = tableUi;
 
 			this.classModel = classModel;
-			this.usuario = usuario;
+			this.sessionVar = sessionVar;
 
 			this.mode = mode;
 			this.dtoLabel = getLabel();
@@ -143,7 +140,6 @@ public class StandardFormUi<T> extends CustomComponent {
 			} else if (StandardFormUi.COPY_MODE.equalsIgnoreCase(mode)) {
 				this.window.setCaption("Copiar " + dtoLabel + " : " + object);
 			}
-			this.cx = cx;
 			buildContainers(object);
 			buildControls();
 
@@ -171,31 +167,38 @@ public class StandardFormUi<T> extends CustomComponent {
 
 	@SuppressWarnings("unchecked")
 	protected void shortcutListener(Object target) {
-		
+
 		if (target instanceof TextField) {
 			TextField txt = (TextField) target;
-			
+
 			Field[] fields = classModel.getDeclaredFields();
 			for (Field field : fields) {
 				if (isCBBox(field)) {
-					if (txt.getDescription().equals(getLabel(field))) {											
-						
-						FrontendContext.openWindows(false, false, false, true, true, true, true, true, this,
-								field.getType(), cx, usuario, getCBBoxAttName(field),
+					if (txt.getDescription().equals(getLabel(field))) {
+
+						// WindowsFactory.openWindow(false, false, false, true,
+						// true, true, true, true, this,
+						// field.getType(), cx, usuario, getCBBoxAttName(field),
+						// ((TextField) target).getValue(),
+						// dtoBI.getItemProperty(field.getName()),
+						// getOtrosFiltros());
+
+						WindowsFactory.openWindowFromForm(this,
+								field.getType(), sessionVar,
+								getCBBoxAttName(field),
 								((TextField) target).getValue(),
-								dtoBI.getItemProperty(field.getName()), getOtrosFiltros());
+								dtoBI.getItemProperty(field.getName()),
+								getOtrosFiltros());
 					}
 				}
 			}
-			
-			
+
 		}
-		
-		
+
 	}
-	
+
 	@SuppressWarnings("rawtypes")
-	protected List getOtrosFiltros(){
+	protected List getOtrosFiltros() {
 		return null;
 	}
 
@@ -247,8 +250,8 @@ public class StandardFormUi<T> extends CustomComponent {
 
 				if (field.getType() == Integer.class && isAutoMaxValue(field)) {
 
-					Integer maxNumero = cx.buildBO(classModel).maxValue(
-							field.getName(), dtoBI.getBean());
+					Integer maxNumero = sessionVar.getCx().buildBO(classModel)
+							.maxValue(field.getName(), dtoBI.getBean());
 					if (maxNumero == null || maxNumero < 1) {
 						maxNumero = 1;
 					}
@@ -294,7 +297,7 @@ public class StandardFormUi<T> extends CustomComponent {
 		// --------------------------------------------------
 
 	}
-	
+
 	private static Button buildUptaqteBTN(String mode) {
 		Button btn = new Button();
 		btn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -316,8 +319,9 @@ public class StandardFormUi<T> extends CustomComponent {
 		String formSource = getFormSource();
 		if (formSource != null && formSource.trim().length() > 0) {
 
-			rootVL.addComponent(BuilderXMD.loadModel(window, controls, usuario,
-					cx, formSource.trim(), dtoBI, originalDTO, mode));
+			rootVL.addComponent(BuilderXMD.loadModel(window, controls,
+					sessionVar.getUsuario(), sessionVar.getCx(),
+					formSource.trim(), dtoBI, originalDTO, mode));
 		} else {
 			ComponentXMD rootVLXMD = new ComponentXMD(ComponentXMD.VL);
 			rootVLXMD.setClassModel(classModel);
@@ -326,8 +330,9 @@ public class StandardFormUi<T> extends CustomComponent {
 			for (Field field : fields) {
 				rootVLXMD.addAttName(field.getName());
 			}
-			rootVL.addComponent(BuilderXMD.loadModel(window, controls, usuario,
-					cx, rootVLXMD, dtoBI, originalDTO, mode));
+			rootVL.addComponent(BuilderXMD.loadModel(window, controls,
+					sessionVar.getUsuario(), sessionVar.getCx(), rootVLXMD,
+					dtoBI, originalDTO, mode));
 		}
 
 	}
@@ -392,20 +397,21 @@ public class StandardFormUi<T> extends CustomComponent {
 		validateAllFields(rootVL);
 
 	}
-	
+
 	protected void validateAllFields() throws Exception {
 		validateAllFields(rootVL);
 	}
-	
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void validateAllFields(AbstractComponentContainer componentContainer)
 			throws Exception {
 
 		if (mode.equals(UPDATE_MODE)) {
-			cx.buildBO(classModel).checkUnique(dtoBI.getBean(), originalDTO);
+			sessionVar.getCx().buildBO(classModel)
+					.checkUnique(dtoBI.getBean(), originalDTO);
 		} else {
-			cx.buildBO(classModel).checkUnique(dtoBI.getBean(), null);
+			sessionVar.getCx().buildBO(classModel)
+					.checkUnique(dtoBI.getBean(), null);
 		}
 
 		Iterator<Component> itr = componentContainer.iterator();
@@ -431,12 +437,14 @@ public class StandardFormUi<T> extends CustomComponent {
 
 	@SuppressWarnings("unchecked")
 	protected void insert() throws Exception {
-		cx.buildBO(classModel).insert(dtoBI.getBean(), usuario);
+		sessionVar.getCx().buildBO(classModel)
+				.insert(dtoBI.getBean(), sessionVar.getUsuario());
 	}
 
 	@SuppressWarnings("unchecked")
 	protected void update() throws Exception {
-		cx.buildBO(classModel).update(dtoBI.getBean(), originalDTO, usuario);
+		sessionVar.getCx().buildBO(classModel)
+				.update(dtoBI.getBean(), originalDTO, sessionVar.getUsuario());
 	}
 
 	protected void postInsert() throws Exception {
@@ -527,6 +535,5 @@ public class StandardFormUi<T> extends CustomComponent {
 
 		return null;
 	}
-	
-	
+
 } // END CLASS ///////////////////////////////////////////////////////////

@@ -1,10 +1,8 @@
 package com.massoftware.frontend.custom.windows;
 
-import com.massoftware.backend.BackendContext;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.window.StandardTableUi;
 import com.massoftware.model.SeguridadModulo;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -16,16 +14,14 @@ public class SeguridadModuloTableUi extends StandardTableUi<SeguridadModulo> {
 	private SeguridadPuertaTableUi seguridadPuertaTableUi;
 
 	@SuppressWarnings("rawtypes")
-	public SeguridadModuloTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
+	public SeguridadModuloTableUi(StandarTableUiPagedConf pagedConf, boolean shortcut, boolean agregar,
 			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario,
-			Class<SeguridadModulo> classModel, String pidFiltering,
-			Object searchFilter, Property searchProperty,
+			SessionVar sessionVar, Class<SeguridadModulo> classModel,
+			String pidFiltering, Object searchFilter, Property searchProperty,
 			SeguridadPuertaTableUi seguridadPuertaTableUi) {
 
-		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				false, eliminar, window, cx, usuario, classModel, pidFiltering,
+		super(pagedConf, shortcut, agregar, modificar,
+				false, eliminar, window, sessionVar, classModel, pidFiltering,
 				searchFilter, searchProperty, null);
 
 		this.seguridadPuertaTableUi = seguridadPuertaTableUi;

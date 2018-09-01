@@ -1,4 +1,4 @@
-package com.massoftware.frontend.util.window;
+package com.massoftware.frontend.custom.windows;
 
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.cendra.jdbc.ex.crud.DeleteForeingObjectConflictException;
 
-import com.massoftware.backend.BackendContext;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.ColumnMetaData;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.SimpleStringTraslateFilter;
@@ -22,7 +22,6 @@ import com.massoftware.frontend.util.builder.annotation.FieldSubNameFKAnont;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.Entity;
 import com.massoftware.model.EntityId;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItemContainer;
@@ -60,15 +59,13 @@ public class StandardTableUi<T> extends CustomComponent {
 	 */
 	private static final long serialVersionUID = -2361315768472348160L;
 
-	protected boolean paged = false;
-	protected boolean pagedCount = false;
-	protected boolean pagedOrder = false;
+	protected StandarTableUiPagedConf pagedConf;
+
 	protected int limit = 15;
 	protected int offset = 0;
 
 	protected Window window;
-	protected BackendContext cx;
-	protected Usuario usuario;
+	protected SessionVar sessionVar;
 
 	// ----------------------------------------------
 	// CONTROLES
@@ -140,18 +137,73 @@ public class StandardTableUi<T> extends CustomComponent {
 
 	// ----------------------------------------------
 
-	public StandardTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario, Class<T> classModel,
-			String pidFiltering, Object valueFilter,
+	// // MODO ABM
+	// protected StandardTableUi(Window window, BackendContext cx,
+	// Usuario usuario, Class<T> classModel) {
+	//
+	// buildABMMode(window, cx, usuario, classModel);
+	// }
+	//
+	// // MODO SELECTOR
+	// protected StandardTableUi(Window window, BackendContext cx,
+	// Usuario usuario, Class<T> classModel, String pidFiltering,
+	// Object valueFilter,
+	// @SuppressWarnings("rawtypes") Property searchProperty,
+	// List<Object> otrosFiltros) {
+	//
+	// buildSelectionMode(window, cx, usuario, classModel, pidFiltering,
+	// valueFilter, searchProperty, otrosFiltros);
+	// }
+
+	protected StandardTableUi(StandarTableUiPagedConf pagedConf,
+			boolean shortcut, boolean agregar, boolean modificar,
+			boolean copiar, boolean eliminar, Window window,
+			SessionVar sessionVar, Class<T> classModel, String pidFiltering,
+			Object valueFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty,
 			List<Object> otrosFiltros) {
-		super();
+
+		build(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
+				window, sessionVar, classModel, pidFiltering, valueFilter,
+				searchProperty, otrosFiltros);
+	}
+
+	// ---------------------------------------------------------------------
+
+	// // MODO ABM
+	// private void buildABMMode(Window window, BackendContext cx,
+	// Usuario usuario, Class<T> classModel) {
+	//
+	// build(false, false, false, true, true, true, true, true, window, cx,
+	// usuario, classModel, null, null, null, null);
+	// }
+	//
+	// // MODO SELECTOR
+	// private void buildSelectionMode(Window window, BackendContext cx,
+	// Usuario usuario, Class<T> classModel, String pidFiltering,
+	// Object valueFilter,
+	// @SuppressWarnings("rawtypes") Property searchProperty,
+	// List<Object> otrosFiltros) {
+	//
+	// build(false, false, false, true, true, true, true, true, window, cx,
+	// usuario, classModel, pidFiltering, valueFilter, searchProperty,
+	// otrosFiltros);
+	// }
+
+	private void build(StandarTableUiPagedConf pagedConf, boolean shortcut,
+			boolean agregar, boolean modificar, boolean copiar,
+			boolean eliminar, Window window, SessionVar sessionVar,
+			Class<T> classModel, String pidFiltering, Object valueFilter,
+			@SuppressWarnings("rawtypes") Property searchProperty,
+			List<Object> otrosFiltros) {
+
 		try {
-			this.paged = paged;
-			this.pagedCount = pagedCount;
-			this.pagedOrder = pagedOrder;
+
+			if (pagedConf == null) {
+				this.pagedConf = new StandarTableUiPagedConf();
+			} else {
+				this.pagedConf = pagedConf;
+			}
 
 			this.otrosFiltros = otrosFiltros;
 
@@ -162,10 +214,10 @@ public class StandardTableUi<T> extends CustomComponent {
 			this.eliminar = eliminar;
 
 			this.classModel = classModel;
-			this.cx = cx;
-			this.usuario = usuario;
 			this.searchFilter = valueFilter;
 			this.searchProperty = searchProperty;
+
+			this.sessionVar = sessionVar;
 
 			this.window = window;
 			if (this.window != null) {
@@ -308,7 +360,8 @@ public class StandardTableUi<T> extends CustomComponent {
 		// filtroGenericoTXT.setIcon(FontAwesome.SEARCH);
 		filtroGenericoTXT.setImmediate(true);
 		filtroGenericoTXT.setNullRepresentation("");
-		filtroGenericoHL.setVisible((paged == true && pagedCount == true));
+		filtroGenericoHL.setVisible((pagedConf.isPaged() == true && pagedConf
+				.isPagedCount() == true));
 
 		for (ColumnMetaData columnMetaData : columnsMetaData) {
 
@@ -487,13 +540,13 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		cantItemsLBL = BuilderXMD.buildLBL();
 		cantItemsLBL.setCaption("Cantidad de items: 0");
-		cantItemsLBL.setVisible(paged);
+		cantItemsLBL.setVisible(pagedConf.isPaged());
 
 		rootVL.addComponent(barraDeHerramientasFila0);
 		rootVL.setComponentAlignment(barraDeHerramientasFila0,
 				Alignment.MIDDLE_RIGHT);
 
-		if (paged) {
+		if (pagedConf.isPaged()) {
 
 			barraDeHerramientasFila0.addComponent(cantItemsLBL);
 			barraDeHerramientasFila0.setComponentAlignment(cantItemsLBL,
@@ -507,7 +560,7 @@ public class StandardTableUi<T> extends CustomComponent {
 			prevPageBTN.addClickListener(e -> {
 				prevPageBTNClick();
 			});
-			prevPageBTN.setVisible(paged);
+			prevPageBTN.setVisible(pagedConf.isPaged());
 
 			barraDeHerramientasFila0.addComponent(prevPageBTN);
 
@@ -518,7 +571,7 @@ public class StandardTableUi<T> extends CustomComponent {
 			nextPageBTN.addClickListener(e -> {
 				nextPageBTNClick();
 			});
-			nextPageBTN.setVisible(paged);
+			nextPageBTN.setVisible(pagedConf.isPaged());
 
 			barraDeHerramientasFila0.addComponent(nextPageBTN);
 
@@ -746,8 +799,8 @@ public class StandardTableUi<T> extends CustomComponent {
 		// DepositoFormUi ui = new DepositoFormUi(StandardFormUi.INSERT_MODE,
 		// cx, null, this);
 
-		return new StandardFormUi<T>(usuario, classModel,
-				StandardFormUi.INSERT_MODE, cx, this, classModel.newInstance());
+		return new StandardFormUi<T>(sessionVar, classModel,
+				StandardFormUi.INSERT_MODE, this, classModel.newInstance());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -770,8 +823,8 @@ public class StandardTableUi<T> extends CustomComponent {
 		// DepositoFormUi ui = new DepositoFormUi(StandardFormUi.UPDATE_MODE,
 		// cx, item, this);
 
-		return new StandardFormUi<T>(usuario, classModel,
-				StandardFormUi.UPDATE_MODE, cx, this, item);
+		return new StandardFormUi<T>(sessionVar, classModel,
+				StandardFormUi.UPDATE_MODE, this, item);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -798,8 +851,8 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		T o = (T) ((Entity) item).copy();
 
-		return new StandardFormUi<T>(usuario, classModel,
-				StandardFormUi.COPY_MODE, cx, this, o, item);
+		return new StandardFormUi<T>(sessionVar, classModel,
+				StandardFormUi.COPY_MODE, this, o, item);
 
 	}
 
@@ -858,12 +911,12 @@ public class StandardTableUi<T> extends CustomComponent {
 
 	@SuppressWarnings("unchecked")
 	protected void deleteItem(T item) throws Exception {
-		cx.buildBO(classModel).delete(item);
+		sessionVar.getCx().buildBO(classModel).delete(item);
 	}
 
 	private void filtroGenericoTXTTextChange(String filterValue) {
 		try {
-			if (paged) {
+			if (pagedConf.isPaged()) {
 				pidFilteringValue = filterValue;
 				reloadData();
 			} else {
@@ -995,7 +1048,7 @@ public class StandardTableUi<T> extends CustomComponent {
 	private void sort(SortEvent sortEvent) {
 		try {
 
-			if (paged && pagedOrder) {
+			if (pagedConf.isPaged() && pagedConf.isPagedOrder()) {
 
 				pidFiltering = itemsGRD.getSortOrder().get(0).getPropertyId()
 						.toString();
@@ -1040,7 +1093,8 @@ public class StandardTableUi<T> extends CustomComponent {
 
 				filtroGenericoTXT.focus();
 
-				if (sortEvent != null && paged && pagedOrder) {
+				if (sortEvent != null && pagedConf.isPaged()
+						&& pagedConf.isPagedOrder()) {
 					reloadData();
 				}
 
@@ -1103,7 +1157,7 @@ public class StandardTableUi<T> extends CustomComponent {
 				itemsBIC.addBean(item);
 			}
 
-			if (paged == false) {
+			if (pagedConf.isPaged() == false) {
 
 				cantItemsLBL
 						.setCaption("Cantidad de items: " + itemsBIC.size());
@@ -1132,12 +1186,12 @@ public class StandardTableUi<T> extends CustomComponent {
 			if (eliminar) {
 				eliminarBTN.setEnabled(enabled);
 			}
-			if (paged) {
+			if (pagedConf.isPaged()) {
 				nextPageBTN.setEnabled(itemsBIC.size() > 0
 						&& itemsBIC.size() <= 15);
 			}
 
-			if (paged) {
+			if (pagedConf.isPaged()) {
 				prevPageBTN.setEnabled(offset >= 15);
 			}
 
@@ -1262,33 +1316,35 @@ public class StandardTableUi<T> extends CustomComponent {
 	protected List<T> reloadDataList(String orderBy, String where,
 			Object value, int limit, int offset) throws Exception {
 
-		if (paged) {
+		if (pagedConf.isPaged()) {
 			if (pidFilteringValue != null
 					&& pidFilteringValue.trim().length() > 0) {
 
-				if (pagedCount) {
-					Integer count = cx.buildBO(classModel).count(where, value);
+				if (pagedConf.isPagedCount()) {
+					Integer count = sessionVar.getCx().buildBO(classModel)
+							.count(where, value);
 
 					cantItemsLBL.setCaption("Cantidad de items: " + count);
 				}
 
-				return cx.buildBO(classModel).findPaged(orderBy, where, limit,
-						offset, value);
+				return sessionVar.getCx().buildBO(classModel)
+						.findPaged(orderBy, where, limit, offset, value);
 
 			} else {
 
-				if (pagedCount) {
-					Integer count = cx.buildBO(classModel).count();
+				if (pagedConf.isPagedCount()) {
+					Integer count = sessionVar.getCx().buildBO(classModel)
+							.count();
 
 					cantItemsLBL.setCaption("Cantidad de items: " + count);
 				}
 
-				return cx.buildBO(classModel).findAllPaged(orderBy, limit,
-						offset);
+				return sessionVar.getCx().buildBO(classModel)
+						.findAllPaged(orderBy, limit, offset);
 			}
 
 		} else {
-			return cx.buildBO(classModel).findAll();
+			return sessionVar.getCx().buildBO(classModel).findAll();
 		}
 
 	}

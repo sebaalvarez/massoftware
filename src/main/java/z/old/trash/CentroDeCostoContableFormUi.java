@@ -2,7 +2,7 @@ package z.old.trash;
 
 import com.massoftware.backend.BackendContext;
 import com.massoftware.frontend.custom.windows.CentroDeCostoContableTableUi;
-import com.massoftware.frontend.util.window.StandardFormUi;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Usuario;

@@ -5,15 +5,13 @@ import java.util.List;
 import org.cendra.jdbc.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ex.crud.UniqueException;
 
-import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.custom.validator.CuentaContableCodigoPadreUniqueValidator;
 import com.massoftware.frontend.custom.validator.CuentaContableCodigoUniqueValidator;
 import com.massoftware.frontend.custom.validator.CuentaContableCuentaContableUniqueValidator;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.window.StandardFormUi;
-import com.massoftware.frontend.util.window.StandardTableUi;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CostoDeVenta;
 import com.massoftware.model.CuentaContable;
@@ -21,7 +19,6 @@ import com.massoftware.model.CuentaContableEstado;
 import com.massoftware.model.CuentaContableFull;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -34,7 +31,8 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class CuentaContableFullFormUi extends StandardFormUi<CuentaContableFull> {
+public class CuentaContableFullFormUi extends
+		StandardFormUi<CuentaContableFull> {
 
 	/**
 	 * 
@@ -43,7 +41,7 @@ public class CuentaContableFullFormUi extends StandardFormUi<CuentaContableFull>
 
 	private TabSheet pestaniasTBS;
 	private VerticalLayout pestaniaCCVL;
-	
+
 	private TextField codigoCuentaPadreTXT;
 	private TextField codigoCuentaTXT;
 	private TextField cuentaContableTXT;
@@ -62,41 +60,37 @@ public class CuentaContableFullFormUi extends StandardFormUi<CuentaContableFull>
 	private ComboBox filtroPuntoDeEquilibrioCBX;
 	protected BeanItemContainer<PuntoDeEquilibrio> puntosDeEquilibrioBIC;
 
-	public CuentaContableFullFormUi(Usuario usuario,/*
-			Class<CuentaContableFull> classModel,*/ String mode, BackendContext cx,
+	public CuentaContableFullFormUi(SessionVar sessionVar, String mode,
 			CuentaContableFull object) {
-		super(usuario, CuentaContableFull.class, mode, cx, object);
+		super(sessionVar, CuentaContableFull.class, mode, object);
 		start();
 	}
 
 	@SuppressWarnings("rawtypes")
-	public CuentaContableFullFormUi(Usuario usuario,/*
-			Class<CuentaContableFull> classModel,*/ String mode, BackendContext cx,
+	public CuentaContableFullFormUi(SessionVar sessionVar, String mode,
 			StandardTableUi tableUi, CuentaContableFull objectClone,
 			CuentaContableFull object) {
-		super(usuario, CuentaContableFull.class, mode, cx, tableUi, objectClone, object);
+		super(sessionVar, CuentaContableFull.class, mode, tableUi, objectClone,
+				object);
 		start();
 	}
 
 	@SuppressWarnings("rawtypes")
-	public CuentaContableFullFormUi(Usuario usuario,/*
-			Class<CuentaContableFull> classModel,*/ String mode, BackendContext cx,
+	public CuentaContableFullFormUi(SessionVar sessionVar, String mode,
 			StandardTableUi tableUi, CuentaContableFull objectClone) {
-		super(usuario, CuentaContableFull.class, mode, cx, tableUi, objectClone);
+		super(sessionVar, CuentaContableFull.class, mode, tableUi, objectClone);
 		start();
 	}
 
 	@SuppressWarnings("rawtypes")
-	public CuentaContableFullFormUi(Usuario usuario,/*
-			Class<CuentaContableFull> classModel,*/ String mode, BackendContext cx,
+	public CuentaContableFullFormUi(SessionVar sessionVar, String mode,
 			StandardTableUi tableUi) {
-		super(usuario, CuentaContableFull.class, mode, cx, tableUi);
+		super(sessionVar, CuentaContableFull.class, mode, tableUi);
 		start();
 	}
 
-	public CuentaContableFullFormUi(Usuario usuario,/*
-			Class<CuentaContableFull> classModel,*/ String mode, BackendContext cx) {
-		super(usuario, CuentaContableFull.class, mode, cx);
+	public CuentaContableFullFormUi(SessionVar sessionVar, String mode) {
+		super(sessionVar, CuentaContableFull.class, mode);
 		start();
 	}
 
@@ -104,8 +98,8 @@ public class CuentaContableFullFormUi extends StandardFormUi<CuentaContableFull>
 	private void start() {
 
 		// ----------------------------------
-		
-		pestaniasTBS = (TabSheet) getComponentById("pestaniasTBS");				
+
+		pestaniasTBS = (TabSheet) getComponentById("pestaniasTBS");
 		pestaniaCCVL = (VerticalLayout) getComponentById("pestaniaCC");
 
 		imputableCKB = (CheckBox) getComponentById("imputable");
@@ -170,12 +164,12 @@ public class CuentaContableFullFormUi extends StandardFormUi<CuentaContableFull>
 		// +
 		// " es requerido. Es decir no debe estar vacio y debe contener 16 caracteres con un formato como el siguiente 9.99.99.99.99.99",
 		// 11, 11, false, '_'));
-		
+
 		addValidatorCodigoCuentaTXT();
-		
+
 		// ----------------------------------
-		
-		 addValidatorCuentaContableTXT();
+
+		addValidatorCuentaContableTXT();
 
 		// ----------------------------------
 
@@ -264,13 +258,11 @@ public class CuentaContableFullFormUi extends StandardFormUi<CuentaContableFull>
 	private void imputableCKBChange() {
 		try {
 
-			
-			
 			boolean b = dtoBI.getBean().getImputable().booleanValue();
 
-//			pestaniaCCVL.setEnabled(b);
+			// pestaniaCCVL.setEnabled(b);
 			pestaniasTBS.getTab(pestaniaCCVL).setEnabled(b);
-			
+
 			filtroCentroDeCostoContableCBX.setEnabled(b);
 			filtroPuntoDeEquilibrioCBX.setEnabled(b);
 			costoDeVentaCBX.setEnabled(b);
@@ -286,10 +278,10 @@ public class CuentaContableFullFormUi extends StandardFormUi<CuentaContableFull>
 		try {
 
 			if (ejerciciosContablesBIC.size() > 0) {
-				
-				filtroCentroDeCostoContableCBX.setValue(null);				
+
+				filtroCentroDeCostoContableCBX.setValue(null);
 				filtroPuntoDeEquilibrioCBX.setValue(null);
-				
+
 				// ----------------------------------
 
 				EjercicioContable ejercicioContable = (EjercicioContable) filtroEjercicioCBX
@@ -297,8 +289,8 @@ public class CuentaContableFullFormUi extends StandardFormUi<CuentaContableFull>
 
 				// ----------------------------------
 
-				CentroDeCostoContableBO centroDeCostoContableBO = (CentroDeCostoContableBO) cx
-						.buildBO(CentroDeCostoContable.class);
+				CentroDeCostoContableBO centroDeCostoContableBO = (CentroDeCostoContableBO) sessionVar
+						.getCx().buildBO(CentroDeCostoContable.class);
 
 				List<CentroDeCostoContable> centroDeCostosContable = centroDeCostoContableBO
 						.findAll(ejercicioContable);
@@ -313,8 +305,8 @@ public class CuentaContableFullFormUi extends StandardFormUi<CuentaContableFull>
 
 				// ----------------------------------
 
-				PuntoDeEquilibrioBO puntoDeEquilibrioBO = (PuntoDeEquilibrioBO) cx
-						.buildBO(PuntoDeEquilibrio.class);
+				PuntoDeEquilibrioBO puntoDeEquilibrioBO = (PuntoDeEquilibrioBO) sessionVar
+						.getCx().buildBO(PuntoDeEquilibrio.class);
 
 				List<PuntoDeEquilibrio> puntosDeEquilibrio = puntoDeEquilibrioBO
 						.findAll(ejercicioContable);
@@ -352,49 +344,49 @@ public class CuentaContableFullFormUi extends StandardFormUi<CuentaContableFull>
 	}
 
 	private void addValidatorCodigoCuentaTXT() {
-		
+
 		codigoCuentaTXT.removeAllValidators();
 
 		CuentaContableCodigoUniqueValidator cuentaContableCodigoUniqueValidator;
 
 		if (StandardFormUi.INSERT_MODE.equalsIgnoreCase(mode)) {
 			cuentaContableCodigoUniqueValidator = new CuentaContableCodigoUniqueValidator(
-					cx, dtoBI);
+					sessionVar.getCx(), dtoBI);
 		} else {
 			cuentaContableCodigoUniqueValidator = new CuentaContableCodigoUniqueValidator(
-					cx, dtoBI, ((CuentaContableFull) originalDTO).getCodigoCuenta());
+					sessionVar.getCx(), dtoBI,
+					((CuentaContableFull) originalDTO).getCodigoCuenta());
 		}
 		codigoCuentaTXT.addValidator(cuentaContableCodigoUniqueValidator);
 	}
-	
+
 	private void addValidatorCodigoCuentaPadreTXT() {
-		
+
 		codigoCuentaPadreTXT.removeAllValidators();
 
 		CuentaContableCodigoPadreUniqueValidator stringPlanDeCuentaCodigoPadreValidator = new CuentaContableCodigoPadreUniqueValidator(
-				cx, dtoBI);
+				sessionVar.getCx(), dtoBI);
 		codigoCuentaPadreTXT
 				.addValidator(stringPlanDeCuentaCodigoPadreValidator);
 	}
-	
+
 	private void addValidatorCuentaContableTXT() {
-		
+
 		cuentaContableTXT.removeAllValidators();
-		
+
 		CuentaContableCuentaContableUniqueValidator stringPlanDeCuentaCuentaContableValidator = null;
 
 		if (StandardFormUi.INSERT_MODE.equalsIgnoreCase(mode)) {
 			stringPlanDeCuentaCuentaContableValidator = new CuentaContableCuentaContableUniqueValidator(
-					cx, dtoBI);
+					sessionVar.getCx(), dtoBI);
 		} else {
 			stringPlanDeCuentaCuentaContableValidator = new CuentaContableCuentaContableUniqueValidator(
-					cx, dtoBI, ((CuentaContable) originalDTO).getCuentaContable());
+					sessionVar.getCx(), dtoBI,
+					((CuentaContable) originalDTO).getCuentaContable());
 		}
 		cuentaContableTXT
 				.addValidator(stringPlanDeCuentaCuentaContableValidator);
 
 	}
-	
-
 
 }

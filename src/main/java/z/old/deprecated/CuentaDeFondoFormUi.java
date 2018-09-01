@@ -1,15 +1,15 @@
 package z.old.deprecated;
 
 import com.massoftware.backend.BackendContext;
-import com.massoftware.frontend.FrontendContext;
+import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
+import com.massoftware.frontend.custom.windows.WindowsFactory;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.window.StandardFormUi;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.CuentaDeFondoA;
 import com.massoftware.model.CuentaDeFondoTipo;
 import com.massoftware.model.SeguridadPuerta;
-import com.massoftware.model.Usuario;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TabSheet;
@@ -24,18 +24,18 @@ public class CuentaDeFondoFormUi extends StandardFormUi<CuentaDeFondo> {
 
 	private ComboBox tipoCB;
 
-	public CuentaDeFondoFormUi(Usuario usuario,String mode, BackendContext cx,
-			CuentaDeFondoTableUi cuentaDeFondoTableUi) {
+	public CuentaDeFondoFormUi(SessionVar sessionVar, String mode,
+			BackendContext cx, CuentaDeFondoTableUi cuentaDeFondoTableUi) {
 
-		super(usuario, CuentaDeFondo.class, mode, cx, cuentaDeFondoTableUi, null);
+		super(sessionVar, CuentaDeFondo.class, mode, cuentaDeFondoTableUi, null);
 		init();
 	}
 
-	public CuentaDeFondoFormUi(Usuario usuario,
-			String mode, BackendContext cx,
+	public CuentaDeFondoFormUi(SessionVar sessionVar, String mode,
 			CuentaDeFondoTableUi cuentaDeFondoTableUi, CuentaDeFondo object) {
 
-		super(usuario, CuentaDeFondo.class, mode, cx, cuentaDeFondoTableUi, object);
+		super(sessionVar, CuentaDeFondo.class, mode, cuentaDeFondoTableUi,
+				object);
 		init();
 	}
 
@@ -97,54 +97,45 @@ public class CuentaDeFondoFormUi extends StandardFormUi<CuentaDeFondo> {
 		if (target instanceof TextField) {
 
 			TextField txt = (TextField) target;
-			
-			
 
 			if (txt.getDescription().equals("Cuenta contable")) {
 
-				FrontendContext.openWindows(false, false, false, true, true, true, true, true, this,
-						CuentaContable.class, cx, usuario, "cuentaContable",
+				WindowsFactory.openWindowFromForm(this, CuentaContable.class,
+						sessionVar, "cuentaContable",
 						((TextField) target).getValue(),
 						dtoBI.getItemProperty("cuentaContable"), null);
 
 			} else if (txt.getDescription().equals("Cuenta diferidos")) {
 
-				FrontendContext.openWindows(false, false, false, false, false, false, false, false, this,
-						CuentaDeFondoA.class, cx, usuario, "codigo",
-						((TextField) target).getValue(),
+				WindowsFactory.openWindowFromForm(this, CuentaDeFondoA.class,
+						sessionVar, "codigo", ((TextField) target).getValue(),
 						dtoBI.getItemProperty("cuentaDiferidos"), null);
 
 			} else if (txt.getDescription().equals("Cuenta caución")) {
 
-				FrontendContext.openWindows(false, false, false, false, false, false, false, false, this,
-						CuentaDeFondoA.class, cx, usuario, "codigo",
-						((TextField) target).getValue(),
+				WindowsFactory.openWindowFromForm(this, CuentaDeFondoA.class,
+						sessionVar, "codigo", ((TextField) target).getValue(),
 						dtoBI.getItemProperty("cuentaCaucion"), null);
-				
+
 			} else if (txt.getDescription().equals("Puerta para uso de cta.")) {
 
-				FrontendContext.openWindows(false, false, false, true, true, true, true, true, this,
-						SeguridadPuerta.class, cx, usuario, "codigo",
-						((TextField) target).getValue(),
+				WindowsFactory.openWindowFromForm(this, SeguridadPuerta.class,
+						sessionVar, "codigo", ((TextField) target).getValue(),
 						dtoBI.getItemProperty("seguridadPuerta"), null);
-				
-			}else if (txt.getDescription().equals("Puerta para consulta")) {
 
-				FrontendContext.openWindows(false, false, false, true, true, true, true, true, this,
-						SeguridadPuerta.class, cx, usuario, "codigo",
-						((TextField) target).getValue(),
+			} else if (txt.getDescription().equals("Puerta para consulta")) {
+
+				WindowsFactory.openWindowFromForm(this, SeguridadPuerta.class,
+						sessionVar, "codigo", ((TextField) target).getValue(),
 						dtoBI.getItemProperty("puertaConsulta"), null);
-				
-			}else if (txt.getDescription().equals("Puerta, derecho para superar límite")) {
 
-				FrontendContext.openWindows(false, false, false, true, true, true, true, true, this,
-						SeguridadPuerta.class, cx, usuario, "codigo",
-						((TextField) target).getValue(),
+			} else if (txt.getDescription().equals(
+					"Puerta, derecho para superar límite")) {
+
+				WindowsFactory.openWindowFromForm(this, SeguridadPuerta.class,
+						sessionVar, "codigo", ((TextField) target).getValue(),
 						dtoBI.getItemProperty("puertaLimite"), null);
 			}
-
-
-
 
 		}
 

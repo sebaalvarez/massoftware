@@ -403,8 +403,8 @@ public class CuentaContable extends EntityId implements
 
 		if (this.ejercicioContable == null) {
 
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".ejercicioContable es nulo.");
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".ejercicioContable es nulo.");
 		} else {
 			this.ejercicioContable.validate();
 		}

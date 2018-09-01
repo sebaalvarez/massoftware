@@ -7,10 +7,10 @@ import org.cendra.jdbc.ex.crud.DeleteForeingObjectConflictException;
 
 import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.SucursalBO;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.SimpleStringTraslateFilter;
 import com.massoftware.frontend.util.YesNoDialog;
-import com.massoftware.frontend.util.window.StandardFormUi;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.Entity;
 import com.massoftware.model.Sucursal;

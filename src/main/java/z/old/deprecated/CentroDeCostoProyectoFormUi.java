@@ -1,11 +1,10 @@
 package z.old.deprecated;
 
-import com.massoftware.backend.BackendContext;
+import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.window.StandardFormUi;
 import com.massoftware.model.CentroDeCostoProyecto;
 import com.massoftware.model.CentroDeCostoProyectoTipo;
-import com.massoftware.model.Usuario;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextArea;
@@ -20,27 +19,27 @@ public class CentroDeCostoProyectoFormUi extends
 
 	private ComboBox tipoCB;
 
-	public CentroDeCostoProyectoFormUi(Usuario usuario, String mode,
-			BackendContext cx, CentroDeCostoProyectoTableUi chequeraTableUi) {
+	public CentroDeCostoProyectoFormUi(SessionVar sessionVar, String mode,
+			CentroDeCostoProyectoTableUi chequeraTableUi) {
 
-		super(usuario, CentroDeCostoProyecto.class, mode, cx, chequeraTableUi,
+		super(sessionVar, CentroDeCostoProyecto.class, mode, chequeraTableUi,
 				null);
 		init();
 	}
 
-	public CentroDeCostoProyectoFormUi(Usuario usuario, String mode,
-			BackendContext cx, CentroDeCostoProyectoTableUi chequeraTableUi,
+	public CentroDeCostoProyectoFormUi(SessionVar sessionVar, String mode,
+			CentroDeCostoProyectoTableUi chequeraTableUi,
 			CentroDeCostoProyecto object) {
 
-		super(usuario, CentroDeCostoProyecto.class, mode, cx, chequeraTableUi,
+		super(sessionVar, CentroDeCostoProyecto.class, mode, chequeraTableUi,
 				object);
 		init();
 	}
 
 	private void init() {
-		
+
 		tipoCBXValueChange();
-		
+
 		tipoCB = (ComboBox) this.getComponentById("tipo");
 
 		tipoCB.addValueChangeListener(e -> {

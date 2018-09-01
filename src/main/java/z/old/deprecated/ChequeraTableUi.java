@@ -2,15 +2,15 @@ package z.old.deprecated;
 
 import java.util.List;
 
-import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.ChequeraBO;
+import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.StandarTableUiPagedConf;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
+import com.massoftware.frontend.custom.windows.StandardTableUi;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.builder.BuilderXMD;
-import com.massoftware.frontend.util.window.StandardFormUi;
-import com.massoftware.frontend.util.window.StandardTableUi;
 import com.massoftware.model.Chequera;
 import com.massoftware.model.CuentaDeFondoA;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Alignment;
@@ -29,16 +29,16 @@ public class ChequeraTableUi extends StandardTableUi<Chequera> {
 
 	private CuentaDeFondoATableUi cuentaDeFondoATableUi;
 
-	public ChequeraTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario, Class<Chequera> classModel,
-			String pidFiltering, Object searchFilter,
+	public ChequeraTableUi(StandarTableUiPagedConf pagedConf, boolean shortcut,
+			boolean agregar, boolean modificar, boolean copiar,
+			boolean eliminar, Window window, SessionVar sessionVar,
+			Class<Chequera> classModel, String pidFiltering,
+			Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				copiar, eliminar, window, cx, usuario, classModel,
-				pidFiltering, searchFilter, searchProperty, null);
+		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
+				window, sessionVar, classModel, pidFiltering, searchFilter,
+				searchProperty, null);
 
 		window.setWidth("1300px");
 
@@ -46,9 +46,9 @@ public class ChequeraTableUi extends StandardTableUi<Chequera> {
 		hsplit.setSplitPosition(550, Unit.PIXELS);
 		this.setCompositionRoot(hsplit);
 
-		cuentaDeFondoATableUi = new CuentaDeFondoATableUi(false, false, false, false, false, false,
-				false, false, null, cx, usuario, CuentaDeFondoA.class, null,
-				null, null, this);
+		cuentaDeFondoATableUi = new CuentaDeFondoATableUi(pagedConf, false,
+				false, false, false, false, null, sessionVar,
+				CuentaDeFondoA.class, null, null, null, this);
 
 		hsplit.setFirstComponent(cuentaDeFondoATableUi);
 
@@ -84,7 +84,7 @@ public class ChequeraTableUi extends StandardTableUi<Chequera> {
 
 	protected List<Chequera> reloadDataList() throws Exception {
 
-		return ((ChequeraBO) cx.buildBO(classModel)).findAll(
+		return ((ChequeraBO) sessionVar.getCx().buildBO(classModel)).findAll(
 				cuentaDeFondoFilter, filtroTodasCHK.getValue());
 
 	}
@@ -107,15 +107,15 @@ public class ChequeraTableUi extends StandardTableUi<Chequera> {
 		Chequera chequera = Chequera.class.newInstance();
 		chequera.setCuentaDeFondo(cuentaDeFondo);
 
-		return new ChequeraFormUi(usuario, StandardFormUi.INSERT_MODE, cx,
-				this, chequera);
+		return new ChequeraFormUi(sessionVar, StandardFormUi.INSERT_MODE, this,
+				chequera);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected StandardFormUi openFormModificar(Chequera item) throws Exception {
 
-		return new ChequeraFormUi(usuario, StandardFormUi.UPDATE_MODE, cx,
-				this, item);
+		return new ChequeraFormUi(sessionVar, StandardFormUi.UPDATE_MODE, this,
+				item);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -123,7 +123,7 @@ public class ChequeraTableUi extends StandardTableUi<Chequera> {
 
 		Chequera chequera = ((Chequera) item).clone();
 
-		return new ChequeraFormUi(usuario, StandardFormUi.COPY_MODE, cx, this,
+		return new ChequeraFormUi(sessionVar, StandardFormUi.COPY_MODE, this,
 				chequera);
 	}
 

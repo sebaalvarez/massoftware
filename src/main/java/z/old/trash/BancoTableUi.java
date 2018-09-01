@@ -1,7 +1,7 @@
 package z.old.trash;
 
 import com.massoftware.backend.BackendContext;
-import com.massoftware.frontend.util.window.StandardTableUi;
+import com.massoftware.frontend.custom.windows.StandardTableUi;
 import com.massoftware.model.Banco;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;

@@ -6,10 +6,10 @@ import java.util.List;
 import org.cendra.jdbc.ex.crud.DeleteForeingObjectConflictException;
 
 import com.massoftware.backend.BackendContext;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.SimpleStringTraslateFilter;
 import com.massoftware.frontend.util.YesNoDialog;
-import com.massoftware.frontend.util.window.StandardFormUi;
 import com.massoftware.model.Sucursal;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.sort.SortOrder;

@@ -16,6 +16,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.vaadin.inputmask.InputMask;
 
 import com.massoftware.backend.BackendContext;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.util.UtilDate;
 import com.massoftware.frontend.util.builder.annotation.FieldAllowDecimalAnont;
 import com.massoftware.frontend.util.builder.annotation.FieldCBBox;
@@ -40,7 +41,6 @@ import com.massoftware.frontend.util.converter.StringToBigDecimalConverterUnspec
 import com.massoftware.frontend.util.converter.StringToIntegerConverterUnspecifiedLocale;
 import com.massoftware.frontend.util.validator.GenericMinLengthValidator;
 import com.massoftware.frontend.util.validator.GenericUniqueValidator;
-import com.massoftware.frontend.util.window.StandardFormUi;
 import com.massoftware.model.Usuario;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;

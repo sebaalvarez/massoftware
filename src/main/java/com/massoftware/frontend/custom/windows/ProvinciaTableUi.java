@@ -3,17 +3,14 @@ package com.massoftware.frontend.custom.windows;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.PaisBO;
 import com.massoftware.backend.bo.ProvinciaBO;
+import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.builder.BuilderXMD;
-import com.massoftware.frontend.util.window.StandardFormUi;
-import com.massoftware.frontend.util.window.StandardTableUi;
 import com.massoftware.model.Entity;
 import com.massoftware.model.Pais;
 import com.massoftware.model.Provincia;
-import com.massoftware.model.Usuario;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Alignment;
@@ -30,16 +27,16 @@ public class ProvinciaTableUi extends StandardTableUi<Provincia> {
 	private ComboBox filtroPaisCBX;
 	private BeanItemContainer<Pais> paisesBIC;
 
-	public ProvinciaTableUi(boolean paged, boolean pagedCount,
-			boolean pagedOrder, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			BackendContext cx, Usuario usuario, Class<Provincia> classModel,
+	public ProvinciaTableUi(StandarTableUiPagedConf pagedConf,
+			boolean shortcut, boolean agregar, boolean modificar,
+			boolean copiar, boolean eliminar, Window window,
+			SessionVar sessionVar, Class<Provincia> classModel,
 			String pidFiltering, Object searchFilter,
 			@SuppressWarnings("rawtypes") Property searchProperty) {
 
-		super(paged, pagedCount, pagedOrder, shortcut, agregar, modificar,
-				copiar, eliminar, window, cx, usuario, classModel,
-				pidFiltering, searchFilter, searchProperty, null);
+		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
+				window, sessionVar, classModel, pidFiltering, searchFilter,
+				searchProperty, null);
 
 		ejercicioCBXValueChange();
 
@@ -62,7 +59,7 @@ public class ProvinciaTableUi extends StandardTableUi<Provincia> {
 		filaFiltro1HL.setComponentAlignment(filtroPaisCBX,
 				Alignment.MIDDLE_CENTER);
 
-		PaisBO paisBO = (PaisBO) cx.buildBO(Pais.class);
+		PaisBO paisBO = (PaisBO) sessionVar.getCx().buildBO(Pais.class);
 
 		List<Pais> paises = paisBO.findAll();
 		paisesBIC.removeAllItems();
@@ -94,7 +91,7 @@ public class ProvinciaTableUi extends StandardTableUi<Provincia> {
 
 	protected List<Provincia> reloadDataList() throws Exception {
 
-		return ((ProvinciaBO) cx.buildBO(classModel))
+		return ((ProvinciaBO) sessionVar.getCx().buildBO(classModel))
 				.findAll((Pais) filtroPaisCBX.getValue());
 
 	}
@@ -106,8 +103,8 @@ public class ProvinciaTableUi extends StandardTableUi<Provincia> {
 
 		item.setPais((Pais) filtroPaisCBX.getValue());
 
-		StandardFormUi<Provincia> form = new StandardFormUi<Provincia>(usuario,
-				classModel, StandardFormUi.INSERT_MODE, cx, this, item);
+		StandardFormUi<Provincia> form = new StandardFormUi<Provincia>(
+				sessionVar, classModel, StandardFormUi.INSERT_MODE, this, item);
 
 		form.setMaxValues();
 
@@ -122,8 +119,8 @@ public class ProvinciaTableUi extends StandardTableUi<Provincia> {
 
 		o.setPais((Pais) filtroPaisCBX.getValue());
 
-		StandardFormUi<Provincia> form = new StandardFormUi<Provincia>(usuario,
-				classModel, StandardFormUi.COPY_MODE, cx, this, o, item);
+		StandardFormUi<Provincia> form = new StandardFormUi<Provincia>(
+				sessionVar, classModel, StandardFormUi.COPY_MODE, this, o, item);
 
 		form.setMaxValues();
 
