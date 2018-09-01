@@ -1,6 +1,6 @@
 package com.massoftware.frontend;
 
-import com.massoftware.backend.cx.BackendContext;
+import com.massoftware.backend.BackendContext;
 import com.massoftware.model.Usuario;
 
 public class SessionVar {

@@ -133,7 +133,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='odd'>
- <td class='detail'>cuentacontable</td>
+ <td class='detail'>codigocuentapadre</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>2147483647</td>
  <td class='detail' align='center'></td>
@@ -144,7 +144,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='even'>
- <td class='detail'>integra</td>
+ <td class='detail'>codigocuenta</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>2147483647</td>
  <td class='detail' align='center'></td>
@@ -155,7 +155,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='odd'>
- <td class='detail'>cuentadejerarquia</td>
+ <td class='detail'>cuentacontable</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>2147483647</td>
  <td class='detail' align='center'></td>
@@ -188,6 +188,37 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='even'>
+ <td class='detail'>ajustaporinflacion</td>
+ <td class='detail'>bool</td>
+ <td class='detail' align='right'>1</td>
+ <td class='detail' align='center'></td>
+ <td class='detail' align='center'></td>
+ <td class='detail' align='right'>false</td>
+ <td class='detail'></td>
+ <td class='detail'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr class='odd'>
+ <td class='detail'>plandecuentaestado</td>
+ <td class='detail'>varchar</td>
+ <td class='detail' align='right'>2147483647</td>
+ <td class='detail' align='center'></td>
+ <td class='detail' align='center'></td>
+ <td class='detail'></td>
+ <td class='detail'></td>
+ <td class='detail'>
+  <table border='0' width='100%' cellspacing='0' cellpadding='0'>
+   <tr class='relative odd' valign='top'>
+    <td class='relatedTable detail' title="plandecuenta.plandecuentaestado refs plandecuentaestado.id via plandecuenta_plandecuentaestado_fkey"><a href='plandecuentaestado.html'>plandecuentaestado</a><span class='relatedKey'>.id</span>
+    </td>
+    <td class='constraint detail'>plandecuenta_plandecuentaestado_fkey<span title='Restrict delete:
+ Parent cannot be deleted if children exist'>&nbsp;R</span></td>
+   </tr>
+  </table>
+ </td>
+ <td class='comment detail'></td>
+</tr>
+<tr class='even'>
  <td class='detail'>cuentaconapropiacion</td>
  <td class='detail'>bool</td>
  <td class='detail' align='right'>1</td>
@@ -199,34 +230,12 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='odd'>
- <td class='detail'>ajustaporinflacion</td>
- <td class='detail'>bool</td>
- <td class='detail' align='right'>1</td>
- <td class='detail' align='center'></td>
- <td class='detail' align='center'></td>
- <td class='detail' align='right'>false</td>
- <td class='detail'></td>
- <td class='detail'> </td>
- <td class='comment detail'></td>
-</tr>
-<tr class='even'>
- <td class='detail'>estado</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
- <td class='detail' align='center'></td>
- <td class='detail' align='center'></td>
- <td class='detail' align='right'>1</td>
- <td class='detail'></td>
- <td class='detail'> </td>
- <td class='comment detail'></td>
-</tr>
-<tr class='odd'>
  <td class='detail'>centrodecostocontable</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>2147483647</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'></td>
- <td class='detail' align='center'></td>
- <td class='detail'></td>
+ <td class='detail' align='right'>null</td>
  <td class='detail'></td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
@@ -252,7 +261,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='odd'>
- <td class='detail'>porsentaje</td>
+ <td class='detail'>porcentaje</td>
  <td class='detail'>float8</td>
  <td class='detail' align='right'>17,17</td>
  <td class='detail' align='center'></td>
@@ -266,9 +275,9 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'>puntodeequilibrio</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>2147483647</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'></td>
- <td class='detail' align='center'></td>
- <td class='detail'></td>
+ <td class='detail' align='right'>null</td>
  <td class='detail'></td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
@@ -284,17 +293,26 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </tr>
 <tr class='odd'>
  <td class='detail'>costodeventa</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>varchar</td>
+ <td class='detail' align='right'>2147483647</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'></td>
- <td class='detail' align='center'></td>
- <td class='detail' align='right'>1</td>
+ <td class='detail' align='right'>null</td>
  <td class='detail'></td>
- <td class='detail'> </td>
+ <td class='detail'>
+  <table border='0' width='100%' cellspacing='0' cellpadding='0'>
+   <tr class='relative odd' valign='top'>
+    <td class='relatedTable detail' title="plandecuenta.costodeventa refs costodeventa.id via plandecuenta_costodeventa_fkey"><a href='costodeventa.html'>costodeventa</a><span class='relatedKey'>.id</span>
+    </td>
+    <td class='constraint detail'>plandecuenta_costodeventa_fkey<span title='Restrict delete:
+ Parent cannot be deleted if children exist'>&nbsp;R</span></td>
+   </tr>
+  </table>
+ </td>
  <td class='comment detail'></td>
 </tr>
 </table>
-<p title='15 columns'>Table contained 0 rows at lun nov 20 19:08 ART 2017<p/>
+<p title='15 columns'>Table contained 11.351 rows at vie ago 10 18:10 ART 2018<p/>
 </td></tr></table>
 <div class='indent'>
 <b>Indexes:</b>
@@ -318,7 +336,25 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   <td class='indexedColumn'>ejerciciocontable</td>
   <td class='detail'>Must be unique</td>
   <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
-  <td class='constraint' style='text-align:left;'>u_plandecuenta_ejerciciocontable_puntodeequilibrio</td>
+  <td class='constraint' style='text-align:left;'>u_plandecuenta_ejerciciocontable_codigocuenta</td>
+ </tr>
+ <tr>
+  <td class='indexedColumn'>ejerciciocontable</td>
+  <td class='detail'>Must be unique</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>u_plandecuenta_ejerciciocontable_codigocuenta_nombre</td>
+ </tr>
+ <tr>
+  <td class='indexedColumn'>ejerciciocontable</td>
+  <td class='detail'>Must be unique</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>u_plandecuenta_ejerciciocontable_codigocuentapadre_codigocuenta</td>
+ </tr>
+ <tr>
+  <td class='indexedColumn'>ejerciciocontable</td>
+  <td class='detail'>Must be unique</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>u_plandecuenta_ejerciciocontable_cuentacontable</td>
  </tr>
 </table>
 </div>
@@ -326,19 +362,23 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <br><form action='get'><b>Close relationships</b><span class='degrees' id='degrees' title='Detail diminishes with increased separation from plandecuenta'>
 &nbsp;within <label for='oneDegree'><input type='radio' name='degrees' id='oneDegree' checked>one</label>  <label for='twoDegrees'><input type='radio' name='degrees' id='twoDegrees'>two degrees</label> of separation</span><b>:</b></form>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" href="centrodecostocontable.html" title="centrodecostocontable" alt="" coords="243,117,425,287" >
-<area shape="rect" href="ejerciciocontable.html" title="ejerciciocontable" alt="" coords="7,139,199,355" >
-<area shape="rect" href="plandecuenta.html" title="plandecuenta" alt="" coords="469,7,805,410" >
-<area shape="rect" href="puntodeequilibrio.html" title="puntodeequilibrio" alt="" coords="250,305,418,475" >
+<area shape="rect" id="node1" href="centrodecostocontable.html" title="centrodecostocontable" alt="" coords="240,248,419,427">
+<area shape="rect" id="node2" href="ejerciciocontable.html" title="ejerciciocontable" alt="" coords="5,272,196,499">
+<area shape="rect" id="node3" href="plandecuenta.html" title="plandecuenta" alt="" coords="463,5,792,429">
+<area shape="rect" id="node4" href="costodeventa.html" title="costodeventa" alt="" coords="269,640,390,771">
+<area shape="rect" id="node5" href="plandecuentaestado.html" title="plandecuentaestado" alt="" coords="249,100,410,231">
+<area shape="rect" id="node6" href="puntodeequilibrio.html" title="puntodeequilibrio" alt="" coords="248,444,411,623">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='../diagrams/plandecuenta.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" href="centrodecostocontable.html" title="centrodecostocontable" alt="" coords="243,110,425,281" >
-<area shape="rect" href="ejerciciocontable.html" title="ejerciciocontable" alt="" coords="7,193,199,409" >
-<area shape="rect" href="plandecuenta.html" title="plandecuenta" alt="" coords="469,8,805,410" >
-<area shape="rect" href="puntodeequilibrio.html" title="puntodeequilibrio" alt="" coords="250,396,418,566" >
-<area shape="rect" href="puntodeequilibriotipo.html" title="puntodeequilibriotipo" alt="" coords="19,486,187,566" >
-<area shape="rect" href="usuario.html" title="usuario" alt="" coords="273,298,395,378" >
+<area shape="rect" id="node1" href="centrodecostocontable.html" title="centrodecostocontable" alt="" coords="240,248,419,427">
+<area shape="rect" id="node2" href="ejerciciocontable.html" title="ejerciciocontable" alt="" coords="5,335,196,561">
+<area shape="rect" id="node3" href="plandecuenta.html" title="plandecuenta" alt="" coords="463,5,792,429">
+<area shape="rect" id="node4" href="costodeventa.html" title="costodeventa" alt="" coords="269,740,390,871">
+<area shape="rect" id="node5" href="plandecuentaestado.html" title="plandecuentaestado" alt="" coords="249,100,410,231">
+<area shape="rect" id="node6" href="puntodeequilibrio.html" title="puntodeequilibrio" alt="" coords="248,544,411,723">
+<area shape="rect" id="node7" href="puntodeequilibriotipo.html" title="puntodeequilibriotipo" alt="" coords="19,640,182,723">
+<area shape="rect" id="node8" href="usuario.html" title="usuario" alt="" coords="265,444,394,527">
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='../diagrams/plandecuenta.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>

@@ -40,7 +40,7 @@
 		display: inline-block;
 		line-height: inherit;
 		color: #6aaef2;
-		font-size: 12px;
+		font-size: 11px;
 		font-weight: bold;
 	}
 	
@@ -55,16 +55,56 @@
 		color: white;
 	}
 	
+	.v-button-caption{
+		font-size: 11px;
+	}
+	
+	.v-button-tiny {
+		height: 22px;
+		padding: 0 5px;				
+		font-size: 11px;
+		border-radius: 4px;
+	}
+	
+	.v-textfield-tiny {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		-ms-appearance: none;
+		-o-appearance: none;
+		appearance: none;
+		-webkit-user-select: text;
+		-moz-user-select: text;
+		-ms-user-select: text;
+		user-select: text;
+		margin: 0;
+		font: inherit;
+		
+		font-weight: 400;
+		line-height: normal;
+		height: 22px;
+		border-radius: 4px;
+		padding: 3px 7px;
+		
+		
+		-webkit-transition: box-shadow 180ms, border 180ms;
+		-moz-transition: box-shadow 180ms, border 180ms;
+		transition: box-shadow 180ms, border 180ms;
+		font-size: 11px;
+	}
 
-
+	.v-filterselect-tiny {
+		height: 22px;
+		
+		font-size: 11px;
+	}
 
 	.v-grid-column-header-content, .v-grid-column-footer-content {
 		width: 100%;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		line-height: 16px;
+		line-height: 11px;
 		vertical-align: baseline;
-		font-size: 14px;
+		font-size: 11px;
 		color: #197de1;		
 	}
 	
@@ -77,8 +117,8 @@
 		-moz-box-sizing: border-box;
 		box-sizing: border-box;
 		overflow: hidden;
-		font-size: 13px;
-		line-height: 16px;
+		font-size: 11px;
+		line-height: 11px;
 	}
 	
 	.v-tree-node-caption {

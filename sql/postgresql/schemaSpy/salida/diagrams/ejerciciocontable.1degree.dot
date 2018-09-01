@@ -1,4 +1,4 @@
-// dot 2.2.1 on Windows 10 10.0
+// dot 2.38.0 on Windows 10 10.0
 // SchemaSpy rev 590
 digraph "oneDegreeRelationshipsDiagram" {
   graph [
@@ -19,12 +19,12 @@ digraph "oneDegreeRelationshipsDiagram" {
   edge [
     arrowsize="0.8"
   ];
-  "centrodecostocontable":"ejerciciocontable":sw -> "ejerciciocontable":"id.type":se [arrowhead=none dir=back arrowtail=crowodot];
-  "plandecuenta":"centrodecostocontable":sw -> "centrodecostocontable":"id":se [arrowhead=none dir=back arrowtail=crowodot];
-  "plandecuenta":"ejerciciocontable":sw -> "ejerciciocontable":"id.type":se [arrowhead=none dir=back arrowtail=teeodot];
-  "plandecuenta":"puntodeequilibrio":sw -> "puntodeequilibrio":"id":se [arrowhead=none dir=back arrowtail=crowodot];
-  "puntodeequilibrio":"ejerciciocontable":sw -> "ejerciciocontable":"id.type":se [arrowhead=none dir=back arrowtail=crowodot];
-  "usuario":"ejerciciocontable":sw -> "ejerciciocontable":"id.type":se [arrowhead=none dir=back arrowtail=crowodot];
+  "centrodecostocontable":"ejerciciocontable":w -> "ejerciciocontable":"id.type":e [arrowhead=none dir=back arrowtail=crowodot];
+  "plandecuenta":"centrodecostocontable":w -> "centrodecostocontable":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "plandecuenta":"ejerciciocontable":w -> "ejerciciocontable":"id.type":e [arrowhead=none dir=back arrowtail=teeodot];
+  "plandecuenta":"puntodeequilibrio":w -> "puntodeequilibrio":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "puntodeequilibrio":"ejerciciocontable":w -> "ejerciciocontable":"id.type":e [arrowhead=none dir=back arrowtail=crowodot];
+  "usuario":"ejerciciocontable":w -> "ejerciciocontable":"id.type":e [arrowhead=none dir=back arrowtail=crowodot];
   "centrodecostocontable" [
     label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -34,7 +34,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="numero" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">numero</TD></TR>
       <TR><TD PORT="nombre" COLSPAN="3" ALIGN="LEFT">nombre</TD></TR>
       <TR><TD PORT="abreviatura" COLSPAN="3" ALIGN="LEFT">abreviatura</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">17 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1 &gt;</TD></TR>
     </TABLE>>
     URL="centrodecostocontable.html"
     tooltip="centrodecostocontable"
@@ -50,7 +50,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="ejerciciocerrado" COLSPAN="2" ALIGN="LEFT">ejerciciocerrado</TD><TD PORT="ejerciciocerrado.type" ALIGN="LEFT">bool[1]</TD></TR>
       <TR><TD PORT="ejerciciocerradomodulos" COLSPAN="2" ALIGN="LEFT">ejerciciocerradomodulos</TD><TD PORT="ejerciciocerradomodulos.type" ALIGN="LEFT">bool[1]</TD></TR>
       <TR><TD PORT="comentario" COLSPAN="2" ALIGN="LEFT">comentario</TD><TD PORT="comentario.type" ALIGN="LEFT">varchar[2147483647]</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 0</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">4 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 0</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">22 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">4 &gt;</TD></TR>
     </TABLE>>
     URL="ejerciciocontable.html"
     tooltip="ejerciciocontable"
@@ -61,20 +61,20 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">plandecuenta</TD></TR>
       <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
       <TR><TD PORT="ejerciciocontable" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">ejerciciocontable</TD></TR>
+      <TR><TD PORT="codigocuentapadre" COLSPAN="3" ALIGN="LEFT">codigocuentapadre</TD></TR>
+      <TR><TD PORT="codigocuenta" COLSPAN="3" ALIGN="LEFT">codigocuenta</TD></TR>
       <TR><TD PORT="cuentacontable" COLSPAN="3" ALIGN="LEFT">cuentacontable</TD></TR>
-      <TR><TD PORT="integra" COLSPAN="3" ALIGN="LEFT">integra</TD></TR>
-      <TR><TD PORT="cuentadejerarquia" COLSPAN="3" ALIGN="LEFT">cuentadejerarquia</TD></TR>
       <TR><TD PORT="nombre" COLSPAN="3" ALIGN="LEFT">nombre</TD></TR>
       <TR><TD PORT="imputable" COLSPAN="3" ALIGN="LEFT">imputable</TD></TR>
-      <TR><TD PORT="cuentaconapropiacion" COLSPAN="3" ALIGN="LEFT">cuentaconapropiacion</TD></TR>
       <TR><TD PORT="ajustaporinflacion" COLSPAN="3" ALIGN="LEFT">ajustaporinflacion</TD></TR>
-      <TR><TD PORT="estado" COLSPAN="3" ALIGN="LEFT">estado</TD></TR>
+      <TR><TD PORT="plandecuentaestado" COLSPAN="3" ALIGN="LEFT">plandecuentaestado</TD></TR>
+      <TR><TD PORT="cuentaconapropiacion" COLSPAN="3" ALIGN="LEFT">cuentaconapropiacion</TD></TR>
       <TR><TD PORT="centrodecostocontable" COLSPAN="3" ALIGN="LEFT">centrodecostocontable</TD></TR>
       <TR><TD PORT="cuentaagrupadora" COLSPAN="3" ALIGN="LEFT">cuentaagrupadora</TD></TR>
-      <TR><TD PORT="porsentaje" COLSPAN="3" ALIGN="LEFT">porsentaje</TD></TR>
+      <TR><TD PORT="porcentaje" COLSPAN="3" ALIGN="LEFT">porcentaje</TD></TR>
       <TR><TD PORT="puntodeequilibrio" COLSPAN="3" ALIGN="LEFT">puntodeequilibrio</TD></TR>
       <TR><TD PORT="costodeventa" COLSPAN="3" ALIGN="LEFT">costodeventa</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 5</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">11.351 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
     URL="plandecuenta.html"
     tooltip="plandecuenta"
@@ -88,7 +88,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="puntodeequilibrio" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">puntodeequilibrio</TD></TR>
       <TR><TD PORT="nombre" COLSPAN="3" ALIGN="LEFT">nombre</TD></TR>
       <TR><TD PORT="puntodeequilibriotipo" COLSPAN="3" ALIGN="LEFT">puntodeequilibriotipo</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">33 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1 &gt;</TD></TR>
     </TABLE>>
     URL="puntodeequilibrio.html"
     tooltip="puntodeequilibrio"
@@ -101,7 +101,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="ejerciciocontable" COLSPAN="3" ALIGN="LEFT">ejerciciocontable</TD></TR>
       <TR><TD PORT="numero" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">numero</TD></TR>
       <TR><TD PORT="nombre" COLSPAN="3" ALIGN="LEFT">nombre</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">53 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
     URL="usuario.html"
     tooltip="usuario"

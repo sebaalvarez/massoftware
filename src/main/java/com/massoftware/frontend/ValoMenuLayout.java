@@ -6,7 +6,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class ValoMenuLayout extends HorizontalLayout {
+class ValoMenuLayout extends HorizontalLayout {
 
 	/**
 	 * 

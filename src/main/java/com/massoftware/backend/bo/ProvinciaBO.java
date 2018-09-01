@@ -4,12 +4,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cendra.ex.crud.UniqueException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
+import org.cendra.jdbc.ex.crud.UniqueException;
 
-import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.backend.util.bo.GenericBO;
+import com.massoftware.backend.BackendContext;
+import com.massoftware.backend.util.GenericBO;
 import com.massoftware.model.Provincia;
 import com.massoftware.model.Pais;
 import com.massoftware.model.Usuario;

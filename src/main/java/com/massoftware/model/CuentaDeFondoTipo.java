@@ -1,10 +1,10 @@
 package com.massoftware.model;
 
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassPluralLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
 
 @SuppressWarnings("serial")
 @ClassLabelInTheSingularAnont(value = "Tipo")

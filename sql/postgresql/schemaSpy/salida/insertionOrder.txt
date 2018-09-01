@@ -1,4 +1,6 @@
 ejerciciocontable
+costodeventa
+plandecuentaestado
 puntodeequilibriotipo
 centrodecostocontable
 puntodeequilibrio

@@ -11,11 +11,10 @@ import java.sql.SQLWarning;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.cendra.log.LogPrinter;
 
 public class ConnectionWrapper {
 
@@ -27,6 +26,7 @@ public class ConnectionWrapper {
 	private final String OPERATION_TYPE_INSERT = "INSERT";
 	private final String OPERATION_TYPE_UPDATE = "UPDATE";
 	private final String OPERATION_TYPE_DELETE = "DELETE";
+	private final String OPERATION_TYPE_EXECUTE = "EXECUTE";
 
 	private final String TITLE_BEGIN_TRANSACTION = "Comienzo de Transacción";
 	private final String TITLE_COMMIT_TRANSACTION = "Fin de Transacción";
@@ -36,6 +36,7 @@ public class ConnectionWrapper {
 	private final String TITLE_INSERT = "Insertando un Registro";
 	private final String TITLE_UPDATE = "Actualizando un Registro";
 	private final String TITLE_DELETE = "Borrando un Registro";
+	private final String TITLE_EXECUTE = "Modificando la base de datos";
 
 	private final String SUBJECT_BEGIN_TRANSACTION = "Error al intentar iniciar una transacción.";
 	private final String SUBJECT_COMMIT_TRANSACTION = "Fin de Transacción";
@@ -45,13 +46,13 @@ public class ConnectionWrapper {
 	private final String SUBJECT_INSERT = "Error al intentar insertar un registro.";
 	private final String SUBJECT_UPDATE = "Error al intentar actualizar un registro.";
 	private final String SUBJECT_DELETE = "Error al intentar borrar un registro.";
+	private final String SUBJECT_EXECUTE = "Error al intentar modificar la base de datos.";
 
 	private final String MSG_1 = "Se pretende agregar un parámetro a una sentencia sql que posee un tipo de dato desconocido. Se recibió [${value}] de tipo ${class}, y se espera String | Boolean | Short | Integer | Long | Float | Double | BigDecimal | Date | Timestamp | Time";
 
 	private Connection connection;
 	private DataSourceMetaData dataSourceMetaData;
 	private DataSourceProperties dataSourceProperties;
-	private LogPrinter errorPrinter;
 	private List<String> sqlStatements = new ArrayList<String>();
 
 	private boolean verbose = false;
@@ -60,12 +61,11 @@ public class ConnectionWrapper {
 
 	public ConnectionWrapper(Connection connection,
 			DataSourceMetaData dataSourceMetaData,
-			DataSourceProperties dataSourceProperties, LogPrinter errorPrinter) {
+			DataSourceProperties dataSourceProperties/* , LogPrinter logPrinter */) {
 
 		this.connection = connection;
 		this.dataSourceMetaData = dataSourceMetaData;
 		this.dataSourceProperties = dataSourceProperties;
-		this.errorPrinter = errorPrinter;
 		this.verbose = this.dataSourceProperties.isVerbose();
 	}
 
@@ -196,6 +196,7 @@ public class ConnectionWrapper {
 	}
 
 	// ===================================================================================================
+	// ===================================================================================================
 
 	@SuppressWarnings("rawtypes")
 	public List findToListByCendraConvention(String sql)
@@ -227,7 +228,7 @@ public class ConnectionWrapper {
 			return executeQueryToListByCendraConvention(preparedStatement, sql);
 
 		} catch (SQLException e) {
-			printSQLEnd(buildPrintSQLStart(formatSQL(args, sql)));
+			printSQLEnd(buildPrintSQLStart(formatSQL(args, sql)), null, false);
 			throw this.buildSQLExceptionWrapper(e, OPERATION_TYPE_SELECT,
 					TITLE_SELECT, SUBJECT_SELECT);
 		}
@@ -241,12 +242,14 @@ public class ConnectionWrapper {
 
 		String msg = buildPrintSQLStart(sql);
 
-		System.out.println("SQL 1 " + sql);
+		// System.out.println("SQL 1 " + sql);
+		ZonedDateTime startTime = ZonedDateTime.now();
 		ResultSet resultSet = preparedStatement.executeQuery();
-		System.out.println("SQL 2 " + sql);
+		ZonedDateTime endTime = ZonedDateTime.now();
+		// System.out.println("SQL 2 " + sql);
 		printSQLWarning(resultSet.getWarnings());
 
-		printSQLEnd(msg);
+		printSQLEnd(msg, Duration.between(startTime, endTime), true);
 
 		MapperCendraConvention mapper = new MapperCendraConvention();
 		List list = new ArrayList();
@@ -255,7 +258,7 @@ public class ConnectionWrapper {
 		} catch (IllegalAccessException e) {
 			throw new SQLExceptionByCendraConvention(e);
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace(); //666
+			e.printStackTrace(); // 666
 			throw new SQLExceptionByCendraConvention(e);
 		} catch (InvocationTargetException e) {
 			throw new SQLExceptionByCendraConvention(e);
@@ -305,7 +308,7 @@ public class ConnectionWrapper {
 			return executeQueryToTable(preparedStatement, sql);
 
 		} catch (SQLException e) {
-			printSQLEnd(buildPrintSQLStart(formatSQL(args, sql)));
+			printSQLEnd(buildPrintSQLStart(formatSQL(args, sql)), null, false);
 			throw this.buildSQLExceptionWrapper(e, OPERATION_TYPE_SELECT,
 					TITLE_SELECT, SUBJECT_SELECT);
 		}
@@ -319,10 +322,15 @@ public class ConnectionWrapper {
 
 		String msg = buildPrintSQLStart(sql);
 
+		ZonedDateTime startTime = ZonedDateTime.now();
+
 		ResultSet resultSet = preparedStatement.executeQuery();
+
+		ZonedDateTime endTime = ZonedDateTime.now();
+
 		printSQLWarning(resultSet.getWarnings());
 
-		printSQLEnd(msg);
+		printSQLEnd(msg, Duration.between(startTime, endTime), true);
 
 		int c = resultSet.getMetaData().getColumnCount();
 
@@ -380,7 +388,7 @@ public class ConnectionWrapper {
 			return executeQueryToResultSet(preparedStatement, sql);
 
 		} catch (SQLException e) {
-			printSQLEnd(buildPrintSQLStart(formatSQL(args, sql)));
+			printSQLEnd(buildPrintSQLStart(formatSQL(args, sql)), null, false);
 			throw this.buildSQLExceptionWrapper(e, OPERATION_TYPE_SELECT,
 					TITLE_SELECT, SUBJECT_SELECT);
 		}
@@ -393,10 +401,15 @@ public class ConnectionWrapper {
 
 		String msg = buildPrintSQLStart(sql);
 
+		ZonedDateTime startTime = ZonedDateTime.now();
+
 		ResultSet resultSet = preparedStatement.executeQuery();
+
+		ZonedDateTime endTime = ZonedDateTime.now();
+
 		printSQLWarning(resultSet.getWarnings());
 
-		printSQLEnd(msg);
+		printSQLEnd(msg, Duration.between(startTime, endTime), true);
 
 		// if (resultSet != null && resultSet.isClosed() == false) {
 		// resultSet.close();
@@ -408,6 +421,40 @@ public class ConnectionWrapper {
 		// }
 
 		return resultSet;
+	}
+
+	public int genericExecute(String sql) throws SQLExceptionWrapper, SQLException {
+		return genericExecute(sql, new Object[0]);
+	}
+
+	public int genericExecute(String sql, Object... args) throws SQLExceptionWrapper,
+			SQLException {
+
+		try {
+
+			// PreparedStatement preparedStatement = this.getConnection()
+			// .prepareStatement(sql);
+			// printSQLWarning(preparedStatement.getWarnings());
+			//
+			// if (args != null) {
+			// for (int i = 0; i < args.length; i++) {
+			// set(preparedStatement, args[i], (i + 1));
+			// }
+			// }
+			//
+			// sql = this.formatSQL(preparedStatement, args, sql);
+			//
+			// this.addSqlStatement(sql);
+			//
+			// return executeUpdateByExample(preparedStatement, sql);
+
+			return execute(sql, args);
+
+		} catch (SQLException e) {
+			printSQLEnd(buildPrintSQLStart(formatSQL(args, sql)), null, false);
+			throw this.buildSQLExceptionWrapper(e, OPERATION_TYPE_EXECUTE,
+					TITLE_EXECUTE, SUBJECT_EXECUTE);
+		}
 	}
 
 	public int insert(String sql) throws SQLExceptionWrapper, SQLException {
@@ -438,7 +485,7 @@ public class ConnectionWrapper {
 			return execute(sql, args);
 
 		} catch (SQLException e) {
-			printSQLEnd(buildPrintSQLStart(formatSQL(args, sql)));
+			printSQLEnd(buildPrintSQLStart(formatSQL(args, sql)), null, false);
 			throw this.buildSQLExceptionWrapper(e, OPERATION_TYPE_INSERT,
 					TITLE_INSERT, SUBJECT_INSERT);
 		}
@@ -472,7 +519,7 @@ public class ConnectionWrapper {
 			return execute(sql, args);
 
 		} catch (SQLException e) {
-			printSQLEnd(buildPrintSQLStart(formatSQL(args, sql)));
+			printSQLEnd(buildPrintSQLStart(formatSQL(args, sql)), null, false);
 			throw this.buildSQLExceptionWrapper(e, OPERATION_TYPE_UPDATE,
 					TITLE_UPDATE, SUBJECT_UPDATE);
 		}
@@ -490,7 +537,7 @@ public class ConnectionWrapper {
 			return execute(sql, args);
 
 		} catch (SQLException e) {
-			printSQLEnd(buildPrintSQLStart(formatSQL(args, sql)));
+			printSQLEnd(buildPrintSQLStart(formatSQL(args, sql)), null, false);
 			throw this.buildSQLExceptionWrapper(e, OPERATION_TYPE_DELETE,
 					TITLE_DELETE, SUBJECT_DELETE);
 		}
@@ -526,11 +573,15 @@ public class ConnectionWrapper {
 
 		// System.out.println(preparedStatement);
 
+		ZonedDateTime startTime = ZonedDateTime.now();
+
 		r = preparedStatement.executeUpdate();
+
+		ZonedDateTime endTime = ZonedDateTime.now();
 
 		// System.out.println(preparedStatement);
 
-		printSQLEnd(msg);
+		printSQLEnd(msg, Duration.between(startTime, endTime), true);
 
 		// if (preparedStatement.isClosed() == false) {
 		// preparedStatement.close();
@@ -545,22 +596,35 @@ public class ConnectionWrapper {
 
 		if (isVerbose()) {
 
-			return "\n\n[..] Ejecutando SQL " + ZonedDateTime.now() + " ["
-					+ dataSourceMetaData + "]\n\n" + sql;
+			return Util.sep() + "\n\n[..] Ejecutando SQL "
+					+ ZonedDateTime.now() + "\n[" + dataSourceMetaData + "]\n["
+					+ dataSourceProperties.getUrl() + "]\n\n" + sql;
 		}
 
 		return null;
 	}
 
-	private void printSQLEnd(String msgSql) {
+	private void printSQLEnd(String msgSql, Duration duration, boolean ok) {
 
 		if (isVerbose()) {
 
-			msgSql += "\n\n[OK] SQL ejecutando " + ZonedDateTime.now() + " ["
-					+ dataSourceMetaData + "]\n\n";
+			String s = "";
+			if (ok) {
+				s = "[OK]";
+			} else {
+				s = "[ERROR]";
+			}
 
-			errorPrinter.print(this.getClass().getName(),
-					LogPrinter.LEVEL_INFO, msgSql);
+			if (duration != null) {
+				msgSql += "\n\n" + s + " SQL ejecutando (Total query runtime: "
+						+ duration.toMillis() + " Millis )"
+						+ ZonedDateTime.now() + "\n\n" + Util.sep();
+			} else {
+				msgSql += "\n\n" + s + " SQL ejecutando " + ZonedDateTime.now()
+						+ "\n\n" + Util.sep();
+			}
+
+			System.out.println(msgSql);
 		}
 	}
 
@@ -579,11 +643,14 @@ public class ConnectionWrapper {
 			sqlWarning = sqlWarning.getNextWarning();
 		}
 
+		if (msg2 != null && msg2.isEmpty() == false) {
+			msg += msg2;
+		}
+
 		msg += "\n\nEND SQL WARNING " + ZonedDateTime.now() + "\n\n";
 
-		if (msg2 != null && msg2.isEmpty() == false) {
-			errorPrinter.print(this.getClass().getName(),
-					LogPrinter.LEVEL_WARN, msg);
+		if (isVerbose() && msg2 != null && msg2.isEmpty() == false) {
+			System.out.println(msg);
 		}
 	}
 
@@ -635,7 +702,7 @@ public class ConnectionWrapper {
 
 				preparedStatement.setDate(i, sqlDate);
 
-			} else if (value.getClass() == Timestamp.class) {				
+			} else if (value.getClass() == Timestamp.class) {
 
 				preparedStatement.setTimestamp(i, (Timestamp) value);
 
@@ -687,8 +754,8 @@ public class ConnectionWrapper {
 	private SQLExceptionWrapper buildSQLExceptionWrapper(
 			SQLException sQLException, String operationType, String title,
 			String subject) {
-		
-		sQLException.printStackTrace(); //666
+
+		// sQLException.printStackTrace(); //666
 
 		SQLExceptionWrapper sqlExceptionWrapper = new SQLExceptionWrapper(
 				sQLException);
@@ -741,11 +808,22 @@ public class ConnectionWrapper {
 			Object[] args, String sql) throws SQLException {
 
 		if (preparedStatement.getConnection().getMetaData()
-				.getDatabaseProductVersion().equalsIgnoreCase("PostgreSQL")) {
+				.getDatabaseProductName().equalsIgnoreCase("PostgreSQL")) {
+
 			sql = preparedStatement.toString();
 			if (sql.trim().endsWith(";") == false) {
 				sql += ";";
 			}
+
+			String argsString = "";
+			for (int i = 0; i < args.length; i++) {
+				argsString += "[" + args[i] + "] ";
+			}
+			argsString = argsString.trim();
+			if (args.length > 0) {
+				sql += "\nargs = " + argsString;
+			}
+
 		} else {
 
 			if (sql.trim().endsWith(";") == false) {
@@ -777,7 +855,7 @@ public class ConnectionWrapper {
 		}
 		argsString = argsString.trim();
 		if (args.length > 0) {
-			sql += "\nargs = " + argsString;
+			sql += "\nuuargs = " + argsString;
 		}
 
 		return sql.trim();

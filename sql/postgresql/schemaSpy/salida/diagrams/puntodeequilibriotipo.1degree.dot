@@ -1,4 +1,4 @@
-// dot 2.2.1 on Windows 10 10.0
+// dot 2.38.0 on Windows 10 10.0
 // SchemaSpy rev 590
 digraph "oneDegreeRelationshipsDiagram" {
   graph [
@@ -19,7 +19,7 @@ digraph "oneDegreeRelationshipsDiagram" {
   edge [
     arrowsize="0.8"
   ];
-  "puntodeequilibrio":"puntodeequilibriotipo":sw -> "puntodeequilibriotipo":"id.type":se [arrowhead=none dir=back arrowtail=crowodot];
+  "puntodeequilibrio":"puntodeequilibriotipo":w -> "puntodeequilibriotipo":"id.type":e [arrowhead=none dir=back arrowtail=crowodot];
   "puntodeequilibrio" [
     label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -29,7 +29,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="puntodeequilibrio" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">puntodeequilibrio</TD></TR>
       <TR><TD PORT="nombre" COLSPAN="3" ALIGN="LEFT">nombre</TD></TR>
       <TR><TD PORT="puntodeequilibriotipo" COLSPAN="3" ALIGN="LEFT">puntodeequilibriotipo</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">33 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1 &gt;</TD></TR>
     </TABLE>>
     URL="puntodeequilibrio.html"
     tooltip="puntodeequilibrio"
@@ -39,7 +39,7 @@ digraph "oneDegreeRelationshipsDiagram" {
     <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">puntodeequilibriotipo</TD></TR>
       <TR><TD PORT="id" COLSPAN="2" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD><TD PORT="id.type" ALIGN="LEFT">varchar[2147483647]</TD></TR>
-      <TR><TD PORT="tipo" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">tipo</TD><TD PORT="tipo.type" ALIGN="LEFT">int4[10]</TD></TR>
+      <TR><TD PORT="codigo" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">codigo</TD><TD PORT="codigo.type" ALIGN="LEFT">int4[10]</TD></TR>
       <TR><TD PORT="nombre" COLSPAN="2" ALIGN="LEFT">nombre</TD><TD PORT="nombre.type" ALIGN="LEFT">varchar[2147483647]</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 0</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">5 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1 &gt;</TD></TR>
     </TABLE>>

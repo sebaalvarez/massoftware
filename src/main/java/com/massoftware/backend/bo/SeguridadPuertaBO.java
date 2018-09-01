@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.cendra.jdbc.DataSourceWrapper;
 
-import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.backend.util.bo.GenericBO;
+import com.massoftware.backend.BackendContext;
+import com.massoftware.backend.util.GenericBO;
 import com.massoftware.model.SeguridadModulo;
 import com.massoftware.model.SeguridadPuerta;
 import com.massoftware.model.Usuario;

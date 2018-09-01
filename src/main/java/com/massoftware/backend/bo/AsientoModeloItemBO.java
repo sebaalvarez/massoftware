@@ -4,12 +4,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cendra.ex.crud.UniqueException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
+import org.cendra.jdbc.ex.crud.UniqueException;
 
-import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.backend.util.bo.GenericBO;
+import com.massoftware.backend.BackendContext;
+import com.massoftware.backend.util.GenericBO;
 import com.massoftware.model.AsientoModelo;
 import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.model.EjercicioContable;
@@ -26,19 +26,19 @@ public class AsientoModeloItemBO extends GenericBO<AsientoModeloItem> {
 		super(AsientoModeloItem.class, dataSourceWrapper, cx);
 	}
 
-	public List<AsientoModeloItem> findAll()
-			throws Exception {
+	public List<AsientoModeloItem> findAll() throws Exception {
 		return findAll(ORDER_BY);
 	}
 
-	public List<AsientoModeloItem> findAll(
-			AsientoModelo asientoModeloItem) throws Exception {
+	public List<AsientoModeloItem> findAll(AsientoModelo asientoModelo)
+			throws Exception {
 
-		if (asientoModeloItem != null) {
+		if (asientoModelo != null) {
 
 			String where = "asientoModelo_numero = ?";
 
-			List<AsientoModeloItem> list = find(ORDER_BY, where, asientoModeloItem.getNumero());
+			List<AsientoModeloItem> list = find(ORDER_BY, where,
+					asientoModelo.getNumero());
 
 			EjercicioContable ejercicioContable = null;
 			if (list.size() > 0 && list.get(0).getCuentaContable() != null) {

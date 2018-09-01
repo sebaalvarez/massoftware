@@ -7,8 +7,6 @@ import java.time.ZonedDateTime;
 
 import javax.sql.DataSource;
 
-import org.cendra.log.LogPrinter;
-
 public class DataSourceWrapper {
 
 	private final String OPERATION_TYPE_START_POOL_CONECTION = "START_POOL_CONECTION";
@@ -29,18 +27,18 @@ public class DataSourceWrapper {
 	private DataSource dataSource;
 	private DataSourceMetaData dataSourceMetaData;
 	private DataSourceProperties dataSourceProperties;
-	private LogPrinter logPrinter;
 
 	public DataSourceWrapper(DataSource dataSource,
-			DataSourceProperties dataSourceProperties, LogPrinter logPrinter)
-			throws Exception {
+			DataSourceProperties dataSourceProperties) throws Exception {
 
 		this.dataSource = dataSource;
 		this.dataSourceProperties = dataSourceProperties;
-		this.logPrinter = logPrinter;
-		this.dataSourceMetaData = this.getDataSourceMetaData(dataSource,
-				logPrinter);
+		this.dataSourceMetaData = this.getDataSourceMetaData(dataSource);
 
+	}
+
+	public boolean isVerbose() {
+		return this.dataSourceProperties.isVerbose();
 	}
 
 	public synchronized boolean isDatabasePostgreSql() {
@@ -62,7 +60,7 @@ public class DataSourceWrapper {
 			printSQLWarning(connection.getWarnings());
 
 			return new ConnectionWrapper(connection, dataSourceMetaData,
-					dataSourceProperties, logPrinter);
+					dataSourceProperties);
 
 		} catch (SQLException e) {
 			throw this.buildSQLExceptionWrapper(e,
@@ -72,7 +70,7 @@ public class DataSourceWrapper {
 
 	}
 
-	private synchronized void printSQLWarning(SQLWarning sqlWarning) {
+	private void printSQLWarning(SQLWarning sqlWarning) {
 
 		String msg = "\n\nSQL WARNING " + ZonedDateTime.now() + "\n\n";
 
@@ -87,16 +85,26 @@ public class DataSourceWrapper {
 			sqlWarning = sqlWarning.getNextWarning();
 		}
 
+		if (msg2 != null && msg2.isEmpty() == false) {
+			msg += msg2;
+		}
+
 		msg += "\n\nEND SQL WARNING " + ZonedDateTime.now() + "\n\n";
 
-		if (msg2 != null && msg2.isEmpty() == false) {
-			logPrinter.print(this.getClass().getName(), LogPrinter.LEVEL_WARN,
-					msg);
+		if (isVerbose() && msg2 != null && msg2.isEmpty() == false) {
+
+			System.out.println(msg);
 		}
 	}
 
 	private synchronized DataSourceMetaData getDataSourceMetaData(
-			DataSource dataSource, LogPrinter errorPrinter) throws Exception {
+			DataSource dataSource) throws Exception {
+
+		if (isVerbose()) {
+
+			System.out.println(Util.sep() + "\n\n[..] Conectandose a\n\n"
+					+ dataSourceProperties);
+		}
 
 		Connection connection = null;
 
@@ -145,16 +153,13 @@ public class DataSourceWrapper {
 			}
 		}
 
-		// ObjectMapper mapper = new ObjectMapper();
-		// String msg = "\n\n[OK] Conectado a\n\n"
-		// + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(
-		// dataSourceMetaData) + "\n";
-		//
-		// errorPrinter.print(this.getClass().getName(), LogPrinter.LEVEL_INFO,
-		// msg);
+		if (isVerbose()) {
 
-		logPrinter.printJson(this.getClass().getName(), LogPrinter.LEVEL_INFO,
-				"\n\n[OK] Conectado a\n\n", dataSourceMetaData, "\n");
+			System.out.println("\n\nConectado a\n\n" + dataSourceMetaData);
+
+			System.out.println("\n\n[OK] Conectado a\n\n"
+					+ dataSourceMetaData.getUrl() + Util.sep());
+		}
 
 		return dataSourceMetaData;
 

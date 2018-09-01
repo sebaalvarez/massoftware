@@ -74,9 +74,27 @@ public class DataSourceMetaData {
 	public void setjDBCMinorVersion(int jDBCMinorVersion) {
 		this.jDBCMinorVersion = jDBCMinorVersion;
 	}
-	
-	public String toString(){
-		return getDatabaseProductName() + " " + getDatabaseProductVersion()  + " " + getDriverName() + " " + getDriverVersion();
+
+	// public String toString() {
+	// return getDatabaseProductName() + " " + getDatabaseProductVersion()
+	// + " " + getDriverName() + " " + getDriverVersion();
+	// }
+
+	public String toString() {
+		String json = "\n\n";
+
+		json += "\n\turl:" + url + "";
+		json += "\n\tuserName:" + userName + "";
+		json += "\n\tdatabaseProductName:" + databaseProductName + "";
+		json += "\n\tdatabaseProductVersion:" + databaseProductVersion + "";
+		json += "\n\tdriverName:" + driverName + "";
+		json += "\n\tdriverVersion:" + driverVersion + "";
+		json += "\n\tjDBCMajorVersion:" + jDBCMajorVersion + "";
+		json += "\n\tjDBCMinorVersion:" + jDBCMinorVersion + "";
+
+		json += "\n";
+
+		return json;
 	}
 
 }

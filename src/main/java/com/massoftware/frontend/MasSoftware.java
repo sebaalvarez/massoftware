@@ -7,15 +7,14 @@ import java.util.Map.Entry;
 
 import javax.servlet.annotation.WebServlet;
 
-import com.massoftware.backend.cx.BackendContext;
-import com.massoftware.frontend.ui.custom.menu.ContabilidadGeneralMenu;
-import com.massoftware.frontend.ui.custom.menu.FondosMenu;
-import com.massoftware.frontend.ui.custom.menu.GeneralMenu;
-import com.massoftware.frontend.ui.custom.menu.StockMenu;
-import com.massoftware.frontend.ui.custom.menu.SuperMenu;
-import com.massoftware.frontend.ui.custom.menu.VentasMenu;
-import com.massoftware.frontend.ui.util.LogAndNotification;
-import com.massoftware.frontend.ui.windows.custom.properties.PropertiesFormUi;
+import com.massoftware.backend.BackendContext;
+import com.massoftware.frontend.custom.menu.ContabilidadGeneralMenu;
+import com.massoftware.frontend.custom.menu.FondosMenu;
+import com.massoftware.frontend.custom.menu.GeneralMenu;
+import com.massoftware.frontend.custom.menu.StockMenu;
+import com.massoftware.frontend.custom.menu.SuperMenu;
+import com.massoftware.frontend.custom.menu.VentasMenu;
+import com.massoftware.frontend.util.LogAndNotification;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;

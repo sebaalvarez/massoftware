@@ -7,9 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.cendra.ex.crud.DeleteForeingObjectConflictException;
+import org.cendra.jdbc.ex.crud.DeleteForeingObjectConflictException;
 
-import com.massoftware.backend.cx.BackendContext;
 import com.massoftware.backend.util.UtilModel;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.EjercicioContable;

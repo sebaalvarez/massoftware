@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="cendraom" schema="cendraom" type="PostgreSQL - 9.6.2">
+   <tables>
+      <table name="clazz" numRows="0" remarks="" schema="cendraom" type="TABLE">
+         <column autoUpdated="false" defaultValue="uuid_generate_v4()" digits="0" id="0" name="id" nullable="false" remarks="" size="2147483647" type="varchar">
+            <child column="clazz" foreignKey="clazzatt_clazz_fkey" implied="false" onDeleteCascade="false" table="clazzatt"/>
+            <child column="clazz" foreignKey="clazzextends_clazz_fkey" implied="false" onDeleteCascade="false" table="clazzextends"/>
+            <child column="clazzextends" foreignKey="clazzextends_clazzextends_fkey" implied="false" onDeleteCascade="false" table="clazzextends"/>
+         </column>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="1" name="virtual" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="2" name="name" nullable="false" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="3" name="visibility" nullable="false" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="4" name="finalclass" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="5" name="abstractclass" nullable="false" remarks="" size="1" type="bool"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="clazz_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="clazz_name_key" unique="true">
+            <column ascending="true" name="name"/>
+         </index>
+         <index name="u_clazz_name" unique="true"/>
+      </table>
+      <table name="clazzatt" numRows="0" remarks="" schema="cendraom" type="TABLE">
+         <column autoUpdated="false" defaultValue="uuid_generate_v4()" digits="0" id="0" name="id" nullable="false" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="1" name="clazz" nullable="false" remarks="" size="2147483647" type="varchar">
+            <parent column="id" foreignKey="clazzatt_clazz_fkey" implied="false" onDeleteCascade="false" table="clazz"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="name" nullable="false" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="3" name="datatype" nullable="false" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="4" name="typecardinality" nullable="false" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" defaultValue="0" digits="0" id="5" name="orderatt" nullable="false" remarks="" size="10" type="int4"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="clazzatt_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="u_clazzatt_calzz_name" unique="true"/>
+      </table>
+      <table name="clazzextends" numRows="0" remarks="" schema="cendraom" type="TABLE">
+         <column autoUpdated="false" defaultValue="uuid_generate_v4()" digits="0" id="0" name="id" nullable="false" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="1" name="clazz" nullable="false" remarks="" size="2147483647" type="varchar">
+            <parent column="id" foreignKey="clazzextends_clazz_fkey" implied="false" onDeleteCascade="false" table="clazz"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="clazzextends" nullable="false" remarks="" size="2147483647" type="varchar">
+            <parent column="id" foreignKey="clazzextends_clazzextends_fkey" implied="false" onDeleteCascade="false" table="clazz"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="clazzextends_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="u_clazzextends_clazz_clazzextends" unique="true"/>
+      </table>
+   </tables>
+</database>

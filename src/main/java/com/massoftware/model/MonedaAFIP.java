@@ -1,17 +1,17 @@
 package com.massoftware.model;
 
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassPluralLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassTableMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnsAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxLengthAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldNameMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldRequiredAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldUniqueAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldUniqueAnont;
 
 @ClassLabelInTheSingularAnont(value = "Moneda AFIP")
 @ClassPluralLabelAnont(value = "Monedas AFIP")

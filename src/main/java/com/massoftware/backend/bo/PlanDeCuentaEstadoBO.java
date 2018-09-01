@@ -3,9 +3,9 @@ package com.massoftware.backend.bo;
 import java.util.List;
 import java.util.UUID;
 
-import org.cendra.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ConnectionWrapper;
 import org.cendra.jdbc.DataSourceWrapper;
+import org.cendra.jdbc.ex.crud.InsertDuplicateException;
 
 import com.massoftware.model.CuentaContableEstado;
 

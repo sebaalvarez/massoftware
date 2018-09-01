@@ -2,24 +2,24 @@ package com.massoftware.model;
 
 import java.math.BigDecimal;
 
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassFormSourceAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassPluralLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassTableMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldAllowDecimalAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnsAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldInputMaskAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxLengthAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxValueBigDecimalAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldMinValueBigDecimalAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldNameMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldRequiredAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldSubNameFKAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldUniqueAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassFormSourceAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldAllowDecimalAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldInputMaskAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldMaxValueBigDecimalAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldMinValueBigDecimalAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldSubNameFKAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldUniqueAnont;
 import com.massoftware.util.FormatCuentaContableCodigoCuenta;
 
 @ClassLabelInTheSingularAnont(value = "Cuenta contable")
@@ -96,35 +96,36 @@ public class CuentaContable extends EntityId implements
 	protected String nombre; // texto libre
 
 	// --------------------------------------------------------------------------
-//	@FieldLabelAnont(value = "Imputable")
-//	@FieldColumnMetaDataAnont(hidden = true)
-//	@FieldNameMSAnont(nameAttDB = "[AJUSTEINF]", classAttDB = Boolean.class)
-//	private Boolean imputable = false;
+	// @FieldLabelAnont(value = "Imputable")
+	// @FieldColumnMetaDataAnont(hidden = true)
+	// @FieldNameMSAnont(nameAttDB = "[AJUSTEINF]", classAttDB = Boolean.class)
+	// private Boolean imputable = false;
 
-//	@FieldLabelAnont(value = "Ajusta por inflación")
-//	@FieldColumnMetaDataAnont(hidden = true)
-//	@FieldNameMSAnont(nameAttDB = "[IMPUTABLE]", classAttDB = Boolean.class)
-//	private Boolean ajustaPorInflacion = false;
+	// @FieldLabelAnont(value = "Ajusta por inflación")
+	// @FieldColumnMetaDataAnont(hidden = true)
+	// @FieldNameMSAnont(nameAttDB = "[IMPUTABLE]", classAttDB = Boolean.class)
+	// private Boolean ajustaPorInflacion = false;
 
-//	@FieldLabelAnont(value = "Estado")
-//	@FieldRequiredAnont()
-//	@FieldColumnMetaDataAnont(hidden = true)
-//	@FieldSubNameFKAnont(value = "codigo")
-//	@FieldNameMSAnont(nameAttDB = "[ESTADO]", classAttDB = Integer.class)
-//	private CuentaContableEstado cuentaContableEstado;
+	// @FieldLabelAnont(value = "Estado")
+	// @FieldRequiredAnont()
+	// @FieldColumnMetaDataAnont(hidden = true)
+	// @FieldSubNameFKAnont(value = "codigo")
+	// @FieldNameMSAnont(nameAttDB = "[ESTADO]", classAttDB = Integer.class)
+	// private CuentaContableEstado cuentaContableEstado;
 
-//	@FieldLabelAnont(value = "Cuenta con apropiación")
-//	@FieldColumnMetaDataAnont(hidden = true)
-//	@FieldNameMSAnont(nameAttDB = "[APROPIA]", classAttDB = Boolean.class)
-//	private Boolean cuentaConApropiacion = false;
+	// @FieldLabelAnont(value = "Cuenta con apropiación")
+	// @FieldColumnMetaDataAnont(hidden = true)
+	// @FieldNameMSAnont(nameAttDB = "[APROPIA]", classAttDB = Boolean.class)
+	// private Boolean cuentaConApropiacion = false;
 
 	// --------------------------------------------------------------------------
 
-//	@FieldLabelAnont(value = "Centro de costo")
-//	@FieldColumnMetaDataAnont(attSize = 150)
-//	@FieldSubNameFKAnont(value = "numero")
-//	@FieldNameMSAnont(nameAttDB = "[CENTRODECOSTOCONTABLE]", classAttDB = Integer.class)
-//	protected CentroDeCostoContable centroDeCostoContable;
+	// @FieldLabelAnont(value = "Centro de costo")
+	// @FieldColumnMetaDataAnont(attSize = 150)
+	// @FieldSubNameFKAnont(value = "numero")
+	// @FieldNameMSAnont(nameAttDB = "[CENTRODECOSTOCONTABLE]", classAttDB =
+	// Integer.class)
+	// protected CentroDeCostoContable centroDeCostoContable;
 
 	@FieldLabelAnont(value = "Cuenta agrupadora")
 	@FieldMaxLengthAnont(value = 11)
@@ -143,26 +144,29 @@ public class CuentaContable extends EntityId implements
 	@FieldNameMSAnont(nameAttDB = "[PORCENTAJE]", classAttDB = BigDecimal.class)
 	protected BigDecimal porcentaje = new BigDecimal("0.0");
 
-//	@FieldLabelAnont(value = "Punto de equilibrio")
-////	@FieldColumnMetaDataAnont(hidden = true)
-//	@FieldSubNameFKAnont(value = "puntoDeEquilibrio")
-//	@FieldNameMSAnont(nameAttDB = "[PUNTODEEQUILIBRIO]", classAttDB = Integer.class)
-//	private PuntoDeEquilibrio puntoDeEquilibrio;
+	// @FieldLabelAnont(value = "Punto de equilibrio")
+	// // @FieldColumnMetaDataAnont(hidden = true)
+	// @FieldSubNameFKAnont(value = "puntoDeEquilibrio")
+	// @FieldNameMSAnont(nameAttDB = "[PUNTODEEQUILIBRIO]", classAttDB =
+	// Integer.class)
+	// private PuntoDeEquilibrio puntoDeEquilibrio;
 
-//	@FieldLabelAnont(value = "Costo de venta")
-//	@FieldRequiredAnont()
-//	@FieldColumnMetaDataAnont(hidden = true)
-//	@FieldSubNameFKAnont(value = "codigo")
-//	@FieldNameMSAnont(nameAttDB = "[COSTODEVENTA]", classAttDB = Integer.class)
-//	private CostoDeVenta costoDeVenta;
+	// @FieldLabelAnont(value = "Costo de venta")
+	// @FieldRequiredAnont()
+	// @FieldColumnMetaDataAnont(hidden = true)
+	// @FieldSubNameFKAnont(value = "codigo")
+	// @FieldNameMSAnont(nameAttDB = "[COSTODEVENTA]", classAttDB =
+	// Integer.class)
+	// private CostoDeVenta costoDeVenta;
 
-//	@FieldLabelAnont(value = "Puerta")
-//	// @FieldRequiredAnont()
-//	@FieldColumnMetaDataAnont(hidden = true)
-//	@FieldSubNameFKAnont(value = "codigo")
-//	@FieldNameMSAnont(nameAttDB = "[DOORNOPERMISO]", classAttDB = Integer.class)
-//	@FieldCBBox(attName = "codigo")
-//	private SeguridadPuerta seguridadPuerta;
+	// @FieldLabelAnont(value = "Puerta")
+	// // @FieldRequiredAnont()
+	// @FieldColumnMetaDataAnont(hidden = true)
+	// @FieldSubNameFKAnont(value = "codigo")
+	// @FieldNameMSAnont(nameAttDB = "[DOORNOPERMISO]", classAttDB =
+	// Integer.class)
+	// @FieldCBBox(attName = "codigo")
+	// private SeguridadPuerta seguridadPuerta;
 
 	public EjercicioContable getEjercicioContable() {
 		return ejercicioContable;
@@ -212,58 +216,58 @@ public class CuentaContable extends EntityId implements
 		this.nombre = nombre;
 	}
 
-//	public Boolean getImputable() {
-//		imputable = this.nullIsFalse(imputable);
-//		return imputable;
-//	}
+	// public Boolean getImputable() {
+	// imputable = this.nullIsFalse(imputable);
+	// return imputable;
+	// }
 
-//	public void setImputable(Boolean imputable) {
-//		imputable = this.nullIsFalse(imputable);
-//		this.imputable = imputable;
-//	}
+	// public void setImputable(Boolean imputable) {
+	// imputable = this.nullIsFalse(imputable);
+	// this.imputable = imputable;
+	// }
 
-//	public Boolean getAjustaPorInflacion() {
-//		ajustaPorInflacion = this.nullIsFalse(ajustaPorInflacion);
-//		return ajustaPorInflacion;
-//	}
+	// public Boolean getAjustaPorInflacion() {
+	// ajustaPorInflacion = this.nullIsFalse(ajustaPorInflacion);
+	// return ajustaPorInflacion;
+	// }
 
-//	public void setAjustaPorInflacion(Boolean ajustaPorInflacion) {
-//		ajustaPorInflacion = this.nullIsFalse(ajustaPorInflacion);
-//		this.ajustaPorInflacion = ajustaPorInflacion;
-//	}
+	// public void setAjustaPorInflacion(Boolean ajustaPorInflacion) {
+	// ajustaPorInflacion = this.nullIsFalse(ajustaPorInflacion);
+	// this.ajustaPorInflacion = ajustaPorInflacion;
+	// }
 
-//	public CuentaContableEstado getCuentaContableEstado() {
-//		return cuentaContableEstado;
-//	}
+	// public CuentaContableEstado getCuentaContableEstado() {
+	// return cuentaContableEstado;
+	// }
 
-//	public void setCuentaContableEstado(
-//			CuentaContableEstado cuentaContableEstado) {
-//		this.cuentaContableEstado = cuentaContableEstado;
-//		if (this.cuentaContableEstado != null
-//				&& this.cuentaContableEstado.getId() == null) {
-//			throw new IllegalArgumentException(this.cuentaContableEstado
-//					.getClass().getCanonicalName() + ".id is null");
-//		}
-//	}
+	// public void setCuentaContableEstado(
+	// CuentaContableEstado cuentaContableEstado) {
+	// this.cuentaContableEstado = cuentaContableEstado;
+	// if (this.cuentaContableEstado != null
+	// && this.cuentaContableEstado.getId() == null) {
+	// throw new IllegalArgumentException(this.cuentaContableEstado
+	// .getClass().getCanonicalName() + ".id is null");
+	// }
+	// }
 
-//	public Boolean getCuentaConApropiacion() {
-//		cuentaConApropiacion = this.nullIsFalse(cuentaConApropiacion);
-//		return cuentaConApropiacion;
-//	}
+	// public Boolean getCuentaConApropiacion() {
+	// cuentaConApropiacion = this.nullIsFalse(cuentaConApropiacion);
+	// return cuentaConApropiacion;
+	// }
 
-//	public void setCuentaConApropiacion(Boolean cuentaConApropiacion) {
-//		cuentaConApropiacion = this.nullIsFalse(cuentaConApropiacion);
-//		this.cuentaConApropiacion = cuentaConApropiacion;
-//	}
+	// public void setCuentaConApropiacion(Boolean cuentaConApropiacion) {
+	// cuentaConApropiacion = this.nullIsFalse(cuentaConApropiacion);
+	// this.cuentaConApropiacion = cuentaConApropiacion;
+	// }
 
-//	public CentroDeCostoContable getCentroDeCostoContable() {
-//		return centroDeCostoContable;
-//	}
+	// public CentroDeCostoContable getCentroDeCostoContable() {
+	// return centroDeCostoContable;
+	// }
 
-//	public void setCentroDeCostoContable(
-//			CentroDeCostoContable centroDeCostoContable) {
-//		this.centroDeCostoContable = centroDeCostoContable;
-//	}
+	// public void setCentroDeCostoContable(
+	// CentroDeCostoContable centroDeCostoContable) {
+	// this.centroDeCostoContable = centroDeCostoContable;
+	// }
 
 	public String getCuentaAgrupadora() {
 		cuentaAgrupadora = formatValue(cuentaAgrupadora);
@@ -285,32 +289,32 @@ public class CuentaContable extends EntityId implements
 		this.porcentaje = porcentaje;
 	}
 
-//	public PuntoDeEquilibrio getPuntoDeEquilibrio() {
-//		return puntoDeEquilibrio;
-//	}
+	// public PuntoDeEquilibrio getPuntoDeEquilibrio() {
+	// return puntoDeEquilibrio;
+	// }
 
-//	public void setPuntoDeEquilibrio(PuntoDeEquilibrio puntoDeEquilibrio) {
-//		this.puntoDeEquilibrio = puntoDeEquilibrio;
-//	}
+	// public void setPuntoDeEquilibrio(PuntoDeEquilibrio puntoDeEquilibrio) {
+	// this.puntoDeEquilibrio = puntoDeEquilibrio;
+	// }
 
-//	public CostoDeVenta getCostoDeVenta() {
-//		return costoDeVenta;
-//	}
+	// public CostoDeVenta getCostoDeVenta() {
+	// return costoDeVenta;
+	// }
 
-//	public void setCostoDeVenta(CostoDeVenta costoDeVenta) {
-//		this.costoDeVenta = costoDeVenta;
-//	}
+	// public void setCostoDeVenta(CostoDeVenta costoDeVenta) {
+	// this.costoDeVenta = costoDeVenta;
+	// }
 
-//	public SeguridadPuerta getSeguridadPuerta() {
-//		return seguridadPuerta;
-//	}
+	// public SeguridadPuerta getSeguridadPuerta() {
+	// return seguridadPuerta;
+	// }
 
-//	public void setSeguridadPuerta(SeguridadPuerta seguridadPuerta) {
-//		if (seguridadPuerta != null && seguridadPuerta.getId() == null) {
-//			return;
-//		}
-//		this.seguridadPuerta = seguridadPuerta;
-//	}
+	// public void setSeguridadPuerta(SeguridadPuerta seguridadPuerta) {
+	// if (seguridadPuerta != null && seguridadPuerta.getId() == null) {
+	// return;
+	// }
+	// this.seguridadPuerta = seguridadPuerta;
+	// }
 
 	// @Override
 	// public CuentaContable clone() throws CloneNotSupportedException {
@@ -367,8 +371,14 @@ public class CuentaContable extends EntityId implements
 	public String toString() {
 
 		if (this._setfullToString) {
-			return "(" + this.getEjercicioContable() + ") ("
-					+ this.getCuentaContable() + ") " + this.getNombre();
+
+			if (this.getEjercicioContable() != null) {
+				return "(" + this.getEjercicioContable() + ") ("
+						+ this.getCuentaContable() + ") " + this.getNombre();
+			} else {
+				return "(" + this.getCuentaContable() + ") " + this.getNombre();
+			}
+
 		} else {
 
 			// return "(" + this.getEjercicioContable() + ") "
@@ -419,33 +429,33 @@ public class CuentaContable extends EntityId implements
 					.getCanonicalName() + ".nombre es nulo.");
 		}
 
-//		if (this.imputable == null) {
-//			throw new IllegalArgumentException(this.getClass()
-//					.getCanonicalName() + ".imputable es nulo.");
-//		}
+		// if (this.imputable == null) {
+		// throw new IllegalArgumentException(this.getClass()
+		// .getCanonicalName() + ".imputable es nulo.");
+		// }
 
-//		if (this.ajustaPorInflacion == null) {
-//			throw new IllegalArgumentException(this.getClass()
-//					.getCanonicalName() + ".ajustaPorInflacion es nulo.");
-//		}
+		// if (this.ajustaPorInflacion == null) {
+		// throw new IllegalArgumentException(this.getClass()
+		// .getCanonicalName() + ".ajustaPorInflacion es nulo.");
+		// }
 
-//		if (this.cuentaContableEstado == null) {
-//
-//			throw new IllegalArgumentException(this.getClass()
-//					.getCanonicalName() + ".cuentaContableEstado es nulo.");
-//		} else {
-//			this.cuentaContableEstado.validate();
-//		}
+		// if (this.cuentaContableEstado == null) {
+		//
+		// throw new IllegalArgumentException(this.getClass()
+		// .getCanonicalName() + ".cuentaContableEstado es nulo.");
+		// } else {
+		// this.cuentaContableEstado.validate();
+		// }
 
-//		if (this.cuentaConApropiacion == null) {
-//			throw new IllegalArgumentException(this.getClass()
-//					.getCanonicalName() + ".cuentaConApropiacion es nulo.");
-//		}
+		// if (this.cuentaConApropiacion == null) {
+		// throw new IllegalArgumentException(this.getClass()
+		// .getCanonicalName() + ".cuentaConApropiacion es nulo.");
+		// }
 
-//		if (this.porcentaje == null) {
-//			throw new IllegalArgumentException(this.getClass()
-//					.getCanonicalName() + ".porcentaje es nulo.");
-//		}
+		// if (this.porcentaje == null) {
+		// throw new IllegalArgumentException(this.getClass()
+		// .getCanonicalName() + ".porcentaje es nulo.");
+		// }
 
 		return true;
 	}

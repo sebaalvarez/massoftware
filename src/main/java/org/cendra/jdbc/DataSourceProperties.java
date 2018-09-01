@@ -84,4 +84,24 @@ public class DataSourceProperties {
 		this.verbose = verbose;
 	}
 
+	public String toString() {
+		String json = "\n\n";
+
+		json += "\n\tdriverClassName:" + driverClassName + "";
+		json += "\n\tinitialSize:" + initialSize + "";
+		json += "\n\tdmaxActive:" + maxActive + "";
+		json += "\n\tmaxIdle:" + maxIdle + "";
+		json += "\n\tvalidationQuery:" + validationQuery + "";
+		json += "\n\turl:" + url + "";
+		json += "\n\tuserName:" + userName + "";
+		json += "\n\tuserPassword:" + "SECRET" + "";
+		json += "\n\tverbose:" + verbose + "";
+
+		json += "\n";
+
+		return json;
+	}
+	
+	
+
 }

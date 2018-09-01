@@ -1250,8 +1250,7 @@ CREATE VIEW [dbo].[vAsientoModelo] AS
 
 
 	SELECT	'com.massoftware.model.AsientoModelo' AS ClassAsientoModelo	
-			-----------------------------------------------------------------------------------------------------
-			--, CONCAT ( CAST([vEjercicioContable].[ejercicio] AS VARCHAR), '-', CAST([AsientosModelos].[ASIENTOMODELO] AS VARCHAR) ) AS id			
+			-----------------------------------------------------------------------------------------------------			
 			, CAST([AsientosModelos].[ASIENTOMODELO] AS VARCHAR)																	AS id			
 			-----------------------------------------------------------------------------------------------------
 			/*
@@ -1333,8 +1332,8 @@ CREATE VIEW [dbo].[vAsientoModeloItem] AS
 			-----------------------------------------------------------------------------------------------------
 			-- , vCuentaContable.cuentaConApropiacion												AS cuentaContable_cuentaConApropiacion
 			-----------------------------------------------------------------------------------------------------			
-			, vCuentaContable.centroDeCostoContable_id											AS cuentaContable_centroDeCostoContable_id		
-				,  vCuentaContable.centroDeCostoContable_numero									AS cuentaContable_centroDeCostoContable_numero
+			--, vCuentaContable.centroDeCostoContable_id											AS cuentaContable_centroDeCostoContable_id		
+			--	,  vCuentaContable.centroDeCostoContable_numero									AS cuentaContable_centroDeCostoContable_numero
 			-- 	,  vCuentaContable.centroDeCostoContable_nombre									AS cuentaContable_centroDeCostoContable_nombre
 			-- 	,  vCuentaContable.centroDeCostoContable_abreviatura							AS cuentaContable_centroDeCostoContable_abreviatura					
 			-----------------------------------------------------------------------------------------------------
@@ -1414,34 +1413,30 @@ CREATE VIEW [dbo].[vMinutaContable] AS
 
 -------------------------------------------------------------
 
--- DROP VIEW [dbo].[vAsiento]         
+-- DROP VIEW [dbo].[vAsiento];         
 
 CREATE VIEW [dbo].[vAsiento] AS        
 
 
-	SELECT	'com.massoftware.model.Asiento' AS ClassAsiento	
+SELECT	'com.massoftware.model.Asiento' AS ClassAsiento	
 			-----------------------------------------------------------------------------------------------------
 			, CONCAT ( CAST([Contabilidad].[EJERCICIO] AS VARCHAR), '-', CAST([Contabilidad].[NUMEROASIENTO] AS VARCHAR) ) AS id			
-			-----------------------------------------------------------------------------------------------------
-			
-			, CAST([Contabilidad].[EJERCICIO] AS VARCHAR)					AS ejercicioContable_id		
-			, CAST([Contabilidad].[EJERCICIO] AS INT)						AS ejercicioContable_ejercicio		
-			-- ejercicioContable [PlanDeCuentas].[EJERCICIO]				-- NOT NULL
-			/*
+			-----------------------------------------------------------------------------------------------------			
+			--, CAST([Contabilidad].[EJERCICIO] AS VARCHAR)					AS ejercicioContable_id		
+			--, CAST([Contabilidad].[EJERCICIO] AS INT)						AS ejercicioContable_ejercicio		
+			-- ejercicioContable [PlanDeCuentas].[EJERCICIO]				-- NOT NULL			
 				, vEjercicioContable.id										AS ejercicioContable_id			
 				, vEjercicioContable.ejercicio								AS ejercicioContable_ejercicio		
 				, vEjercicioContable.fechaApertura							AS ejercicioContable_fechaApertura
 				, vEjercicioContable.fechaCierre							AS ejercicioContable_fechaCierre
 				, vEjercicioContable.ejercicioCerrado						AS ejercicioContable_ejercicioCerrado
 				, vEjercicioContable.ejercicioCerradoModulos				AS ejercicioContable_ejercicioCerradoModulos
-				, vEjercicioContable.comentario								AS ejercicioContable_comentario
-			*/
-		
+				, vEjercicioContable.comentario								AS ejercicioContable_comentario			
+			-----------------------------------------------------------------------------------------------------
 			, CAST([Contabilidad].[NUMEROASIENTO] AS INT)					AS numero	-- Integer NOT NULL UN [ 1 - Integer.MAX_VALUE]
 			, CAST([Contabilidad].[FECHASQL] AS DATE)						AS fecha	-- Date NOT NULL [ vEjercicioContable.fechaApertura - vEjercicioContable.fechaCierre]
-			
-			--, [SUCURSAL]
-			/*
+			-----------------------------------------------------------------------------------------------------
+			--, [Contabilidad].[SUCURSAL]			
 			, [vSucursal].id												AS sucursal_id		
 			, [vSucursal].codigo											AS sucursal_codigo
 			, [vSucursal].nombre											AS sucursal_nombre
@@ -1463,28 +1458,44 @@ CREATE VIEW [dbo].[vAsiento] AS
 			, [vSucursal].cantidadCaracteresProveedor						AS sucursal_cantidadCaracteresProveedor
 			, [vSucursal].identificacionNumericaProveedores					AS sucursal_identificacionNumericaProveedores	
 			, [vSucursal].permiteCambiarProveedores							AS sucursal_permiteCambiarProveedores
-			*/
-
+			-----------------------------------------------------------------------------------------------------
 			, CAST([Contabilidad].[NROLOTE] AS INT)							AS lote	-- Integer NOT NULL UN [ 0 - Short.MAX_VALUE]
-			 
-			--, [MINUTACONTABLE]
-			/*
+			-----------------------------------------------------------------------------------------------------			 
+			--, [Contabilidad].[MINUTACONTABLE]			
 			, [vMinutaContable].id											AS minutaContable_id			
 			, [vMinutaContable].codigo										AS minutaContable_codigo
 			, [vMinutaContable].nombre										AS minutaContable_nombre
-			*/
-
-			, LTRIM(RTRIM(CAST([DETALLE]  AS VARCHAR)))						AS detalle -- String (60) 
-
-			--, [MODULO]
-			, [vAsientoModulo].id											AS AsientoModulo_id			
-			, [vAsientoModulo].codigo										AS AsientoModulo_codigo
-			, [vAsientoModulo].nombre										AS AsientoModulo_nombre
+			-----------------------------------------------------------------------------------------------------
+			, LTRIM(RTRIM(CAST([Contabilidad].[DETALLE]  AS VARCHAR)))						AS detalle -- String (60) 
+			-----------------------------------------------------------------------------------------------------
+			--, [Contabilidad].[MODULO]
+			, [vAsientoModulo].id											AS asientoModulo_id			
+			, [vAsientoModulo].codigo										AS asientoModulo_codigo
+			, [vAsientoModulo].nombre										AS asientoModulo_nombre
+			-----------------------------------------------------------------------------------------------------
+			--, [Contabilidad].[TIPOID]  
+			--, [Contabilidad].[NUMEROID] 
+			--, [Contabilidad].[COMPROBANTE] ??????????????????????????????????????
+			/*
+			, CASE    
+					WHEN	[Contabilidad].[TIPOID]			IS NOT NULL		AND [Contabilidad].[TIPOID]		> 0		AND LTRIM(RTRIM(CAST([Contabilidad].[TIPOID]  AS VARCHAR)))		<> ''		
+							AND [Contabilidad].[NUMEROID]	IS NOT NULL		AND [Contabilidad].[NUMEROID]	> 0		AND LTRIM(RTRIM(CAST([Contabilidad].[NUMEROID]  AS VARCHAR)))	<> ''
+							AND [vAsientoModulo].id			IS NOT NULL												AND LTRIM(RTRIM(CAST([vAsientoModulo].id  AS VARCHAR)))			<> ''
+				
+					THEN	CONCAT ( CAST([Contabilidad].[TIPOID] AS VARCHAR), '-', CAST([Contabilidad].[NUMEROID] AS VARCHAR), '-', [vAsientoModulo].id )
 			
-			--, [TIPOID]  -- ???
-			--, [NUMEROID] -- ???
-			--, [COMPROBANTE] -- ???
-	 
+					ELSE	CAST(null AS VARCHAR) 
+			  END															AS comprobante_id	
+			*/
+			--, CONCAT ( CAST([Contabilidad].[TIPOID] AS VARCHAR), '-', CAST([Contabilidad].[NUMEROID] AS VARCHAR), '-', [vAsientoModulo].id ) AS comprobante_id		
+			--, LTRIM(RTRIM(CAST([dbo].[TablaDeComprobantes].abreviatura AS VARCHAR)))						AS comprobanteAbreviatura
+			, CASE    
+				WHEN [dbo].[facturas].comprobante		IS NOT NULL		AND LTRIM(RTRIM(CAST([dbo].[facturas].comprobante  AS VARCHAR)))	<> ''	THEN  CONCAT ( LTRIM(RTRIM(CAST([dbo].[TablaDeComprobantes].abreviatura AS VARCHAR))), ' ', LTRIM(RTRIM(CAST([dbo].[facturas].comprobante AS VARCHAR))) )
+				WHEN [dbo].[facturaspro].comprobante	IS NOT NULL		AND LTRIM(RTRIM(CAST([dbo].[facturaspro].comprobante  AS VARCHAR))) <> ''	THEN  CONCAT ( LTRIM(RTRIM(CAST([dbo].[TablaDeComprobantes].abreviatura AS VARCHAR))), ' ', LTRIM(RTRIM(CAST([dbo].[facturaspro].comprobante AS VARCHAR))) )
+				WHEN [dbo].[fondos].comprobante			IS NOT NULL		AND LTRIM(RTRIM(CAST([dbo].[fondos].comprobante  AS VARCHAR)))		<> ''	THEN  CONCAT ( LTRIM(RTRIM(CAST([dbo].[TablaDeComprobantes].abreviatura AS VARCHAR))), ' ', LTRIM(RTRIM(CAST([dbo].[fondos].comprobante AS VARCHAR))) )
+				ELSE CAST(null AS VARCHAR) 
+			  END															AS comprobante	
+			-----------------------------------------------------------------------------------------------------				 
 			--, [TIPOASIENTO]		-- ???      
 			--, [TIPO]			-- ???	
 			--, [LETRA]			-- ???
@@ -1492,17 +1503,37 @@ CREATE VIEW [dbo].[vAsiento] AS
 			--, [SECUENCIA]		-- ???
 			--, [SUCURSALCOMP]	-- ???
 			--, [NUMEROCOMP]		-- ???		
+			-----------------------------------------------------------------------------------------------------
 	
 	FROM	[dbo].[Contabilidad]
---	LEFT JOIN	[dbo].[vEjercicioContable]
---			ON		[dbo].[vEjercicioContable].[ejercicio] = CAST([dbo].[Contabilidad].[EJERCICIO] AS INT)
---	LEFT JOIN	[dbo].[vSucursal]
---			ON		[dbo].[vSucursal].[codigo] = CAST([dbo].[Contabilidad].[SUCURSAL] AS INT)
---	LEFT JOIN	[dbo].[vMinutaContable]
---			ON		[dbo].[vMinutaContable].[codigo] = CAST([dbo].[Contabilidad].[MINUTACONTABLE] AS INT)
+	LEFT JOIN	[dbo].[vEjercicioContable]
+			ON		[dbo].[vEjercicioContable].[ejercicio] = CAST([dbo].[Contabilidad].[EJERCICIO] AS INT)
+	LEFT JOIN	[dbo].[vSucursal]
+			ON		[dbo].[vSucursal].[codigo] = CAST([dbo].[Contabilidad].[SUCURSAL] AS INT)
+	LEFT JOIN	[dbo].[vMinutaContable]
+			ON		[dbo].[vMinutaContable].[codigo] = CAST([dbo].[Contabilidad].[MINUTACONTABLE] AS INT)
 	LEFT JOIN	[dbo].[vAsientoModulo]
 			ON		[dbo].[vAsientoModulo].[codigo] = CAST([dbo].[Contabilidad].[MODULO] AS INT)
+
+	LEFT JOIN	[dbo].[TablaDeComprobantes]  
+			ON	[dbo].[Contabilidad].tipoid		= [dbo].[TablaDeComprobantes].tipo
+	
+	LEFT JOIN	[dbo].[facturas]  
+			ON	[dbo].[Contabilidad].tipoid		= [dbo].[facturas].tipoid 
+			AND [dbo].[facturas].numeroid		= [dbo].[Contabilidad].numeroid 
+			AND [dbo].[Contabilidad].MODULO		= 1
+    LEFT JOIN	[dbo].[facturaspro] 
+			ON	[dbo].[Contabilidad].tipoid		= [dbo].[facturaspro].tipoid 
+			AND [dbo].[facturaspro].numeroid	= [dbo].[Contabilidad].numeroid 
+			AND [dbo].[Contabilidad].MODULO		= 4
+	LEFT JOIN	[dbo].[fondos] 
+			ON	[dbo].[Contabilidad].tipoid		= [dbo].[fondos].tipoid 
+			AND [dbo].[fondos].numeroid			= [dbo].[Contabilidad].numeroid  
+			AND [dbo].[Contabilidad].MODULO		= 3
 	;
+
+	-- SELECT * FROM dbo.vAsiento WHERE  ejercicioContable_ejercicio = 2015  ORDER BY fecha DESC OFFSET 0 ROWS FETCH NEXT 15 ROWS ONLY ;
+	-- SELECT * FROM dbo.vAsiento WHERE  ejercicioContable_ejercicio = 2015  AND sucursal_id IS NOT NULL ORDER BY fecha DESC OFFSET 0 ROWS FETCH NEXT 15 ROWS ONLY ;
 
 	-- SELECT * FROM dbo.vAsiento;	
 	-- SELECT * FROM dbo.vAsiento ORDER BY ejercicioContable_ejercicio, numero;	
@@ -1524,6 +1555,139 @@ CREATE VIEW [dbo].[vAsiento] AS
 	-- SELECT * FROM dbo.vAsiento WHERE  ejercicioContable_ejercicio = 2016  AND fecha >= '2015-12-1' ORDER BY fecha DESC OFFSET 0 ROWS FETCH NEXT 15 ROWS ONLY ;
 	-- SELECT * FROM dbo.vAsiento WHERE  ejercicioContable_ejercicio = 2016  AND fecha >= '2015-03-1' AND fecha <= '2015-04-1' ORDER BY fecha DESC OFFSET 0 ROWS FETCH NEXT 15 ROWS ONLY ;
 	-- SELECT * FROM dbo.vAsiento WHERE  ejercicioContable_ejercicio = 2016  AND fecha >= '2015-03-1' AND fecha <= '2015-03-1' ORDER BY fecha DESC OFFSET 0 ROWS FETCH NEXT 15 ROWS ONLY ;
+
+	/*
+	SELECT 
+			--DISTINCT	t.abreviatura AS comprobanteAbreviatura	
+
+			t.abreviatura AS comprobanteAbreviatura
+			, CASE    
+				WHEN f.comprobante IS NOT NULL AND LTRIM(RTRIM(CAST(f.comprobante  AS VARCHAR))) <> '' THEN f.comprobante
+				WHEN fp.comprobante IS NOT NULL AND LTRIM(RTRIM(CAST(fp.comprobante  AS VARCHAR))) <> '' THEN fp.comprobante
+				WHEN fo.comprobante IS NOT NULL AND LTRIM(RTRIM(CAST(fo.comprobante  AS VARCHAR))) <> '' THEN fo.comprobante
+				ELSE CAST(null AS VARCHAR) 
+			  END AS comprobanteNro																		
+
+			
+			, c.numeroasiento
+			, f.comprobante AS comprobanteFactura
+			, fp.comprobante AS comprobanteFacturaPro
+			, fo.comprobante AS comprobanteFondo 
+			, c.comprobante AS comprobanteContabilidad						
+
+	FROM	contabilidad c
+    LEFT JOIN  facturas f 
+			ON c.tipoid = f.tipoid 
+			AND f.numeroid = c.numeroid 
+			AND c.MODULO = 1
+    LEFT JOIN facturaspro fp 
+			ON c.tipoid = fp.tipoid 
+			AND fp.numeroid = c.numeroid 
+			AND c.MODULO = 4
+	LEFT JOIN fondos fo 
+			ON c.tipoid=fo.tipoid 
+			AND fo.numeroid = c.numeroid  
+			AND c.MODULO = 3
+	LEFT JOIN TablaDeComprobantes t 
+			ON c.tipoid = t.tipo
+
+	 WHERE	ejercicio = 2015
+		
+			AND (
+					f.comprobante IS NULL
+					AND fp.comprobante IS NULL
+					AND fo.comprobante IS NULL			
+			)
+			
+			-- AND c.comprobante IS NULL
+
+	ORDER BY t.abreviatura
+
+	*/
+
+	/*
+
+		SELECT	DISTINCT	
+			t.abreviatura AS comprobanteAbreviatura				
+
+	FROM	contabilidad c
+    LEFT JOIN  facturas f 
+			ON c.tipoid = f.tipoid 
+			AND f.numeroid = c.numeroid 
+			AND c.MODULO = 1
+    LEFT JOIN facturaspro fp 
+			ON c.tipoid = fp.tipoid 
+			AND fp.numeroid = c.numeroid 
+			AND c.MODULO = 4
+	LEFT JOIN fondos fo 
+			ON c.tipoid=fo.tipoid 
+			AND fo.numeroid = c.numeroid  
+			AND c.MODULO = 3
+	LEFT JOIN TablaDeComprobantes t 
+			ON c.tipoid = t.tipo
+
+	 WHERE	t.abreviatura IS NOT NULL
+			AND ejercicio = 2015								
+
+	ORDER BY t.abreviatura
+
+	*/
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vAsientoItem]         
+
+CREATE VIEW [dbo].[vAsientoItem] AS   
+
+SELECT	'com.massoftware.model.AsientoItem' AS ClassAsientoItem	
+		-----------------------------------------------------------------------------------------------------
+		, CONCAT (  vAsiento.id, '-', CAST([MovContabilidad].[ORDEN] AS VARCHAR) )	AS id			
+		-----------------------------------------------------------------------------------------------------	
+
+		, vAsiento.id														AS asiento_id
+		, vAsiento.ejercicioContable_id										AS asiento_ejercicioContable_id		
+		, vAsiento.ejercicioContable_ejercicio								AS asiento_ejercicioContable_ejercicio	
+		, vAsiento.numero													AS asiento_numero
+		, vAsiento.detalle													AS asiento_detalle
+		-----------------------------------------------------------------------------------------------------	
+		, CAST([MovContabilidad].[ORDEN] AS INT)							AS orden		-- Integer NOT NULL UN [ 1 - Short.MAX_VALUE]				
+		-----------------------------------------------------------------------------------------------------			
+		, CAST([MovContabilidad].[FECHASQL] AS DATE)						AS fecha		-- Date NOT NULL 
+		, CAST([MovContabilidad].[NROREGISTRO] AS INT)						AS registro		-- Integer NOT NULL UN [ 1 - Integer.MAX_VALUE]
+		-----------------------------------------------------------------------------------------------------	
+
+
+		-- , [MovContabilidad].[CUENTACONTABLE]								AS cuentaContable		
+		, vCuentaContable.id												AS cuentaContable_id
+		, vCuentaContable.codigoCuentaPadre									AS cuentaContable_codigoCuentaPadre
+		, vCuentaContable.codigoCuenta										AS cuentaContable_codigoCuenta
+		, vCuentaContable.cuentaContable									AS cuentaContable_cuentaContable
+		, vCuentaContable.nombre											AS cuentaContable_nombre
+
+
+		-----------------------------------------------------------------------------------------------------      
+		, [MovContabilidad].[DEBE]											AS debe			-- BigDecimal (11,2) NOT NULL [ 0 - 99999999999.99] default 0.00 
+		, [MovContabilidad].[HABER]											AS haber		-- BigDecimal (11,2) NOT NULL [ 0 - 99999999999.99] default 0.00 
+		, LTRIM(RTRIM(CAST([MovContabilidad].[DETALLE] AS VARCHAR)))		AS detalle		-- String(60) 
+		
+						
+      
+  
+	FROM [dbo].[MovContabilidad]
+	LEFT JOIN	dbo.vAsiento
+		ON	vAsiento.ejercicioContable_ejercicio = CAST([MovContabilidad].[EJERCICIO] AS INT)
+		AND vAsiento.numero = CAST([MovContabilidad].[NUMEROASIENTO] AS INT)
+	LEFT JOIN	dbo.vCuentaContable
+		ON	vCuentaContable.cuentaContable = LTRIM(RTRIM(CAST([MovContabilidad].[CUENTACONTABLE] AS VARCHAR)))	
+		-- AND vCuentaContable.ejercicioContable_ejercicio = vAsientoModelo.ejercicioContable_ejercicio;
+		AND vCuentaContable.ejercicioContable_ejercicio = CAST([MovContabilidad].[EJERCICIO] AS INT)
+	
+	;
+
+	-- SELECT * FROM dbo.vAsientoItem WHERE asiento_ejercicioContable_ejercicio = 2015;	
+	-- SELECT * FROM dbo.vAsientoItem WHERE asiento_ejercicioContable_ejercicio = 2015 ORDER BY asiento_id, orden;	
+	-- SELECT * FROM dbo.vAsientoItem WHERE asiento_ejercicioContable_ejercicio = 2015 ORDER BY asiento_ejercicioContable_ejercicio, asiento_numero, orden;	
+	-- SELECT * FROM dbo.vAsientoItem WHERE cuentaContable_cuentaContable IS NULL ORDER BY asiento_ejercicioContable_ejercicio, asiento_numero, orden;	
 	
 
 --=============================================================================================================

@@ -4,41 +4,42 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassPluralLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassTableMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldAllowDecimalAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldAutoMaxValueAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldCBBox;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnsAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxLengthAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxValueBigDecimalAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxValueIntegerAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldMinValueBigDecimalAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldMinValueIntegerAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldNameMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldReadOnly;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldRequiredAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldSubNameFKAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldUniqueAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldAllowDecimalAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldAutoMaxValueAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldCBBox;
+import com.massoftware.frontend.util.builder.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldMaxValueBigDecimalAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldMaxValueIntegerAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldMinValueBigDecimalAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldMinValueIntegerAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldReadOnly;
+import com.massoftware.frontend.util.builder.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldSubNameFKAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldUniqueAnont;
 
 @ClassLabelInTheSingularAnont(value = "Asiento contable")
 @ClassPluralLabelAnont(value = "Asientos contables")
 @ClassArticleLabelInTheSingularAnont(value = "el")
 @ClassArticleLabelInPluralAnont(value = "los")
 // @ClassFormSourceAnont(value = "Talonario")
-@ClassTableMSAnont(nameTableDB = "[AsientosModelosMov]")
+@ClassTableMSAnont(nameTableDB = "[MovContabilidad]")
 public class AsientoItem extends EntityId implements Comparable<AsientoItem> {
 
-	@FieldLabelAnont(value = "Asiento modelo")
+	@FieldLabelAnont(value = "Asiento")
 	@FieldRequiredAnont()
 	@FieldColumnMetaDataAnont(hidden = true)
-	@FieldSubNameFKAnont(value = "numero")
-	@FieldNameMSAnont(nameAttDB = "[ASIENTOMODELO]", classAttDB = Integer.class)
+	// @FieldSubNameFKAnont(value = "numero")
+	// @FieldNameMSAnont(nameAttDB = "[ASIENTOMODELO]", classAttDB =
+	// Integer.class)
 	@FieldReadOnly()
 	private Asiento asiento;
 
@@ -48,7 +49,7 @@ public class AsientoItem extends EntityId implements Comparable<AsientoItem> {
 	@FieldColumnsAnont(value = 5)
 	@FieldMinValueIntegerAnont(value = 1)
 	@FieldMaxValueIntegerAnont(value = Short.MAX_VALUE)
-	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
+	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldUniqueAnont()
 	@FieldAutoMaxValueAnont()
 	@FieldNameMSAnont(nameAttDB = "[ORDEN]", classAttDB = Integer.class)
@@ -61,28 +62,28 @@ public class AsientoItem extends EntityId implements Comparable<AsientoItem> {
 	@FieldColumnsAnont(value = 5)
 	@FieldMinValueIntegerAnont(value = 1)
 	@FieldMaxValueIntegerAnont(value = Integer.MAX_VALUE)
-	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
+	@FieldColumnMetaDataAnont(hidden = true)
 	// @FieldUniqueAnont()
 	@FieldAutoMaxValueAnont()
 	@FieldNameMSAnont(nameAttDB = "[NROREGISTRO]", classAttDB = Integer.class)
 	@FieldReadOnly()
 	private Integer registro;
 
-	@FieldLabelAnont(value = "Cuenta contable")
-	@FieldRequiredAnont()
-	@FieldColumnMetaDataAnont(attSize = 550)
-	@FieldSubNameFKAnont(value = "cuentaContable")
-	@FieldNameMSAnont(nameAttDB = "[CUENTACONTABLE]", classAttDB = String.class)
-	@FieldCBBox(attName = "cuentaContable")
-	private CuentaContable cuentaContable;
-
 	@FieldLabelAnont(value = "Fecha")
 	@FieldRequiredAnont()
-	@FieldColumnMetaDataAnont(attSize = 90, pidFilteringStart = true, ascOrderByStart = false)
+	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldNameMSAnont(nameAttDB = "[FECHASQL]", classAttDB = Timestamp.class)
 	// @FieldTimestamp()
 	// @FieldUniqueAnont()
 	private Date fecha;
+
+	@FieldLabelAnont(value = "Cuenta contable")
+	@FieldRequiredAnont()
+	@FieldColumnMetaDataAnont(attSize = 210, pidFilteringStart = true)
+	@FieldSubNameFKAnont(value = "cuentaContable")
+	@FieldNameMSAnont(nameAttDB = "[CUENTACONTABLE]", classAttDB = String.class)
+	@FieldCBBox(attName = "cuentaContable")
+	private CuentaContable cuentaContable;
 
 	@FieldLabelAnont(value = "Debe")
 	@FieldRequiredAnont()
@@ -91,7 +92,7 @@ public class AsientoItem extends EntityId implements Comparable<AsientoItem> {
 	@FieldMinValueBigDecimalAnont(value = "0")
 	@FieldMaxValueBigDecimalAnont(value = "999999999")
 	@FieldAllowDecimalAnont()
-	@FieldColumnMetaDataAnont(attSize = 120)
+	@FieldColumnMetaDataAnont(attSize = 100)
 	@FieldNameMSAnont(nameAttDB = "[DEBE]", classAttDB = BigDecimal.class)
 	private BigDecimal debe;
 
@@ -102,7 +103,7 @@ public class AsientoItem extends EntityId implements Comparable<AsientoItem> {
 	@FieldMinValueBigDecimalAnont(value = "0")
 	@FieldMaxValueBigDecimalAnont(value = "999999999")
 	@FieldAllowDecimalAnont()
-	@FieldColumnMetaDataAnont(attSize = 120)
+	@FieldColumnMetaDataAnont(attSize = 100)
 	@FieldNameMSAnont(nameAttDB = "[HABER]", classAttDB = BigDecimal.class)
 	private BigDecimal haber;
 
@@ -110,7 +111,7 @@ public class AsientoItem extends EntityId implements Comparable<AsientoItem> {
 	@FieldRequiredAnont()
 	@FieldMaxLengthAnont(value = 60)
 	@FieldColumnsAnont(value = 45)
-	@FieldColumnMetaDataAnont(attSize = 225)
+	@FieldColumnMetaDataAnont(hidden = true)
 	// @FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[DETALLE]", classAttDB = String.class)
 	private String detalle;
@@ -142,6 +143,14 @@ public class AsientoItem extends EntityId implements Comparable<AsientoItem> {
 		this.registro = registro;
 	}
 
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+
 	public CuentaContable getCuentaContable() {
 		return cuentaContable;
 	}
@@ -151,14 +160,6 @@ public class AsientoItem extends EntityId implements Comparable<AsientoItem> {
 			return;
 		}
 		this.cuentaContable = cuentaContable;
-	}
-
-	public Date getFecha() {
-		return fecha;
-	}
-
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
 	}
 
 	public BigDecimal getDebe() {

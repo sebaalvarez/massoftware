@@ -3,25 +3,25 @@ package com.massoftware.model;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassPluralLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.ClassTableMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldAutoMaxValueAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldColumnsAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldLabelAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxLengthAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldMaxValueIntegerAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldMinValueIntegerAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldNameMSAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldNotVisibleCopy;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldNotVisibleInsert;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldReadOnly;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldRequiredAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldSubNameFKAnont;
-import com.massoftware.frontend.ui.util.xmd.annotation.FieldUniqueAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.util.builder.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldAutoMaxValueAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldMaxValueIntegerAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldMinValueIntegerAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldNotVisibleCopy;
+import com.massoftware.frontend.util.builder.annotation.FieldNotVisibleInsert;
+import com.massoftware.frontend.util.builder.annotation.FieldReadOnly;
+import com.massoftware.frontend.util.builder.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldSubNameFKAnont;
+import com.massoftware.frontend.util.builder.annotation.FieldUniqueAnont;
 
 @ClassLabelInTheSingularAnont(value = "Asiento contable")
 @ClassPluralLabelAnont(value = "Asientos contables")
@@ -33,7 +33,7 @@ public class Asiento extends EntityId implements Comparable<Asiento> {
 
 	@FieldLabelAnont(value = "Ejercicio")
 	@FieldRequiredAnont()
-	@FieldColumnMetaDataAnont(hidden = true)	
+	@FieldColumnMetaDataAnont(hidden = true)
 	@FieldSubNameFKAnont(value = "ejercicio")
 	// @FieldNameMSAnont(nameAttDB = "[EJERCICIO]", classAttDB = Integer.class)
 	// @FieldCBBox(attName = "ejercicio")
@@ -45,7 +45,7 @@ public class Asiento extends EntityId implements Comparable<Asiento> {
 	@FieldColumnsAnont(value = 8)
 	@FieldMinValueIntegerAnont(value = 1)
 	@FieldMaxValueIntegerAnont(value = Integer.MAX_VALUE)
-	@FieldColumnMetaDataAnont(attSize = 70, simpleStringTraslateFilterMode = "STARTS_WITCH")
+	@FieldColumnMetaDataAnont(attSize = 50, simpleStringTraslateFilterMode = "STARTS_WITCH")
 	@FieldUniqueAnont()
 	@FieldAutoMaxValueAnont()
 	@FieldNameMSAnont(nameAttDB = "[NUMEROASIENTO]", classAttDB = Integer.class)
@@ -54,17 +54,26 @@ public class Asiento extends EntityId implements Comparable<Asiento> {
 
 	@FieldLabelAnont(value = "Fecha")
 	@FieldRequiredAnont()
-	@FieldColumnMetaDataAnont(attSize = 90, pidFilteringStart = true, ascOrderByStart = false)
+	@FieldColumnMetaDataAnont(attSize = 75, pidFilteringStart = true, ascOrderByStart = false)
 	@FieldNameMSAnont(nameAttDB = "[FECHASQL]", classAttDB = Timestamp.class)
 	// @FieldTimestamp()
 	// @FieldUniqueAnont()
 	private Date fecha;
 
+	@FieldLabelAnont(value = "Comprobante")
+	// @FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 19)
+	@FieldColumnsAnont(value = 19)
+	@FieldColumnMetaDataAnont(attSize = 125)
+	// @FieldUniqueAnont()
+	// @FieldNameMSAnont(nameAttDB = "[DETALLE]", classAttDB = String.class)
+	private String comprobante;
+
 	@FieldLabelAnont(value = "Detalle")
 	@FieldRequiredAnont()
 	@FieldMaxLengthAnont(value = 60)
 	@FieldColumnsAnont(value = 45)
-	@FieldColumnMetaDataAnont(attSize = 215)
+	@FieldColumnMetaDataAnont(attSize = 200)
 	// @FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[DETALLE]", classAttDB = String.class)
 	private String detalle;
@@ -82,7 +91,7 @@ public class Asiento extends EntityId implements Comparable<Asiento> {
 
 	@FieldLabelAnont(value = "Módulo")
 	// @FieldRequiredAnont()
-	@FieldColumnMetaDataAnont(attSize = 80)
+	@FieldColumnMetaDataAnont(attSize = 70)
 	@FieldSubNameFKAnont(value = "codigo")
 	@FieldNameMSAnont(nameAttDB = "[MODULO]", classAttDB = Integer.class)
 	@FieldNotVisibleInsert()
@@ -111,6 +120,15 @@ public class Asiento extends EntityId implements Comparable<Asiento> {
 	@FieldNameMSAnont(nameAttDB = "[MINUTACONTABLE]", classAttDB = Integer.class)
 	private MinutaContable minutaContable;
 
+	// @FieldLabelAnont(value = "Abr.")
+	// // @FieldRequiredAnont()
+	// @FieldMaxLengthAnont(value = 5)
+	// @FieldColumnsAnont(value = 5)
+	// @FieldColumnMetaDataAnont(attSize = 70)
+	// // @FieldUniqueAnont()
+	// //@FieldNameMSAnont(nameAttDB = "[DETALLE]", classAttDB = String.class)
+	// private String comprobanteAbreviatura;
+
 	public Integer getNumero() {
 		return numero;
 	}
@@ -136,6 +154,14 @@ public class Asiento extends EntityId implements Comparable<Asiento> {
 
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+
+	public String getComprobante() {
+		return comprobante;
+	}
+
+	public void setComprobante(String comprobante) {
+		this.comprobante = comprobante;
 	}
 
 	public String getDetalle() {
@@ -188,6 +214,14 @@ public class Asiento extends EntityId implements Comparable<Asiento> {
 		}
 		this.minutaContable = minutaContable;
 	}
+
+	// public String getComprobanteAbreviatura() {
+	// return comprobanteAbreviatura;
+	// }
+	//
+	// public void setComprobanteAbreviatura(String comprobanteAbreviatura) {
+	// this.comprobanteAbreviatura = comprobanteAbreviatura;
+	// }
 
 	@Override
 	public String toString() {
