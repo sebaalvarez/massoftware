@@ -1,14 +1,13 @@
 package z.old.deprecated;
 
-import com.massoftware.backend.BackendContext;
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.StandarTableUiFilteringSet;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.custom.windows.WindowsFactory;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.model.Chequera;
 import com.massoftware.model.CuentaDeFondoA;
-import com.massoftware.model.Usuario;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -55,6 +54,7 @@ public class ChequeraFormUi extends StandardFormUi<Chequera> {
 		this.setCompositionRoot(vl);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void shortcutListener(Object target) {
 
 		if (target instanceof TextField) {
@@ -72,11 +72,17 @@ public class ChequeraFormUi extends StandardFormUi<Chequera> {
 					// "codigo", ((TextField) target).getValue(),
 					// dtoBI.getItemProperty("cuentaDeFondo"), null);
 
+					StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+
+					filteringSet.setPidFiltering("codigo");
+					filteringSet
+							.setValueFilter(((TextField) target).getValue());
+					filteringSet.setSearchProperty(dtoBI
+							.getItemProperty("cuentaDeFondo"));
+					filteringSet.setOtrosFiltros(getOtrosFiltros());
+
 					WindowsFactory.openWindowFromForm(this,
-							CuentaDeFondoA.class, sessionVar, "codigo",
-							((TextField) target).getValue(),
-							dtoBI.getItemProperty("cuentaDeFondo"),
-							getOtrosFiltros());
+							CuentaDeFondoA.class, sessionVar, filteringSet);
 
 				}
 			} catch (Exception e) {

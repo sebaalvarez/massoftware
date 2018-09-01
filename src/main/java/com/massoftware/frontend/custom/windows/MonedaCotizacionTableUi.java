@@ -13,7 +13,6 @@ import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.model.Entity;
 import com.massoftware.model.Moneda;
 import com.massoftware.model.MonedaCotizacion;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComboBox;
@@ -33,15 +32,12 @@ public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 	private BeanItemContainer<IntegerValue> aniosBIC;
 
 	public MonedaCotizacionTableUi(StandarTableUiPagedConf pagedConf,
-			boolean shortcut, boolean agregar, boolean modificar,
-			boolean copiar, boolean eliminar, Window window,
+			StandarTableUiToolbarConf toolbarConf, Window window,
 			SessionVar sessionVar, Class<MonedaCotizacion> classModel,
-			String pidFiltering, Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty) {
+			StandarTableUiFilteringSet filteringSet) {
 
-		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
-				window, sessionVar, classModel, pidFiltering, searchFilter,
-				searchProperty, null);
+		super(pagedConf, toolbarConf, window, sessionVar, classModel,
+				filteringSet);
 
 		monedaCBXValueChange();
 

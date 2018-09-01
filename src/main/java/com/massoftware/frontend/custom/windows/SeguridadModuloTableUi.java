@@ -3,26 +3,30 @@ package com.massoftware.frontend.custom.windows;
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.SeguridadModulo;
-import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
-public class SeguridadModuloTableUi extends StandardTableUi<SeguridadModulo> {
+class SeguridadModuloTableUi extends StandardTableUi<SeguridadModulo> {
 
 	private SeguridadPuertaTableUi seguridadPuertaTableUi;
 
-	@SuppressWarnings("rawtypes")
-	public SeguridadModuloTableUi(StandarTableUiPagedConf pagedConf, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			SessionVar sessionVar, Class<SeguridadModulo> classModel,
-			String pidFiltering, Object searchFilter, Property searchProperty,
+	protected SeguridadModuloTableUi(SessionVar sessionVar,
 			SeguridadPuertaTableUi seguridadPuertaTableUi) {
 
-		super(pagedConf, shortcut, agregar, modificar,
-				false, eliminar, window, sessionVar, classModel, pidFiltering,
-				searchFilter, searchProperty, null);
+		StandarTableUiPagedConf pagedConf = new StandarTableUiPagedConf(false,
+				false, false);
+
+		StandarTableUiToolbarConf toolbarConf = new StandarTableUiToolbarConf(
+				false, false, false, false, false);
+
+		StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+
+		Window window = null;
+
+		build(pagedConf, toolbarConf, window, sessionVar,
+				SeguridadModulo.class, filteringSet);
 
 		this.seguridadPuertaTableUi = seguridadPuertaTableUi;
 

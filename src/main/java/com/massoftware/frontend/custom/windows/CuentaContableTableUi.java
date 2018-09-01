@@ -15,7 +15,6 @@ import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaContableFull;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComboBox;
@@ -53,29 +52,18 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 	private String itemTodas = "Todas las cuentas";
 
-	public CuentaContableTableUi(StandarTableUiPagedConf pagedConf,
-			boolean shortcut, boolean agregar, boolean modificar,
-			boolean copiar, boolean eliminar, Window window,
+	protected CuentaContableTableUi(StandarTableUiPagedConf pagedConf,
+			StandarTableUiToolbarConf toolbarConf, Window window,
 			SessionVar sessionVar, Class<CuentaContable> classModel,
-			String pidFiltering, Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty,
-			List<Object> otrosFiltros) {
+			StandarTableUiFilteringSet filteringSet) {
+		super(pagedConf, toolbarConf, window, sessionVar, classModel,
+				filteringSet);
 
-		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
-				window, sessionVar, classModel, pidFiltering, searchFilter,
-				searchProperty, otrosFiltros);
-
-		init(agregar, modificar, copiar, eliminar, window, sessionVar,
-				classModel, pidFiltering, searchFilter, searchProperty, null);
+		init();
 
 	}
 
-	public void init(boolean agregar, boolean modificar, boolean copiar,
-			boolean eliminar, Window window, SessionVar sessionVar,
-			Class<CuentaContable> classModel, String pidFiltering,
-			Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty,
-			CuentaContableTableUi cuentaContableTableUi) {
+	public void init() {
 
 		// window.setWidth("800px");
 

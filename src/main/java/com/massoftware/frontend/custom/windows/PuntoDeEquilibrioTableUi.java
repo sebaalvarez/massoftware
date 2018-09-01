@@ -11,7 +11,6 @@ import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Entity;
 import com.massoftware.model.PuntoDeEquilibrio;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComboBox;
@@ -28,15 +27,12 @@ public class PuntoDeEquilibrioTableUi extends
 	private ComboBox filtroEjercicioCBX;
 	private BeanItemContainer<EjercicioContable> ejerciciosContablesBIC;
 
-	public PuntoDeEquilibrioTableUi(StandarTableUiPagedConf pagedConf, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
+	protected PuntoDeEquilibrioTableUi(StandarTableUiPagedConf pagedConf,
+			StandarTableUiToolbarConf toolbarConf, Window window,
 			SessionVar sessionVar, Class<PuntoDeEquilibrio> classModel,
-			String pidFiltering, Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty) {
-
-		super(pagedConf, shortcut, agregar, modificar,
-				copiar, eliminar, window, sessionVar, classModel, pidFiltering,
-				searchFilter, searchProperty, null);
+			StandarTableUiFilteringSet filteringSet) {
+		super(pagedConf, toolbarConf, window, sessionVar, classModel,
+				filteringSet);
 
 		ejercicioCBXValueChange();
 

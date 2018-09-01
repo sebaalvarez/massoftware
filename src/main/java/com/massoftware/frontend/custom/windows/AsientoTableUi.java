@@ -72,12 +72,13 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 
 	private AsientoItemTableUi asientoItemTableUi;
 
-	public AsientoTableUi(SessionVar sessionVar, Window window) {
+	protected AsientoTableUi(StandarTableUiPagedConf pagedConf,
+			StandarTableUiToolbarConf toolbarConf, Window window,
+			SessionVar sessionVar, Class<Asiento> classModel,
+			StandarTableUiFilteringSet filteringSet) {
 
-		super(new StandarTableUiPagedConf(true, false, true), true, true, true,
-				true, true, window, sessionVar, Asiento.class, null, null,
-				null, null);
-
+		super(pagedConf, toolbarConf, window, sessionVar, classModel,
+				filteringSet);
 		build();
 	}
 
@@ -96,6 +97,8 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 		// this.setCompositionRoot(hsplit);
 
 		// hsplit.setFirstComponent(rootVL);
+		
+		
 
 		asientoItemTableUi = new AsientoItemTableUi(sessionVar);
 

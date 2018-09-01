@@ -13,7 +13,6 @@ import com.massoftware.model.Ciudad;
 import com.massoftware.model.Entity;
 import com.massoftware.model.Pais;
 import com.massoftware.model.Provincia;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
@@ -34,21 +33,19 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 	private BeanItemContainer<Provincia> provinciaBIC;
 
 	private ComboBox filtroPaisFormCBX;
+	
+	
+	
 
-	public CiudadTableUi(StandarTableUiPagedConf pagedConf, boolean shortcut,
-			boolean agregar, boolean modificar, boolean copiar,
-			boolean eliminar, Window window, SessionVar sessionVar,
-			Class<Ciudad> classModel, String pidFiltering, Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty) {
-
-		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
-				window, sessionVar, classModel, pidFiltering, searchFilter,
-				searchProperty, null);
+	protected CiudadTableUi(StandarTableUiPagedConf pagedConf,
+			StandarTableUiToolbarConf toolbarConf, Window window,
+			SessionVar sessionVar, Class<Ciudad> classModel,
+			StandarTableUiFilteringSet filteringSet) {
+		super(pagedConf, toolbarConf, window, sessionVar, classModel, filteringSet);
 
 		paisCBXValueChange();
-
 	}
-
+	
 	protected void addControlsFilters() throws Exception {
 
 		// ----------------------------------

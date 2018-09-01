@@ -60,14 +60,14 @@ public class CuentaContableFullFormUi extends
 	private ComboBox filtroPuntoDeEquilibrioCBX;
 	protected BeanItemContainer<PuntoDeEquilibrio> puntosDeEquilibrioBIC;
 
-	public CuentaContableFullFormUi(SessionVar sessionVar, String mode,
+	protected CuentaContableFullFormUi(SessionVar sessionVar, String mode,
 			CuentaContableFull object) {
 		super(sessionVar, CuentaContableFull.class, mode, object);
 		start();
 	}
 
 	@SuppressWarnings("rawtypes")
-	public CuentaContableFullFormUi(SessionVar sessionVar, String mode,
+	protected CuentaContableFullFormUi(SessionVar sessionVar, String mode,
 			StandardTableUi tableUi, CuentaContableFull objectClone,
 			CuentaContableFull object) {
 		super(sessionVar, CuentaContableFull.class, mode, tableUi, objectClone,
@@ -76,20 +76,20 @@ public class CuentaContableFullFormUi extends
 	}
 
 	@SuppressWarnings("rawtypes")
-	public CuentaContableFullFormUi(SessionVar sessionVar, String mode,
+	protected CuentaContableFullFormUi(SessionVar sessionVar, String mode,
 			StandardTableUi tableUi, CuentaContableFull objectClone) {
 		super(sessionVar, CuentaContableFull.class, mode, tableUi, objectClone);
 		start();
 	}
 
 	@SuppressWarnings("rawtypes")
-	public CuentaContableFullFormUi(SessionVar sessionVar, String mode,
+	protected CuentaContableFullFormUi(SessionVar sessionVar, String mode,
 			StandardTableUi tableUi) {
 		super(sessionVar, CuentaContableFull.class, mode, tableUi);
 		start();
 	}
 
-	public CuentaContableFullFormUi(SessionVar sessionVar, String mode) {
+	protected CuentaContableFullFormUi(SessionVar sessionVar, String mode) {
 		super(sessionVar, CuentaContableFull.class, mode);
 		start();
 	}

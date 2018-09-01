@@ -8,7 +8,6 @@ import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.AsientoModelo;
 import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.model.EjercicioContable;
-import com.vaadin.data.Property;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Window;
 
@@ -22,16 +21,13 @@ public class AsientoModeloItemTableUi extends
 
 	public AsientoModelo asientoModeloFilter;
 
-	public AsientoModeloItemTableUi(StandarTableUiPagedConf pagedConf,
-			boolean shortcut, boolean agregar, boolean modificar,
-			boolean copiar, boolean eliminar, Window window,
+	protected AsientoModeloItemTableUi(StandarTableUiPagedConf pagedConf,
+			StandarTableUiToolbarConf toolbarConf, Window window,
 			SessionVar sessionVar, Class<AsientoModeloItem> classModel,
-			String pidFiltering, Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty) {
+			StandarTableUiFilteringSet filteringSet) {
 
-		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
-				window, sessionVar, classModel, pidFiltering, searchFilter,
-				searchProperty, null);
+		super(pagedConf, toolbarConf, window, sessionVar, classModel,
+				filteringSet);
 
 		window.setWidth("1300px");
 
@@ -40,8 +36,7 @@ public class AsientoModeloItemTableUi extends
 		this.setCompositionRoot(hsplit);
 
 		AsientoModeloTableUi asientoModeloTableUi = new AsientoModeloTableUi(
-				true, true, true, true, true, null, sessionVar,
-				AsientoModelo.class, null, null, null, this);
+				sessionVar, this);
 
 		hsplit.setFirstComponent(asientoModeloTableUi);
 

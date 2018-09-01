@@ -3,7 +3,6 @@ package com.massoftware.frontend.custom.windows;
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.AsientoModelo;
-import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Window;
@@ -13,16 +12,20 @@ public class AsientoModeloTableUi extends StandardTableUi<AsientoModelo> {
 
 	private AsientoModeloItemTableUi asientoModeloItemTableUi;
 
-	@SuppressWarnings("rawtypes")
-	public AsientoModeloTableUi(boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			SessionVar sessionVar, Class<AsientoModelo> classModel,
-			String pidFiltering, Object searchFilter, Property searchProperty,
+	protected AsientoModeloTableUi(SessionVar sessionVar,
 			AsientoModeloItemTableUi asientoModeloItemTableUi) {
 
-		super(null, shortcut, agregar, modificar,
-				false, eliminar, window, sessionVar, classModel, pidFiltering,
-				searchFilter, searchProperty, null);
+		StandarTableUiPagedConf pagedConf = new StandarTableUiPagedConf(false,
+				false, false);
+
+		StandarTableUiToolbarConf toolbarConf = new StandarTableUiToolbarConf(true, true, false, true, true);
+
+		StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+
+		Window window = null;
+
+		build(pagedConf, toolbarConf, window, sessionVar, AsientoModelo.class,
+				filteringSet);
 
 		this.asientoModeloItemTableUi = asientoModeloItemTableUi;
 

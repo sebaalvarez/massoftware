@@ -5,7 +5,6 @@ import java.util.Date;
 
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.EjercicioContable;
-import com.vaadin.data.Property;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
@@ -18,14 +17,14 @@ public class EjercicioContableTableUi extends
 	 */
 	private static final long serialVersionUID = 4960961261882226754L;
 
-	public EjercicioContableTableUi(StandarTableUiPagedConf pagedConf, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
+	public EjercicioContableTableUi(StandarTableUiPagedConf pagedConf,
+			StandarTableUiToolbarConf toolbarConf, Window window,
 			SessionVar sessionVar, Class<EjercicioContable> classModel,
-			String pidFiltering, Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty) {
-		super(pagedConf, shortcut, agregar, modificar,
-				false, eliminar, window, sessionVar, classModel, pidFiltering,
-				searchFilter, searchProperty, null);
+			StandarTableUiFilteringSet filteringSet) {
+
+		super(pagedConf, new StandarTableUiToolbarConf(true, true, false, true,
+				true), window, sessionVar, classModel, filteringSet);
+
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

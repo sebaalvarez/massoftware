@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.massoftware.backend.bo.ChequeraBO;
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.custom.windows.StandarTableUiPagedConf;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.custom.windows.StandardTableUi;
 import com.massoftware.frontend.util.LogAndNotification;
@@ -29,16 +28,9 @@ public class ChequeraTableUi extends StandardTableUi<Chequera> {
 
 	private CuentaDeFondoATableUi cuentaDeFondoATableUi;
 
-	public ChequeraTableUi(StandarTableUiPagedConf pagedConf, boolean shortcut,
-			boolean agregar, boolean modificar, boolean copiar,
-			boolean eliminar, Window window, SessionVar sessionVar,
-			Class<Chequera> classModel, String pidFiltering,
-			Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty) {
+	public ChequeraTableUi(Window window, SessionVar sessionVar) {
 
-		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
-				window, sessionVar, classModel, pidFiltering, searchFilter,
-				searchProperty, null);
+		super(null, null, window, sessionVar, Chequera.class);
 
 		window.setWidth("1300px");
 
@@ -46,9 +38,8 @@ public class ChequeraTableUi extends StandardTableUi<Chequera> {
 		hsplit.setSplitPosition(550, Unit.PIXELS);
 		this.setCompositionRoot(hsplit);
 
-		cuentaDeFondoATableUi = new CuentaDeFondoATableUi(pagedConf, false,
-				false, false, false, false, null, sessionVar,
-				CuentaDeFondoA.class, null, null, null, this);
+		cuentaDeFondoATableUi = new CuentaDeFondoATableUi(null, sessionVar,
+				this);
 
 		hsplit.setFirstComponent(cuentaDeFondoATableUi);
 

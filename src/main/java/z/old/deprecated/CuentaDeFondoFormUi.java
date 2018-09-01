@@ -2,6 +2,7 @@ package z.old.deprecated;
 
 import com.massoftware.backend.BackendContext;
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.StandarTableUiFilteringSet;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.custom.windows.WindowsFactory;
 import com.massoftware.frontend.util.LogAndNotification;
@@ -100,45 +101,85 @@ public class CuentaDeFondoFormUi extends StandardFormUi<CuentaDeFondo> {
 
 			if (txt.getDescription().equals("Cuenta contable")) {
 
+				StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+
+				filteringSet.setPidFiltering("cuentaContable");
+				filteringSet.setValueFilter(((TextField) target).getValue());
+				filteringSet.setSearchProperty(dtoBI
+						.getItemProperty("cuentaContable"));
+				filteringSet.setOtrosFiltros(null);
+
 				WindowsFactory.openWindowFromForm(this, CuentaContable.class,
-						sessionVar, "cuentaContable",
-						((TextField) target).getValue(),
-						dtoBI.getItemProperty("cuentaContable"), null);
+						sessionVar, filteringSet);
 
 			} else if (txt.getDescription().equals("Cuenta diferidos")) {
 
+				StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+
+				filteringSet.setPidFiltering("codigo");
+				filteringSet.setValueFilter(((TextField) target).getValue());
+				filteringSet.setSearchProperty(dtoBI
+						.getItemProperty("cuentaDiferidos"));
+				filteringSet.setOtrosFiltros(null);
+
 				WindowsFactory.openWindowFromForm(this, CuentaDeFondoA.class,
-						sessionVar, "codigo", ((TextField) target).getValue(),
-						dtoBI.getItemProperty("cuentaDiferidos"), null);
+						sessionVar, filteringSet);
 
 			} else if (txt.getDescription().equals("Cuenta caución")) {
 
+				StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+
+				filteringSet.setPidFiltering("codigo");
+				filteringSet.setValueFilter(((TextField) target).getValue());
+				filteringSet.setSearchProperty(dtoBI
+						.getItemProperty("cuentaCaucion"));
+				filteringSet.setOtrosFiltros(null);
+
 				WindowsFactory.openWindowFromForm(this, CuentaDeFondoA.class,
-						sessionVar, "codigo", ((TextField) target).getValue(),
-						dtoBI.getItemProperty("cuentaCaucion"), null);
+						sessionVar, filteringSet);
 
 			} else if (txt.getDescription().equals("Puerta para uso de cta.")) {
 
+				StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+
+				filteringSet.setPidFiltering("codigo");
+				filteringSet.setValueFilter(((TextField) target).getValue());
+				filteringSet.setSearchProperty(dtoBI
+						.getItemProperty("seguridadPuerta"));
+				filteringSet.setOtrosFiltros(null);
+
 				WindowsFactory.openWindowFromForm(this, SeguridadPuerta.class,
-						sessionVar, "codigo", ((TextField) target).getValue(),
-						dtoBI.getItemProperty("seguridadPuerta"), null);
+						sessionVar, filteringSet);
 
 			} else if (txt.getDescription().equals("Puerta para consulta")) {
 
+				StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+
+				filteringSet.setPidFiltering("codigo");
+				filteringSet.setValueFilter(((TextField) target).getValue());
+				filteringSet.setSearchProperty(dtoBI
+						.getItemProperty("puertaConsulta"));
+				filteringSet.setOtrosFiltros(null);
+
 				WindowsFactory.openWindowFromForm(this, SeguridadPuerta.class,
-						sessionVar, "codigo", ((TextField) target).getValue(),
-						dtoBI.getItemProperty("puertaConsulta"), null);
+						sessionVar, filteringSet);
 
 			} else if (txt.getDescription().equals(
 					"Puerta, derecho para superar límite")) {
 
+				StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+
+				filteringSet.setPidFiltering("codigo");
+				filteringSet.setValueFilter(((TextField) target).getValue());
+				filteringSet.setSearchProperty(dtoBI
+						.getItemProperty("puertaLimite"));
+				filteringSet.setOtrosFiltros(null);
+
 				WindowsFactory.openWindowFromForm(this, SeguridadPuerta.class,
-						sessionVar, "codigo", ((TextField) target).getValue(),
-						dtoBI.getItemProperty("puertaLimite"), null);
+						sessionVar, filteringSet);
 			}
 
 		}
 
 	}
-
 }

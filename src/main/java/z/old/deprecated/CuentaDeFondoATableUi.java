@@ -4,11 +4,9 @@ import java.util.List;
 
 import com.massoftware.backend.bo.CuentaDeFondoABO;
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.custom.windows.StandarTableUiPagedConf;
 import com.massoftware.frontend.custom.windows.StandardTableUi;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.CuentaDeFondoA;
-import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Window;
@@ -18,16 +16,10 @@ public class CuentaDeFondoATableUi extends StandardTableUi<CuentaDeFondoA> {
 
 	private ChequeraTableUi chequeraTableUi;
 
-	@SuppressWarnings("rawtypes")
-	public CuentaDeFondoATableUi(StandarTableUiPagedConf pagedConf, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			SessionVar sessionVar, Class<CuentaDeFondoA> classModel,
-			String pidFiltering, Object searchFilter, Property searchProperty,
+	public CuentaDeFondoATableUi(Window window, SessionVar sessionVar,
 			ChequeraTableUi chequeraTableUi) {
 
-		super(pagedConf, shortcut, agregar, modificar,
-				copiar, eliminar, window, sessionVar, classModel, pidFiltering,
-				searchFilter, searchProperty, null);
+		super(null, null, window, sessionVar, CuentaDeFondoA.class, null);
 
 		this.itemsGRD.getColumn("cuentaDeFondoTipo").setHidden(true);
 		this.itemsGRD.setWidth((itemsGRD.getWidth() - 150) + "px");

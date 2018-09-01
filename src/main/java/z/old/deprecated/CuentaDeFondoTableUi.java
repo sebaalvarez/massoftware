@@ -8,7 +8,6 @@ import com.massoftware.backend.bo.CuentaDeFondoABO;
 import com.massoftware.backend.bo.CuentaDeFondoBO;
 import com.massoftware.backend.bo.CuentaDeFondoGrupoBO;
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.custom.windows.StandarTableUiPagedConf;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.custom.windows.StandardTableUi;
 import com.massoftware.frontend.util.LogAndNotification;
@@ -51,46 +50,24 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 	private HorizontalLayout treeBarraDeHerramientasFila2;
 	private Button treeEliminarBTN;
 
-	public CuentaDeFondoTableUi(StandarTableUiPagedConf pagedConf,
-			boolean shortcut, boolean agregar, boolean modificar,
-			boolean copiar, boolean eliminar, Window window,
-			SessionVar sessionVar, Class<CuentaDeFondoA> classModel,
-			String pidFiltering, Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty) {
+	public CuentaDeFondoTableUi(Window window, SessionVar sessionVar) {
 
-		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
-				window, sessionVar, classModel, pidFiltering, searchFilter,
-				searchProperty, null);
+		super(null, null, window, sessionVar, CuentaDeFondoA.class);
 
-		init(agregar, modificar, copiar, eliminar, window, sessionVar,
-				classModel, pidFiltering, searchFilter, searchProperty, null);
+		init();
 
 	}
 
-	public CuentaDeFondoTableUi(StandarTableUiPagedConf pagedConf,
-			boolean shortcut, boolean agregar, boolean modificar,
-			boolean copiar, boolean eliminar, Window window,
-			SessionVar sessionVar, Class<CuentaDeFondoA> classModel,
-			String pidFiltering, Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty,
+	public CuentaDeFondoTableUi(Window window, SessionVar sessionVar,
 			ChequeraTableUi chequeraTableUi) {
 
-		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
-				window, sessionVar, classModel, pidFiltering, searchFilter,
-				searchProperty, null);
+		super(null, null, window, sessionVar, CuentaDeFondoA.class);
 
-		init(agregar, modificar, copiar, eliminar, window, sessionVar,
-				classModel, pidFiltering, searchFilter, searchProperty,
-				chequeraTableUi);
+		init();
 
 	}
 
-	public void init(boolean agregar, boolean modificar, boolean copiar,
-			boolean eliminar, Window window, SessionVar sessionVar,
-			Class<CuentaDeFondoA> classModel, String pidFiltering,
-			Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty,
-			ChequeraTableUi chequeraTableUi) {
+	public void init() {
 
 		window.setWidth("1300px");
 

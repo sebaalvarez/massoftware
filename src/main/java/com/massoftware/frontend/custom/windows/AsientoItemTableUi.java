@@ -7,8 +7,9 @@ import com.massoftware.backend.bo.AsientoItemBO;
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.AsientoItem;
+import com.vaadin.ui.Window;
 
-public class AsientoItemTableUi extends StandardTableUi<AsientoItem> {
+class AsientoItemTableUi extends StandardTableUi<AsientoItem> {
 
 	/**
 	 * 
@@ -19,8 +20,18 @@ public class AsientoItemTableUi extends StandardTableUi<AsientoItem> {
 
 	protected AsientoItemTableUi(SessionVar sessionVar) {
 
-		super(null, false, false, false, false, false, null, sessionVar,
-				AsientoItem.class, null, null, null, null);
+		StandarTableUiPagedConf pagedConf = new StandarTableUiPagedConf(false,
+				false, false);
+
+		StandarTableUiToolbarConf toolbarConf = new StandarTableUiToolbarConf(
+				false, false, false, false, false);
+
+		StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+
+		Window window = null;
+		
+		build(pagedConf, toolbarConf, window, sessionVar, AsientoItem.class,
+				filteringSet);
 
 		build();
 	}

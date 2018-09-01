@@ -1,13 +1,10 @@
 package com.massoftware.frontend.custom.windows;
 
-import java.util.List;
-
 import z.old.deprecated.CentroDeCostoProyectoTableUi;
 import z.old.deprecated.ChequeraTableUi;
 import z.old.deprecated.CuentaDeFondoTableUi;
 
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.custom.menu.AbstractMenu;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.AsientoModeloItem;
@@ -42,61 +39,42 @@ import com.massoftware.model.TipoCbteControl;
 import com.massoftware.model.TipoCliente;
 import com.massoftware.model.TipoDocumentoAFIP;
 import com.massoftware.model.Zona;
-import com.vaadin.data.Property;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
 
 public class WindowsFactory {
 
-	// ABRE LA VENTANA EN MODO ABM
 	@SuppressWarnings("rawtypes")
-	public static StandardTableUi openWindowFromMenu(AbstractMenu component,
+	public static StandardTableUi openWindow(Component component,
 			Class classModel, SessionVar sessionVar) {
 
-		StandarTableUiPagedConf pagedConf = new StandarTableUiPagedConf();
-
-		pagedConf.setPaged(false);
-		pagedConf.setPagedCount(false);
-		pagedConf.setPagedOrder(false);
-
-		return openWindow(pagedConf, true, true, true, true, true, component,
-				classModel, sessionVar, null, null, null, null);
-	}
-
-	// ABRE LA VENTANA EN MODO SELECCION
-	@SuppressWarnings("rawtypes")
-	public static StandardTableUi openWindowFromForm(StandardFormUi component,
-			Class classModel, SessionVar sessionVar, String pidFiltering,
-			Object valueFilter, Property searchProperty,
-			List<Object> otrosFiltros) {
-
-		StandarTableUiPagedConf pagedConf = new StandarTableUiPagedConf();
-
-		pagedConf.setPaged(false);
-		pagedConf.setPagedCount(false);
-		pagedConf.setPagedOrder(false);
-
-		return openWindow(pagedConf, true, true, true, true, true, component,
-				classModel, sessionVar, pidFiltering, valueFilter,
-				searchProperty, otrosFiltros);
-
+		return openWindow(new StandarTableUiPagedConf(),
+				new StandarTableUiToolbarConf(), component, classModel,
+				sessionVar, new StandarTableUiFilteringSet());
 	}
 
 	@SuppressWarnings("rawtypes")
-	private static StandardTableUi openWindow(
-			StandarTableUiPagedConf pagedConf, boolean shortcut,
-			boolean agregar, boolean modificar, boolean copiar,
-			boolean eliminar, Component component, Class classModel,
-			SessionVar sessionVar, String pidFiltering, Object valueFilter,
-			Property searchProperty, List<Object> otrosFiltros) {
+	public static StandardTableUi openWindow(Component component,
+			Class classModel, SessionVar sessionVar,
+			StandarTableUiFilteringSet filteringSet) {
+
+		return openWindow(new StandarTableUiPagedConf(),
+				new StandarTableUiToolbarConf(), component, classModel,
+				sessionVar, filteringSet);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static StandardTableUi openWindow(StandarTableUiPagedConf pagedConf,
+			StandarTableUiToolbarConf toolbarConf, Component component,
+			Class classModel, SessionVar sessionVar,
+			StandarTableUiFilteringSet filteringSet) {
 		try {
 
 			Window win = new Window();
 
-			StandardTableUi standardTableUi = buildTable(pagedConf, shortcut,
-					agregar, modificar, copiar, eliminar, component,
-					classModel, sessionVar, pidFiltering, valueFilter,
-					searchProperty, otrosFiltros, win);
+			StandardTableUi standardTableUi = buildTable(pagedConf,
+					toolbarConf, component, classModel, sessionVar,
+					filteringSet, win);
 
 			component.getUI().addWindow(win);
 
@@ -110,251 +88,176 @@ public class WindowsFactory {
 		return null;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static StandardTableUi buildTable(
-			StandarTableUiPagedConf pagedConf, boolean shortcut,
-			boolean agregar, boolean modificar, boolean copiar,
-			boolean eliminar, Component component, Class classModel,
-			SessionVar sessionVar, String pidFiltering, Object valueFilter,
-			Property searchProperty, List<Object> otrosFiltros, Window win) {
+			StandarTableUiPagedConf pagedConf,
+			StandarTableUiToolbarConf toolbarConf, Component component,
+			Class classModel, SessionVar sessionVar,
+			StandarTableUiFilteringSet filteringSet, Window win) {
 
 		if (classModel == Zona.class) {
 
-			return new StandardTableUi<Zona>(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar, Zona.class,
-					pidFiltering, valueFilter, searchProperty, otrosFiltros);
+			return new StandardTableUi<Zona>(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == Pais.class) {
 
-			return new StandardTableUi<Pais>(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar, Pais.class,
-					pidFiltering, valueFilter, searchProperty, otrosFiltros);
+			return new StandardTableUi<Pais>(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == TipoCliente.class) {
 
-			return new StandardTableUi<TipoCliente>(pagedConf, shortcut,
-					agregar, modificar, copiar, eliminar, win, sessionVar,
-					TipoCliente.class, pidFiltering, valueFilter,
-					searchProperty, otrosFiltros);
+			return new StandardTableUi<TipoCliente>(pagedConf, toolbarConf,
+					win, sessionVar, classModel, filteringSet);
 
 		} else if (classModel == TipoDocumentoAFIP.class) {
 
-			return new StandardTableUi<TipoDocumentoAFIP>(pagedConf, shortcut,
-					agregar, modificar, copiar, eliminar, win, sessionVar,
-					TipoDocumentoAFIP.class, pidFiltering, valueFilter,
-					searchProperty, otrosFiltros);
+			return new StandardTableUi<TipoDocumentoAFIP>(pagedConf,
+					toolbarConf, win, sessionVar, classModel, filteringSet);
 
 		} else if (classModel == TipoCbteAFIP.class) {
 
-			return new StandardTableUi<TipoCbteAFIP>(pagedConf, shortcut,
-					agregar, modificar, copiar, eliminar, win, sessionVar,
-					TipoCbteAFIP.class, pidFiltering, valueFilter,
-					searchProperty, otrosFiltros);
+			return new StandardTableUi<TipoCbteAFIP>(pagedConf, toolbarConf,
+					win, sessionVar, classModel, filteringSet);
 
 		} else if (classModel == MotivoComentario.class) {
 
-			return new StandardTableUi<MotivoComentario>(pagedConf, shortcut,
-					agregar, modificar, copiar, eliminar, win, sessionVar,
-					MotivoComentario.class, pidFiltering, valueFilter,
-					searchProperty, otrosFiltros);
+			return new StandardTableUi<MotivoComentario>(pagedConf,
+					toolbarConf, win, sessionVar, classModel, filteringSet);
 
 		} else if (classModel == MotivoNotaDeCredito.class) {
 
 			return new StandardTableUi<MotivoNotaDeCredito>(pagedConf,
-					shortcut, agregar, modificar, copiar, eliminar, win,
-					sessionVar, MotivoNotaDeCredito.class, pidFiltering,
-					valueFilter, searchProperty, otrosFiltros);
+					toolbarConf, win, sessionVar, classModel, filteringSet);
 
 		} else if (classModel == CodigoConvenioMultilateral.class) {
 
 			return new StandardTableUi<CodigoConvenioMultilateral>(pagedConf,
-					shortcut, agregar, modificar, copiar, eliminar, win,
-					sessionVar, CodigoConvenioMultilateral.class, pidFiltering,
-					valueFilter, searchProperty, otrosFiltros);
+					toolbarConf, win, sessionVar, classModel, filteringSet);
 
 		} else if (classModel == EjercicioContable.class) {
 
-			// new StandardTableUi<EjercicioContable>(shortcut,
-			// agregar, modificar, copiar, eliminar, win, cx, usuario,
-			// EjercicioContable.class, pidFiltering,
-			// searchFilter, searchProperty);
-
-			return new EjercicioContableTableUi(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar,
-					EjercicioContable.class, pidFiltering, valueFilter,
-					searchProperty);
+			return new EjercicioContableTableUi(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == CentroDeCostoProyecto.class) {
 
-			return new CentroDeCostoProyectoTableUi(pagedConf, shortcut,
-					agregar, modificar, copiar, eliminar, win, sessionVar,
-					CentroDeCostoProyecto.class, pidFiltering, valueFilter,
-					searchProperty);
+			return new CentroDeCostoProyectoTableUi(win, sessionVar);
 
 		} else if (classModel == CentroDeCostoContable.class) {
 
-			return new CentroDeCostoContableTableUi(pagedConf, shortcut,
-					agregar, modificar, copiar, eliminar, win, sessionVar,
-					CentroDeCostoContable.class, pidFiltering, valueFilter,
-					searchProperty);
+			return new CentroDeCostoContableTableUi(pagedConf, toolbarConf,
+					win, sessionVar, classModel, filteringSet);
 
 		} else if (classModel == PuntoDeEquilibrio.class) {
 
-			return new PuntoDeEquilibrioTableUi(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar,
-					PuntoDeEquilibrio.class, pidFiltering, valueFilter,
-					searchProperty);
+			return new PuntoDeEquilibrioTableUi(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == Provincia.class) {
 
-			return new ProvinciaTableUi(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar,
-					Provincia.class, pidFiltering, valueFilter, searchProperty);
+			return new ProvinciaTableUi(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == Ciudad.class) {
 
-			return new CiudadTableUi(pagedConf, shortcut, agregar, modificar,
-					copiar, eliminar, win, sessionVar, Ciudad.class,
-					pidFiltering, valueFilter, searchProperty);
+			return new CiudadTableUi(pagedConf, toolbarConf, win, sessionVar,
+					classModel, filteringSet);
 
 		} else if (classModel == Sucursal.class) {
 
-			return new StandardTableUi<Sucursal>(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar,
-					Sucursal.class, pidFiltering, valueFilter, searchProperty,
-					otrosFiltros);
+			return new StandardTableUi<Sucursal>(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == SeguridadPuerta.class) {
 
-			return new SeguridadPuertaTableUi(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar,
-					SeguridadPuerta.class, pidFiltering, valueFilter,
-					searchProperty);
+			return new SeguridadPuertaTableUi(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == BancoFirmante.class) {
 
-			return new StandardTableUi<BancoFirmante>(pagedConf, shortcut,
-					agregar, modificar, copiar, eliminar, win, sessionVar,
-					BancoFirmante.class, pidFiltering, valueFilter,
-					searchProperty, otrosFiltros);
+			return new StandardTableUi<BancoFirmante>(pagedConf, toolbarConf,
+					win, sessionVar, classModel, filteringSet);
 
 		} else if (classModel == Banco.class) {
 
-			return new StandardTableUi<Banco>(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar, Banco.class,
-					pidFiltering, valueFilter, searchProperty, otrosFiltros);
+			return new StandardTableUi<Banco>(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == Caja.class) {
 
-			return new StandardTableUi<Caja>(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar, Caja.class,
-					pidFiltering, valueFilter, searchProperty, otrosFiltros);
+			return new StandardTableUi<Caja>(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == MonedaAFIP.class) {
 
-			return new StandardTableUi<MonedaAFIP>(pagedConf, shortcut,
-					agregar, modificar, copiar, eliminar, win, sessionVar,
-					MonedaAFIP.class, pidFiltering, valueFilter,
-					searchProperty, otrosFiltros);
+			return new StandardTableUi<MonedaAFIP>(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == Moneda.class) {
 
-			return new StandardTableUi<Moneda>(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar, Moneda.class,
-					pidFiltering, valueFilter, searchProperty, otrosFiltros);
+			return new StandardTableUi<Moneda>(pagedConf, toolbarConf, win,
+					sessionVar, Moneda.class, filteringSet);
 
 		} else if (classModel == MonedaCotizacion.class) {
 
-			return new MonedaCotizacionTableUi(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar,
-					MonedaCotizacion.class, pidFiltering, valueFilter,
-					searchProperty);
+			return new MonedaCotizacionTableUi(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == AsientoModeloItem.class) {
 
-			// new StandardTableUi<AsientoModeloItem>(shortcut, agregar,
-			// modificar,
-			// copiar, eliminar, win, cx, usuario, AsientoModeloItem.class,
-			// pidFiltering, searchFilter, searchProperty);
-
-			return new AsientoModeloItemTableUi(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar,
-					AsientoModeloItem.class, pidFiltering, valueFilter,
-					searchProperty);
+			return new AsientoModeloItemTableUi(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == CuentaContable.class) {
 
-			// new StandardTableUi<CuentaContable>(shortcut, agregar,
-			// modificar,
-			// copiar, eliminar, win, cx, usuario, CuentaContable.class,
-			// pidFiltering, searchFilter, searchProperty);
-
-			return new CuentaContableTableUi(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar,
-					CuentaContable.class, pidFiltering, valueFilter,
-					searchProperty, otrosFiltros);
-
-			// new CuentaContableTableUi(win, cx, usuario, pidFiltering,
-			// searchFilter, searchProperty);
+			return new CuentaContableTableUi(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == Asiento.class) {
 
-			return new AsientoTableUi(sessionVar, win);
+			return new AsientoTableUi(pagedConf, toolbarConf, win, sessionVar,
+					classModel, filteringSet);
 		}
-
+		// ==============================================================
 		else if (classModel == Talonario.class) {
 
-			return new StandardTableUi<Talonario>(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar,
-					Talonario.class, pidFiltering, valueFilter, searchProperty,
-					otrosFiltros);
+			return new StandardTableUi<Talonario>(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == Deposito.class) {
 
-			return new StandardTableUi<Deposito>(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar,
-					Deposito.class, pidFiltering, valueFilter, searchProperty,
-					otrosFiltros);
+			return new StandardTableUi<Deposito>(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == TipoCbteControl.class) {
 
-			return new StandardTableUi<TipoCbteControl>(pagedConf, shortcut,
-					agregar, modificar, copiar, eliminar, win, sessionVar,
-					TipoCbteControl.class, pidFiltering, valueFilter,
-					searchProperty, otrosFiltros);
+			return new StandardTableUi<TipoCbteControl>(pagedConf, toolbarConf,
+					win, sessionVar, classModel, filteringSet);
 
 		} else if (classModel == CuentaDeFondo.class) {
 
-			return new CuentaDeFondoTableUi(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar,
-					CuentaDeFondoA.class, pidFiltering, valueFilter,
-					searchProperty);
+			return new CuentaDeFondoTableUi(win, sessionVar);
 
 		} else if (classModel == CuentaDeFondoA.class) {
 
-			return new StandardTableUi<CuentaDeFondoA>(pagedConf, shortcut,
-					agregar, modificar, copiar, eliminar, win, sessionVar,
-					CuentaDeFondoA.class, pidFiltering, valueFilter,
-					searchProperty, otrosFiltros);
+			return new StandardTableUi<CuentaDeFondoA>(pagedConf, toolbarConf,
+					win, sessionVar, classModel, filteringSet);
 
 		} else if (classModel == JurisdiccionConvenioMultilateral.class) {
 
 			return new StandardTableUi<JurisdiccionConvenioMultilateral>(
-					pagedConf, shortcut, agregar, modificar, copiar, eliminar,
-					win, sessionVar, JurisdiccionConvenioMultilateral.class,
-					pidFiltering, valueFilter, searchProperty, otrosFiltros);
+					pagedConf, toolbarConf, win, sessionVar,
+					JurisdiccionConvenioMultilateral.class, filteringSet);
 
 		} else if (classModel == Ticket.class) {
 
-			return new StandardTableUi<Ticket>(pagedConf, shortcut, agregar,
-					modificar, copiar, eliminar, win, sessionVar, Ticket.class,
-					pidFiltering, valueFilter, searchProperty, otrosFiltros);
+			return new StandardTableUi<Ticket>(pagedConf, toolbarConf, win,
+					sessionVar, classModel, filteringSet);
 
 		} else if (classModel == Chequera.class) {
 
-			return new ChequeraTableUi(pagedConf, shortcut,
-					agregar, modificar, copiar, eliminar, win, sessionVar,
-					Chequera.class, pidFiltering, valueFilter, searchProperty);
+			return new ChequeraTableUi(win, sessionVar);
 
 		}
 		return null;

@@ -1,11 +1,9 @@
 package z.old.deprecated;
 
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.custom.windows.StandarTableUiPagedConf;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.custom.windows.StandardTableUi;
 import com.massoftware.model.CentroDeCostoProyecto;
-import com.vaadin.data.Property;
 import com.vaadin.ui.Window;
 
 public class CentroDeCostoProyectoTableUi extends
@@ -16,15 +14,9 @@ public class CentroDeCostoProyectoTableUi extends
 	 */
 	private static final long serialVersionUID = 4960961261883256758L;
 
-	public CentroDeCostoProyectoTableUi(StandarTableUiPagedConf pagedConf, boolean shortcut, boolean agregar,
-			boolean modificar, boolean copiar, boolean eliminar, Window window,
-			SessionVar sessionVar, Class<CentroDeCostoProyecto> classModel,
-			String pidFiltering, Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty) {
+	public CentroDeCostoProyectoTableUi(Window window, SessionVar sessionVar) {
 
-		super(pagedConf, shortcut, agregar, modificar,
-				copiar, eliminar, window, sessionVar, classModel, pidFiltering,
-				searchFilter, searchProperty, null);
+		super(null, null, window, sessionVar, CentroDeCostoProyecto.class);
 
 	}
 

@@ -183,12 +183,17 @@ public class StandardFormUi<T> extends CustomComponent {
 						// dtoBI.getItemProperty(field.getName()),
 						// getOtrosFiltros());
 
-						WindowsFactory.openWindowFromForm(this,
-								field.getType(), sessionVar,
-								getCBBoxAttName(field),
-								((TextField) target).getValue(),
-								dtoBI.getItemProperty(field.getName()),
-								getOtrosFiltros());
+						StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+
+						filteringSet.setPidFiltering(getCBBoxAttName(field));
+						filteringSet.setValueFilter(((TextField) target)
+								.getValue());
+						filteringSet.setSearchProperty(dtoBI
+								.getItemProperty(field.getName()));
+						filteringSet.setOtrosFiltros(getOtrosFiltros());
+
+						WindowsFactory.openWindow(this, field.getType(),
+								sessionVar, filteringSet);
 					}
 				}
 			}

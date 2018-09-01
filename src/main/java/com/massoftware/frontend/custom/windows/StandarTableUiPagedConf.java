@@ -7,7 +7,10 @@ public class StandarTableUiPagedConf {
 	private boolean pagedOrder = false;
 
 	public StandarTableUiPagedConf() {
-		super();	
+		super();
+		this.paged = true;
+		this.pagedCount = true;
+		this.pagedOrder = true;
 	}
 
 	public StandarTableUiPagedConf(boolean paged, boolean pagedCount,

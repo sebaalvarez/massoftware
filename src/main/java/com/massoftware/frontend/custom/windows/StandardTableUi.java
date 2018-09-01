@@ -59,7 +59,8 @@ public class StandardTableUi<T> extends CustomComponent {
 	 */
 	private static final long serialVersionUID = -2361315768472348160L;
 
-	protected StandarTableUiPagedConf pagedConf;
+	private StandarTableUiPagedConf pagedConf;
+	private StandarTableUiToolbarConf toolbarConf;
 
 	protected int limit = 15;
 	protected int offset = 0;
@@ -99,13 +100,6 @@ public class StandardTableUi<T> extends CustomComponent {
 
 	protected Label cantItemsLBL;
 
-	private boolean agregar;
-	private boolean modificar;
-	private boolean copiar;
-	private boolean eliminar;
-
-	private boolean shortcut = true;
-
 	// ----------------------------------------------
 	// OPCIONES
 
@@ -137,87 +131,151 @@ public class StandardTableUi<T> extends CustomComponent {
 
 	// ----------------------------------------------
 
-	// // MODO ABM
-	// protected StandardTableUi(Window window, BackendContext cx,
-	// Usuario usuario, Class<T> classModel) {
-	//
-	// buildABMMode(window, cx, usuario, classModel);
-	// }
-	//
-	// // MODO SELECTOR
-	// protected StandardTableUi(Window window, BackendContext cx,
-	// Usuario usuario, Class<T> classModel, String pidFiltering,
-	// Object valueFilter,
-	// @SuppressWarnings("rawtypes") Property searchProperty,
-	// List<Object> otrosFiltros) {
-	//
-	// buildSelectionMode(window, cx, usuario, classModel, pidFiltering,
-	// valueFilter, searchProperty, otrosFiltros);
-	// }
+//	private StandardTableUi(Window window, SessionVar sessionVar,
+//			Class<T> classModel, StandarTableUiFilteringSet filteringSet) {
+//
+//		StandarTableUiPagedConf pagedConf = new StandarTableUiPagedConf(false,
+//				false, false);
+//
+//		StandarTableUiToolbarConf toolbarConf = new StandarTableUiToolbarConf(
+//				false, false, false, false, false);
+//
+//		build(pagedConf, toolbarConf, window, sessionVar, classModel,
+//				filteringSet);
+//	}
+//
+//	private StandardTableUi(Window window, SessionVar sessionVar,
+//			Class<T> classModel) {
+//
+//		StandarTableUiPagedConf pagedConf = new StandarTableUiPagedConf(false,
+//				false, false);
+//
+//		StandarTableUiToolbarConf toolbarConf = new StandarTableUiToolbarConf(
+//				false, false, false, false, false);
+//
+//		StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+//
+//		build(pagedConf, toolbarConf, window, sessionVar, classModel,
+//				filteringSet);
+//	}
+//
+//	private StandardTableUi(StandarTableUiToolbarConf toolbarConf,
+//			Window window, SessionVar sessionVar, Class<T> classModel,
+//			StandarTableUiFilteringSet filteringSet) {
+//
+//		StandarTableUiPagedConf pagedConf = new StandarTableUiPagedConf(false,
+//				false, false);
+//
+//		build(pagedConf, toolbarConf, window, sessionVar, classModel,
+//				filteringSet);
+//	}
+//
+//	private StandardTableUi(StandarTableUiToolbarConf toolbarConf,
+//			Window window, SessionVar sessionVar, Class<T> classModel) {
+//
+//		StandarTableUiPagedConf pagedConf = new StandarTableUiPagedConf(false,
+//				false, false);
+//
+//		StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+//
+//		build(pagedConf, toolbarConf, window, sessionVar, classModel,
+//				filteringSet);
+//	}
+//
+//	private StandardTableUi(StandarTableUiPagedConf pagedConf, Window window,
+//			SessionVar sessionVar, Class<T> classModel,
+//			StandarTableUiFilteringSet filteringSet) {
+//
+//		StandarTableUiToolbarConf toolbarConf = new StandarTableUiToolbarConf(
+//				false, false, false, false, false);
+//
+//		build(pagedConf, toolbarConf, window, sessionVar, classModel,
+//				filteringSet);
+//	}
+//
+//	private StandardTableUi(StandarTableUiPagedConf pagedConf, Window window,
+//			SessionVar sessionVar, Class<T> classModel) {
+//
+//		StandarTableUiToolbarConf toolbarConf = new StandarTableUiToolbarConf(
+//				false, false, false, false, false);
+//
+//		StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+//
+//		build(pagedConf, toolbarConf, window, sessionVar, classModel,
+//				filteringSet);
+//	}
+	
+	protected StandardTableUi() {		
+	}
 
 	protected StandardTableUi(StandarTableUiPagedConf pagedConf,
-			boolean shortcut, boolean agregar, boolean modificar,
-			boolean copiar, boolean eliminar, Window window,
-			SessionVar sessionVar, Class<T> classModel, String pidFiltering,
-			Object valueFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty,
-			List<Object> otrosFiltros) {
+			StandarTableUiToolbarConf toolbarConf, Window window,
+			SessionVar sessionVar, Class<T> classModel,
+			StandarTableUiFilteringSet filteringSet) {
 
-		build(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
-				window, sessionVar, classModel, pidFiltering, valueFilter,
-				searchProperty, otrosFiltros);
+		build(pagedConf, toolbarConf, window, sessionVar, classModel,
+				filteringSet);
 	}
+
+//	private StandardTableUi(StandarTableUiPagedConf pagedConf,
+//			StandarTableUiToolbarConf toolbarConf, Window window,
+//			SessionVar sessionVar, Class<T> classModel) {
+//
+//		StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
+//
+//		build(pagedConf, toolbarConf, window, sessionVar, classModel,
+//				filteringSet);
+//	}
 
 	// ---------------------------------------------------------------------
 
-	// // MODO ABM
-	// private void buildABMMode(Window window, BackendContext cx,
-	// Usuario usuario, Class<T> classModel) {
-	//
-	// build(false, false, false, true, true, true, true, true, window, cx,
-	// usuario, classModel, null, null, null, null);
-	// }
-	//
-	// // MODO SELECTOR
-	// private void buildSelectionMode(Window window, BackendContext cx,
-	// Usuario usuario, Class<T> classModel, String pidFiltering,
-	// Object valueFilter,
-	// @SuppressWarnings("rawtypes") Property searchProperty,
-	// List<Object> otrosFiltros) {
-	//
-	// build(false, false, false, true, true, true, true, true, window, cx,
-	// usuario, classModel, pidFiltering, valueFilter, searchProperty,
-	// otrosFiltros);
-	// }
+//	private void build(StandarTableUiPagedConf pagedConf,
+//			StandarTableUiToolbarConf toolbarConf, Window window,
+//			SessionVar sessionVar, Class<T> classModel, String pidFiltering,
+//			Object valueFilter,
+//			@SuppressWarnings("rawtypes") Property searchProperty,
+//			List<Object> otrosFiltros) {
+//
+//	}
 
-	private void build(StandarTableUiPagedConf pagedConf, boolean shortcut,
-			boolean agregar, boolean modificar, boolean copiar,
-			boolean eliminar, Window window, SessionVar sessionVar,
-			Class<T> classModel, String pidFiltering, Object valueFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty,
-			List<Object> otrosFiltros) {
+	protected void build(StandarTableUiPagedConf pagedConf,
+			StandarTableUiToolbarConf toolbarConf, Window window,
+			SessionVar sessionVar, Class<T> classModel,
+			StandarTableUiFilteringSet filteringSet) {
 
 		try {
 
 			if (pagedConf == null) {
-				this.pagedConf = new StandarTableUiPagedConf();
-			} else {
-				this.pagedConf = pagedConf;
+				throw new IllegalArgumentException(
+						"Argument pagedConf is null.");
 			}
 
-			this.otrosFiltros = otrosFiltros;
+			if (toolbarConf == null) {
+				throw new IllegalArgumentException(
+						"Argument toolbarConf is null.");
+			}
 
-			this.shortcut = shortcut;
-			this.agregar = agregar;
-			this.modificar = modificar;
-			this.copiar = copiar;
-			this.eliminar = eliminar;
-
-			this.classModel = classModel;
-			this.searchFilter = valueFilter;
-			this.searchProperty = searchProperty;
+			if (sessionVar == null) {
+				throw new IllegalArgumentException(
+						"Argument sessionVar is null.");
+			}
+			if (classModel == null) {
+				throw new IllegalArgumentException(
+						"Argument classModel is null.");
+			}
+			if (filteringSet == null) {
+				throw new IllegalArgumentException(
+						"Argument filteringSet is null.");
+			}
 
 			this.sessionVar = sessionVar;
+			this.classModel = classModel;
+			this.pagedConf = pagedConf;
+			this.toolbarConf = toolbarConf;
+
+			this.otrosFiltros = filteringSet.getOtrosFiltros();
+			this.searchFilter = filteringSet.getValueFilter();
+			this.searchProperty = filteringSet.getSearchProperty();
 
 			this.window = window;
 			if (this.window != null) {
@@ -239,7 +297,7 @@ public class StandardTableUi<T> extends CustomComponent {
 					this.window.setModal(true);
 				}
 
-				this.pidFiltering = pidFiltering;
+				this.pidFiltering = filteringSet.getPidFiltering();
 			}
 
 			columnsMetaData = buildColumnsMetaData();
@@ -587,7 +645,7 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		// ----------------------------------------------
 
-		if (agregar) {
+		if (toolbarConf.isAgregar()) {
 			agregarBTN = new Button();
 			agregarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 			agregarBTN.addStyleName(ValoTheme.BUTTON_TINY);
@@ -603,7 +661,7 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		// ----------------------------------------------
 
-		if (modificar) {
+		if (toolbarConf.isModificar()) {
 			modificarBTN = new Button();
 			modificarBTN.addStyleName(ValoTheme.BUTTON_PRIMARY);
 			modificarBTN.addStyleName(ValoTheme.BUTTON_TINY);
@@ -620,7 +678,7 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		// ----------------------------------------------
 
-		if (copiar) {
+		if (toolbarConf.isCopiar()) {
 			copiarBTN = new Button();
 			copiarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 			copiarBTN.addStyleName(ValoTheme.BUTTON_TINY);
@@ -645,7 +703,7 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		// ----------------------------------------------
 
-		if (eliminar) {
+		if (toolbarConf.isEliminar()) {
 			eliminarBTN = new Button();
 			eliminarBTN.addStyleName(ValoTheme.BUTTON_DANGER);
 			eliminarBTN.addStyleName(ValoTheme.BUTTON_TINY);
@@ -662,7 +720,7 @@ public class StandardTableUi<T> extends CustomComponent {
 
 		// --------------------------------------------------
 
-		if (shortcut) {
+		if (toolbarConf.isShortcut()) {
 
 			// --------------------------------------------------
 			this.addShortcutListener(new ShortcutListener("ENTER",
@@ -785,7 +843,7 @@ public class StandardTableUi<T> extends CustomComponent {
 	private void agregarBTNClick() {
 		try {
 
-			if (agregar) {
+			if (toolbarConf.isAgregar()) {
 				itemsGRD.select(null);
 				getUI().addWindow(openFormAgregar().getWindow());
 			}
@@ -807,7 +865,7 @@ public class StandardTableUi<T> extends CustomComponent {
 	private void modificarBTNClick() {
 		try {
 
-			if (modificar && itemsGRD.getSelectedRow() != null) {
+			if (toolbarConf.isModificar() && itemsGRD.getSelectedRow() != null) {
 
 				getUI().addWindow(
 						openFormModificar((T) itemsGRD.getSelectedRow())
@@ -831,7 +889,7 @@ public class StandardTableUi<T> extends CustomComponent {
 	private void copiarBTNClick() {
 		try {
 
-			if (copiar && itemsGRD.getSelectedRow() != null) {
+			if (toolbarConf.isCopiar() && itemsGRD.getSelectedRow() != null) {
 
 				getUI().addWindow(
 						openFormCopiar((T) itemsGRD.getSelectedRow())
@@ -859,7 +917,7 @@ public class StandardTableUi<T> extends CustomComponent {
 	private void eliminarBTNClick() {
 		try {
 
-			if (eliminar && itemsGRD.getSelectedRow() != null) {
+			if (toolbarConf.isEliminar() && itemsGRD.getSelectedRow() != null) {
 
 				getUI().addWindow(
 						new YesNoDialog("Eliminar",
@@ -1021,13 +1079,13 @@ public class StandardTableUi<T> extends CustomComponent {
 
 			itemsGRD.setEnabled(enabled);
 
-			if (modificar) {
+			if (toolbarConf.isModificar()) {
 				modificarBTN.setEnabled(enabled);
 			}
-			if (copiar) {
+			if (toolbarConf.isCopiar()) {
 				copiarBTN.setEnabled(enabled);
 			}
-			if (eliminar) {
+			if (toolbarConf.isEliminar()) {
 				eliminarBTN.setEnabled(enabled);
 			}
 
@@ -1177,13 +1235,13 @@ public class StandardTableUi<T> extends CustomComponent {
 			// }
 
 			itemsGRD.setEnabled(enabled);
-			if (modificar) {
+			if (toolbarConf.isModificar()) {
 				modificarBTN.setEnabled(enabled);
 			}
-			if (copiar) {
+			if (toolbarConf.isCopiar()) {
 				copiarBTN.setEnabled(enabled);
 			}
-			if (eliminar) {
+			if (toolbarConf.isEliminar()) {
 				eliminarBTN.setEnabled(enabled);
 			}
 			if (pagedConf.isPaged()) {

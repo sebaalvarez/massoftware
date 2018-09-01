@@ -6,7 +6,6 @@ import com.massoftware.backend.bo.SeguridadPuertaBO;
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.SeguridadModulo;
 import com.massoftware.model.SeguridadPuerta;
-import com.vaadin.data.Property;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Window;
 
@@ -19,16 +18,13 @@ public class SeguridadPuertaTableUi extends StandardTableUi<SeguridadPuerta> {
 
 	public SeguridadModulo seguridadModuloFilter;
 
-	public SeguridadPuertaTableUi(StandarTableUiPagedConf pagedConf,
-			boolean shortcut, boolean agregar, boolean modificar,
-			boolean copiar, boolean eliminar, Window window,
+	protected SeguridadPuertaTableUi(StandarTableUiPagedConf pagedConf,
+			StandarTableUiToolbarConf toolbarConf, Window window,
 			SessionVar sessionVar, Class<SeguridadPuerta> classModel,
-			String pidFiltering, Object searchFilter,
-			@SuppressWarnings("rawtypes") Property searchProperty) {
+			StandarTableUiFilteringSet filteringSet) {
 
-		super(pagedConf, shortcut, agregar, modificar, copiar, eliminar,
-				window, sessionVar, classModel, pidFiltering, searchFilter,
-				searchProperty, null);
+		super(pagedConf, toolbarConf, window, sessionVar, classModel,
+				filteringSet);
 
 		window.setWidth("1300px");
 
@@ -37,8 +33,7 @@ public class SeguridadPuertaTableUi extends StandardTableUi<SeguridadPuerta> {
 		this.setCompositionRoot(hsplit);
 
 		SeguridadModuloTableUi seguridadModuloTableUi = new SeguridadModuloTableUi(
-				null, true, true, true, true, true, null, sessionVar,
-				SeguridadModulo.class, null, null, null, this);
+				sessionVar, this);
 
 		hsplit.setFirstComponent(seguridadModuloTableUi);
 
