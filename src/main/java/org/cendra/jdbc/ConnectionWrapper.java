@@ -855,7 +855,7 @@ public class ConnectionWrapper {
 		}
 		argsString = argsString.trim();
 		if (args.length > 0) {
-			sql += "\nuuargs = " + argsString;
+			sql += "\nargs = " + argsString;
 		}
 
 		return sql.trim();

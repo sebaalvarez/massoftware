@@ -15,14 +15,14 @@ import org.cendra.jdbc.DataSourceWrapper;
 import org.cendra.jdbc.ex.crud.UniqueException;
 
 import com.massoftware.backend.BackendContext;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldNowTimestampForInsertUpdate;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldSubNameFKAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldTimestamp;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldUserForInsertUpdate;
 import com.massoftware.frontend.util.Traslate;
-import com.massoftware.frontend.util.builder.annotation.ClassTableMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldNameMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldNowTimestampForInsertUpdate;
-import com.massoftware.frontend.util.builder.annotation.FieldSubNameFKAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldTimestamp;
-import com.massoftware.frontend.util.builder.annotation.FieldUserForInsertUpdate;
 import com.massoftware.model.Usuario;
 import com.massoftware.model.Valuable;
 
@@ -44,7 +44,7 @@ public abstract class GenericBO<T> {
 		// dtoName = getDtoName(this.getClass());
 		// viewName = "v" + dtoName;
 	}
-	
+
 	public Integer count() throws Exception {
 		String where = null;
 		return count(where, new Object[0]);
@@ -53,9 +53,9 @@ public abstract class GenericBO<T> {
 	public Integer count(String where, Object... args) throws Exception {
 
 		String viewName = getView();
-		
+
 		String sql = "SELECT COUNT(*) FROM " + viewName;
-		
+
 		if (where != null && where.trim().length() > 0) {
 			sql += " WHERE " + where;
 		}
@@ -63,10 +63,10 @@ public abstract class GenericBO<T> {
 		ConnectionWrapper connectionWrapper = dataSourceWrapper
 				.getConnectionWrapper();
 
-		try {											
+		try {
 
 			Object[][] table = null;
-			
+
 			if (args.length == 0) {
 				table = connectionWrapper.findToTable(sql);
 			} else {
@@ -82,7 +82,7 @@ public abstract class GenericBO<T> {
 		}
 
 	}
-	
+
 	public List<T> findAll() throws Exception {
 		return find(null, null, new Object[0]);
 		// return null;
@@ -129,15 +129,15 @@ public abstract class GenericBO<T> {
 		return findPaged(orderBy, null, limit, offset, new Object[0]);
 	}
 
-	public List<T> findPaged(String where, int limit, int offset, Object... args)
-			throws Exception {
+	public List<T> findPaged(String where, int limit, int offset,
+			Object... args) throws Exception {
 		return findPaged(null, where, limit, offset, args);
 	}
 
-	public List<T> findPaged(String orderBy, String where, int limit, int offset,
-			Object... args) throws Exception {
+	public List<T> findPaged(String orderBy, String where, int limit,
+			int offset, Object... args) throws Exception {
 
-		String viewName = getView();		
+		String viewName = getView();
 
 		return findPaged(viewName, orderBy, where, limit, offset, args);
 
@@ -150,8 +150,9 @@ public abstract class GenericBO<T> {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	protected List findTLessPaged(String viewName, String orderBy, String where,
-			int limit, int offset, Object... args) throws Exception {
+	protected List findTLessPaged(String viewName, String orderBy,
+			String where, int limit, int offset, Object... args)
+			throws Exception {
 
 		if (args == null) {
 			args = new Object[0];
@@ -170,13 +171,11 @@ public abstract class GenericBO<T> {
 		if (orderBy != null && orderBy.trim().length() > 0) {
 			sql += " ORDER BY " + orderBy;
 		} else {
-			sql += " ORDER BY " + 1;	
+			sql += " ORDER BY " + 1;
 		}
-		
+
 		if (offset > -1 && limit > -1) {
-			
-			
-			
+
 			sql += " OFFSET " + offset + " ROWS FETCH NEXT " + limit
 					+ " ROWS ONLY ";
 		}
@@ -189,7 +188,7 @@ public abstract class GenericBO<T> {
 		try {
 
 			List list = null;
-			
+
 			if (args.length == 0) {
 				list = connectionWrapper.findToListByCendraConvention(sql);
 			} else {
@@ -216,7 +215,9 @@ public abstract class GenericBO<T> {
 
 	protected Boolean ifExists(String where, Object... args) throws Exception {
 
-		List<T> items = find(where, -1, -1, args);
+//		List<T> items = find(where, -1, -1, args); 666
+		
+		List<T> items = find(where, args); 
 
 		return items.size() == 1;
 

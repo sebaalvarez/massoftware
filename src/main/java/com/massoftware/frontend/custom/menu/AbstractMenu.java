@@ -1,9 +1,6 @@
 package com.massoftware.frontend.custom.menu;
 
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.custom.windows.StandarTableUiFilteringSet;
-import com.massoftware.frontend.custom.windows.StandarTableUiPagedConf;
-import com.massoftware.frontend.custom.windows.StandarTableUiToolbarConf;
 import com.massoftware.frontend.custom.windows.WindowsFactory;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.vaadin.navigator.View;

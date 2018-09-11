@@ -9,7 +9,6 @@ import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaContableFull;
@@ -27,7 +26,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
+class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 	/**
 	 * 
@@ -211,7 +210,7 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 		ejerciciosContablesBIC = new BeanItemContainer<EjercicioContable>(
 				EjercicioContable.class, new ArrayList<EjercicioContable>());
 
-		filtroEjercicioCBX = BuilderXMD.buildCB();
+		filtroEjercicioCBX = ControlFactory.buildCB();
 		filtroEjercicioCBX.setCaption("Ejercicio");
 		filtroEjercicioCBX.setRequired(true);
 		filtroEjercicioCBX.setNullSelectionAllowed(false);
@@ -255,7 +254,7 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 				CentroDeCostoContable.class,
 				new ArrayList<CentroDeCostoContable>());
 
-		filtroCentroDeCostoContableCBX = BuilderXMD.buildCB();
+		filtroCentroDeCostoContableCBX = ControlFactory.buildCB();
 		filtroCentroDeCostoContableCBX.setCaption("Centro de costo");
 		filtroCentroDeCostoContableCBX.setRequired(false);
 		filtroCentroDeCostoContableCBX.setNullSelectionAllowed(true);
@@ -271,7 +270,7 @@ public class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 		puntosDeEquilibrioBIC = new BeanItemContainer<PuntoDeEquilibrio>(
 				PuntoDeEquilibrio.class, new ArrayList<PuntoDeEquilibrio>());
 
-		filtroPuntoDeEquilibrioCBX = BuilderXMD.buildCB();
+		filtroPuntoDeEquilibrioCBX = ControlFactory.buildCB();
 		filtroPuntoDeEquilibrioCBX.setCaption("Punto de equilibrio");
 		filtroPuntoDeEquilibrioCBX.setRequired(false);
 		filtroPuntoDeEquilibrioCBX.setNullSelectionAllowed(true);

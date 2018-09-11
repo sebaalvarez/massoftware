@@ -3,25 +3,25 @@ package com.massoftware.model;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassPluralLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassTableMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldAutoMaxValueAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnsAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxLengthAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxValueIntegerAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMinValueIntegerAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldNameMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldNotVisibleCopy;
-import com.massoftware.frontend.util.builder.annotation.FieldNotVisibleInsert;
-import com.massoftware.frontend.util.builder.annotation.FieldReadOnly;
-import com.massoftware.frontend.util.builder.annotation.FieldRequiredAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldSubNameFKAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldUniqueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldAutoMaxValueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxValueIntegerAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMinValueIntegerAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldNotVisibleCopy;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldNotVisibleInsert;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldReadOnly;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldSubNameFKAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldUniqueAnont;
 
 @ClassLabelInTheSingularAnont(value = "Asiento contable")
 @ClassPluralLabelAnont(value = "Asientos contables")
@@ -37,6 +37,7 @@ public class Asiento extends EntityId implements Comparable<Asiento> {
 	@FieldSubNameFKAnont(value = "ejercicio")
 	// @FieldNameMSAnont(nameAttDB = "[EJERCICIO]", classAttDB = Integer.class)
 	// @FieldCBBox(attName = "ejercicio")
+	@FieldReadOnly()
 	private EjercicioContable ejercicioContable;
 
 	@FieldLabelAnont(value = "Número")
@@ -67,6 +68,9 @@ public class Asiento extends EntityId implements Comparable<Asiento> {
 	@FieldColumnMetaDataAnont(attSize = 125)
 	// @FieldUniqueAnont()
 	// @FieldNameMSAnont(nameAttDB = "[DETALLE]", classAttDB = String.class)
+	@FieldReadOnly()
+	@FieldNotVisibleInsert()
+	@FieldNotVisibleCopy()
 	private String comprobante;
 
 	@FieldLabelAnont(value = "Detalle")
@@ -94,6 +98,7 @@ public class Asiento extends EntityId implements Comparable<Asiento> {
 	@FieldColumnMetaDataAnont(attSize = 70)
 	@FieldSubNameFKAnont(value = "codigo")
 	@FieldNameMSAnont(nameAttDB = "[MODULO]", classAttDB = Integer.class)
+	@FieldReadOnly()
 	@FieldNotVisibleInsert()
 	@FieldNotVisibleCopy()
 	private AsientoModulo asientoModulo;

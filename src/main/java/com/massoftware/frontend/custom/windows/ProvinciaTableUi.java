@@ -6,8 +6,8 @@ import java.util.List;
 import com.massoftware.backend.bo.PaisBO;
 import com.massoftware.backend.bo.ProvinciaBO;
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.builder.BuilderXMD;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.model.Entity;
 import com.massoftware.model.Pais;
 import com.massoftware.model.Provincia;
@@ -16,7 +16,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Window;
 
-public class ProvinciaTableUi extends StandardTableUi<Provincia> {
+class ProvinciaTableUi extends StandardTableUi<Provincia> {
 
 	/**
 	 * 
@@ -45,7 +45,7 @@ public class ProvinciaTableUi extends StandardTableUi<Provincia> {
 		paisesBIC = new BeanItemContainer<Pais>(Pais.class,
 				new ArrayList<Pais>());
 
-		filtroPaisCBX = BuilderXMD.buildCB();
+		filtroPaisCBX = ControlFactory.buildCB();
 		filtroPaisCBX.setCaption("País");
 		filtroPaisCBX.setRequired(true);
 		filtroPaisCBX.setNullSelectionAllowed(false);

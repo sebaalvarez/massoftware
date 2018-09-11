@@ -1,23 +1,23 @@
 package com.massoftware.model;
 
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassPluralLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassTableMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldAutoMaxValueAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldCBBox;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnsAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxLengthAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxValueIntegerAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMinValueIntegerAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldNameMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldReadOnly;
-import com.massoftware.frontend.util.builder.annotation.FieldRequiredAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldSubNameFKAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldUniqueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldAutoMaxValueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldCBBox;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxValueIntegerAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMinValueIntegerAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldReadOnly;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldSubNameFKAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldUniqueAnont;
 
 @ClassLabelInTheSingularAnont(value = "Asiento modelo")
 @ClassPluralLabelAnont(value = "Asientos modelo")
@@ -42,7 +42,7 @@ public class AsientoModeloItem extends EntityId implements
 	@FieldColumnsAnont(value = 5)
 	@FieldMinValueIntegerAnont(value = 1)
 	@FieldMaxValueIntegerAnont(value = Short.MAX_VALUE)
-	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
+	@FieldColumnMetaDataAnont(attSize = 60, pidFilteringStart = true)
 	@FieldUniqueAnont()
 	@FieldAutoMaxValueAnont()
 	@FieldNameMSAnont(nameAttDB = "[REGISTRO]", classAttDB = Integer.class)
@@ -57,7 +57,7 @@ public class AsientoModeloItem extends EntityId implements
 	//-----------------------------------------------
 	@FieldLabelAnont(value = "Cuenta contable")
 	 @FieldRequiredAnont()
-	@FieldColumnMetaDataAnont(attSize = 550)
+	@FieldColumnMetaDataAnont(attSize = 350)
 	@FieldSubNameFKAnont(value = "cuentaContable")
 	@FieldNameMSAnont(nameAttDB = "[CUENTACONTABLE]", classAttDB = String.class)
 	@FieldCBBox(attName = "cuentaContable")	

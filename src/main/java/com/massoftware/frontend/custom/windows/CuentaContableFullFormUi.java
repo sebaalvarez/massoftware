@@ -31,7 +31,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class CuentaContableFullFormUi extends
+class CuentaContableFullFormUi extends
 		StandardFormUi<CuentaContableFull> {
 
 	/**

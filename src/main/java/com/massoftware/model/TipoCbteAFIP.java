@@ -1,21 +1,21 @@
 package com.massoftware.model;
 
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassPluralLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassTableMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldAutoMaxValueAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnsAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxLengthAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxValueIntegerAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMinValueIntegerAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldNameMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldReadOnly;
-import com.massoftware.frontend.util.builder.annotation.FieldRequiredAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldUniqueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldAutoMaxValueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxValueIntegerAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMinValueIntegerAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldReadOnly;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldUniqueAnont;
 
 @ClassLabelInTheSingularAnont(value = "Tipo cbte. AFIP")
 @ClassPluralLabelAnont(value = "Tipos cbtes. AFIP")

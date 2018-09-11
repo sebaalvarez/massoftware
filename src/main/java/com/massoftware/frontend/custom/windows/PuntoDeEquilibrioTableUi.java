@@ -6,8 +6,8 @@ import java.util.List;
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.builder.BuilderXMD;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Entity;
 import com.massoftware.model.PuntoDeEquilibrio;
@@ -16,7 +16,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Window;
 
-public class PuntoDeEquilibrioTableUi extends
+class PuntoDeEquilibrioTableUi extends
 		StandardTableUi<PuntoDeEquilibrio> {
 
 	/**
@@ -45,7 +45,7 @@ public class PuntoDeEquilibrioTableUi extends
 		ejerciciosContablesBIC = new BeanItemContainer<EjercicioContable>(
 				EjercicioContable.class, new ArrayList<EjercicioContable>());
 
-		filtroEjercicioCBX = BuilderXMD.buildCB();
+		filtroEjercicioCBX = ControlFactory.buildCB();
 		filtroEjercicioCBX.setCaption("Ejercicio");
 		filtroEjercicioCBX.setRequired(true);
 		filtroEjercicioCBX.setNullSelectionAllowed(false);

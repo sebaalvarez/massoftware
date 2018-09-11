@@ -12985,6 +12985,26 @@ div.v-layout.v-horizontal.v-widget {
 	overflow: hidden;
 }
 
+.mytheme .v-grid-row.red-row {
+	color: red;
+}
+
+.mytheme .red {
+	color: red;
+}
+
+.mytheme .gray {
+	color: gray;
+}
+
+.mytheme .footer-error {
+	display: inline-block;
+	line-height: inherit;
+	color: #6aaef2;
+	font-size: 11px;
+	font-weight: bold;
+}
+
 .mytheme .v-captiontext {
 	display: inline-block;
 	line-height: inherit;
@@ -13035,6 +13055,11 @@ div.v-layout.v-horizontal.v-widget {
 	-webkit-transition: box-shadow 180ms, border 180ms;
 	-moz-transition: box-shadow 180ms, border 180ms;
 	transition: box-shadow 180ms, border 180ms;
+	font-size: 11px;
+}
+
+.mytheme .v-datefield-tiny {
+	height: 22px;
 	font-size: 11px;
 }
 

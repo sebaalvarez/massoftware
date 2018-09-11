@@ -36,6 +36,26 @@
 
   // Insert your own theme rules here
   
+  	.v-grid-row.red-row {
+    	color: red;
+	}
+
+ 	.red {
+    	color: red;
+	}
+	
+	.gray {
+    	color: gray;
+	}
+  
+  	.footer-error {
+		display: inline-block;
+		line-height: inherit;
+		color: #6aaef2;
+		font-size: 11px;
+		font-weight: bold;
+	}
+  
   	.v-captiontext {
 		display: inline-block;
 		line-height: inherit;
@@ -90,6 +110,16 @@
 		-moz-transition: box-shadow 180ms, border 180ms;
 		transition: box-shadow 180ms, border 180ms;
 		font-size: 11px;
+	}
+	
+	.v-datefield-tiny {
+	
+		
+	
+		height: 22px;
+		
+		font-size: 11px;
+	
 	}
 
 	.v-filterselect-tiny {

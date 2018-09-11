@@ -2,21 +2,21 @@ package com.massoftware.model;
 
 import java.math.BigDecimal;
 
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassPluralLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassTableMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldAllowDecimalAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnsAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxLengthAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxValueBigDecimalAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMinValueBigDecimalAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldNameMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldRequiredAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldUniqueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldAllowDecimalAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxValueBigDecimalAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMinValueBigDecimalAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldUniqueAnont;
 
 @ClassLabelInTheSingularAnont(value = "Zona")
 @ClassPluralLabelAnont(value = "Zonas")

@@ -4,27 +4,27 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassPluralLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassTableMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldAllowDecimalAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldAutoMaxValueAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldCBBox;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnsAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxLengthAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxValueBigDecimalAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxValueIntegerAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMinValueBigDecimalAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMinValueIntegerAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldNameMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldReadOnly;
-import com.massoftware.frontend.util.builder.annotation.FieldRequiredAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldSubNameFKAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldUniqueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldAllowDecimalAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldAutoMaxValueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldCBBox;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxValueBigDecimalAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxValueIntegerAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMinValueBigDecimalAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMinValueIntegerAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldReadOnly;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldSubNameFKAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldUniqueAnont;
 
 @ClassLabelInTheSingularAnont(value = "Asiento contable")
 @ClassPluralLabelAnont(value = "Asientos contables")
@@ -111,7 +111,8 @@ public class AsientoItem extends EntityId implements Comparable<AsientoItem> {
 	@FieldRequiredAnont()
 	@FieldMaxLengthAnont(value = 60)
 	@FieldColumnsAnont(value = 45)
-	@FieldColumnMetaDataAnont(hidden = true)
+//	@FieldColumnMetaDataAnont(hidden = true)
+	@FieldColumnMetaDataAnont(attSize = 150)
 	// @FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[DETALLE]", classAttDB = String.class)
 	private String detalle;

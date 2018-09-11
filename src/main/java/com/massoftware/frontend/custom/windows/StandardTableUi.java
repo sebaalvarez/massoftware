@@ -10,15 +10,14 @@ import java.util.List;
 import org.cendra.jdbc.ex.crud.DeleteForeingObjectConflictException;
 
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldSubNameFKAnont;
 import com.massoftware.frontend.util.ColumnMetaData;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.SimpleStringTraslateFilter;
 import com.massoftware.frontend.util.YesNoDialog;
-import com.massoftware.frontend.util.builder.BuilderXMD;
-import com.massoftware.frontend.util.builder.annotation.ClassPluralLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldSubNameFKAnont;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.Entity;
 import com.massoftware.model.EntityId;
@@ -510,6 +509,7 @@ public class StandardTableUi<T> extends CustomComponent {
 			column.setHeaderCaption(this.columnsMetaData.get(i).getAttLabel());
 			column.setHidable(true);
 			column.setHidden(this.columnsMetaData.get(i).getHidden());
+			column.setEditable(false);
 
 			if (this.columnsMetaData.get(i).getAttSize() != null
 					&& this.columnsMetaData.get(i).getAttSize() > 0) {
@@ -596,7 +596,7 @@ public class StandardTableUi<T> extends CustomComponent {
 		barraDeHerramientasFila0 = new HorizontalLayout();
 		barraDeHerramientasFila0.setSpacing(true);
 
-		cantItemsLBL = BuilderXMD.buildLBL();
+		cantItemsLBL = ControlFactory.buildLBL();
 		cantItemsLBL.setCaption("Cantidad de items: 0");
 		cantItemsLBL.setVisible(pagedConf.isPaged());
 

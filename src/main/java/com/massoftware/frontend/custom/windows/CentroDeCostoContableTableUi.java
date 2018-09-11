@@ -7,7 +7,6 @@ import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Entity;
@@ -16,7 +15,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Window;
 
-public class CentroDeCostoContableTableUi extends
+class CentroDeCostoContableTableUi extends
 		StandardTableUi<CentroDeCostoContable> {
 
 	/**
@@ -44,7 +43,7 @@ public class CentroDeCostoContableTableUi extends
 		ejerciciosContablesBIC = new BeanItemContainer<EjercicioContable>(
 				EjercicioContable.class, new ArrayList<EjercicioContable>());
 
-		filtroEjercicioCBX = BuilderXMD.buildCB();
+		filtroEjercicioCBX = ControlFactory.buildCB();
 		filtroEjercicioCBX.setCaption("Ejercicio");
 		filtroEjercicioCBX.setRequired(true);
 		filtroEjercicioCBX.setNullSelectionAllowed(false);

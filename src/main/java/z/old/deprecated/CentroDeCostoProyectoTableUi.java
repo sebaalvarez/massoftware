@@ -16,7 +16,7 @@ public class CentroDeCostoProyectoTableUi extends
 
 	public CentroDeCostoProyectoTableUi(Window window, SessionVar sessionVar) {
 
-		super(null, null, window, sessionVar, CentroDeCostoProyecto.class);
+//		super(null, null, window, sessionVar, CentroDeCostoProyecto.class);
 
 	}
 

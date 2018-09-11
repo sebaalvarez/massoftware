@@ -7,9 +7,9 @@ import java.util.List;
 import com.massoftware.backend.bo.MonedaBO;
 import com.massoftware.backend.bo.MonedaCotizacionBO;
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.builder.BuilderXMD;
 import com.massoftware.frontend.util.IntegerValue;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.model.Entity;
 import com.massoftware.model.Moneda;
 import com.massoftware.model.MonedaCotizacion;
@@ -18,7 +18,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Window;
 
-public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
+class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 
 	/**
 	 * 
@@ -31,7 +31,7 @@ public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 	private ComboBox filtroAnioCBX;
 	private BeanItemContainer<IntegerValue> aniosBIC;
 
-	public MonedaCotizacionTableUi(StandarTableUiPagedConf pagedConf,
+	protected MonedaCotizacionTableUi(StandarTableUiPagedConf pagedConf,
 			StandarTableUiToolbarConf toolbarConf, Window window,
 			SessionVar sessionVar, Class<MonedaCotizacion> classModel,
 			StandarTableUiFilteringSet filteringSet) {
@@ -50,7 +50,7 @@ public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 		aniosBIC = new BeanItemContainer<IntegerValue>(IntegerValue.class,
 				new ArrayList<IntegerValue>());
 
-		filtroAnioCBX = BuilderXMD.buildCB();
+		filtroAnioCBX = ControlFactory.buildCB();
 		filtroAnioCBX.setCaption("Desde el año");
 		filtroAnioCBX.setRequired(true);
 		filtroAnioCBX.setNullSelectionAllowed(false);
@@ -82,7 +82,7 @@ public class MonedaCotizacionTableUi extends StandardTableUi<MonedaCotizacion> {
 		monedasBIC = new BeanItemContainer<Moneda>(Moneda.class,
 				new ArrayList<Moneda>());
 
-		filtroMonedaCBX = BuilderXMD.buildCB();
+		filtroMonedaCBX = ControlFactory.buildCB();
 		filtroMonedaCBX.setCaption("Moneda");
 		filtroMonedaCBX.setRequired(true);
 		filtroMonedaCBX.setNullSelectionAllowed(false);

@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.massoftware.backend.bo.ChequeraBO;
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.ControlFactory;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.custom.windows.StandardTableUi;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.model.Chequera;
 import com.massoftware.model.CuentaDeFondoA;
 import com.vaadin.data.Property;
@@ -30,7 +30,7 @@ public class ChequeraTableUi extends StandardTableUi<Chequera> {
 
 	public ChequeraTableUi(Window window, SessionVar sessionVar) {
 
-		super(null, null, window, sessionVar, Chequera.class);
+//		super(null, null, window, sessionVar, Chequera.class);
 
 		window.setWidth("1300px");
 
@@ -53,7 +53,7 @@ public class ChequeraTableUi extends StandardTableUi<Chequera> {
 
 		// ----------------------------------
 
-		filtroTodasCHK = BuilderXMD.buildCHK();
+		filtroTodasCHK = ControlFactory.buildCHK();
 		filtroTodasCHK.setCaption("Incluir cuentas bloqueadas");
 
 		filaFiltro1HL.addComponent(filtroTodasCHK);

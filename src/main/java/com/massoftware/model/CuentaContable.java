@@ -2,24 +2,24 @@ package com.massoftware.model;
 
 import java.math.BigDecimal;
 
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassFormSourceAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassPluralLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassTableMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldAllowDecimalAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnsAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldInputMaskAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxLengthAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxValueBigDecimalAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMinValueBigDecimalAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldNameMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldRequiredAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldSubNameFKAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldUniqueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassFormSourceAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldAllowDecimalAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldInputMaskAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxValueBigDecimalAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMinValueBigDecimalAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldSubNameFKAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldUniqueAnont;
 import com.massoftware.util.FormatCuentaContableCodigoCuenta;
 
 @ClassLabelInTheSingularAnont(value = "Cuenta contable")
@@ -401,33 +401,33 @@ public class CuentaContable extends EntityId implements
 
 		super.validate();
 
-		if (this.ejercicioContable == null) {
-
+//		if (this.ejercicioContable == null) {
+//
+////			throw new IllegalArgumentException(this.getClass()
+////					.getCanonicalName() + ".ejercicioContable es nulo.");
+//		} else {
+//			this.ejercicioContable.validate();
+//		}
+//
+//		if (this.codigoCuentaPadre == null) {
 //			throw new IllegalArgumentException(this.getClass()
-//					.getCanonicalName() + ".ejercicioContable es nulo.");
-		} else {
-			this.ejercicioContable.validate();
-		}
-
-		if (this.codigoCuentaPadre == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".codigoCuentaPadre es nulo.");
-		}
-
-		if (this.codigoCuenta == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".codigoCuenta es nulo.");
-		}
-
-		if (this.cuentaContable == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".cuentaContable es nulo.");
-		}
-
-		if (this.nombre == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".nombre es nulo.");
-		}
+//					.getCanonicalName() + ".codigoCuentaPadre es nulo.");
+//		}
+//
+//		if (this.codigoCuenta == null) {
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".codigoCuenta es nulo.");
+//		}
+//
+//		if (this.cuentaContable == null) {
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".cuentaContable es nulo.");
+//		}
+//
+//		if (this.nombre == null) {
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".nombre es nulo.");
+//		}
 
 		// if (this.imputable == null) {
 		// throw new IllegalArgumentException(this.getClass()

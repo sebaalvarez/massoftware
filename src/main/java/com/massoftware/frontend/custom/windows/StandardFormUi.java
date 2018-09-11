@@ -10,14 +10,14 @@ import org.cendra.jdbc.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ex.crud.UniqueException;
 
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.builder.BuilderXMD;
+import com.massoftware.frontend.custom.windows.builder.ComponentXMD;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassFormSourceAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldAutoMaxValueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldCBBox;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldLabelAnont;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.builder.BuilderXMD;
-import com.massoftware.frontend.util.builder.ComponentXMD;
-import com.massoftware.frontend.util.builder.annotation.ClassFormSourceAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldAutoMaxValueAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldCBBox;
-import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
 import com.massoftware.model.Entity;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
@@ -272,7 +272,7 @@ public class StandardFormUi<T> extends CustomComponent {
 		// 768x1024
 		// --------------------------------------------------
 
-		rootVL = BuilderXMD.buildVL();
+		rootVL = ControlFactory.buildVL();
 
 		this.setCompositionRoot(rootVL);
 
@@ -322,12 +322,15 @@ public class StandardFormUi<T> extends CustomComponent {
 	protected void buildBodyControls() throws Exception {
 
 		String formSource = getFormSource();
+		
 		if (formSource != null && formSource.trim().length() > 0) {
 
 			rootVL.addComponent(BuilderXMD.loadModel(window, controls,
 					sessionVar.getUsuario(), sessionVar.getCx(),
 					formSource.trim(), dtoBI, originalDTO, mode));
+			
 		} else {
+			
 			ComponentXMD rootVLXMD = new ComponentXMD(ComponentXMD.VL);
 			rootVLXMD.setClassModel(classModel);
 

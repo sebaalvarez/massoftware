@@ -1,11 +1,11 @@
 package z.old.deprecated;
 
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.ControlFactory;
 import com.massoftware.frontend.custom.windows.StandarTableUiFilteringSet;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.custom.windows.WindowsFactory;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.model.Chequera;
 import com.massoftware.model.CuentaDeFondoA;
 import com.vaadin.ui.TabSheet;
@@ -38,7 +38,7 @@ public class ChequeraFormUi extends StandardFormUi<Chequera> {
 	private void init() {
 		this.setCompositionRoot(null);
 
-		VerticalLayout vl = BuilderXMD.buildVL();
+		VerticalLayout vl = ControlFactory.buildVL();
 
 		TabSheet ts = new TabSheet();
 		vl.addComponent(ts);
@@ -47,7 +47,7 @@ public class ChequeraFormUi extends StandardFormUi<Chequera> {
 		window.setWidth("1300px");
 		ts.addComponent(rootVL);
 
-		VerticalLayout valoresAnuladosVL = BuilderXMD.buildVL();
+		VerticalLayout valoresAnuladosVL = ControlFactory.buildVL();
 		valoresAnuladosVL.setCaption("Valores anulados");
 		ts.addComponent(valoresAnuladosVL);
 
@@ -81,8 +81,7 @@ public class ChequeraFormUi extends StandardFormUi<Chequera> {
 							.getItemProperty("cuentaDeFondo"));
 					filteringSet.setOtrosFiltros(getOtrosFiltros());
 
-					WindowsFactory.openWindowFromForm(this,
-							CuentaDeFondoA.class, sessionVar, filteringSet);
+					WindowsFactory.openWindow(this, CuentaDeFondoA.class, sessionVar, filteringSet);
 
 				}
 			} catch (Exception e) {

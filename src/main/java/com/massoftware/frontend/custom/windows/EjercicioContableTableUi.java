@@ -9,7 +9,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class EjercicioContableTableUi extends
+class EjercicioContableTableUi extends
 		StandardTableUi<EjercicioContable> {
 
 	/**
@@ -17,7 +17,7 @@ public class EjercicioContableTableUi extends
 	 */
 	private static final long serialVersionUID = 4960961261882226754L;
 
-	public EjercicioContableTableUi(StandarTableUiPagedConf pagedConf,
+	protected EjercicioContableTableUi(StandarTableUiPagedConf pagedConf,
 			StandarTableUiToolbarConf toolbarConf, Window window,
 			SessionVar sessionVar, Class<EjercicioContable> classModel,
 			StandarTableUiFilteringSet filteringSet) {

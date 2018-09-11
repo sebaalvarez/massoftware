@@ -8,11 +8,11 @@ import com.massoftware.backend.bo.CuentaDeFondoABO;
 import com.massoftware.backend.bo.CuentaDeFondoBO;
 import com.massoftware.backend.bo.CuentaDeFondoGrupoBO;
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.ControlFactory;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.custom.windows.StandardTableUi;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.YesNoDialog;
-import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.CuentaDeFondoA;
 import com.massoftware.model.CuentaDeFondoGrupo;
@@ -52,7 +52,7 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 
 	public CuentaDeFondoTableUi(Window window, SessionVar sessionVar) {
 
-		super(null, null, window, sessionVar, CuentaDeFondoA.class);
+//		super(null, null, window, sessionVar, CuentaDeFondoA.class);
 
 		init();
 
@@ -61,7 +61,7 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 	public CuentaDeFondoTableUi(Window window, SessionVar sessionVar,
 			ChequeraTableUi chequeraTableUi) {
 
-		super(null, null, window, sessionVar, CuentaDeFondoA.class);
+//		super(null, null, window, sessionVar, CuentaDeFondoA.class);
 
 		init();
 
@@ -300,7 +300,7 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 
 		// ----------------------------------
 
-		filtroTodasCHK = BuilderXMD.buildCHK();
+		filtroTodasCHK = ControlFactory.buildCHK();
 		filtroTodasCHK.setCaption("Incluir cuentas obsoletas");
 
 		filaFiltro1HL.addComponent(filtroTodasCHK);

@@ -11,8 +11,7 @@ import com.massoftware.model.EjercicioContable;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Window;
 
-public class AsientoModeloItemTableUi extends
-		StandardTableUi<AsientoModeloItem> {
+class AsientoModeloItemTableUi extends StandardTableUi<AsientoModeloItem> {
 
 	/**
 	 * 
@@ -26,13 +25,13 @@ public class AsientoModeloItemTableUi extends
 			SessionVar sessionVar, Class<AsientoModeloItem> classModel,
 			StandarTableUiFilteringSet filteringSet) {
 
-		super(pagedConf, toolbarConf, window, sessionVar, classModel,
-				filteringSet);
+		super(new StandarTableUiPagedConf(false, false, false), toolbarConf,
+				window, sessionVar, classModel, filteringSet);
 
-		window.setWidth("1300px");
+		// window.setWidth("1300px");
 
 		HorizontalSplitPanel hsplit = new HorizontalSplitPanel();
-		hsplit.setSplitPosition(550, Unit.PIXELS);
+		hsplit.setSplitPosition(325, Unit.PIXELS);
 		this.setCompositionRoot(hsplit);
 
 		AsientoModeloTableUi asientoModeloTableUi = new AsientoModeloTableUi(

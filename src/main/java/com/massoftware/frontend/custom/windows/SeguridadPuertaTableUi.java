@@ -9,7 +9,7 @@ import com.massoftware.model.SeguridadPuerta;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Window;
 
-public class SeguridadPuertaTableUi extends StandardTableUi<SeguridadPuerta> {
+class SeguridadPuertaTableUi extends StandardTableUi<SeguridadPuerta> {
 
 	/**
 	 * 

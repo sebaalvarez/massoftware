@@ -13,10 +13,10 @@ import com.massoftware.model.Usuario;
 public class EjercicioContableBO extends GenericBO<EjercicioContable> {
 
 	private final String ATT_NAME_CODIGO = "ejercicio";
-	
+
 	private final String SQL_MS_1 = "SELECT MAX(ejercicio) FROM VetaroRep.dbo.vEjercicioContable;";
 	private final String SQL_MS_2 = "SELECT * FROM VetaroRep.dbo.vEjercicioContable WHERE ejercicio = ?;";
-
+	private final String SQL_MS_3 = "SELECT [EJERCICIO] FROM [dbo].[Empresa];";
 
 	public EjercicioContableBO(DataSourceWrapper dataSourceWrapper,
 			BackendContext cx) {
@@ -29,18 +29,34 @@ public class EjercicioContableBO extends GenericBO<EjercicioContable> {
 
 	public EjercicioContable findDefaultEjercicioContable() throws Exception {
 
-		String sql = "SELECT [EJERCICIO] FROM [dbo].[Empresa];";
+		String sql = SQL_MS_3;
 
 		ConnectionWrapper connectionWrapper = dataSourceWrapper
 				.getConnectionWrapper();
 
 		try {
 
-			Object[][] table = connectionWrapper.findToTable(sql);
+			Integer ejercicio = null;
+			EjercicioContable ejercicioContable = null;
 
-			EjercicioContable ejercicioContable = new EjercicioContable();
-			ejercicioContable.setId(table[0][0].toString());
-			ejercicioContable.setEjercicio((Integer) table[0][0]);
+			Object[][] table = connectionWrapper.findToTable(sql);
+			for (Object[] row : table) {
+				int column = 0;
+				if (row[column] != null) {
+					ejercicio = (Integer) row[column];
+					break;
+				}
+			}
+
+			sql = SQL_MS_2;
+
+			@SuppressWarnings("unchecked")
+			List<EjercicioContable> list = connectionWrapper
+					.findToListByCendraConvention(sql, ejercicio);
+			if (list.size() == 1) {
+				list.get(0).validate();
+				ejercicioContable = list.get(0);
+			}
 
 			return ejercicioContable;
 

@@ -1,3 +1,6 @@
+USE [VetaroRep]
+GO
+
 
 
 
@@ -410,6 +413,7 @@ CREATE VIEW [dbo].[vEjercicioContable] AS
 	-- SELECT * FROM dbo.[vEjercicioContable] WHERE CAST(ejercicio AS VARCHAR)  LIKE CONCAT('%', CAST(12 AS VARCHAR)) ORDER BY ejercicio DESC;
 	-- SELECT * FROM dbo.vEjercicioContable ORDER BY ejercicio DESC;
 
+	SELECT * FROM dbo.vEjercicioContable ORDER BY ejercicio DESC;
 
 
 -- DROP VIEW [dbo].[vCentroDeCostoContable]
@@ -1310,12 +1314,12 @@ CREATE VIEW [dbo].[vAsientoModeloItem] AS
 			, vCuentaContable.id																AS cuentaContable_id			
 			-----------------------------------------------------------------------------------------------------			
 			, vCuentaContable.ejercicioContable_id												AS cuentaContable_ejercicioContable_id			
-				, vCuentaContable.ejercicioContable_ejercicio									AS cuentaContable_ejercicioContable_ejercicio		
-			--	, vCuentaContable.ejercicioContable_fechaApertura								AS cuentaContable_ejercicioContable_fechaApertura
-			--	, vCuentaContable.ejercicioContable_fechaCierre									AS cuentaContable_ejercicioContable_fechaCierre
-			--	, vCuentaContable.ejercicioContable_ejercicioCerrado							AS cuentaContable_ejercicioContable_ejercicioCerrado
-			--	, vCuentaContable.ejercicioContable_ejercicioCerradoModulos						AS cuentaContable_ejercicioContable_ejercicioCerradoModulos
-			--	, vCuentaContable.ejercicioContable_comentario									AS cuentaContable_ejercicioContable_comentario
+			, vCuentaContable.ejercicioContable_ejercicio										AS cuentaContable_ejercicioContable_ejercicio		
+			--, vCuentaContable.ejercicioContable_fechaApertura									AS cuentaContable_ejercicioContable_fechaApertura
+			--, vCuentaContable.ejercicioContable_fechaCierre										AS cuentaContable_ejercicioContable_fechaCierre
+			--, vCuentaContable.ejercicioContable_ejercicioCerrado								AS cuentaContable_ejercicioContable_ejercicioCerrado
+			--, vCuentaContable.ejercicioContable_ejercicioCerradoModulos							AS cuentaContable_ejercicioContable_ejercicioCerradoModulos
+			--, vCuentaContable.ejercicioContable_comentario										AS cuentaContable_ejercicioContable_comentario
 			-----------------------------------------------------------------------------------------------------			
 			, vCuentaContable.codigoCuentaPadre													AS cuentaContable_codigoCuentaPadre
 			, vCuentaContable.codigoCuenta														AS cuentaContable_codigoCuenta

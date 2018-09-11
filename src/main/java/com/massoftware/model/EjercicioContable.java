@@ -2,22 +2,22 @@ package com.massoftware.model;
 
 import java.util.Date;
 
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInPluralAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassArticleLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassLabelInTheSingularAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassPluralLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.ClassTableMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldAutoMaxValueAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnMetaDataAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldColumnsAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldLabelAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxLengthAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMaxValueIntegerAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldMinValueIntegerAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldNameMSAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldReadOnly;
-import com.massoftware.frontend.util.builder.annotation.FieldRequiredAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldUniqueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInPluralAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassLabelInTheSingularAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassPluralLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassTableMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldAutoMaxValueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnMetaDataAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnsAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldLabelAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxLengthAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMaxValueIntegerAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldMinValueIntegerAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldNameMSAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldReadOnly;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldRequiredAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldUniqueAnont;
 import com.massoftware.util.FormatDate;
 
 @ClassLabelInTheSingularAnont(value = "ejercicio contable")
@@ -228,7 +228,7 @@ public class EjercicioContable extends EntityId implements
 
 	private boolean _setfullToString = false;
 
-	public void _setfullToString(boolean _setfullToString) {
+	public void _setfullToStringx(boolean _setfullToString) {
 		this._setfullToString = _setfullToString;
 	}
 
@@ -236,43 +236,47 @@ public class EjercicioContable extends EntityId implements
 	public String toString() {
 
 		if (this._setfullToString) {
-			return this.getEjercicio().toString() + " [ "
-					+ FormatDate.format(fechaApertura) + " - "
-					+ FormatDate.format(fechaCierre) + " ]";
+			return toStringFull();
 		} else {
 			return this.getEjercicio().toString();
 		}
 
 	}
 
+	public String toStringFull() {
+		return this.getEjercicio().toString() + " [ "
+				+ FormatDate.format(fechaApertura) + " - "
+				+ FormatDate.format(fechaCierre) + " ]";
+	}
+
 	public boolean validate() throws IllegalArgumentException {
 
 		super.validate();
 
-		if (this.ejercicio == null || this.ejercicio == 0) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".ejercicio es nulo o igual a cero.");
-		}
-
-		if (this.fechaApertura == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".fechaApertura es nulo.");
-		}
-
-		if (this.fechaCierre == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".fechaCierre es nulo.");
-		}
-
-		if (this.ejercicioCerrado == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".ejercicioCerrado es nulo.");
-		}
-
-		if (this.ejercicioCerradoModulos == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".ejercicioCerradoModulos es nulo.");
-		}
+//		if (this.ejercicio == null || this.ejercicio == 0) {
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".ejercicio es nulo o igual a cero.");
+//		}
+//
+//		if (this.fechaApertura == null) {
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".fechaApertura es nulo.");
+//		}
+//
+//		if (this.fechaCierre == null) {
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".fechaCierre es nulo.");
+//		}
+//
+//		if (this.ejercicioCerrado == null) {
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".ejercicioCerrado es nulo.");
+//		}
+//
+//		if (this.ejercicioCerradoModulos == null) {
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".ejercicioCerradoModulos es nulo.");
+//		}
 
 		return true;
 	}

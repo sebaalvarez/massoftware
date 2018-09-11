@@ -109,7 +109,7 @@ public class CuentaDeFondoFormUi extends StandardFormUi<CuentaDeFondo> {
 						.getItemProperty("cuentaContable"));
 				filteringSet.setOtrosFiltros(null);
 
-				WindowsFactory.openWindowFromForm(this, CuentaContable.class,
+				WindowsFactory.openWindow(this, CuentaContable.class,
 						sessionVar, filteringSet);
 
 			} else if (txt.getDescription().equals("Cuenta diferidos")) {
@@ -122,7 +122,7 @@ public class CuentaDeFondoFormUi extends StandardFormUi<CuentaDeFondo> {
 						.getItemProperty("cuentaDiferidos"));
 				filteringSet.setOtrosFiltros(null);
 
-				WindowsFactory.openWindowFromForm(this, CuentaDeFondoA.class,
+				WindowsFactory.openWindow(this, CuentaDeFondoA.class,
 						sessionVar, filteringSet);
 
 			} else if (txt.getDescription().equals("Cuenta caución")) {
@@ -135,7 +135,7 @@ public class CuentaDeFondoFormUi extends StandardFormUi<CuentaDeFondo> {
 						.getItemProperty("cuentaCaucion"));
 				filteringSet.setOtrosFiltros(null);
 
-				WindowsFactory.openWindowFromForm(this, CuentaDeFondoA.class,
+				WindowsFactory.openWindow(this, CuentaDeFondoA.class,
 						sessionVar, filteringSet);
 
 			} else if (txt.getDescription().equals("Puerta para uso de cta.")) {
@@ -148,7 +148,7 @@ public class CuentaDeFondoFormUi extends StandardFormUi<CuentaDeFondo> {
 						.getItemProperty("seguridadPuerta"));
 				filteringSet.setOtrosFiltros(null);
 
-				WindowsFactory.openWindowFromForm(this, SeguridadPuerta.class,
+				WindowsFactory.openWindow(this, SeguridadPuerta.class,
 						sessionVar, filteringSet);
 
 			} else if (txt.getDescription().equals("Puerta para consulta")) {
@@ -161,7 +161,7 @@ public class CuentaDeFondoFormUi extends StandardFormUi<CuentaDeFondo> {
 						.getItemProperty("puertaConsulta"));
 				filteringSet.setOtrosFiltros(null);
 
-				WindowsFactory.openWindowFromForm(this, SeguridadPuerta.class,
+				WindowsFactory.openWindow(this, SeguridadPuerta.class,
 						sessionVar, filteringSet);
 
 			} else if (txt.getDescription().equals(
@@ -175,7 +175,7 @@ public class CuentaDeFondoFormUi extends StandardFormUi<CuentaDeFondo> {
 						.getItemProperty("puertaLimite"));
 				filteringSet.setOtrosFiltros(null);
 
-				WindowsFactory.openWindowFromForm(this, SeguridadPuerta.class,
+				WindowsFactory.openWindow(this, SeguridadPuerta.class,
 						sessionVar, filteringSet);
 			}
 

@@ -29,12 +29,14 @@ class AsientoItemTableUi extends StandardTableUi<AsientoItem> {
 		StandarTableUiFilteringSet filteringSet = new StandarTableUiFilteringSet();
 
 		Window window = null;
-		
+
 		build(pagedConf, toolbarConf, window, sessionVar, AsientoItem.class,
 				filteringSet);
 
 		build();
 	}
+
+
 
 	private void build() {
 

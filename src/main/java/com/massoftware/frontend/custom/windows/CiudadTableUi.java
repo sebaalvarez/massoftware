@@ -7,8 +7,8 @@ import com.massoftware.backend.bo.CiudadBO;
 import com.massoftware.backend.bo.PaisBO;
 import com.massoftware.backend.bo.ProvinciaBO;
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.windows.builder.BuilderXMD;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.model.Ciudad;
 import com.massoftware.model.Entity;
 import com.massoftware.model.Pais;
@@ -19,7 +19,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Window;
 
-public class CiudadTableUi extends StandardTableUi<Ciudad> {
+class CiudadTableUi extends StandardTableUi<Ciudad> {
 
 	/**
 	 * 
@@ -53,7 +53,7 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 		provinciaBIC = new BeanItemContainer<Provincia>(Provincia.class,
 				new ArrayList<Provincia>());
 
-		filtroProvinciaCBX = BuilderXMD.buildCB();
+		filtroProvinciaCBX = ControlFactory.buildCB();
 		filtroProvinciaCBX.setCaption("Provincia");
 		filtroProvinciaCBX.setRequired(true);
 		filtroProvinciaCBX.setNullSelectionAllowed(false);
@@ -71,7 +71,7 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 
 		paisBIC = new BeanItemContainer<Pais>(Pais.class, new ArrayList<Pais>());
 
-		filtroPaisCBX = BuilderXMD.buildCB();
+		filtroPaisCBX = ControlFactory.buildCB();
 		filtroPaisCBX.setCaption("País");
 		filtroPaisCBX.setRequired(true);
 		filtroPaisCBX.setNullSelectionAllowed(false);
@@ -194,7 +194,7 @@ public class CiudadTableUi extends StandardTableUi<Ciudad> {
 		BeanItemContainer<Pais> paisFormBIC = new BeanItemContainer<Pais>(
 				Pais.class, new ArrayList<Pais>());
 
-		filtroPaisFormCBX = BuilderXMD.buildCB();
+		filtroPaisFormCBX = ControlFactory.buildCB();
 		filtroPaisFormCBX.setCaption("País");
 		filtroPaisFormCBX.setRequired(true);
 		filtroPaisFormCBX.setNullSelectionAllowed(false);

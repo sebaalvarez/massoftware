@@ -28,7 +28,7 @@ public class AsientoModeloBO extends GenericBO<AsientoModelo> {
 	@Override
 	public void checkUnique(String attName, Object value) throws Exception {
 
-		if (attName.equalsIgnoreCase(ATT_NAME_NUMERO)) {
+		if (attName.equalsIgnoreCase(ATT_NAME_NUMERO)) {			
 
 			checkUnique(attName, ATT_NAME_NUMERO + " = ?", value);
 

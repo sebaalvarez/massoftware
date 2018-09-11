@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.util.builder.BuilderXMD;
+import com.massoftware.frontend.custom.windows.ControlFactory;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.model.CentroDeCostoContable;
@@ -166,7 +166,7 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 		ejerciciosContablesBIC = new BeanItemContainer<EjercicioContable>(
 				EjercicioContable.class, new ArrayList<EjercicioContable>());
 
-		filtroEjercicioCBX = BuilderXMD.buildCB();
+		filtroEjercicioCBX = ControlFactory.buildCB();
 		// filtroEjercicioCBX.setCaption("Ejercicio");
 		filtroEjercicioCBX.setDescription("Ejercicio");
 		// filtroEjercicioCBX.setRequired(true);

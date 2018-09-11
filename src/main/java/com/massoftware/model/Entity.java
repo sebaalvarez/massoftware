@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.massoftware.frontend.util.builder.annotation.FieldNotCopiableAnont;
-import com.massoftware.frontend.util.builder.annotation.FieldNowTimestampForInsertUpdate;
-import com.massoftware.frontend.util.builder.annotation.FieldUniqueAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldNotCopiableAnont;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldNowTimestampForInsertUpdate;
+import com.massoftware.frontend.custom.windows.builder.annotation.FieldUniqueAnont;
 
 public class Entity implements Cloneable, Valuable {
 

@@ -12,7 +12,6 @@ import com.massoftware.backend.bo.AsientoBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.builder.BuilderXMD;
 import com.massoftware.frontend.util.converter.StringToIntegerConverterUnspecifiedLocale;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.CostoDeVenta;
@@ -33,7 +32,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
-public class AsientoTableUi extends StandardTableUi<Asiento> {
+class AsientoTableUi extends StandardTableUi<Asiento> {
 
 	/**
 	 * 
@@ -77,8 +76,8 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 			SessionVar sessionVar, Class<Asiento> classModel,
 			StandarTableUiFilteringSet filteringSet) {
 
-		super(pagedConf, toolbarConf, window, sessionVar, classModel,
-				filteringSet);
+		super(pagedConf, new StandarTableUiToolbarConf(true, true, false, true,
+				true), window, sessionVar, classModel, filteringSet);
 		build();
 	}
 
@@ -97,8 +96,6 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 		// this.setCompositionRoot(hsplit);
 
 		// hsplit.setFirstComponent(rootVL);
-		
-		
 
 		asientoItemTableUi = new AsientoItemTableUi(sessionVar);
 
@@ -142,7 +139,7 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 		ejerciciosContablesBIC = new BeanItemContainer<EjercicioContable>(
 				EjercicioContable.class, new ArrayList<EjercicioContable>());
 
-		filtroEjercicioCBX = BuilderXMD.buildCB();
+		filtroEjercicioCBX = ControlFactory.buildCB();
 		filtroEjercicioCBX.setWidth("80px");
 		// filtroEjercicioCBX.setIcon(FontAwesome.SEARCH);
 		filtroEjercicioCBX.setCaption("Ejercicio");
@@ -186,6 +183,30 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 
 		}
 
+		Object o = filtroEjercicioCBX.getValue();
+		if (o != null) {
+			filtroEjercicioCBX.setDescription(((EjercicioContable) o)
+					.toStringFull());
+		} else {
+			filtroEjercicioCBX.setDescription("");
+		}
+
+		filtroEjercicioCBX.addValueChangeListener(e -> {
+			try {
+				Object value = filtroEjercicioCBX.getValue();
+				if (value != null) {
+					filtroEjercicioCBX
+							.setDescription(((EjercicioContable) value)
+									.toStringFull());
+				} else {
+					filtroEjercicioCBX.setDescription("");
+				}
+
+			} catch (Exception ex) {
+				LogAndNotification.print(ex);
+			}
+		});
+
 		// ----------------------------------------------
 		// ----------------------------------------------
 
@@ -195,7 +216,7 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 
 		// ----------------------------------------------
 
-		filtroNumeroTXT = BuilderXMD.buildTXT();
+		filtroNumeroTXT = ControlFactory.buildTXT();
 		filtroNumeroTXT.setCaption("Número");
 		filtroNumeroTXT.setDescription("igual a");
 		filtroNumeroTXT.setInputPrompt("igual a");
@@ -324,7 +345,7 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 
 		filtroMesAnioDesdeHL = new HorizontalLayout();
 
-		filtroDesdeTXT = BuilderXMD.buildTXT();
+		filtroDesdeTXT = ControlFactory.buildTXT();
 		filtroDesdeTXT.setCaption("Desde");
 		filtroDesdeTXT.setMaxLength(2);
 		filtroDesdeTXT.setColumns(5);
@@ -338,7 +359,7 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 		mesAnioDesdeBIC = new BeanItemContainer<String>(String.class,
 				new ArrayList<String>());
 
-		filtroMesAnioDesdeCBX = BuilderXMD.buildCB();
+		filtroMesAnioDesdeCBX = ControlFactory.buildCB();
 		filtroMesAnioDesdeCBX.setWidth("90px");
 		// filtroEjercicioCBX.setIcon(FontAwesome.SEARCH);
 		filtroMesAnioDesdeCBX.setCaption("Mes/Año");
@@ -374,7 +395,7 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 
 		filtroMesAnioHastaHL = new HorizontalLayout();
 
-		filtroHastaTXT = BuilderXMD.buildTXT();
+		filtroHastaTXT = ControlFactory.buildTXT();
 		filtroHastaTXT.setCaption("Hasta");
 		filtroHastaTXT.setMaxLength(2);
 		filtroHastaTXT.setColumns(5);
@@ -388,7 +409,7 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 		mesAnioHastaBIC = new BeanItemContainer<String>(String.class,
 				new ArrayList<String>());
 
-		filtroMesAnioHastaCBX = BuilderXMD.buildCB();
+		filtroMesAnioHastaCBX = ControlFactory.buildCB();
 		filtroMesAnioHastaCBX.setWidth("90px");
 		// filtroEjercicioCBX.setIcon(FontAwesome.SEARCH);
 		filtroMesAnioHastaCBX.setCaption("Mes/Año");
@@ -693,29 +714,30 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 		item.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
 				.getValue());
 
-		if (item.getEjercicioContable() != null) {
-			item.getEjercicioContable()._setfullToString(true);
-		}
+		// if (item.getEjercicioContable() != null) {
+		// item.getEjercicioContable()._setfullToString(true);
+		// }
 
 		AsientoFormUi form = new AsientoFormUi(sessionVar,
 				StandardFormUi.INSERT_MODE, this, item);
 
-		form.setMaxValues();
+		// form.setMaxValues();
 
 		// ----------------------------------
 
-		ComboBox ejercicioContableCBX = (ComboBox) form
-				.getComponentById("ejercicioContable");
+		// ComboBox ejercicioContableCBX = (ComboBox) form
+		// .getComponentById("ejercicioContable");
 
-		BeanItemContainer<EjercicioContable> bicEjercicioContable = (BeanItemContainer<EjercicioContable>) ejercicioContableCBX
-				.getContainerDataSource();
+		// BeanItemContainer<EjercicioContable> bicEjercicioContable =
+		// (BeanItemContainer<EjercicioContable>) ejercicioContableCBX
+		// .getContainerDataSource();
 
-		if (bicEjercicioContable.size() > 0) {
-			for (int i = 0; i < bicEjercicioContable.size(); i++) {
-				bicEjercicioContable.getIdByIndex(i)._setfullToString(true);
-			}
-
-		}
+		// if (bicEjercicioContable.size() > 0) {
+		// for (int i = 0; i < bicEjercicioContable.size(); i++) {
+		// bicEjercicioContable.getIdByIndex(i)._setfullToString(true);
+		// }
+		//
+		// }
 
 		// ----------------------------------
 
@@ -739,9 +761,9 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected StandardFormUi openFormCopiar(Asiento item) throws Exception {
 
-		if (item.getEjercicioContable() != null) {
-			item.getEjercicioContable()._setfullToString(true);
-		}
+		// if (item.getEjercicioContable() != null) {
+		// item.getEjercicioContable()._setfullToString(true);
+		// }
 
 		Asiento o = (Asiento) ((Entity) item).copy();
 
@@ -771,6 +793,21 @@ public class AsientoTableUi extends StandardTableUi<Asiento> {
 
 		return form;
 
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected StandardFormUi openFormModificar(Asiento itemArg)
+			throws Exception {
+
+		itemArg.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
+				.getValue());
+
+		AsientoFormUi form = new AsientoFormUi(sessionVar,
+				StandardFormUi.UPDATE_MODE, this, itemArg);
+
+		// form.setMaxValues();
+
+		return form;
 	}
 
 }

@@ -8,7 +8,7 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
-public class AsientoModeloTableUi extends StandardTableUi<AsientoModelo> {
+class AsientoModeloTableUi extends StandardTableUi<AsientoModelo> {
 
 	private AsientoModeloItemTableUi asientoModeloItemTableUi;
 
