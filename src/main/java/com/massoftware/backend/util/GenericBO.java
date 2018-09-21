@@ -88,7 +88,7 @@ public abstract class GenericBO<T> {
 		// return null;
 	}
 
-	protected List<T> findAll(String orderBy) throws Exception {
+	public List<T> findAll(String orderBy) throws Exception {
 		return find(orderBy, null, new Object[0]);
 	}
 
@@ -215,9 +215,9 @@ public abstract class GenericBO<T> {
 
 	protected Boolean ifExists(String where, Object... args) throws Exception {
 
-//		List<T> items = find(where, -1, -1, args); 666
-		
-		List<T> items = find(where, args); 
+		// List<T> items = find(where, -1, -1, args); 666
+
+		List<T> items = find(where, args);
 
 		return items.size() == 1;
 

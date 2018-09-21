@@ -22,7 +22,7 @@ class EjercicioContableTableUi extends
 			SessionVar sessionVar, Class<EjercicioContable> classModel,
 			StandarTableUiFilteringSet filteringSet) {
 
-		super(pagedConf, new StandarTableUiToolbarConf(true, true, false, true,
+		super(new StandarTableUiPagedConf(false, false, false), new StandarTableUiToolbarConf(true, true, false, true,
 				true), window, sessionVar, classModel, filteringSet);
 
 	}

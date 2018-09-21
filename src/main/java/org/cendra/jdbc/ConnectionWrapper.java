@@ -423,12 +423,13 @@ public class ConnectionWrapper {
 		return resultSet;
 	}
 
-	public int genericExecute(String sql) throws SQLExceptionWrapper, SQLException {
+	public int genericExecute(String sql) throws SQLExceptionWrapper,
+			SQLException {
 		return genericExecute(sql, new Object[0]);
 	}
 
-	public int genericExecute(String sql, Object... args) throws SQLExceptionWrapper,
-			SQLException {
+	public int genericExecute(String sql, Object... args)
+			throws SQLExceptionWrapper, SQLException {
 
 		try {
 
@@ -593,19 +594,27 @@ public class ConnectionWrapper {
 	// ===================================================================================================
 
 	private String buildPrintSQLStart(String sql) {
+		
+		String sep = "\n\n================================= SQL START =======================================\n\n";
 
 		if (isVerbose()) {
 
-			return Util.sep() + "\n\n[..] Ejecutando SQL "
+			String msgSql = sep + "\n\n[..] Ejecutando SQL "
 					+ ZonedDateTime.now() + "\n[" + dataSourceMetaData + "]\n["
 					+ dataSourceProperties.getUrl() + "]\n\n" + sql;
+
+			System.out.println(msgSql);
+
+			return msgSql;
 		}
 
 		return null;
 	}
 
-	private void printSQLEnd(String msgSql, Duration duration, boolean ok) {
+	private String printSQLEnd(String msgSql, Duration duration, boolean ok) {
 
+		String sep = "\n\n================================= SQL END =========================================\n\n";
+		
 		if (isVerbose()) {
 
 			String s = "";
@@ -616,16 +625,24 @@ public class ConnectionWrapper {
 			}
 
 			if (duration != null) {
-				msgSql += "\n\n" + s + " SQL ejecutando (Total query runtime: "
-						+ duration.toMillis() + " Millis )"
-						+ ZonedDateTime.now() + "\n\n" + Util.sep();
+				msgSql = "\n\n" + s + " SQL ejecutando (Total query runtime: "
+						+ duration.toMillis() + " Millis ) "
+						+ ZonedDateTime.now() + "\n\n" + sep;
 			} else {
-				msgSql += "\n\n" + s + " SQL ejecutando " + ZonedDateTime.now()
-						+ "\n\n" + Util.sep();
+				msgSql = "\n\n" + s + " SQL ejecutando " + ZonedDateTime.now()
+						+ "\n\n" + sep;
 			}
 
-			System.out.println(msgSql);
+			if (ok) {
+				System.out.println(msgSql);
+			} else {
+				System.err.println(msgSql);
+			}
+
+			return msgSql;
 		}
+
+		return null;
 	}
 
 	private void printSQLWarning(SQLWarning sqlWarning) {

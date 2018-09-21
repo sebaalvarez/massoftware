@@ -38,25 +38,41 @@ public class PuntoDeEquilibrioBO extends GenericBO<PuntoDeEquilibrio> {
 
 		return new ArrayList<PuntoDeEquilibrio>();
 	}
-	
-	protected Integer maxValueInteger(String attName, PuntoDeEquilibrio dto) throws Exception {
+
+	public List<PuntoDeEquilibrio> findAll(String orderBy, EjercicioContable dto)
+			throws Exception {
+
+		if (dto != null) {
+
+			return find(orderBy, "ejercicioContable_ejercicio = ?",
+					dto.getEjercicio());
+
+		}
+
+		return new ArrayList<PuntoDeEquilibrio>();
+	}
+
+	protected Integer maxValueInteger(String attName, PuntoDeEquilibrio dto)
+			throws Exception {
 
 		String viewName = getView();
-		String sql = "SELECT MAX(" + attName + ") + 1 FROM " + viewName + " WHERE ejercicioContable_ejercicio = ?";
+		String sql = "SELECT MAX(" + attName + ") + 1 FROM " + viewName
+				+ " WHERE ejercicioContable_ejercicio = ?";
 
 		ConnectionWrapper connectionWrapper = dataSourceWrapper
 				.getConnectionWrapper();
 
 		try {
-			
+
 			Object ejercicioContable = Integer.class;
-			
+
 			if (dto.getEjercicioContable() != null
 					&& dto.getEjercicioContable().getId() != null) {
 				ejercicioContable = dto.getEjercicioContable().getEjercicio();
 			}
 
-			Object[][] table = connectionWrapper.findToTable(sql, ejercicioContable);
+			Object[][] table = connectionWrapper.findToTable(sql,
+					ejercicioContable);
 
 			return (Integer) table[0][0];
 

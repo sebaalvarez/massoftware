@@ -1,6 +1,8 @@
 package com.massoftware.backend.bo;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,11 +110,9 @@ public class AsientoItemBO extends GenericBO<AsientoItem> {
 		}
 
 		if (ifExists(where, ejercicioContable, asiento, orden)) {
-			
-			Field fieldAsiento = AsientoItem.class
-					.getDeclaredField("asiento");
-			Field fieldRegistro = AsientoItem.class
-					.getDeclaredField("orden");
+
+			Field fieldAsiento = AsientoItem.class.getDeclaredField("asiento");
+			Field fieldRegistro = AsientoItem.class.getDeclaredField("orden");
 
 			throw new UniqueException(getLabel(fieldAsiento),
 					getLabel(fieldRegistro));
@@ -124,7 +124,10 @@ public class AsientoItemBO extends GenericBO<AsientoItem> {
 			throws Exception {
 
 		String viewName = getView();
-		String sql = "SELECT MAX(" + attName + ") + 1 FROM " + viewName
+		String sql = "SELECT MAX("
+				+ attName
+				+ ") + 1 FROM "
+				+ viewName
 				+ " WHERE asiento_ejercicioContable_ejercicio = ? AND asiento_numero = ?";
 
 		ConnectionWrapper connectionWrapper = dataSourceWrapper
@@ -141,8 +144,8 @@ public class AsientoItemBO extends GenericBO<AsientoItem> {
 				asiento = dto.getAsiento().getNumero();
 			}
 
-			Object[][] table = connectionWrapper
-					.findToTable(sql, ejercicioContable, asiento);
+			Object[][] table = connectionWrapper.findToTable(sql,
+					ejercicioContable, asiento);
 
 			return (Integer) table[0][0];
 
@@ -160,17 +163,15 @@ public class AsientoItemBO extends GenericBO<AsientoItem> {
 		Object asiento = Integer.class;
 		Object orden = Integer.class;
 
-		if (dto.getAsiento() != null
-				&& dto.getAsiento().getId() != null
+		if (dto.getAsiento() != null && dto.getAsiento().getId() != null
 				&& dto.getAsiento().getEjercicioContable() != null
 				&& dto.getAsiento().getEjercicioContable().getId() != null) {
-			
+
 			ejercicioContable = dto.getAsiento().getEjercicioContable()
 					.getEjercicio();
 		}
 
-		if (dto.getAsiento() != null
-				&& dto.getAsiento().getId() != null) {
+		if (dto.getAsiento() != null && dto.getAsiento().getId() != null) {
 			asiento = dto.getAsiento().getNumero();
 		}
 
@@ -194,112 +195,168 @@ public class AsientoItemBO extends GenericBO<AsientoItem> {
 	public AsientoItem insert(AsientoItem dto, Usuario usuario)
 			throws Exception {
 
-//		String nameTableDB = getClassTableMSAnont(classModel);
-//
-//		String[] nameAtts = { "[EJERCICIO]", "[ASIENTOMODELO]", "[REGISTRO]",
-//				"[CUENTACONTABLE]" };
-//
-//		Object ejercicioContable = Integer.class;
-//		Object asientoModelo = Integer.class;
-//		Object registro = Integer.class;
-//		Object cuentaContable = String.class;
-//
-//		if (dto.getCuentaContable() != null
-//				&& dto.getCuentaContable().getId() != null
-//				&& dto.getCuentaContable().getEjercicioContable() != null
-//				&& dto.getCuentaContable().getEjercicioContable().getId() != null) {
-//			ejercicioContable = dto.getCuentaContable().getEjercicioContable()
-//					.getEjercicio();
-//		}
-//
-//		if (dto.getAsiento() != null
-//				&& dto.getAsiento().getId() != null) {
-//			asientoModelo = dto.getAsiento().getNumero();
-//		}
-//
-//		if (dto.getRegistro() != null) {
-//			registro = dto.getRegistro();
-//		}
-//
-//		if (dto.getCuentaContable() != null
-//				&& dto.getCuentaContable().getId() != null) {
-//			cuentaContable = dto.getCuentaContable().getCuentaContable();
-//		}
-//
-//		Object[] args = { ejercicioContable, asientoModelo, registro,
-//				cuentaContable };
-//
-//		insert(nameTableDB, nameAtts, args);
+		String nameTableDB = getClassTableMSAnont(classModel);
+
+		String[] nameAtts = { "[EJERCICIO]", "[NUMEROASIENTO]",
+				"[NROREGISTRO]", "[CUENTACONTABLE]", "[DEBE]", "[HABER]",
+				"[DETALLE]", "[FECHASQL]", "[ORDEN]" };
+
+		Object ejercicioContable = Integer.class;
+		Object asiento = Integer.class;
+		Object registro = Integer.class;
+		Object cuentaContable = String.class;
+		Object debe = BigDecimal.class;
+		Object haber = BigDecimal.class;
+		Object detalle = String.class;
+		Object fecha = Date.class;
+		Object orden = String.class;
+
+		if (dto.getCuentaContable() != null
+				&& dto.getCuentaContable().getId() != null
+				&& dto.getCuentaContable().getEjercicioContable() != null
+				&& dto.getCuentaContable().getEjercicioContable().getId() != null) {
+			ejercicioContable = dto.getCuentaContable().getEjercicioContable()
+					.getEjercicio();
+		}
+
+		if (dto.getAsiento() != null && dto.getAsiento().getNumero() != null) {
+			asiento = dto.getAsiento().getNumero();
+		}
+
+		if (dto.getAsiento() != null && dto.getAsiento().getFecha() != null) {
+			fecha = dto.getAsiento().getFecha();
+		}
+
+		if (dto.getRegistro() != null) {
+			registro = dto.getRegistro();
+		}
+
+		if (dto.getCuentaContable() != null
+				&& dto.getCuentaContable().getId() != null) {
+			cuentaContable = dto.getCuentaContable().getCuentaContable();
+		}
+
+		if (dto.getDebe() != null) {
+			debe = dto.getDebe();
+		}
+
+		if (dto.getHaber() != null) {
+			haber = dto.getHaber();
+		}
+
+		if (dto.getDetalle() != null) {
+			detalle = dto.getDetalle();
+		}
+
+		if (dto.getOrden() != null) {
+			orden = dto.getOrden();
+		}
+
+		Object[] args = { ejercicioContable, asiento, registro, cuentaContable,
+				debe, haber, detalle, fecha, orden };
+
+		insert(nameTableDB, nameAtts, args);
 
 		return dto;
 
 		// return insertByReflection(dto, usuario);
 	}
 
-	public AsientoItem update(AsientoItem dto,
-			AsientoItem dtoOriginal, Usuario usuario) throws Exception {
+	public AsientoItem update(AsientoItem dto, AsientoItem dtoOriginal,
+			Usuario usuario) throws Exception {
 
-//		String nameTableDB = getClassTableMSAnont(classModel);
-//
-//		String[] nameAtts = { "[EJERCICIO]", "[ASIENTOMODELO]", "[REGISTRO]",
-//				"[CUENTACONTABLE]" };
-//
-//		Object ejercicioContable = Integer.class;
-//		Object asientoModelo = Integer.class;
-//		Object registro = Integer.class;
-//		Object cuentaContable = String.class;
-//
-//		if (dto.getCuentaContable() != null
-//				&& dto.getCuentaContable().getId() != null
-//				&& dto.getCuentaContable().getEjercicioContable() != null
-//				&& dto.getCuentaContable().getEjercicioContable().getId() != null) {
-//			ejercicioContable = dto.getCuentaContable().getEjercicioContable()
-//					.getEjercicio();
-//		}
-//
-//		if (dto.getAsientoModelo() != null
-//				&& dto.getAsientoModelo().getId() != null) {
-//			asientoModelo = dto.getAsientoModelo().getNumero();
-//		}
-//
-//		if (dto.getRegistro() != null) {
-//			registro = dto.getRegistro();
-//		}
-//
-//		if (dto.getCuentaContable() != null
-//				&& dto.getCuentaContable().getId() != null) {
-//			cuentaContable = dto.getCuentaContable().getCuentaContable();
-//		}
-//
-//		Object ejercicioContableOriginal = Integer.class;
-//		Object asientoModeloOriginal = Integer.class;
-//		Object registroOriginal = Integer.class;
-//
-//		if (dtoOriginal.getCuentaContable() != null
-//				&& dtoOriginal.getCuentaContable().getId() != null
-//				&& dtoOriginal.getCuentaContable().getEjercicioContable() != null
-//				&& dtoOriginal.getCuentaContable().getEjercicioContable()
-//						.getId() != null) {
-//			ejercicioContableOriginal = dtoOriginal.getCuentaContable()
-//					.getEjercicioContable().getEjercicio();
-//		}
-//
-//		if (dtoOriginal.getAsientoModelo() != null
-//				&& dtoOriginal.getAsientoModelo().getId() != null) {
-//			asientoModeloOriginal = dtoOriginal.getAsientoModelo().getNumero();
-//		}
-//
-//		if (dtoOriginal.getRegistro() != null) {
-//			registroOriginal = dtoOriginal.getRegistro();
-//		}
-//
-//		String where = "[EJERCICIO] = ? AND [ASIENTOMODELO] = ? AND [REGISTRO] = ?";
-//
-//		Object[] args = { ejercicioContable, asientoModelo, registro,
-//				cuentaContable, ejercicioContableOriginal,
-//				asientoModeloOriginal, registroOriginal };
-//
-//		update(nameTableDB, nameAtts, args, where);
+		String nameTableDB = getClassTableMSAnont(classModel);
+
+		String[] nameAtts = { "[EJERCICIO]", "[NUMEROASIENTO]",
+				"[NROREGISTRO]", "[CUENTACONTABLE]", "[DEBE]", "[HABER]",
+				"[DETALLE]", "[FECHASQL]", "[ORDEN]" };
+
+		// --------------------------------------------
+
+		Object ejercicioContable = Integer.class;
+		Object asiento = Integer.class;
+		Object registro = Integer.class;
+		Object cuentaContable = String.class;
+		Object debe = BigDecimal.class;
+		Object haber = BigDecimal.class;
+		Object detalle = String.class;
+		Object fecha = Date.class;
+		Object orden = String.class;
+
+		if (dto.getCuentaContable() != null
+				&& dto.getCuentaContable().getId() != null
+				&& dto.getCuentaContable().getEjercicioContable() != null
+				&& dto.getCuentaContable().getEjercicioContable().getId() != null) {
+			ejercicioContable = dto.getCuentaContable().getEjercicioContable()
+					.getEjercicio();
+		}
+
+		if (dto.getAsiento() != null && dto.getAsiento().getId() != null) {
+			asiento = dto.getAsiento().getNumero();
+			fecha = dto.getAsiento().getFecha();
+		}
+
+		if (dto.getRegistro() != null) {
+			registro = dto.getRegistro();
+		}
+
+		if (dto.getCuentaContable() != null
+				&& dto.getCuentaContable().getId() != null) {
+			cuentaContable = dto.getCuentaContable().getCuentaContable();
+		}
+
+		if (dto.getDebe() != null) {
+			debe = dto.getDebe();
+		}
+
+		if (dto.getHaber() != null) {
+			haber = dto.getHaber();
+		}
+
+		if (dto.getDetalle() != null) {
+			detalle = dto.getDetalle();
+		}
+
+		if (dto.getOrden() != null) {
+			orden = dto.getOrden();
+		}
+
+		// --------------------------------------------
+
+		Object ejercicioContableOriginal = Integer.class;
+		Object asientoModeloOriginal = Integer.class;
+		Object ordenOriginal = Integer.class;
+
+		if (dtoOriginal.getCuentaContable() != null
+				&& dtoOriginal.getCuentaContable().getId() != null
+				&& dtoOriginal.getCuentaContable().getEjercicioContable() != null
+				&& dtoOriginal.getCuentaContable().getEjercicioContable()
+						.getId() != null) {
+
+			ejercicioContableOriginal = dtoOriginal.getCuentaContable()
+					.getEjercicioContable().getEjercicio();
+		}
+
+		if (dtoOriginal.getAsiento() != null
+				&& dtoOriginal.getAsiento().getId() != null) {
+
+			asientoModeloOriginal = dtoOriginal.getAsiento().getNumero();
+		}
+
+		if (dtoOriginal.getOrden() != null) {
+
+			ordenOriginal = dtoOriginal.getOrden();
+		}
+
+		// --------------------------------------------
+
+		String where = "[EJERCICIO] = ? AND [NUMEROASIENTO] = ? AND [ORDEN] = ?";
+
+		Object[] args = { ejercicioContable, asiento, registro, cuentaContable,
+				debe, haber, detalle, fecha, orden, ejercicioContableOriginal,
+				asientoModeloOriginal, ordenOriginal };
+
+		update(nameTableDB, nameAtts, args, where);
 
 		return dto;
 	}

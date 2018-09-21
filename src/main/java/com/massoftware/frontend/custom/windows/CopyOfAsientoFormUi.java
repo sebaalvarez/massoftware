@@ -1,16 +1,12 @@
 package com.massoftware.frontend.custom.windows;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 import org.cendra.jdbc.ex.crud.DeleteForeingObjectConflictException;
-import org.cendra.jdbc.ex.crud.InsertDuplicateException;
-import org.cendra.jdbc.ex.crud.UniqueException;
 
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
@@ -24,12 +20,10 @@ import com.massoftware.model.EjercicioContable;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.validator.BigDecimalRangeValidator;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -38,7 +32,6 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 //validar que al menos tenga dos cuentas contables en todos los modos
@@ -46,7 +39,7 @@ import com.vaadin.ui.themes.ValoTheme;
 //ubicar el boton de selecionar de modelo en el medio, por fuera de las tablas
 //agregar la suma de saldos en el modo tabla de asiento
 
-public class AsientoFormUi extends StandardFormUi<Asiento> {
+class CopyOfAsientoFormUi extends StandardFormUi<Asiento> {
 
 	/**
 	 * 
@@ -62,12 +55,14 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 	private DateField fechaRevisionDF;
 	private CheckBox fechaRevisionCHK;
 
-	private AsientoItemTableUi asientoItemTableUi2;
+	private boolean update;
 
-	public AsientoFormUi(SessionVar sessionVar, String mode,
-			AsientoTableUi tableUi, Asiento objectClone) {
+	protected CopyOfAsientoFormUi(SessionVar sessionVar, String mode,
+			AsientoTableUi tableUi, Asiento objectClone, boolean update) {
 
 		super(sessionVar, Asiento.class, mode, tableUi, objectClone);
+
+		this.update = update;
 
 		HorizontalLayout filaCabeceraHL = new HorizontalLayout();
 		filaCabeceraHL.setSpacing(true);
@@ -109,8 +104,8 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 			fechaRevisionDF = ControlFactory.buildDF(false);
 			fechaRevisionDF.setCaption("Incluye revisión del asiento");
 
-			// fechaRevisionCHK.addValueChangeListener(event -> // Java 8
-			// fechaRevisionDF.setEnabled(fechaRevisionCHK.getValue()));
+//			fechaRevisionCHK.addValueChangeListener(event -> // Java 8
+//					fechaRevisionDF.setEnabled(fechaRevisionCHK.getValue()));
 
 			fechaRevisionCHK.addValueChangeListener(new ValueChangeListener() {
 				private static final long serialVersionUID = 1L;
@@ -410,40 +405,70 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 	protected void agregarModeloBTNClick() {
 		try {
 
-			asientoItemTableUi.itemsGRD.select(null);
-			asientoItemTableUi.itemsBIC.removeAllItems();
-			// getUI().addWindow(openFormAgregar().getWindow());
-			AsientoModeloItemTableUi asientoModeloItemTableUi = (AsientoModeloItemTableUi) WindowsFactory
-					.openWindow(this, AsientoModeloItem.class, sessionVar);
+			boolean ok = false;
+			if (this.dtoBI.getBean().getId() == null) {
+				ok = this.updateBTNClick(false);
+			} else {
+				ok = true;
+			}
 
-			asientoModeloItemTableUi.window.setModal(true);
+			if (ok) {
 
-			HorizontalLayout barraDeHerramientasFila3 = new HorizontalLayout();
-			barraDeHerramientasFila3.setSpacing(true);
+				List<AsientoItem> asientosItem = this.asientoItemTableUi.itemsBIC
+						.getItemIds();
 
-			asientoModeloItemTableUi.vh.addComponent(barraDeHerramientasFila3);
-			asientoModeloItemTableUi.vh.setComponentAlignment(
-					barraDeHerramientasFila3, Alignment.MIDDLE_CENTER);
+				for (AsientoItem item : asientosItem) {
+					try {
 
-			// ----------------------------------------------
+						deleteItem(item);
 
-			Button seleccionarBTN = new Button();
-			seleccionarBTN.addStyleName(ValoTheme.BUTTON_PRIMARY);
-			seleccionarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-			seleccionarBTN.setIcon(FontAwesome.CHECK_SQUARE_O);
-			seleccionarBTN.setCaption("Seleccionar");
+					} catch (DeleteForeingObjectConflictException e) {
+						LogAndNotification.print(e, "Ítem " + item);
+						return;
+					}
 
-			seleccionarBTN.addClickListener(e -> {
-				addCuentaContable(asientoModeloItemTableUi);
-			});
+				}
 
-			barraDeHerramientasFila3.addComponent(seleccionarBTN);
+				asientoItemTableUi.reloadData();
+				sumDebeHaber();
+
+				asientoItemTableUi.itemsGRD.select(null);
+				asientoItemTableUi.itemsBIC.removeAllItems();
+				// getUI().addWindow(openFormAgregar().getWindow());
+				AsientoModeloItemTableUi asientoModeloItemTableUi = (AsientoModeloItemTableUi) WindowsFactory
+						.openWindow(this, AsientoModeloItem.class, sessionVar);
+
+				asientoModeloItemTableUi.window.setModal(true);
+
+				HorizontalLayout barraDeHerramientasFila3 = new HorizontalLayout();
+				barraDeHerramientasFila3.setSpacing(true);
+
+				asientoModeloItemTableUi.rootVL
+						.addComponent(barraDeHerramientasFila3);
+				asientoModeloItemTableUi.rootVL.setComponentAlignment(
+						barraDeHerramientasFila3, Alignment.MIDDLE_CENTER);
+
+				// ----------------------------------------------
+
+				Button seleccionarBTN = new Button();
+				seleccionarBTN.addStyleName(ValoTheme.BUTTON_PRIMARY);
+				seleccionarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+				seleccionarBTN.setIcon(FontAwesome.CHECK_SQUARE_O);
+				seleccionarBTN.setCaption("Seleccionar");
+
+				seleccionarBTN.addClickListener(e -> {
+					addCuentaContable(asientoModeloItemTableUi);
+				});
+
+				barraDeHerramientasFila3.addComponent(seleccionarBTN);
+			}
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void addCuentaContable(
 			AsientoModeloItemTableUi asientoModeloItemTableUi) {
 		try {
@@ -453,8 +478,6 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 
 				List<AsientoModeloItem> asientosModeloItem = asientoModeloItemTableUi.itemsBIC
 						.getItemIds();
-
-				List<AsientoItem> newList = new ArrayList<AsientoItem>();
 
 				for (AsientoModeloItem asientoModeloItem : asientosModeloItem) {
 
@@ -466,7 +489,7 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 									.getEjercicioContable().getEjercicio())) {
 
 						AsientoItem newAsientoItem = new AsientoItem();
-						newAsientoItem.setId(UUID.randomUUID().toString());
+						// newAsientoItem.setId(UUID.randomUUID().toString());
 						this.dtoBI.getBean().setId("XXX");
 						newAsientoItem.setAsiento(this.dtoBI.getBean());
 						newAsientoItem
@@ -478,15 +501,17 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 						newAsientoItem.setOrden(asientoItemTableUi.itemsBIC
 								.size() + 1);
 
-						newList.add(newAsientoItem);
-
+						this.sessionVar
+								.getCx()
+								.buildBO(AsientoItem.class)
+								.insert(newAsientoItem,
+										this.sessionVar.getUsuario());
+						asientoItemTableUi.reloadData();
 						// ------------------------------------------
 
 					}
 
 				}
-
-				asientoItemTableUi.reloadData(newList);
 
 			}
 
@@ -504,46 +529,8 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 			// getUI().addWindow(openFormAgregar().getWindow());
 			CuentaContableTableUi cuentaContableTableUi = (CuentaContableTableUi) WindowsFactory
 					.openWindow(this, CuentaContable.class, sessionVar);
-			cuentaContableTableUi.hsplit.setSplitPosition(20, Unit.PERCENTAGE);
+
 			cuentaContableTableUi.window.setModal(true);
-
-			VerticalLayout vl = new VerticalLayout();
-
-			Button seleccionarBTN = new Button();
-			seleccionarBTN.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-			seleccionarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-			seleccionarBTN.setCaption(">");
-
-			seleccionarBTN.addClickListener(e -> {
-				addCuentaContable(cuentaContableTableUi);
-
-			});
-
-			Button quitarBTN = new Button();
-			quitarBTN.addStyleName(ValoTheme.BUTTON_DANGER);
-			quitarBTN.addStyleName(ValoTheme.BUTTON_TINY);
-
-			quitarBTN.setCaption("<");
-
-			quitarBTN.addClickListener(e -> {
-				quitarBTNClick();
-			});
-
-			vl.addComponent(seleccionarBTN);
-			vl.addComponent(quitarBTN);
-
-			cuentaContableTableUi.gridRowHL.addComponent(vl);
-			cuentaContableTableUi.gridRowHL.setComponentAlignment(vl,
-					Alignment.MIDDLE_CENTER);
-
-			// ----------------------------------------------
-
-			asientoItemTableUi2 = new AsientoItemTableUi(sessionVar);
-			asientoItemTableUi2.gridRowHL.setWidth("100%");
-			asientoItemTableUi2.itemsGRD.setWidth("100%");
-
-			cuentaContableTableUi.gridRowHL
-					.addComponent(asientoItemTableUi2.itemsGRD);
 
 			HorizontalLayout barraDeHerramientasFila3 = new HorizontalLayout();
 			barraDeHerramientasFila3.setSpacing(true);
@@ -552,24 +539,27 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 			cuentaContableTableUi.rootVL.setComponentAlignment(
 					barraDeHerramientasFila3, Alignment.MIDDLE_CENTER);
 
-			List<AsientoItem> oldList = this.asientoItemTableUi.itemsBIC
-					.getItemIds();
-
-			List<AsientoItem> newList = new ArrayList<AsientoItem>();
-
-			for (AsientoItem oldItem : oldList) {
-				newList.add(oldItem);
-			}
-
-			this.asientoItemTableUi2.reloadData(newList);
-
 			// ----------------------------------------------
+
+			Button seleccionarBTN = new Button();
+			seleccionarBTN.addStyleName(ValoTheme.BUTTON_PRIMARY);
+			seleccionarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+			seleccionarBTN.setIcon(FontAwesome.CHECK_SQUARE_O);
+			seleccionarBTN.setCaption("Agregar ->");
+
+			seleccionarBTN.addClickListener(e -> {
+				addCuentaContable(cuentaContableTableUi);
+
+			});
+
+			barraDeHerramientasFila3.addComponent(seleccionarBTN);
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void addCuentaContable(CuentaContableTableUi cuentaContableTableUi) {
 		try {
 
@@ -581,7 +571,7 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 				if (cuentaContable != null) {
 
 					AsientoItem newAsientoItem = new AsientoItem();
-					newAsientoItem.setId(UUID.randomUUID().toString());
+					// newAsientoItem.setId(UUID.randomUUID().toString());
 					newAsientoItem.setAsiento(this.dtoBI.getBean());
 					newAsientoItem.setFecha(this.dtoBI.getBean().getFecha());
 					newAsientoItem.setCuentaContable(cuentaContable);
@@ -590,20 +580,12 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 					newAsientoItem
 							.setOrden(asientoItemTableUi.itemsBIC.size() + 1);
 
-					List<AsientoItem> oldList = this.asientoItemTableUi.itemsBIC
-							.getItemIds();
-
-					List<AsientoItem> newList = new ArrayList<AsientoItem>();
-
-					for (AsientoItem oldItem : oldList) {
-						newList.add(oldItem);
-					}
-
-					newList.add(newAsientoItem);
-
-					this.asientoItemTableUi.reloadData(newList);
-					this.asientoItemTableUi2.reloadData(newList);
-
+					this.sessionVar
+							.getCx()
+							.buildBO(AsientoItem.class)
+							.insert(newAsientoItem,
+									this.sessionVar.getUsuario());
+					asientoItemTableUi.reloadData();
 					// ------------------------------------------
 
 				}
@@ -653,6 +635,7 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void setCuentaContable(CuentaContableTableUi cuentaContableTableUi) {
 		try {
 
@@ -663,27 +646,18 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 
 				if (cuentaContable != null) {
 
-					List<AsientoItem> asientosItemOld = asientoItemTableUi.itemsBIC
-							.getItemIds();
-
-					List<AsientoItem> newList = new ArrayList<AsientoItem>();
-
-					AsientoItem itemUpdate = (AsientoItem) asientoItemTableUi.itemsGRD
+					AsientoItem asientoItem = (AsientoItem) asientoItemTableUi.itemsGRD
 							.getSelectedRow();
 
-					for (AsientoItem asientoItem : asientosItemOld) {
+					asientoItem.setAsiento(this.dtoBI.getBean());
+					asientoItem.setCuentaContable(cuentaContable);
 
-						if (itemUpdate.getId().equals(asientoItem.getId()) == true) {
-							asientoItem.setAsiento(this.dtoBI.getBean());
-							asientoItem.setCuentaContable(cuentaContable);
-						}
-
-						newList.add(asientoItem);
-					}
-
-					asientoItemTableUi.reloadData(newList);
-					sumDebeHaber();
-
+					this.sessionVar
+							.getCx()
+							.buildBO(AsientoItem.class)
+							.update(asientoItem, asientoItem.clone(),
+									this.sessionVar.getUsuario());
+					asientoItemTableUi.reloadData();
 					// ------------------------------------------
 
 				}
@@ -727,78 +701,20 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 
 				AsientoItem itemDelete = (AsientoItem) asientoItemTableUi.itemsGRD
 						.getSelectedRow();
+				try {
 
-				List<AsientoItem> asientosItemOld = asientoItemTableUi.itemsBIC
-						.getItemIds();
+					deleteItem(itemDelete);
 
-				List<AsientoItem> newList = new ArrayList<AsientoItem>();
-
-				for (AsientoItem asientoItem : asientosItemOld) {
-
-					if (itemDelete.getId().equals(asientoItem.getId()) == false) {
-						newList.add(asientoItem);
-					}
+				} catch (DeleteForeingObjectConflictException e) {
+					LogAndNotification.print(e, "Ítem " + itemDelete);
+					return;
 				}
 
-				asientoItemTableUi.reloadData(newList);
+				String msg = "Se eliminó con éxito el ítem " + itemDelete;
 
-				sumDebeHaber();
-			}
+				LogAndNotification.printSuccessOk(msg);
 
-		} catch (DeleteForeingObjectConflictException e) {
-			LogAndNotification.print(e, "Ítem");
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-	}
-
-	protected void quitarBTNClick() {
-		try {
-
-			if (asientoItemTableUi2.itemsGRD.getSelectedRow() != null) {
-
-				getUI().addWindow(
-						new YesNoDialog("Eliminar",
-								"Esta seguro de eliminar el ítem "
-										+ asientoItemTableUi2.itemsGRD
-												.getSelectedRow(),
-								new YesNoDialog.Callback() {
-									public void onDialogResult(boolean yes) {
-										if (yes) {
-											quitar();
-										}
-									}
-								}));
-			}
-
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-	}
-
-	private void quitar() {
-		try {
-
-			if (asientoItemTableUi2.itemsGRD.getSelectedRow() != null) {
-
-				AsientoItem itemDelete = (AsientoItem) asientoItemTableUi2.itemsGRD
-						.getSelectedRow();
-
-				List<AsientoItem> asientosItemOld = asientoItemTableUi2.itemsBIC
-						.getItemIds();
-
-				List<AsientoItem> newList = new ArrayList<AsientoItem>();
-
-				for (AsientoItem asientoItem : asientosItemOld) {
-
-					if (itemDelete.getId().equals(asientoItem.getId()) == false) {
-						newList.add(asientoItem);
-					}
-				}
-
-				asientoItemTableUi.reloadData(newList);
-				asientoItemTableUi2.reloadData(newList);
-
+				asientoItemTableUi.reloadData();
 				sumDebeHaber();
 			}
 
@@ -815,26 +731,8 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 	}
 
 	protected boolean updateBTNClick() {
-
-		try {
-			super.preInsertUpdate();
-
-		} catch (InvalidValueException e) {
-			LogAndNotification.print(e);
-			return false;
-		} catch (InsertDuplicateException e) {
-			LogAndNotification.print(e);
-			return false;
-		} catch (UniqueException e) {
-			LogAndNotification.print(e);
-			return false;
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-			return false;
-		}
-		if (fechaRevisionDF != null) {
-			this.dtoBI.getBean()._fechaRevision = fechaRevisionDF.getValue();
-		}
+		
+		this.dtoBI.getBean()._fechaRevision = fechaRevisionDF.getValue();
 
 		if (asientoItemTableUi.itemsBIC.size() == 0) {
 			LogAndNotification
@@ -862,25 +760,37 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 							"La fecha del asiento debe ser menor o igual a la fecha de cierre del ejercicio.");
 			return false;
 		}
+		
+		f = this.dtoBI.getBean()._fechaRevision;		
 
-		if (fechaRevisionDF != null) {
-			f = this.dtoBI.getBean()._fechaRevision;
+		if (f.compareTo(d) < 0) {
+			LogAndNotification
+					.printError(
+							dtoBI.getBean().toString(),
+							"La fecha del asiento debe ser mayor o igual a la fecha de apertura del ejercicio.");
+			return false;
+		}
+		if (f.compareTo(h) > 0) {
+			LogAndNotification
+					.printError(
+							dtoBI.getBean().toString(),
+							"La fecha del asiento debe ser menor o igual a la fecha de cierre del ejercicio.");
+			return false;
+		}
 
-			if (f.compareTo(d) < 0) {
-				LogAndNotification
-						.printError(
-								dtoBI.getBean().toString(),
-								"La fecha (revisión) del asiento debe ser mayor o igual a la fecha de apertura del ejercicio.");
-				return false;
-			}
-			if (f.compareTo(h) > 0) {
-				LogAndNotification
-						.printError(
-								dtoBI.getBean().toString(),
-								"La fecha (revisión) del asiento debe ser menor o igual a la fecha de cierre del ejercicio.");
-				return false;
+		if (this.dtoBI.getBean().getId() != null && update == false) {
+			mode = UPDATE_MODE;
+			try {
+				originalDTO = this.dtoBI.getBean().clone();
+			} catch (CloneNotSupportedException e) {
+				LogAndNotification.print(e);
 			}
 		}
+		return super.updateBTNClick();
+	}
+
+	@SuppressWarnings("unchecked")
+	protected boolean update() throws Exception {
 
 		BigDecimal dif = sumDebeHaber();
 
@@ -923,6 +833,14 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 
 			}
 
+			sessionVar
+					.getCx()
+					.buildBO(classModel)
+					.update(dtoBI.getBean(), originalDTO,
+							sessionVar.getUsuario());
+
+			return true;
+
 		} else {
 			LogAndNotification.printError(dtoBI.getBean().toString(),
 					"La suma del debe y la suma del haber, deben ser iguales. Diferencia "
@@ -931,17 +849,13 @@ public class AsientoFormUi extends StandardFormUi<Asiento> {
 			return false;
 		}
 
-		return super.updateBTNClick();
 	}
 
 	private void fechaRevisionCHKChange() {
 		fechaRevisionDF.setEnabled(fechaRevisionCHK.getValue());
-		DateField d = ((DateField) this.getComponentById("fecha"));
-		if (d.getValue() != null) {
-			fechaRevisionDF.setValue(sumarDiasAFecha(d.getValue(), 1));
-		}
-		if(fechaRevisionDF.isEnabled() == false){
-			fechaRevisionDF.setValue(null);
+		DateField d = ((DateField)this.getComponentById("fecha"));
+		if(d.getValue() != null){
+			fechaRevisionDF.setValue(sumarDiasAFecha(d.getValue(), 1));	
 		}
 	}
 

@@ -40,7 +40,7 @@ public class CentroDeCostoContable extends EntityId implements
 	@FieldColumnsAnont(value = 5)
 	@FieldMinValueIntegerAnont(value = 1)
 	@FieldMaxValueIntegerAnont(value = Short.MAX_VALUE)
-	@FieldColumnMetaDataAnont(attSize = 100, pidFilteringStart = true)
+	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[CENTRODECOSTOCONTABLE]", classAttDB = Integer.class)
 	@FieldAutoMaxValueAnont()
@@ -50,7 +50,7 @@ public class CentroDeCostoContable extends EntityId implements
 	@FieldRequiredAnont()
 	@FieldMaxLengthAnont(value = 30)
 	@FieldColumnsAnont(value = 30)
-	@FieldColumnMetaDataAnont(attSize = 300)
+	@FieldColumnMetaDataAnont(attSize = 200)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[NOMBRE]", classAttDB = String.class)
 	private String nombre;
@@ -59,7 +59,7 @@ public class CentroDeCostoContable extends EntityId implements
 	@FieldRequiredAnont()
 	@FieldMaxLengthAnont(value = 12)
 	@FieldColumnsAnont(value = 12)
-	@FieldColumnMetaDataAnont(attSize = 120)
+	@FieldColumnMetaDataAnont(attSize = 100)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[ABREVIATURA]", classAttDB = String.class)
 	private String abreviatura;

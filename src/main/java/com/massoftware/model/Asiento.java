@@ -1,7 +1,9 @@
 package com.massoftware.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInPluralAnont;
 import com.massoftware.frontend.custom.windows.builder.annotation.ClassArticleLabelInTheSingularAnont;
@@ -60,6 +62,8 @@ public class Asiento extends EntityId implements Comparable<Asiento> {
 	// @FieldTimestamp()
 	// @FieldUniqueAnont()
 	private Date fecha;
+	
+	public Date _fechaRevision;
 
 	@FieldLabelAnont(value = "Comprobante")
 	// @FieldRequiredAnont()
@@ -125,14 +129,37 @@ public class Asiento extends EntityId implements Comparable<Asiento> {
 	@FieldNameMSAnont(nameAttDB = "[MINUTACONTABLE]", classAttDB = Integer.class)
 	private MinutaContable minutaContable;
 
-	// @FieldLabelAnont(value = "Abr.")
-	// // @FieldRequiredAnont()
-	// @FieldMaxLengthAnont(value = 5)
-	// @FieldColumnsAnont(value = 5)
-	// @FieldColumnMetaDataAnont(attSize = 70)
-	// // @FieldUniqueAnont()
-	// //@FieldNameMSAnont(nameAttDB = "[DETALLE]", classAttDB = String.class)
-	// private String comprobanteAbreviatura;
+	@FieldLabelAnont(value = "Tipo Comprobante Id")
+	// @FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 5)
+	@FieldColumnsAnont(value = 5)
+	@FieldMinValueIntegerAnont(value = 0)
+	@FieldMaxValueIntegerAnont(value = Short.MAX_VALUE)
+	@FieldColumnMetaDataAnont(hidden = true)
+	// @FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[tipoid]", classAttDB = Integer.class)
+	// @FieldAutoMaxValueAnont()
+	@FieldReadOnly()
+	@FieldNotVisibleInsert()
+	@FieldNotVisibleCopy()
+	private Integer tipoComprobanteId;
+
+	@FieldLabelAnont(value = "Nro. Comprobante Id")
+	// @FieldRequiredAnont()
+	@FieldMaxLengthAnont(value = 5)
+	@FieldColumnsAnont(value = 10)
+	@FieldMinValueIntegerAnont(value = 0)
+	@FieldMaxValueIntegerAnont(value = Integer.MAX_VALUE)
+	@FieldColumnMetaDataAnont(hidden = true)
+	// @FieldUniqueAnont()
+	@FieldNameMSAnont(nameAttDB = "[numeroid]", classAttDB = Integer.class)
+	// @FieldAutoMaxValueAnont()
+	@FieldReadOnly()
+	@FieldNotVisibleInsert()
+	@FieldNotVisibleCopy()
+	private Integer nroComprobanteId;
+
+	public List<AsientoItem> _items = new ArrayList<AsientoItem>();
 
 	public Integer getNumero() {
 		return numero;
@@ -220,13 +247,21 @@ public class Asiento extends EntityId implements Comparable<Asiento> {
 		this.minutaContable = minutaContable;
 	}
 
-	// public String getComprobanteAbreviatura() {
-	// return comprobanteAbreviatura;
-	// }
-	//
-	// public void setComprobanteAbreviatura(String comprobanteAbreviatura) {
-	// this.comprobanteAbreviatura = comprobanteAbreviatura;
-	// }
+	public Integer getTipoComprobanteId() {
+		return tipoComprobanteId;
+	}
+
+	public void setTipoComprobanteId(Integer tipoComprobanteId) {
+		this.tipoComprobanteId = tipoComprobanteId;
+	}
+
+	public Integer getNroComprobanteId() {
+		return nroComprobanteId;
+	}
+
+	public void setNroComprobanteId(Integer nroComprobanteId) {
+		this.nroComprobanteId = nroComprobanteId;
+	}
 
 	@Override
 	public String toString() {

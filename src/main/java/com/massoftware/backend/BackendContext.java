@@ -79,7 +79,6 @@ import com.massoftware.model.CodigoConvenioMultilateral;
 import com.massoftware.model.CostoDeVenta;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaContableEstado;
-import com.massoftware.model.CuentaContableFull;
 import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.CuentaDeFondoA;
 import com.massoftware.model.CuentaDeFondoGrupo;
@@ -369,8 +368,7 @@ public class BackendContext extends AbstractContext {
 
 				return new CostoDeVentaBO(dataSourceWrapper, this);
 
-			} else if (classModel == CuentaContable.class
-					|| classModel == CuentaContableFull.class) {
+			} else if (classModel == CuentaContable.class) {
 
 				return new CuentaContableBO(dataSourceWrapper, this);
 

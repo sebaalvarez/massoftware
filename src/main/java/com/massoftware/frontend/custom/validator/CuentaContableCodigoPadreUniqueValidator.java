@@ -4,7 +4,6 @@ import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.CuentaContableBO;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.CuentaContable;
-import com.massoftware.model.CuentaContableFull;
 import com.massoftware.util.FormatCuentaContableCodigoCuenta;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
@@ -18,9 +17,9 @@ public class CuentaContableCodigoPadreUniqueValidator extends
 	private static final long serialVersionUID = -2108700714465550165L;
 	private BackendContext cx;
 
-	protected BeanItem<CuentaContableFull> cuentaContableBI;
+	protected BeanItem<CuentaContable> cuentaContableBI;
 
-	public CuentaContableCodigoPadreUniqueValidator(BackendContext cx, BeanItem<CuentaContableFull> cuentaContableBI) {
+	public CuentaContableCodigoPadreUniqueValidator(BackendContext cx, BeanItem<CuentaContable> cuentaContableBI) {
 		super("");
 		this.cx = cx;
 		this.cuentaContableBI = cuentaContableBI;

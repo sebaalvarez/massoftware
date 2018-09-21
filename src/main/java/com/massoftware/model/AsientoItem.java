@@ -164,18 +164,30 @@ public class AsientoItem extends EntityId implements Comparable<AsientoItem> {
 	}
 
 	public BigDecimal getDebe() {
+		if(debe == null){
+			debe = new BigDecimal("0.0");
+		}
 		return debe;
 	}
 
 	public void setDebe(BigDecimal debe) {
+		if(debe == null){
+			debe = new BigDecimal("0.0");
+		}
 		this.debe = debe;
 	}
 
 	public BigDecimal getHaber() {
+		if(haber == null){
+			haber = new BigDecimal("0.0");
+		}
 		return haber;
 	}
 
 	public void setHaber(BigDecimal haber) {
+		if(haber == null){
+			haber = new BigDecimal("0.0");
+		}
 		this.haber = haber;
 	}
 
@@ -240,26 +252,26 @@ public class AsientoItem extends EntityId implements Comparable<AsientoItem> {
 
 		super.validate();
 
-		if (this.asiento == null) {
-
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".asiento es nulo.");
-		} else {
-			// this.asientoModelo.validate(); // recusivo no hacer
-		}
-
-		if (this.cuentaContable == null) {
-
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".cuentaContable es nulo.");
-		} else {
-			this.cuentaContable.validate();
-		}
-
-		if (this.registro == null) {
-			throw new IllegalArgumentException(this.getClass()
-					.getCanonicalName() + ".registro es nulo.");
-		}
+//		if (this.asiento == null) {
+//
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".asiento es nulo.");
+//		} else {
+//			// this.asientoModelo.validate(); // recusivo no hacer
+//		}
+//
+//		if (this.cuentaContable == null) {
+//
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".cuentaContable es nulo.");
+//		} else {
+//			this.cuentaContable.validate();
+//		}
+//
+//		if (this.registro == null) {
+//			throw new IllegalArgumentException(this.getClass()
+//					.getCanonicalName() + ".registro es nulo.");
+//		}
 
 		return true;
 	}

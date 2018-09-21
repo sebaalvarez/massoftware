@@ -6,10 +6,13 @@ import java.util.List;
 
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.custom.windows.ControlFactory;
+import com.massoftware.frontend.custom.windows.AsientoFormUi;
+import com.massoftware.frontend.custom.windows.StandardFormUi;
+import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.model.CentroDeCostoContable;
+import com.massoftware.model.CostoDeVenta;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.MotivoNotaDeCredito;
@@ -21,7 +24,10 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.Command;
+import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class ContabilidadGeneralMenu extends AbstractMenu {
@@ -68,7 +74,7 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 		final MenuBar.MenuItem a7 = menubar.addItem("Ayuda", null);
 
 		a2.setEnabled(false);
-//		a3.setEnabled(false);
+		// a3.setEnabled(false);
 		a4.setEnabled(false);
 		a5.setEnabled(false);
 		a6.setEnabled(false);
@@ -88,8 +94,8 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 		a1.addItem("Especificar impresora ...", open(MotivoNotaDeCredito.class))
 				.setEnabled(false);
 
-		// asientos.addItem("Nuevo asiento ...", null);
-		 a3.addItem("Asientos realizados ...", open(Asiento.class));		 
+		a3.addItem("Nuevo asiento ...", openNewAsiento());
+		a3.addItem("Asientos realizados ...", open(Asiento.class));
 		// asientos.addItem("Lotes de asientos importados ...", null);
 		// asientos.addItem("Anulación de asientos ...", null);
 
@@ -166,7 +172,7 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 		ejerciciosContablesBIC = new BeanItemContainer<EjercicioContable>(
 				EjercicioContable.class, new ArrayList<EjercicioContable>());
 
-		filtroEjercicioCBX = ControlFactory.buildCB();
+		filtroEjercicioCBX = new ComboBox(); // ControlFactory.buildCB();
 		// filtroEjercicioCBX.setCaption("Ejercicio");
 		filtroEjercicioCBX.setDescription("Ejercicio");
 		// filtroEjercicioCBX.setRequired(true);
@@ -207,29 +213,117 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 				ejercicioContable = ejerciciosContablesBIC.getIdByIndex(0);
 				filtroEjercicioCBX.setValue(ejercicioContable);
 			}
+
+			sessionVar.setEjercicioContable(ejercicioContable);
+
 		}
 
 		row.addComponent(filtroEjercicioCBX);
 
+		filtroEjercicioCBX.addValueChangeListener(e -> {
+			filtroEjercicioCBXCBXValueChange();
+		});
+
 		return row;
 	}
 
-	// private void changeEjercicioContableDefault() {
-	// try {
-	//
-	// EjercicioContable ejercicioContableDefault = (EjercicioContable)
-	// filtroEjercicioCBX
-	// .getValue();
-	//
-	// //
-	// sessionVar.getUsuario().setEjercicioContable(ejercicioContableDefault);
-	//
-	// // usuarioBO.update(sessionVar.getUsuario(), (Usuario) sessionVar
-	// // .getUsuario().clone(), sessionVar.getUsuario());
-	//
-	// } catch (Exception e) {
-	// LogAndNotification.print(e);
-	// }
-	// }
+	private void filtroEjercicioCBXCBXValueChange() {
+		try {
+
+			sessionVar
+					.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
+							.getValue());
+
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
+
+	protected Command openNewAsiento() {
+
+		return new Command() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 4645387020070455569L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+
+				try {
+
+					Window window = new Window();
+
+					window.setImmediate(true);
+					window.setWidth("-1px");
+					window.setHeight("-1px");
+					window.setClosable(true);
+					window.setResizable(false);
+					window.setModal(true);
+					window.center();
+					window.setContent(openFormAgregar());
+					window.setCaption("Agregar asiento contable");
+					window.center();
+					getThis().getUI().addWindow(window);
+
+				} catch (Exception e) {
+					LogAndNotification.print(e);
+				}
+
+			}
+		};
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected StandardFormUi openFormAgregar() throws Exception {
+
+		Asiento item = Asiento.class.newInstance();
+
+		item.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
+				.getValue());
+
+		// if (item.getEjercicioContable() != null) {
+		// item.getEjercicioContable()._setfullToString(true);
+		// }
+
+		AsientoFormUi form = new AsientoFormUi(sessionVar,
+				StandardFormUi.INSERT_MODE, null, item);
+
+		// form.setMaxValues();
+
+		// ----------------------------------
+
+		// ComboBox ejercicioContableCBX = (ComboBox) form
+		// .getComponentById("ejercicioContable");
+
+		// BeanItemContainer<EjercicioContable> bicEjercicioContable =
+		// (BeanItemContainer<EjercicioContable>) ejercicioContableCBX
+		// .getContainerDataSource();
+
+		// if (bicEjercicioContable.size() > 0) {
+		// for (int i = 0; i < bicEjercicioContable.size(); i++) {
+		// bicEjercicioContable.getIdByIndex(i)._setfullToString(true);
+		// }
+		//
+		// }
+
+		// ----------------------------------
+
+		ComboBox minutaContableCBX = (ComboBox) form
+				.getComponentById("minutaContable");
+
+		if (form.dtoBI.getBean().getMinutaContable() == null) {
+
+			BeanItemContainer bic = (BeanItemContainer<CostoDeVenta>) minutaContableCBX
+					.getContainerDataSource();
+
+			if (bic.size() > 0) {
+				minutaContableCBX.setValue(bic.getIdByIndex(5));
+			}
+		}
+
+		return form;
+
+	}
 
 }

@@ -6,18 +6,17 @@ import java.util.List;
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.custom.windows.builder.BuilderXMD;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Entity;
 import com.massoftware.model.PuntoDeEquilibrio;
+import com.massoftware.model.PuntoDeEquilibrioTipo;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Window;
 
-class PuntoDeEquilibrioTableUi extends
-		StandardTableUi<PuntoDeEquilibrio> {
+class PuntoDeEquilibrioTableUi extends StandardTableUi<PuntoDeEquilibrio> {
 
 	/**
 	 * 
@@ -31,8 +30,9 @@ class PuntoDeEquilibrioTableUi extends
 			StandarTableUiToolbarConf toolbarConf, Window window,
 			SessionVar sessionVar, Class<PuntoDeEquilibrio> classModel,
 			StandarTableUiFilteringSet filteringSet) {
-		super(pagedConf, toolbarConf, window, sessionVar, classModel,
-				filteringSet);
+
+		super(new StandarTableUiPagedConf(false, false, false), toolbarConf,
+				window, sessionVar, classModel, filteringSet);
 
 		ejercicioCBXValueChange();
 
@@ -50,6 +50,7 @@ class PuntoDeEquilibrioTableUi extends
 		filtroEjercicioCBX.setRequired(true);
 		filtroEjercicioCBX.setNullSelectionAllowed(false);
 		filtroEjercicioCBX.setContainerDataSource(ejerciciosContablesBIC);
+		filtroEjercicioCBX.setEnabled(false);
 
 		filaFiltro1HL.addComponent(filtroEjercicioCBX, 0);
 		filaFiltro1HL.setComponentAlignment(filtroEjercicioCBX,
@@ -67,22 +68,15 @@ class PuntoDeEquilibrioTableUi extends
 
 		if (ejerciciosContablesBIC.size() > 0) {
 
-			// EjercicioContable ejercicioContable = usuario
-			// .getEjercicioContable();
-
-			EjercicioContable ejercicioContable = ejercicioContableBO
-					.findDefaultEjercicioContable();
-
+			EjercicioContable ejercicioContable = this.sessionVar
+					.getEjercicioContable();
 			if (ejercicioContable != null
 					&& ejercicioContable.getEjercicio() != null) {
 
 				filtroEjercicioCBX.setValue(ejercicioContable);
 
 			} else {
-				// EjercicioContable maxEjercicioContable =
-				// ejercicioContableBO
-				// .findMaxEjercicio();
-				// ejercicioContableCB.setValue(maxEjercicioContable);
+
 				ejercicioContable = ejerciciosContablesBIC.getIdByIndex(0);
 				filtroEjercicioCBX.setValue(ejercicioContable);
 			}
@@ -105,15 +99,18 @@ class PuntoDeEquilibrioTableUi extends
 
 	}
 
-	protected List<PuntoDeEquilibrio> reloadDataList() throws Exception {
+	protected List<PuntoDeEquilibrio> reloadDataList(String orderBy,
+			String where, Object value, int limit, int offset) throws Exception {
 
 		return ((PuntoDeEquilibrioBO) sessionVar.getCx().buildBO(classModel))
-				.findAll((EjercicioContable) filtroEjercicioCBX.getValue());
+				.findAll(orderBy,
+						(EjercicioContable) filtroEjercicioCBX.getValue());
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected StandardFormUi openFormAgregar() throws Exception {
+	@SuppressWarnings("unchecked")
+	protected StandardFormUi<PuntoDeEquilibrio> openFormAgregar()
+			throws Exception {
 
 		PuntoDeEquilibrio item = PuntoDeEquilibrio.class.newInstance();
 
@@ -125,13 +122,24 @@ class PuntoDeEquilibrioTableUi extends
 
 		form.setMaxValues();
 
+		ComboBox puntoDeEquilibrioTipoCBX = (ComboBox) form
+				.getComponentById("puntoDeEquilibrioTipo");
+		BeanItemContainer<PuntoDeEquilibrioTipo> puntosDeEquilibrioTipoBIC = (BeanItemContainer<PuntoDeEquilibrioTipo>) puntoDeEquilibrioTipoCBX
+				.getContainerDataSource();
+		if (puntosDeEquilibrioTipoBIC.size() > 0) {
+			PuntoDeEquilibrioTipo puntoDeEquilibrioTipo = puntosDeEquilibrioTipoBIC
+					.getIdByIndex(0);
+			puntoDeEquilibrioTipoCBX.setValue(puntoDeEquilibrioTipo);
+		}
+
+		form.getComponentById("ejercicioContable").setEnabled(false);
+
 		return form;
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected StandardFormUi openFormCopiar(PuntoDeEquilibrio item)
-			throws Exception {
+	protected StandardFormUi<PuntoDeEquilibrio> openFormCopiar(
+			PuntoDeEquilibrio item) throws Exception {
 
 		PuntoDeEquilibrio o = (PuntoDeEquilibrio) ((Entity) item).copy();
 
@@ -143,8 +151,21 @@ class PuntoDeEquilibrioTableUi extends
 
 		form.setMaxValues();
 
+		form.getComponentById("ejercicioContable").setEnabled(false);
+
 		return form;
 
+	}
+
+	protected StandardFormUi<PuntoDeEquilibrio> openFormModificar(
+			PuntoDeEquilibrio item) throws Exception {
+
+		StandardFormUi<PuntoDeEquilibrio> form = new StandardFormUi<PuntoDeEquilibrio>(
+				sessionVar, classModel, StandardFormUi.UPDATE_MODE, this, item);
+
+		form.getComponentById("ejercicioContable").setEnabled(false);
+
+		return form;
 	}
 
 }

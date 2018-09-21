@@ -40,7 +40,7 @@ public class PuntoDeEquilibrio extends EntityId implements
 	@FieldColumnsAnont(value = 5)
 	@FieldMinValueIntegerAnont(value = 1)
 	@FieldMaxValueIntegerAnont(value = Short.MAX_VALUE)
-	@FieldColumnMetaDataAnont(attSize = 100, pidFilteringStart = true)
+	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[PUNTODEEQUILIBRIO]", classAttDB = Integer.class)
 	@FieldAutoMaxValueAnont()
@@ -50,15 +50,15 @@ public class PuntoDeEquilibrio extends EntityId implements
 	@FieldRequiredAnont()
 	@FieldMaxLengthAnont(value = 30)
 	@FieldColumnsAnont(value = 30)
-	@FieldColumnMetaDataAnont(attSize = 300)
+	@FieldColumnMetaDataAnont(attSize = 200)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[NOMBRE]", classAttDB = String.class)
 	private String nombre;
 
 	@FieldLabelAnont(value = "Tipo")
 	@FieldRequiredAnont()
-	@FieldColumnMetaDataAnont(attSize = 250)
-	@FieldSubNameFKAnont(value = "puntoDeEquilibrioTipo")
+	@FieldColumnMetaDataAnont(attSize = 200)
+	@FieldSubNameFKAnont(value = "codigo")
 	private PuntoDeEquilibrioTipo puntoDeEquilibrioTipo;
 
 	// public PuntoDeEquilibrio(Object[] row) {

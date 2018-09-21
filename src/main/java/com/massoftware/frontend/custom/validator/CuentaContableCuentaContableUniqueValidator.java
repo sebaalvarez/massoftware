@@ -4,7 +4,6 @@ import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.CuentaContableBO;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.CuentaContable;
-import com.massoftware.model.CuentaContableFull;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
 
@@ -17,24 +16,27 @@ public class CuentaContableCuentaContableUniqueValidator extends
 	private static final long serialVersionUID = -2108700714465550165L;
 	private BackendContext cx;
 
-	protected BeanItem<CuentaContableFull> cuentaContableBI;
+	protected BeanItem<CuentaContable> cuentaContableBI;
 	protected String cuentaContableOriginal;
 
 	public CuentaContableCuentaContableUniqueValidator(BackendContext cx,
-			BeanItem<CuentaContableFull> cuentaContableBI) {
+			BeanItem<CuentaContable> cuentaContableBI) {
 		super("");
 		this.cx = cx;
 		this.cuentaContableBI = cuentaContableBI;
 	}
 
 	public CuentaContableCuentaContableUniqueValidator(BackendContext cx,
-			BeanItem<CuentaContableFull> cuentaContableBI,
+			BeanItem<CuentaContable> cuentaContableBI,
 			String cuentaContableOriginal) {
 		super("");
 		this.cx = cx;
 		this.cuentaContableBI = cuentaContableBI;
-		this.cuentaContableOriginal = cuentaContableOriginal.trim()
-				.toLowerCase();
+		if (cuentaContableOriginal != null) {
+			this.cuentaContableOriginal = cuentaContableOriginal.trim()
+					.toLowerCase();
+		}
+
 	}
 
 	/**
@@ -62,10 +64,11 @@ public class CuentaContableCuentaContableUniqueValidator extends
 						+ cuentaContableBI.getBean().getEjercicioContable()
 						+ ") " + cuentaContable + "");
 
-				boolean b = ((CuentaContableBO)cx.buildBO(CuentaContable.class)).checkUniqueCuentaContable(
-						cuentaContable,
-						cuentaContableBI.getBean().getEjercicioContable()
-								.getEjercicio());
+				boolean b = ((CuentaContableBO) cx
+						.buildBO(CuentaContable.class))
+						.checkUniqueCuentaContable(cuentaContable,
+								cuentaContableBI.getBean()
+										.getEjercicioContable().getEjercicio());
 
 				if (b == true) {
 					return false;

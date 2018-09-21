@@ -110,7 +110,7 @@ public class StandardFormUi<T> extends CustomComponent {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void init(SessionVar sessionVar, Class<T> classModel, String mode,
+	protected void init(SessionVar sessionVar, Class<T> classModel, String mode,
 			StandardTableUi tableUi, T object) {
 		try {
 
@@ -158,6 +158,19 @@ public class StandardFormUi<T> extends CustomComponent {
 
 				}
 
+			});
+			
+			this.addShortcutListener(new ShortcutListener("DELETE", KeyCode.DELETE,
+					new int[] {}) {
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void handleAction(Object sender, Object target) {
+					if (target instanceof TextField && ((TextField)target).isEnabled() && ((TextField)target).isReadOnly() == false) {
+						((TextField)target).setValue(null);
+					}
+				}
 			});
 
 		} catch (Exception e) {
@@ -226,7 +239,8 @@ public class StandardFormUi<T> extends CustomComponent {
 
 		if (dto != null && dto instanceof Entity) {
 
-			originalDTO = ((Entity) dto).clone();
+			originalDTO = ((Entity) dto).clone();			
+			
 		}
 
 		// ======================================================================
@@ -322,15 +336,15 @@ public class StandardFormUi<T> extends CustomComponent {
 	protected void buildBodyControls() throws Exception {
 
 		String formSource = getFormSource();
-		
+
 		if (formSource != null && formSource.trim().length() > 0) {
 
 			rootVL.addComponent(BuilderXMD.loadModel(window, controls,
 					sessionVar.getUsuario(), sessionVar.getCx(),
 					formSource.trim(), dtoBI, originalDTO, mode));
-			
+
 		} else {
-			
+
 			ComponentXMD rootVLXMD = new ComponentXMD(ComponentXMD.VL);
 			rootVLXMD.setClassModel(classModel);
 
@@ -347,8 +361,15 @@ public class StandardFormUi<T> extends CustomComponent {
 
 	// EVTs LISTENERS ===================================================
 
-	private void updateBTNClick() {
+	protected boolean updateBTNClick() {
+		return updateBTNClick(true);
+	}
+	
+	protected boolean updateBTNClick(boolean exit) {
 		try {
+
+			String m = null;
+			boolean ok = true;
 
 			preInsertUpdate();
 
@@ -357,45 +378,69 @@ public class StandardFormUi<T> extends CustomComponent {
 
 				preInsert();
 
-				insert();
+				ok = insert();
 
 				if (INSERT_MODE.equalsIgnoreCase(mode)) {
-					LogAndNotification
-							.printSuccessOk("El item se agregó con éxito, "
-									+ dtoLabel + " : " + dtoBI.getBean() + ".");
+					m = "El item se agregó con éxito, " + dtoLabel + " : "
+							+ dtoBI.getBean() + ".";
 
 				} else {
 
-					LogAndNotification
-							.printSuccessOk("El item se copió con éxito, "
-									+ dtoLabel + " : " + dtoBI.getBean() + ".");
+					m = "El item se copió con éxito, " + dtoLabel + " : "
+							+ dtoBI.getBean() + ".";
 				}
 
-				postInsert();
+				if (ok) {
+					postInsert();
+
+					postInsertUpdate();
+
+					LogAndNotification.printSuccessOk(m);
+
+					if(exit){
+						exit();	
+					}
+				}
 
 			} else {
+
 				preUpdate();
 
-				update();
+				ok = update();
 
-				LogAndNotification
-						.printSuccessOk("El item se modificó con éxito, "
-								+ dtoLabel + " : " + dtoBI.getBean() + ".");
-				postUpdate();
+				if (ok) {
+					m = "El item se modificó con éxito, " + dtoLabel + " : "
+							+ dtoBI.getBean() + ".";
+
+					postUpdate();
+
+					postInsertUpdate();
+
+					LogAndNotification.printSuccessOk(m);
+					
+					if(exit){
+						exit();	
+					}
+
+					
+				}
+
 			}
-
-			postInsertUpdate();
-
-			exit();
+			
+			return true;
 
 		} catch (InvalidValueException e) {
-			LogAndNotification.print(e);
+			LogAndNotification.print(e);			
+			return false;
 		} catch (InsertDuplicateException e) {
-			LogAndNotification.print(e);
+			LogAndNotification.print(e);			
+			return false;
 		} catch (UniqueException e) {
 			LogAndNotification.print(e);
+			return false;
 		} catch (Exception e) {
 			LogAndNotification.print(e);
+			return false;
 		}
 
 	}
@@ -444,15 +489,18 @@ public class StandardFormUi<T> extends CustomComponent {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void insert() throws Exception {
+	protected boolean insert() throws Exception {
 		sessionVar.getCx().buildBO(classModel)
 				.insert(dtoBI.getBean(), sessionVar.getUsuario());
+		return true;
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void update() throws Exception {
+	protected boolean update() throws Exception {
 		sessionVar.getCx().buildBO(classModel)
 				.update(dtoBI.getBean(), originalDTO, sessionVar.getUsuario());
+
+		return true;
 	}
 
 	protected void postInsert() throws Exception {

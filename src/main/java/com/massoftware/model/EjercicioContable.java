@@ -35,7 +35,7 @@ public class EjercicioContable extends EntityId implements
 	@FieldMaxLengthAnont(value = 4)
 	@FieldMinValueIntegerAnont(value = 1990)
 	@FieldMaxValueIntegerAnont(value = 2030)
-	@FieldColumnMetaDataAnont(attSize = 80, pidFilteringStart = true, simpleStringTraslateFilterMode = "ENDS_WITCH", ascOrderByStart = false)
+	@FieldColumnMetaDataAnont(attSize = 50, pidFilteringStart = true, simpleStringTraslateFilterMode = "ENDS_WITCH", ascOrderByStart = false)
 	@FieldUniqueAnont()
 	@FieldNameMSAnont(nameAttDB = "[EJERCICIO]", classAttDB = Integer.class)
 	@FieldAutoMaxValueAnont()
@@ -44,23 +44,23 @@ public class EjercicioContable extends EntityId implements
 
 	@FieldLabelAnont(value = "Apertura")
 	@FieldRequiredAnont()
-	@FieldColumnMetaDataAnont(attSize = 150)
+	@FieldColumnMetaDataAnont(attSize = 80)
 	@FieldNameMSAnont(nameAttDB = "[FECHAAPERTURASQL]", classAttDB = Date.class)
 	private Date fechaApertura;
 
 	@FieldLabelAnont(value = "Cierre")
 	@FieldRequiredAnont()
-	@FieldColumnMetaDataAnont(attSize = 150)
+	@FieldColumnMetaDataAnont(attSize = 80)
 	@FieldNameMSAnont(nameAttDB = "[FECHACIERRESQL]", classAttDB = Date.class)
 	private Date fechaCierre;
 
 	@FieldLabelAnont(value = "Cerrado")
-	@FieldColumnMetaDataAnont(attSize = 150)
+	@FieldColumnMetaDataAnont(attSize = 70)
 	@FieldNameMSAnont(nameAttDB = "[EJERCICIOCERRADO]", classAttDB = Boolean.class)
 	private Boolean ejercicioCerrado;
 
 	@FieldLabelAnont(value = "Módulos")
-	@FieldColumnMetaDataAnont(attSize = 150)
+	@FieldColumnMetaDataAnont(attSize = 70)
 	@FieldNameMSAnont(nameAttDB = "[EJERCICIOCERRADOMODULOS]", classAttDB = Boolean.class)
 	private Boolean ejercicioCerradoModulos;
 

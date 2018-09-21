@@ -11,7 +11,7 @@
               "type": "VerticalLayout",              
               "width": "500px",          
               "caption": "General",
-              "classModel": "com.massoftware.model.CuentaContableFull",
+              "classModel": "com.massoftware.model.CuentaContable",
               "attsNames": [
                 "ejercicioContable",
                 "codigoCuentaPadre",
@@ -31,7 +31,7 @@
               "id":"pestaniaCC",
               "width": "500px",          
               "caption": "Centro de costos",
-              "classModel": "com.massoftware.model.CuentaContableFull",
+              "classModel": "com.massoftware.model.CuentaContable",
               "attsNames": [
                 "centroDeCostoContable",
                 "cuentaAgrupadora",
@@ -46,7 +46,7 @@
               "type": "VerticalLayout",
               "width": "500px",          
               "caption": "Seguridad",
-              "classModel": "com.massoftware.model.CuentaContableFull",
+              "classModel": "com.massoftware.model.CuentaContable",
               "attsNames": [
                 "seguridadPuerta"
               ]

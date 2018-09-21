@@ -12,6 +12,16 @@ public class Pruebas {
 
 	public static void main(String[] args) throws Exception {
 		
+		BigDecimal a = new BigDecimal(0);
+		BigDecimal x = new BigDecimal(1);
+		BigDecimal c = new BigDecimal(-1);
+		
+		System.err.println(a + " --------- " + (a.compareTo(BigDecimal.ZERO)) ) ;
+		System.err.println(x + " --------- " + (x.compareTo(BigDecimal.ZERO)) ) ;
+		System.err.println(c + " --------- " + (c.compareTo(BigDecimal.ZERO)) ) ;
+		
+		System.exit(0);
+		
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		System.out.println(t);
 		Date d = new Date(t.getTime());

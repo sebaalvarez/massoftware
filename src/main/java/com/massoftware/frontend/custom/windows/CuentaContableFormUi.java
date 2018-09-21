@@ -16,7 +16,6 @@ import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CostoDeVenta;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.CuentaContableEstado;
-import com.massoftware.model.CuentaContableFull;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.vaadin.data.Property;
@@ -31,8 +30,8 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-class CuentaContableFullFormUi extends
-		StandardFormUi<CuentaContableFull> {
+class CuentaContableFormUi extends
+		StandardFormUi<CuentaContable> {
 
 	/**
 	 * 
@@ -51,46 +50,49 @@ class CuentaContableFullFormUi extends
 	private ComboBox cuentaContableEstadoCBX;
 	private ComboBox costoDeVentaCBX;
 
-	private ComboBox filtroEjercicioCBX;
+	private ComboBox ejercicioCBX;
 	private BeanItemContainer<EjercicioContable> ejerciciosContablesBIC;
 
-	private ComboBox filtroCentroDeCostoContableCBX;
+	private ComboBox centroDeCostoContableCBX;
 	protected BeanItemContainer<CentroDeCostoContable> centrosDeCostosContablesBIC;
 
-	private ComboBox filtroPuntoDeEquilibrioCBX;
+	private ComboBox puntoDeEquilibrioCBX;
 	protected BeanItemContainer<PuntoDeEquilibrio> puntosDeEquilibrioBIC;
 
-	protected CuentaContableFullFormUi(SessionVar sessionVar, String mode,
-			CuentaContableFull object) {
-		super(sessionVar, CuentaContableFull.class, mode, object);
+	protected CuentaContableFormUi(SessionVar sessionVar, String mode,
+			CuentaContable object) {
+		super(sessionVar, CuentaContable.class, mode, object);
 		start();
 	}
 
 	@SuppressWarnings("rawtypes")
-	protected CuentaContableFullFormUi(SessionVar sessionVar, String mode,
-			StandardTableUi tableUi, CuentaContableFull objectClone,
-			CuentaContableFull object) {
-		super(sessionVar, CuentaContableFull.class, mode, tableUi, objectClone,
+	protected CuentaContableFormUi(SessionVar sessionVar, String mode,
+			StandardTableUi tableUi, CuentaContable objectClone,
+			CuentaContable object) {
+		
+		super(sessionVar, CuentaContable.class, mode, tableUi, objectClone,
 				object);
 		start();
 	}
 
 	@SuppressWarnings("rawtypes")
-	protected CuentaContableFullFormUi(SessionVar sessionVar, String mode,
-			StandardTableUi tableUi, CuentaContableFull objectClone) {
-		super(sessionVar, CuentaContableFull.class, mode, tableUi, objectClone);
+	protected CuentaContableFormUi(SessionVar sessionVar, String mode,
+			StandardTableUi tableUi, CuentaContable objectClone) {
+		
+		super(sessionVar, CuentaContable.class, mode, tableUi, objectClone);
 		start();
 	}
 
 	@SuppressWarnings("rawtypes")
-	protected CuentaContableFullFormUi(SessionVar sessionVar, String mode,
+	protected CuentaContableFormUi(SessionVar sessionVar, String mode,
 			StandardTableUi tableUi) {
-		super(sessionVar, CuentaContableFull.class, mode, tableUi);
+		
+		super(sessionVar, CuentaContable.class, mode, tableUi);
 		start();
 	}
 
-	protected CuentaContableFullFormUi(SessionVar sessionVar, String mode) {
-		super(sessionVar, CuentaContableFull.class, mode);
+	protected CuentaContableFormUi(SessionVar sessionVar, String mode) {
+		super(sessionVar, CuentaContable.class, mode);
 		start();
 	}
 
@@ -108,17 +110,17 @@ class CuentaContableFullFormUi extends
 		cuentaContableTXT = (TextField) getComponentById("cuentaContable");
 		cuentaAgrupadoraTXT = (TextField) getComponentById("cuentaAgrupadora");
 		porcentajeTXT = (TextField) getComponentById("porcentaje");
-		filtroEjercicioCBX = (ComboBox) getComponentById("ejercicioContable");
-		filtroCentroDeCostoContableCBX = (ComboBox) getComponentById("centroDeCostoContable");
-		filtroPuntoDeEquilibrioCBX = (ComboBox) getComponentById("puntoDeEquilibrio");
+		ejercicioCBX = (ComboBox) getComponentById("ejercicioContable");
+		centroDeCostoContableCBX = (ComboBox) getComponentById("centroDeCostoContable");
+		puntoDeEquilibrioCBX = (ComboBox) getComponentById("puntoDeEquilibrio");
 		cuentaContableEstadoCBX = (ComboBox) getComponentById("cuentaContableEstado");
 		costoDeVentaCBX = (ComboBox) getComponentById("costoDeVenta");
 
-		ejerciciosContablesBIC = (BeanItemContainer<EjercicioContable>) filtroEjercicioCBX
+		ejerciciosContablesBIC = (BeanItemContainer<EjercicioContable>) ejercicioCBX
 				.getContainerDataSource();
-		centrosDeCostosContablesBIC = (BeanItemContainer<CentroDeCostoContable>) filtroCentroDeCostoContableCBX
+		centrosDeCostosContablesBIC = (BeanItemContainer<CentroDeCostoContable>) centroDeCostoContableCBX
 				.getContainerDataSource();
-		puntosDeEquilibrioBIC = (BeanItemContainer<PuntoDeEquilibrio>) filtroPuntoDeEquilibrioCBX
+		puntosDeEquilibrioBIC = (BeanItemContainer<PuntoDeEquilibrio>) puntoDeEquilibrioCBX
 				.getContainerDataSource();
 
 		// ----------------------------------
@@ -201,7 +203,7 @@ class CuentaContableFullFormUi extends
 
 		ejercicioCBXValueChange();
 
-		filtroEjercicioCBX.addValueChangeListener(e -> {
+		ejercicioCBX.addValueChangeListener(e -> {
 			ejercicioCBXValueChange();
 		});
 
@@ -263,8 +265,8 @@ class CuentaContableFullFormUi extends
 			// pestaniaCCVL.setEnabled(b);
 			pestaniasTBS.getTab(pestaniaCCVL).setEnabled(b);
 
-			filtroCentroDeCostoContableCBX.setEnabled(b);
-			filtroPuntoDeEquilibrioCBX.setEnabled(b);
+			centroDeCostoContableCBX.setEnabled(b);
+			puntoDeEquilibrioCBX.setEnabled(b);
 			costoDeVentaCBX.setEnabled(b);
 			cuentaAgrupadoraTXT.setEnabled(b);
 			porcentajeTXT.setEnabled(b);
@@ -279,12 +281,12 @@ class CuentaContableFullFormUi extends
 
 			if (ejerciciosContablesBIC.size() > 0) {
 
-				filtroCentroDeCostoContableCBX.setValue(null);
-				filtroPuntoDeEquilibrioCBX.setValue(null);
+//				filtroCentroDeCostoContableCBX.setValue(null);
+//				filtroPuntoDeEquilibrioCBX.setValue(null);
 
 				// ----------------------------------
 
-				EjercicioContable ejercicioContable = (EjercicioContable) filtroEjercicioCBX
+				EjercicioContable ejercicioContable = (EjercicioContable) ejercicioCBX
 						.getValue();
 
 				// ----------------------------------
@@ -299,9 +301,9 @@ class CuentaContableFullFormUi extends
 					centrosDeCostosContablesBIC.addBean(centroDeCostoContable);
 				}
 
-				// if (centrosDeCostosContablesBIC.size() > 0) {
-				// filtroCentroDeCostoContableCBX.setValue(null);
-				// }
+				 if (centrosDeCostosContablesBIC.size() > 0) {
+					 centroDeCostoContableCBX.setValue(this.dtoBI.getBean().getCentroDeCostoContable());
+				 }
 
 				// ----------------------------------
 
@@ -315,9 +317,9 @@ class CuentaContableFullFormUi extends
 					puntosDeEquilibrioBIC.addBean(puntoDeEquilibrio);
 				}
 
-				// if (puntosDeEquilibrioBIC.size() > 0) {
-				// filtroPuntoDeEquilibrioCBX.setValue(null);
-				// }
+				 if (puntosDeEquilibrioBIC.size() > 0) {
+					 puntoDeEquilibrioCBX.setValue(this.dtoBI.getBean().getPuntoDeEquilibrio());
+				 }
 
 				// ----------------------------------
 
@@ -350,12 +352,16 @@ class CuentaContableFullFormUi extends
 		CuentaContableCodigoUniqueValidator cuentaContableCodigoUniqueValidator;
 
 		if (StandardFormUi.INSERT_MODE.equalsIgnoreCase(mode)) {
+			
 			cuentaContableCodigoUniqueValidator = new CuentaContableCodigoUniqueValidator(
 					sessionVar.getCx(), dtoBI);
+			
 		} else {
+			
 			cuentaContableCodigoUniqueValidator = new CuentaContableCodigoUniqueValidator(
 					sessionVar.getCx(), dtoBI,
-					((CuentaContableFull) originalDTO).getCodigoCuenta());
+					((CuentaContable) originalDTO).getCodigoCuenta());
+			
 		}
 		codigoCuentaTXT.addValidator(cuentaContableCodigoUniqueValidator);
 	}

@@ -125,8 +125,10 @@ class AsientoTableUi extends StandardTableUi<Asiento> {
 
 	private void reloadDataAsientoItem(Object item) {
 		try {
-			asientoItemTableUi.asientoFilter = (Asiento) item;
-			asientoItemTableUi.reloadData();
+			if (asientoItemTableUi != null) {
+				asientoItemTableUi.asientoFilter = (Asiento) item;
+				asientoItemTableUi.reloadData();
+			}
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -146,6 +148,7 @@ class AsientoTableUi extends StandardTableUi<Asiento> {
 		filtroEjercicioCBX.setRequired(true);
 		filtroEjercicioCBX.setNullSelectionAllowed(false);
 		filtroEjercicioCBX.setContainerDataSource(ejerciciosContablesBIC);
+		filtroEjercicioCBX.setEnabled(false);
 
 		EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) sessionVar
 				.getCx().buildBO(EjercicioContable.class);
@@ -161,11 +164,7 @@ class AsientoTableUi extends StandardTableUi<Asiento> {
 
 		if (ejerciciosContablesBIC.size() > 0) {
 
-			// EjercicioContable ejercicioContable = usuario
-			// .getEjercicioContable();
-
-			ejercicioContable = ejercicioContableBO
-					.findDefaultEjercicioContable();
+			ejercicioContable = this.sessionVar.getEjercicioContable();
 
 			if (ejercicioContable != null
 					&& ejercicioContable.getEjercicio() != null) {
@@ -173,10 +172,7 @@ class AsientoTableUi extends StandardTableUi<Asiento> {
 				filtroEjercicioCBX.setValue(ejercicioContable);
 
 			} else {
-				// EjercicioContable maxEjercicioContable =
-				// ejercicioContableBO
-				// .findMaxEjercicio();
-				// ejercicioContableCB.setValue(maxEjercicioContable);
+
 				ejercicioContable = ejerciciosContablesBIC.getIdByIndex(0);
 				filtroEjercicioCBX.setValue(ejercicioContable);
 			}
@@ -347,6 +343,7 @@ class AsientoTableUi extends StandardTableUi<Asiento> {
 
 		filtroDesdeTXT = ControlFactory.buildTXT();
 		filtroDesdeTXT.setCaption("Desde");
+		filtroDesdeTXT.setInputPrompt("dd");
 		filtroDesdeTXT.setMaxLength(2);
 		filtroDesdeTXT.setColumns(5);
 		msg = "El campo "
@@ -363,6 +360,7 @@ class AsientoTableUi extends StandardTableUi<Asiento> {
 		filtroMesAnioDesdeCBX.setWidth("90px");
 		// filtroEjercicioCBX.setIcon(FontAwesome.SEARCH);
 		filtroMesAnioDesdeCBX.setCaption("Mes/Año");
+		filtroMesAnioDesdeCBX.setInputPrompt("MM/yyyy");
 		filtroMesAnioDesdeCBX.setRequired(false);
 		filtroMesAnioDesdeCBX.setNullSelectionAllowed(true);
 		filtroMesAnioDesdeCBX.setContainerDataSource(mesAnioDesdeBIC);
@@ -397,6 +395,7 @@ class AsientoTableUi extends StandardTableUi<Asiento> {
 
 		filtroHastaTXT = ControlFactory.buildTXT();
 		filtroHastaTXT.setCaption("Hasta");
+		filtroHastaTXT.setInputPrompt("dd");
 		filtroHastaTXT.setMaxLength(2);
 		filtroHastaTXT.setColumns(5);
 		msg = "El campo "
@@ -413,6 +412,7 @@ class AsientoTableUi extends StandardTableUi<Asiento> {
 		filtroMesAnioHastaCBX.setWidth("90px");
 		// filtroEjercicioCBX.setIcon(FontAwesome.SEARCH);
 		filtroMesAnioHastaCBX.setCaption("Mes/Año");
+		filtroMesAnioHastaCBX.setInputPrompt("MM/yyyy");
 		filtroMesAnioHastaCBX.setRequired(false);
 		filtroMesAnioHastaCBX.setNullSelectionAllowed(true);
 		filtroMesAnioHastaCBX.setContainerDataSource(mesAnioHastaBIC);
@@ -571,6 +571,15 @@ class AsientoTableUi extends StandardTableUi<Asiento> {
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
+		}
+	}
+
+	public void reloadData() {
+		super.reloadData();
+		if (this.itemsBIC.size() > 0) {
+			reloadDataAsientoItem(this.itemsBIC.getIdByIndex(0));
+		} else {
+			reloadDataAsientoItem(null);
 		}
 	}
 

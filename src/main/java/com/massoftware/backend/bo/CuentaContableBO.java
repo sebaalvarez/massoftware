@@ -11,7 +11,6 @@ import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.util.GenericBO;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CuentaContable;
-import com.massoftware.model.CuentaContableFull;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.massoftware.model.Usuario;
@@ -22,8 +21,8 @@ public class CuentaContableBO extends GenericBO<CuentaContable> {
 	// private final String ATT_NAME_NOMBRE = "nombre";
 
 	private final String ATT_NAME_EJERCICIO = "ejercicioContable_ejercicio";
-	private final String ATT_NAME_CC = "x_centroDeCostoContable_numero";
-	private final String ATT_NAME_PE = "x_puntoDeEquilibrio_puntoDeEquilibrio";
+	private final String ATT_NAME_CC = "centroDeCostoContable_numero";
+	private final String ATT_NAME_PE = "puntoDeEquilibrio_puntoDeEquilibrio";
 	private final String ATT_NAME_CODIGO = "codigoCuenta";
 	private final String ATT_NAME_CODIGO_PADRE = "codigoCuentaPadre";
 	private final String ATT_NAME_CUENTA = "cuentaContable";
@@ -38,10 +37,10 @@ public class CuentaContableBO extends GenericBO<CuentaContable> {
 	public List<CuentaContable> findAll() throws Exception {
 		return findAll(ORDER_BY);
 	}
-
+	
 	public List<CuentaContable> findAll(EjercicioContable ejercicioContable,
 			CentroDeCostoContable centroDeCostoContable,
-			PuntoDeEquilibrio puntoDeEquilibrio, String codigoCuentaPadre)
+			PuntoDeEquilibrio puntoDeEquilibrio, String codigoCuentaPadre, int limit, int offset, String orderBy)
 			throws Exception {
 
 		String where = ATT_NAME_EJERCICIO + " = ? ";
@@ -63,26 +62,52 @@ public class CuentaContableBO extends GenericBO<CuentaContable> {
 			args.add(codigoCuentaPadre);
 		}
 
-		return find(ORDER_BY, where, args.toArray());
+//		return find(ORDER_BY, where, args.toArray());
+		
+		return findPaged(orderBy, where, limit, offset, args.toArray()); 
 
 	}
 	
-	@SuppressWarnings("unchecked")
-	public CuentaContableFull findById(String id)
+	public List<CuentaContable> findAll(EjercicioContable ejercicioContable,
+			CentroDeCostoContable centroDeCostoContable,
+			PuntoDeEquilibrio puntoDeEquilibrio, int limit, int offset, String orderBy )
 			throws Exception {
 
-		String where = " id = ? ";
-		
-		String orderBy = null;
-		String viewName = getView(CuentaContableFull.class);		
-		List<CuentaContableFull> list = findTLess(viewName, orderBy, where, id);
-		if(list.size() > 0){
-			return list.get(0); 
+		String where = ATT_NAME_EJERCICIO + " = ? ";
+		List<Object> args = new ArrayList<Object>();
+		args.add(ejercicioContable.getEjercicio());
+
+		if (centroDeCostoContable != null) {
+			where += " AND " + ATT_NAME_CC + " = ? ";
+			args.add(centroDeCostoContable.getNumero());
 		}
+
+		if (puntoDeEquilibrio != null) {
+			where += " AND " + ATT_NAME_PE + " = ? ";
+			args.add(puntoDeEquilibrio.getPuntoDeEquilibrio());
+		}		
+
+		//return find(ORDER_BY, where, args.toArray());
 		
-		return null;
+		return findPaged(orderBy, where, limit, offset, args.toArray()); 
 
 	}
+
+//	@SuppressWarnings("unchecked")
+//	public CuentaContable findById(String id) throws Exception {
+//
+//		String where = " id = ? ";
+//
+//		String orderBy = null;
+//		String viewName = getView(CuentaContable.class);
+//		List<CuentaContable> list = findTLess(viewName, orderBy, where, id);
+//		if (list.size() > 0) {
+//			return list.get(0);
+//		}
+//
+//		return null;
+//
+//	}
 
 	public List<CuentaContable> findAllChild(
 			EjercicioContable ejercicioContable, String codigoCuentaPadre)
@@ -155,7 +180,7 @@ public class CuentaContableBO extends GenericBO<CuentaContable> {
 	}
 
 	public Boolean checkUniqueCuentaContable(String cuentaContable,
-			Integer ejercicio) throws Exception {
+			Integer ejercicio) throws Exception {				
 
 		String viewName = getView();
 
@@ -191,9 +216,8 @@ public class CuentaContableBO extends GenericBO<CuentaContable> {
 
 	public CuentaContable insert(CuentaContable dtoArg, Usuario usuario)
 			throws Exception {
-		
-		CuentaContableFull dto = (CuentaContableFull) dtoArg;
-		 
+
+		CuentaContable dto = (CuentaContable) dtoArg;
 
 		String nameTableDB = getClassTableMSAnont(classModel);
 
@@ -347,9 +371,9 @@ public class CuentaContableBO extends GenericBO<CuentaContable> {
 
 	public CuentaContable update(CuentaContable dtoArg,
 			CuentaContable dtoOriginalArg, Usuario usuario) throws Exception {
-		
-		CuentaContableFull dto = (CuentaContableFull) dtoArg;
-		CuentaContableFull dtoOriginal = (CuentaContableFull) dtoOriginalArg; 
+
+		CuentaContable dto = (CuentaContable) dtoArg;
+		CuentaContable dtoOriginal = (CuentaContable) dtoOriginalArg;
 
 		String nameTableDB = getClassTableMSAnont(classModel);
 

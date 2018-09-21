@@ -1,6 +1,7 @@
 package com.massoftware.backend.bo;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +12,9 @@ import org.cendra.jdbc.ex.crud.UniqueException;
 
 import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.util.GenericBO;
+import com.massoftware.frontend.custom.windows.builder.annotation.ClassTableMSAnont;
 import com.massoftware.model.Asiento;
+import com.massoftware.model.AsientoItem;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Usuario;
 
@@ -221,6 +224,38 @@ public class AsientoBO extends GenericBO<Asiento> {
 
 	public Asiento insert(Asiento dto, Usuario usuario) throws Exception {
 
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			connectionWrapper.begin();
+
+			if (dto._fechaRevision != null) {
+				dto = insert(connectionWrapper, dto, usuario);
+				Asiento asientoRevision = (Asiento) dto.clone();
+				asientoRevision.setFecha(asientoRevision._fechaRevision);
+
+			} else {
+				dto = insert(connectionWrapper, dto, usuario);
+			}
+
+			connectionWrapper.commit();
+
+		} catch (Exception e) {
+			connectionWrapper.rollBack();
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
+		return dto;
+
+	}
+
+	public Asiento insert(ConnectionWrapper connectionWrapper, Asiento dto,
+			Usuario usuario) throws Exception {
+
 		String nameTableDB = getClassTableMSAnont(classModel);
 
 		String[] nameAtts = { "[EJERCICIO]", "[NUMEROASIENTO]", "[FECHASQL]",
@@ -267,11 +302,35 @@ public class AsientoBO extends GenericBO<Asiento> {
 		Object[] args = { ejercicioContable, numero, fecha, sucursal, lote,
 				minutaContable, detalle, asientoModulo };
 
-		insert(nameTableDB, nameAtts, args);
+		String sql = "INSERT INTO " + nameTableDB + " (";
+
+		for (int i = 0; i < nameAtts.length; i++) {
+			sql += nameAtts[i];
+			if (i < nameAtts.length - 1) {
+				sql += ", ";
+			}
+		}
+
+		sql += ") VALUES (";
+
+		for (int i = 0; i < args.length; i++) {
+			sql += "?";
+			if (i < args.length - 1) {
+				sql += ", ";
+			}
+		}
+
+		sql += ")";
+
+		int rows = connectionWrapper.insert(sql, args);
+
+		if (rows != 1) {
+			throw new Exception(
+					"La sentencia debería afectar un registro, la sentencia afecto "
+							+ rows + " registros.");
+		}
 
 		return dto;
-
-		// return insertByReflection(dto, usuario);
 	}
 
 	public Asiento update(Asiento dto, Asiento dtoOriginal, Usuario usuario)
@@ -279,18 +338,34 @@ public class AsientoBO extends GenericBO<Asiento> {
 
 		String nameTableDB = getClassTableMSAnont(classModel);
 
-		String[] nameAtts = { "[EJERCICIO]", "[NUMEROASIENTO]", "[FECHASQL]",
-				"[SUCURSAL]", "[NROLOTE]", "[MINUTACONTABLE]", "[DETALLE]",
-				"[MODULO]" };
+		String[] nameAtts = {
+
+		"[EJERCICIO]", "[NUMEROASIENTO]", "[FECHASQL]",
+
+				// "[COMPROBANTE]",
+				"[DETALLE]", "[SUCURSAL]",
+				// "[MODULO]",
+				"[NROLOTE]", "[MINUTACONTABLE]",
+		// "[TIPOID]", "[NUMEROID]",
+
+		// "[TIPOASIENTO]", "[TIPO]", "[LETRA]", "[NUMERO]",
+		// "[SECUENCIA]", "[SUCURSALCOMP]", "[NUMEROCOMP]"
+
+		};
+
+		// ----------------------------------------------------------
 
 		Object ejercicioContable = Integer.class;
 		Object numero = Integer.class;
 		Object fecha = Date.class;
+		// Object comprobante = String.class;
+		Object detalle = String.class;
 		Object sucursal = Integer.class;
+		// Object asientoModulo = Integer.class;
 		Object lote = Integer.class;
 		Object minutaContable = Integer.class;
-		Object detalle = String.class;
-		Object asientoModulo = Integer.class;
+		// Object tipoComprobanteId = Integer.class;
+		// Object nroComprobanteId = Integer.class;
 
 		if (dto.getEjercicioContable() != null
 				&& dto.getEjercicioContable().getId() != null) {
@@ -302,6 +377,9 @@ public class AsientoBO extends GenericBO<Asiento> {
 		if (dto.getFecha() != null) {
 			fecha = dto.getFecha();
 		}
+		if (dto.getDetalle() != null) {
+			detalle = dto.getDetalle();
+		}
 		if (dto.getSucursal() != null && dto.getSucursal().getId() != null) {
 			sucursal = dto.getSucursal().getCodigo();
 		}
@@ -312,13 +390,8 @@ public class AsientoBO extends GenericBO<Asiento> {
 				&& dto.getMinutaContable().getId() != null) {
 			minutaContable = dto.getMinutaContable().getCodigo();
 		}
-		if (dto.getDetalle() != null) {
-			detalle = dto.getDetalle();
-		}
-		if (dto.getAsientoModulo() != null
-				&& dto.getAsientoModulo().getId() != null) {
-			asientoModulo = dto.getAsientoModulo().getCodigo();
-		}
+
+		// ----------------------------------------------------------
 
 		Object ejercicioContableOriginal = Integer.class;
 
@@ -334,13 +407,168 @@ public class AsientoBO extends GenericBO<Asiento> {
 			numeroOriginal = dtoOriginal.getNumero();
 		}
 
+		// ----------------------------------------------------------
+
 		String where = "[EJERCICIO] = ? AND [NUMEROASIENTO] = ?";
 
-		Object[] args = { ejercicioContable, numero, fecha, sucursal, lote,
-				minutaContable, detalle, asientoModulo,
-				ejercicioContableOriginal, numeroOriginal };
+		Object[] args = { ejercicioContable, numero, fecha, detalle, sucursal,
+				lote, minutaContable, ejercicioContableOriginal, numeroOriginal };
 
-		update(nameTableDB, nameAtts, args, where);
+		// ----------------------------------------------------------
+
+		// update(nameTableDB, nameAtts, args, where);
+
+		String sql = buildUpdate(nameTableDB, nameAtts, where);
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			connectionWrapper.begin();
+
+			int rows = connectionWrapper.update(sql, args);
+
+			if (rows != 1) {
+				throw new Exception(
+						"La sentencia debería afectar un registro, la sentencia afecto "
+								+ rows + " registros.");
+			}
+
+			for (AsientoItem asientoItem : dto._items) {
+				AsientoItem asientoItemOriginal = (AsientoItem) asientoItem
+						.clone();
+				asientoItem.setAsiento(dto);
+				update(connectionWrapper, asientoItem, asientoItemOriginal,
+						usuario);
+			}
+
+			connectionWrapper.commit();
+
+		} catch (Exception e) {
+			connectionWrapper.rollBack();
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
+
+		return dto;
+	}
+
+	private AsientoItem update(ConnectionWrapper connectionWrapper,
+			AsientoItem dto, AsientoItem dtoOriginal, Usuario usuario)
+			throws Exception {
+
+		String nameTableDB = null;
+
+		ClassTableMSAnont[] a = AsientoItem.class
+				.getAnnotationsByType(ClassTableMSAnont.class);
+		if (a != null && a.length > 0) {
+			nameTableDB = a[0].nameTableDB();
+		}
+
+		String[] nameAtts = { "[EJERCICIO]", "[NUMEROASIENTO]",
+				"[NROREGISTRO]", "[CUENTACONTABLE]", "[DEBE]", "[HABER]",
+				"[DETALLE]", "[FECHASQL]", "[ORDEN]" };
+
+		// --------------------------------------------
+
+		Object ejercicioContable = Integer.class;
+		Object asiento = Integer.class;
+		Object registro = Integer.class;
+		Object cuentaContable = String.class;
+		Object debe = BigDecimal.class;
+		Object haber = BigDecimal.class;
+		Object detalle = String.class;
+		Object fecha = Date.class;
+		Object orden = String.class;
+
+		if (dto.getCuentaContable() != null
+				&& dto.getCuentaContable().getId() != null
+				&& dto.getCuentaContable().getEjercicioContable() != null
+				&& dto.getCuentaContable().getEjercicioContable().getId() != null) {
+			ejercicioContable = dto.getCuentaContable().getEjercicioContable()
+					.getEjercicio();
+		}
+
+		if (dto.getAsiento() != null && dto.getAsiento().getId() != null) {
+			asiento = dto.getAsiento().getNumero();
+			fecha = dto.getAsiento().getFecha();
+		}
+
+		if (dto.getRegistro() != null) {
+			registro = dto.getRegistro();
+		}
+
+		if (dto.getCuentaContable() != null
+				&& dto.getCuentaContable().getId() != null) {
+			cuentaContable = dto.getCuentaContable().getCuentaContable();
+		}
+
+		if (dto.getDebe() != null) {
+			debe = dto.getDebe();
+		}
+
+		if (dto.getHaber() != null) {
+			haber = dto.getHaber();
+		}
+
+		if (dto.getDetalle() != null) {
+			detalle = dto.getDetalle();
+		}
+
+		if (dto.getOrden() != null) {
+			orden = dto.getOrden();
+		}
+
+		// --------------------------------------------
+
+		Object ejercicioContableOriginal = Integer.class;
+		Object asientoModeloOriginal = Integer.class;
+		Object ordenOriginal = Integer.class;
+
+		if (dtoOriginal.getCuentaContable() != null
+				&& dtoOriginal.getCuentaContable().getId() != null
+				&& dtoOriginal.getCuentaContable().getEjercicioContable() != null
+				&& dtoOriginal.getCuentaContable().getEjercicioContable()
+						.getId() != null) {
+
+			ejercicioContableOriginal = dtoOriginal.getCuentaContable()
+					.getEjercicioContable().getEjercicio();
+		}
+
+		if (dtoOriginal.getAsiento() != null
+				&& dtoOriginal.getAsiento().getId() != null) {
+
+			asientoModeloOriginal = dtoOriginal.getAsiento().getNumero();
+		}
+
+		if (dtoOriginal.getOrden() != null) {
+
+			ordenOriginal = dtoOriginal.getOrden();
+		}
+
+		// --------------------------------------------
+
+		String where = "[EJERCICIO] = ? AND [NUMEROASIENTO] = ? AND [ORDEN] = ?";
+
+		Object[] args = { ejercicioContable, asiento, registro, cuentaContable,
+				debe, haber, detalle, fecha, orden, ejercicioContableOriginal,
+				asientoModeloOriginal, ordenOriginal };
+
+		// ----------------------------------------------------------
+
+		// update(nameTableDB, nameAtts, args, where);
+
+		String sql = buildUpdate(nameTableDB, nameAtts, where);
+
+		int rows = connectionWrapper.update(sql, args);
+
+		if (rows != 1) {
+			throw new Exception(
+					"La sentencia debería afectar un registro, la sentencia afecto "
+							+ rows + " registros.");
+		}
 
 		return dto;
 	}

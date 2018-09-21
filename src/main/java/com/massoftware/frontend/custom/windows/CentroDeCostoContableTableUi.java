@@ -15,8 +15,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Window;
 
-class CentroDeCostoContableTableUi extends
-		StandardTableUi<CentroDeCostoContable> {
+class CentroDeCostoContableTableUi extends StandardTableUi<CentroDeCostoContable> {
 
 	/**
 	 * 
@@ -30,8 +29,9 @@ class CentroDeCostoContableTableUi extends
 			StandarTableUiToolbarConf toolbarConf, Window window,
 			SessionVar sessionVar, Class<CentroDeCostoContable> classModel,
 			StandarTableUiFilteringSet filteringSet) {
-		super(pagedConf, toolbarConf, window, sessionVar, classModel,
-				filteringSet);
+
+		super(new StandarTableUiPagedConf(false, false, false), toolbarConf,
+				window, sessionVar, classModel, filteringSet);
 
 		ejercicioCBXValueChange();
 	}
@@ -48,6 +48,7 @@ class CentroDeCostoContableTableUi extends
 		filtroEjercicioCBX.setRequired(true);
 		filtroEjercicioCBX.setNullSelectionAllowed(false);
 		filtroEjercicioCBX.setContainerDataSource(ejerciciosContablesBIC);
+		filtroEjercicioCBX.setEnabled(false);
 
 		filaFiltro1HL.addComponent(filtroEjercicioCBX, 0);
 		filaFiltro1HL.setComponentAlignment(filtroEjercicioCBX,
@@ -65,11 +66,8 @@ class CentroDeCostoContableTableUi extends
 
 		if (ejerciciosContablesBIC.size() > 0) {
 
-			// EjercicioContable ejercicioContable = usuario
-			// .getEjercicioContable();
-
-			EjercicioContable ejercicioContable = ejercicioContableBO
-					.findDefaultEjercicioContable();
+			EjercicioContable ejercicioContable = this.sessionVar
+					.getEjercicioContable();
 
 			if (ejercicioContable != null
 					&& ejercicioContable.getEjercicio() != null) {
@@ -77,10 +75,6 @@ class CentroDeCostoContableTableUi extends
 				filtroEjercicioCBX.setValue(ejercicioContable);
 
 			} else {
-				// EjercicioContable maxEjercicioContable =
-				// ejercicioContableBO
-				// .findMaxEjercicio();
-				// ejercicioContableCB.setValue(maxEjercicioContable);
 				ejercicioContable = ejerciciosContablesBIC.getIdByIndex(0);
 				filtroEjercicioCBX.setValue(ejercicioContable);
 			}
@@ -94,7 +88,7 @@ class CentroDeCostoContableTableUi extends
 
 	private void ejercicioCBXValueChange() {
 		try {
-
+			
 			reloadData();
 
 		} catch (Exception e) {
@@ -103,16 +97,17 @@ class CentroDeCostoContableTableUi extends
 
 	}
 
-	protected List<CentroDeCostoContable> reloadDataList() throws Exception {
+	protected List<CentroDeCostoContable> reloadDataList(String orderBy,
+			String where, Object value, int limit, int offset) throws Exception {
 
 		return ((CentroDeCostoContableBO) sessionVar.getCx()
-				.buildBO(classModel))
-				.findAll((EjercicioContable) filtroEjercicioCBX.getValue());
+				.buildBO(classModel)).findAll(orderBy,
+				(EjercicioContable) filtroEjercicioCBX.getValue());
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected StandardFormUi openFormAgregar() throws Exception {
+	
+	protected StandardFormUi<CentroDeCostoContable> openFormAgregar() throws Exception {
 
 		CentroDeCostoContable item = CentroDeCostoContable.class.newInstance();
 
@@ -123,13 +118,15 @@ class CentroDeCostoContableTableUi extends
 				sessionVar, classModel, StandardFormUi.INSERT_MODE, this, item);
 
 		form.setMaxValues();
+		
+		form.getComponentById("ejercicioContable").setEnabled(false);
 
 		return form;
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected StandardFormUi openFormCopiar(CentroDeCostoContable item)
+	
+	protected StandardFormUi<CentroDeCostoContable> openFormCopiar(CentroDeCostoContable item)
 			throws Exception {
 
 		CentroDeCostoContable o = (CentroDeCostoContable) ((Entity) item)
@@ -142,9 +139,22 @@ class CentroDeCostoContableTableUi extends
 				sessionVar, classModel, StandardFormUi.COPY_MODE, this, o, item);
 
 		form.setMaxValues();
+		
+		form.getComponentById("ejercicioContable").setEnabled(false);
 
 		return form;
 
+	}
+	
+	protected StandardFormUi<CentroDeCostoContable> openFormModificar(CentroDeCostoContable item) throws Exception {
+
+		StandardFormUi<CentroDeCostoContable> form =  new StandardFormUi<CentroDeCostoContable>(sessionVar, classModel,
+				StandardFormUi.UPDATE_MODE, this, item);
+		
+		form.getComponentById("ejercicioContable").setEnabled(false);
+		
+		
+		return form;
 	}
 
 }

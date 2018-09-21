@@ -11,8 +11,8 @@ import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.CentroDeCostoContable;
 import com.massoftware.model.CuentaContable;
-import com.massoftware.model.CuentaContableFull;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.model.Entity;
 import com.massoftware.model.PuntoDeEquilibrio;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Alignment;
@@ -44,7 +44,7 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 	private ComboBox filtroPuntoDeEquilibrioCBX;
 	protected BeanItemContainer<PuntoDeEquilibrio> puntosDeEquilibrioBIC;
 
-	private HorizontalSplitPanel hsplit;
+	HorizontalSplitPanel hsplit;
 	private Panel panel;
 	private Tree tree;
 	private CuentaContableBO cuentaContableBO;
@@ -55,8 +55,9 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 			StandarTableUiToolbarConf toolbarConf, Window window,
 			SessionVar sessionVar, Class<CuentaContable> classModel,
 			StandarTableUiFilteringSet filteringSet) {
-		super(pagedConf, toolbarConf, window, sessionVar, classModel,
-				filteringSet);
+		
+		super(new StandarTableUiPagedConf(true, false, true), toolbarConf,
+				window, sessionVar, classModel, filteringSet);
 
 		init();
 
@@ -65,12 +66,10 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 	public void init() {
 
 		// window.setWidth("800px");
-
 		hsplit = new HorizontalSplitPanel();
 		hsplit.setSplitPosition(30, Unit.PERCENTAGE);
 		// hsplit.setHeight("500px");
 		this.setCompositionRoot(hsplit);
-
 		hsplit.setFirstComponent(buildTreePanel());
 		hsplit.setSecondComponent(rootVL);
 		this.setCompositionRoot(hsplit);
@@ -137,8 +136,8 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 	private void treeValueChangeListener(Object item) {
 		try {
-
-			if (item instanceof CuentaContable) {
+			offset = 0;
+			if (item instanceof CuentaContable) {				
 				addCuentasContablesTree((CuentaContable) item);
 			}
 			reloadData(); // super.reloadData();
@@ -215,6 +214,7 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 		filtroEjercicioCBX.setRequired(true);
 		filtroEjercicioCBX.setNullSelectionAllowed(false);
 		filtroEjercicioCBX.setContainerDataSource(ejerciciosContablesBIC);
+		filtroEjercicioCBX.setEnabled(false);
 
 		EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) sessionVar
 				.getCx().buildBO(EjercicioContable.class);
@@ -228,8 +228,10 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 		if (ejerciciosContablesBIC.size() > 0) {
 
-			EjercicioContable ejercicioContable = ejercicioContableBO
-					.findDefaultEjercicioContable();
+//			EjercicioContable ejercicioContable = ejercicioContableBO
+//					.findDefaultEjercicioContable();
+			
+			EjercicioContable ejercicioContable = this.sessionVar.getEjercicioContable();
 
 			if (ejercicioContable != null
 					&& ejercicioContable.getEjercicio() != null) {
@@ -314,6 +316,8 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 		try {
 
 			if (ejerciciosContablesBIC.size() > 0) {
+				
+				offset = 0;
 
 				EjercicioContable ejercicioContable = (EjercicioContable) filtroEjercicioCBX
 						.getValue();
@@ -370,7 +374,7 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 	private void centroDeCostoContableCBXValueChange() {
 		try {
-
+			offset = 0;
 			reloadData();
 
 		} catch (Exception e) {
@@ -381,7 +385,7 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 	private void puntoDeEquilibrioCBXValueChange() {
 		try {
-
+			offset = 0;
 			reloadData();
 
 		} catch (Exception e) {
@@ -409,7 +413,7 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 			return ((CuentaContableBO) sessionVar.getCx().buildBO(classModel))
 					.findAll(ejercicioContable, centroDeCostoContable,
-							puntoDeEquilibrio, cuentaContable.getCodigoCuenta());
+							puntoDeEquilibrio, cuentaContable.getCodigoCuenta(), limit, offset, buildOrderBy());
 
 		} else {
 
@@ -419,7 +423,7 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 			return ((CuentaContableBO) sessionVar.getCx().buildBO(classModel))
 					.findAll(ejercicioContable, centroDeCostoContable,
-							puntoDeEquilibrio, null);
+							puntoDeEquilibrio, limit, offset, buildOrderBy());
 
 		}
 
@@ -428,7 +432,7 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected StandardFormUi openFormAgregar() throws Exception {
 
-		CuentaContableFull item = CuentaContableFull.class.newInstance();
+		CuentaContable item = CuentaContable.class.newInstance();
 		item.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
 				.getValue());
 
@@ -436,10 +440,12 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 		// StandardFormUi<CuentaContable>(
 		// usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item);
 
-		CuentaContableFullFormUi form = new CuentaContableFullFormUi(
+		CuentaContableFormUi form = new CuentaContableFormUi(
 				sessionVar, StandardFormUi.INSERT_MODE, this, item);
 
 		// form.setMaxValues();
+		
+		form.getComponentById("ejercicioContable").setEnabled(false);
 
 		return form;
 
@@ -449,16 +455,18 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 	protected StandardFormUi openFormCopiar(CuentaContable itemArg)
 			throws Exception {
 
-		CuentaContableFull item = cuentaContableBO.findById(itemArg.getId());
-		CuentaContableFull o = (CuentaContableFull) item.copy();
+//		CuentaContable item = cuentaContableBO.findById(itemArg.getId());
+		CuentaContable o = (CuentaContable) itemArg.copy();
 
 		o.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
 				.getValue());
 
-		CuentaContableFullFormUi form = new CuentaContableFullFormUi(
-				sessionVar, StandardFormUi.COPY_MODE, this, o, item);
+		CuentaContableFormUi form = new CuentaContableFormUi(
+				sessionVar, StandardFormUi.COPY_MODE, this, o, itemArg);
 
 		// form.setMaxValues();
+		
+		form.getComponentById("ejercicioContable").setEnabled(false);
 
 		return form;
 
@@ -468,12 +476,14 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 	protected StandardFormUi openFormModificar(CuentaContable itemArg)
 			throws Exception {
 
-		CuentaContableFull item = cuentaContableBO.findById(itemArg.getId());
+//		CuentaContable item = cuentaContableBO.findById(itemArg.getId());		
 
-		CuentaContableFullFormUi form = new CuentaContableFullFormUi(
-				sessionVar, StandardFormUi.UPDATE_MODE, this, item);
+		CuentaContableFormUi form = new CuentaContableFormUi(
+				sessionVar, StandardFormUi.UPDATE_MODE, this, itemArg);
 
 		// form.setMaxValues();
+		
+		form.getComponentById("ejercicioContable").setEnabled(false);
 
 		return form;
 	}

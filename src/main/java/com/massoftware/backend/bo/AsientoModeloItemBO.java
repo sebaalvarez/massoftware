@@ -30,14 +30,14 @@ public class AsientoModeloItemBO extends GenericBO<AsientoModeloItem> {
 		return findAll(ORDER_BY);
 	}
 
-	public List<AsientoModeloItem> findAll(AsientoModelo asientoModelo)
+	public List<AsientoModeloItem> findAll(String orderBy, AsientoModelo asientoModelo)
 			throws Exception {
 
 		if (asientoModelo != null) {
 
 			String where = "asientoModelo_numero = ?";
 
-			List<AsientoModeloItem> list = find(ORDER_BY, where,
+			List<AsientoModeloItem> list = find(orderBy, where,
 					asientoModelo.getNumero());
 
 			EjercicioContable ejercicioContable = null;

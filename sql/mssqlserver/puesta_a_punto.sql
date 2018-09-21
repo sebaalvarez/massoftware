@@ -1003,132 +1003,13 @@ CREATE VIEW [dbo].[vCostoDeVenta] AS
 	-- SELECT * FROM dbo.vCostoDeVenta;	
 	-- SELECT * FROM dbo.vCostoDeVenta ORDER BY codigo, nombre;	
 
-
 -------------------------------------------------------------
 
 -- DROP VIEW [dbo].[vCuentaContable]         
 
-
 CREATE VIEW [dbo].[vCuentaContable] AS        
 
 	SELECT	'com.massoftware.model.CuentaContable' AS ClassCuentaContable	
-			-----------------------------------------------------------------------------------------------------
-			, CONCAT ( CAST([PlanDeCuentas].[EJERCICIO] AS VARCHAR), '-', LTRIM(RTRIM(CAST([PlanDeCuentas].[CUENTACONTABLE] AS VARCHAR))) )		AS id			
-			-----------------------------------------------------------------------------------------------------
-			, CAST([PlanDeCuentas].[EJERCICIO] AS VARCHAR)						AS ejercicioContable_id									
-			, CAST([PlanDeCuentas].[EJERCICIO] AS INT)							AS ejercicioContable_ejercicio				
-			/*
-			-- ejercicioContable [PlanDeCuentas].[EJERCICIO]																							-- NOT NULL
-				,vEjercicioContable.id																													AS ejercicioContable_id			
-				,vEjercicioContable.ejercicio																											AS ejercicioContable_ejercicio		
-				,vEjercicioContable.fechaApertura																										AS ejercicioContable_fechaApertura
-				,vEjercicioContable.fechaCierre																											AS ejercicioContable_fechaCierre
-				,vEjercicioContable.ejercicioCerrado																									AS ejercicioContable_ejercicioCerrado
-				,vEjercicioContable.ejercicioCerradoModulos																								AS ejercicioContable_ejercicioCerradoModulos
-				,vEjercicioContable.comentario																											AS ejercicioContable_comentario
-			*/
-			-----------------------------------------------------------------------------------------------------			
-			, LTRIM(RTRIM(CAST([PlanDeCuentas].[CUENTAINTEGRADORA] AS VARCHAR)))																		AS codigoCuentaPadre	-- String (11) NOT NULL -- integra ej 6.40.00.00.00.00
-			, LTRIM(RTRIM(CAST([PlanDeCuentas].[CUENTADEJERARQUIAIND] AS VARCHAR)))																		AS codigoCuenta			-- String (11) NOT NULL UN (Ejercicio) -- integra ej 6.40.00.00.00.10
-			, LTRIM(RTRIM(CAST([PlanDeCuentas].[CUENTACONTABLE] AS VARCHAR)))																			AS cuentaContable		-- String (11) NOT NULL UN (Ejercicio) -- TEXTO LIBRE
-			, LTRIM(RTRIM(CAST([PlanDeCuentas].[NOMBRE] AS VARCHAR)))																					AS nombre				-- String (35) NOT NULL UN (Ejercicio) -- TEXTO LIBRE
-			-----------------------------------------------------------------------------------------------------																																	
-			,  CAST([PlanDeCuentas].[PUNTODEEQUILIBRIO]	AS INT)																							AS x_puntoDeEquilibrio_puntoDeEquilibrio	
-			-----------------------------------------------------------------------------------------------------			
-			-----------------------------------------------------------------------------------------------------		
-			-----------------------------------------------------------------------------------------------------			
-			-----------------------------------------------------------------------------------------------------
-			, CONCAT ( CAST([PlanDeCuentas].[EJERCICIO] AS VARCHAR), '-', CAST([PlanDeCuentas].[CENTRODECOSTOCONTABLE] AS VARCHAR) )		AS x_centroDeCostoContable_id	
-			, CAST([PlanDeCuentas].[CENTRODECOSTOCONTABLE] AS INT)																			AS x_centroDeCostoContable_numero				
-			/*
-			-- centroDeCostoContable [PlanDeCuentas].[CENTRODECOSTOCONTABLE]												
-				, vCentroDeCostoContable.id																												AS centroDeCostoContable_id			
-				, vCentroDeCostoContable.numero																											AS centroDeCostoContable_numero
-				, vCentroDeCostoContable.nombre																											AS centroDeCostoContable_nombre
-				, vCentroDeCostoContable.abreviatura																									AS centroDeCostoContable_abreviatura
-					-----------------------------------------------------------------------------------------------------
-					-- , vCentroDeCostoContable.ejercicioContable_id AS centroDeCostoContable_ejercicioContable_id		
-					-- , vCentroDeCostoContable.ejercicioContable_ejercicio	AS centroDeCostoContable_ejercicioContable_ejercicio	
-					-- , vCentroDeCostoContable.ejercicioContable_fechaApertura AS centroDeCostoContable_ejercicioContable_fechaApertura		
-					-- , vCentroDeCostoContable.ejercicioContable_fechaCierre AS centroDeCostoContable_ejercicioContable_fechaCierre
-					-- , vCentroDeCostoContable.ejercicioContable_ejercicioCerrado AS centroDeCostoContable_ejercicioContable_ejercicioCerrado		
-					-- , vCentroDeCostoContable.ejercicioContable_ejercicioCerradoModulos AS centroDeCostoContable_ejercicioContable_ejercicioCerradoModulos	
-					-- , vCentroDeCostoContable.ejercicioContable_comentario AS centroDeCostoContable_ejercicioContable_comentario		
-			*/
-			-----------------------------------------------------------------------------------------------------
-			, LTRIM(RTRIM(CAST([PlanDeCuentas].[CUENTAAGRUPADORA] AS VARCHAR)))																			AS cuentaAgrupadora		-- String (11) NOT NULL UN  -- TEXTO LIBRE
-			--, CAST([PlanDeCuentas].[PORCENTAJE] AS DOUBLE PRECISION)																					AS porcentaje			-- BigDecimal (9,4) [0 - 999999999] 
-			, [PlanDeCuentas].[PORCENTAJE]																												AS porcentaje			-- BigDecimal (9,4) [0 - 999999999] 
-			-----------------------------------------------------------------------------------------------------
-			-----------------------------------------------------------------------------------------------------		
-			-----------------------------------------------------------------------------------------------------
-			
-			 
-			
-	FROM	[dbo].[PlanDeCuentas]
-	/*
-
-	LEFT JOIN	[dbo].[vEjercicioContable]
-			ON		[dbo].[vEjercicioContable].[ejercicio] = CAST([dbo].[PlanDeCuentas].[EJERCICIO] AS INT)
-	
-	
-	LEFT JOIN	[dbo].[vCentroDeCostoContable]
-			ON		[dbo].[vCentroDeCostoContable].numero = CAST([dbo].[PlanDeCuentas].[CENTRODECOSTOCONTABLE] AS INT)
-			AND		[dbo].[vCentroDeCostoContable].ejercicioContable_ejercicio = CAST([dbo].[PlanDeCuentas].[EJERCICIO] AS INT)	
-	*/
-	
-	WHERE CAST([PlanDeCuentas].[CUENTAINTEGRADORA] AS VARCHAR) IS NOT NULL
-			AND LTRIM(RTRIM(CAST([PlanDeCuentas].[CUENTAINTEGRADORA] AS VARCHAR))) <> '';
-	
-
-	-- SELECT COUNT(*) FROM dbo.[PlanDeCuentas] ;
-	-- SELECT COUNT(*) FROM dbo.[vCuentaContable] ;
-	-- SELECT * FROM dbo.[PlanDeCuentas] ;
-	-- SELECT * FROM dbo.[vCuentaContable] ;	
-	-- SELECT * FROM dbo.[vCuentaContable] WHERE codigoCuentaPadre IS NULL OR codigoCuentaPadre = '' ;
-	-- SELECT * FROM dbo.[vCuentaContable] WHERE cuentaContable = '224'
-	-- SELECT * FROM dbo.[vCuentaContable] WHERE id = '2017-11010200002' ;	
-	-- SELECT * FROM dbo.[vCuentaContable] WHERE id = '2017-10000000000' ;	
-	-- SELECT * FROM dbo.[vCuentaContable] WHERE nombre = 'Moneda Extranjera' ;	
-	-- SELECT * FROM dbo.[vCuentaContable] ORDER BY ejercicioContable_ejercicio DESC, codigoCuenta;		
-	-- SELECT * FROM dbo.[vCuentaContable] ORDER BY ejercicioContable_ejercicio DESC  , codigoCuenta ASC;
-	-- SELECT ejercicioContable_ejercicio, cuentaContable  FROM dbo.[vCuentaContable] WHERE ejercicioContable_ejercicio = 2016 AND codigoCuenta = '';	
-	-- SELECT * FROM dbo.[vCuentaContable] WHERE seguridadPuerta_id IS NOT NULL;
-
-	-- SELECT DISTINCT cuentaContableEstado_codigo FROM dbo.[vCuentaContable] ;
-	-- SELECT * FROM dbo.vCuentaContable WHERE ejercicioContable_ejercicio = 2017 AND codigoCuenta = '10000000001' ;
-	-- SELECT nombre FROM dbo.vCuentaContable WHERE ejercicioContable_ejercicio = 2017 ORDER BY nombre;
-	-- SELECT nombre FROM dbo.vCuentaContable WHERE ejercicioContable_ejercicio = 2017 AND nombre = 'Banco Supervielle' ORDER BY nombre;
-	
-	-- SELECT ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta FROM dbo.[vCuentaContable] ORDER BY ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta;	
-
-	-- SELECT DISTINCT ejercicioContable_ejercicio, codigoCuentaPadre FROM dbo.[vCuentaContable] WHERE ejercicioContable_ejercicio = 2002 ORDER BY ejercicioContable_ejercicio, codigoCuentaPadre;	
-
-	
-	---------------------
-	
-	-- SELECT ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta FROM dbo.[vCuentaContable] WHERE ejercicioContable_ejercicio = 2002  AND codigoCuentaPadre = '00000000000' ORDER BY ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta;	
-
-	-- SELECT ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta FROM dbo.[vCuentaContable] WHERE ejercicioContable_ejercicio = 2002  AND codigoCuentaPadre = '10000000000' ORDER BY ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta;	
-	
-	-- SELECT ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta FROM dbo.[vCuentaContable] WHERE ejercicioContable_ejercicio = 2002  AND codigoCuentaPadre = '11000000000' ORDER BY ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta;	
-
-	-- SELECT ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta FROM dbo.[vCuentaContable] WHERE ejercicioContable_ejercicio = 2002  AND codigoCuentaPadre = '11010000000' ORDER BY ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta;	
-
-	-- SELECT ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta FROM dbo.[vCuentaContable] WHERE ejercicioContable_ejercicio = 2002  AND codigoCuentaPadre = '11010100000' ORDER BY ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta;	
-
-	-- SELECT ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta FROM dbo.[vCuentaContable] WHERE ejercicioContable_ejercicio = 2002  AND codigoCuentaPadre = '11010100001' ORDER BY ejercicioContable_ejercicio, codigoCuentaPadre, codigoCuenta;	
-
-
-
-
--------------------------------------------------------------
-
--- DROP VIEW [dbo].[vCuentaContableFull]         
-
-CREATE VIEW [dbo].[vCuentaContableFull] AS        
-
-	SELECT	'com.massoftware.model.CuentaContableFull' AS ClassCuentaContableFull	
 			-----------------------------------------------------------------------------------------------------
 			, CONCAT ( CAST([vEjercicioContable].[ejercicio] AS VARCHAR), '-', LTRIM(RTRIM(CAST([PlanDeCuentas].[CUENTACONTABLE] AS VARCHAR))) )		AS id			
 			-----------------------------------------------------------------------------------------------------
@@ -1243,8 +1124,9 @@ CREATE VIEW [dbo].[vCuentaContableFull] AS
 	
 
 	-- SELECT COUNT(*) FROM dbo.[PlanDeCuentas] ;
-	-- SELECT COUNT(*) FROM dbo.[vCuentaContableFull] ;	
+	-- SELECT COUNT(*) FROM dbo.[vCuentaContable] ;	
 	-- SELECT * FROM dbo.vCuentaContable WHERE  id = '2016-7777' ;
+	-- SELECT * FROM dbo.vCuentaContable WHERE  ejercicioContable_ejercicio = 2016 AND cuentaContable = 'a';
 
 -------------------------------------------------------------
 
@@ -1365,6 +1247,7 @@ CREATE VIEW [dbo].[vAsientoModeloItem] AS
 
 
 -- SELECT * FROM dbo.vAsientoModeloItem ;	
+-- SELECT * FROM dbo.vAsientoModeloItem WHERE asientoModelo_numero = 2 ORDER BY cuentaContable_cuentaContable DESC;
 
 -------------------------------------------------------------
 
@@ -1497,16 +1380,20 @@ SELECT	'com.massoftware.model.Asiento' AS ClassAsiento
 				WHEN [dbo].[facturas].comprobante		IS NOT NULL		AND LTRIM(RTRIM(CAST([dbo].[facturas].comprobante  AS VARCHAR)))	<> ''	THEN  CONCAT ( LTRIM(RTRIM(CAST([dbo].[TablaDeComprobantes].abreviatura AS VARCHAR))), ' ', LTRIM(RTRIM(CAST([dbo].[facturas].comprobante AS VARCHAR))) )
 				WHEN [dbo].[facturaspro].comprobante	IS NOT NULL		AND LTRIM(RTRIM(CAST([dbo].[facturaspro].comprobante  AS VARCHAR))) <> ''	THEN  CONCAT ( LTRIM(RTRIM(CAST([dbo].[TablaDeComprobantes].abreviatura AS VARCHAR))), ' ', LTRIM(RTRIM(CAST([dbo].[facturaspro].comprobante AS VARCHAR))) )
 				WHEN [dbo].[fondos].comprobante			IS NOT NULL		AND LTRIM(RTRIM(CAST([dbo].[fondos].comprobante  AS VARCHAR)))		<> ''	THEN  CONCAT ( LTRIM(RTRIM(CAST([dbo].[TablaDeComprobantes].abreviatura AS VARCHAR))), ' ', LTRIM(RTRIM(CAST([dbo].[fondos].comprobante AS VARCHAR))) )
+				-- ELSE CAST([Contabilidad].[NUMEROCOMP] AS VARCHAR) ?? que hacemos con este ATT ???????
 				ELSE CAST(null AS VARCHAR) 
 			  END															AS comprobante	
+			  , CAST([Contabilidad].[TIPOID] AS INT)						AS tipoComprobanteId	-- Integer NULL [ 0 - Short.MAX_VALUE]			
+			  , CAST([Contabilidad].[NUMEROID] AS INT)						AS nroComprobanteId		-- Integer NULL [ 0 - Integer.MAX_VALUE]						
+			
 			-----------------------------------------------------------------------------------------------------				 
-			--, [TIPOASIENTO]		-- ???      
-			--, [TIPO]			-- ???	
-			--, [LETRA]			-- ???
-			--, [NUMERO]			-- ???
-			--, [SECUENCIA]		-- ???
-			--, [SUCURSALCOMP]	-- ???
-			--, [NUMEROCOMP]		-- ???		
+			--, [Contabilidad].[TIPOASIENTO]		-- ???      
+			--, [Contabilidad].[TIPO]			-- ???	
+			--, [Contabilidad].[LETRA]			-- ???
+			--, [Contabilidad].[NUMERO]			-- ???
+			--, [Contabilidad].[SECUENCIA]		-- ???
+			--, [Contabilidad].[SUCURSALCOMP]	-- ???
+			--, [Contabilidad].[NUMEROCOMP]		-- ???		
 			-----------------------------------------------------------------------------------------------------
 	
 	FROM	[dbo].[Contabilidad]
@@ -1541,6 +1428,8 @@ SELECT	'com.massoftware.model.Asiento' AS ClassAsiento
 
 	-- SELECT * FROM dbo.vAsiento;	
 	-- SELECT * FROM dbo.vAsiento ORDER BY ejercicioContable_ejercicio, numero;	
+	-- SELECT * FROM dbo.vAsiento WHERE ejercicioContable_ejercicio = 2016 AND numero = 14998;	
+	-- SELECT * FROM dbo.vAsiento WHERE ejercicioContable_ejercicio = 2016 AND numero = 72422;	
 	-- SELECT * FROM dbo.vAsiento WHERE ejercicioContable_ejercicio = 2016 AND  minutaContable_codigo = 5 ORDER BY ejercicioContable_ejercicio, numero;	
 	-- SELECT * FROM dbo.vAsiento WHERE ejercicioContable_ejercicio = 2016 AND  minutaContable_codigo = 1 ORDER BY ejercicioContable_ejercicio, numero;	
 
@@ -1666,17 +1555,15 @@ SELECT	'com.massoftware.model.AsientoItem' AS ClassAsientoItem
 		, vCuentaContable.codigoCuentaPadre									AS cuentaContable_codigoCuentaPadre
 		, vCuentaContable.codigoCuenta										AS cuentaContable_codigoCuenta
 		, vCuentaContable.cuentaContable									AS cuentaContable_cuentaContable
-		, vCuentaContable.nombre											AS cuentaContable_nombre
+		, vCuentaContable.nombre											AS cuentaContable_nombre				
+		, vCuentaContable.ejercicioContable_id								AS cuentaContable_ejercicioContable_id			
+		, vCuentaContable.ejercicioContable_ejercicio					    AS cuentaContable_ejercicioContable_ejercicio		
+		, vCuentaContable.ejercicioContable_fechaApertura					AS cuentaContable_ejercicioContable_fechaApertura
+		, vCuentaContable.ejercicioContable_fechaCierre						AS cuentaContable_ejercicioContable_fechaCierre
+		, vCuentaContable.ejercicioContable_ejercicioCerrado				AS cuentaContable_ejercicioContable_ejercicioCerrado
+		, vCuentaContable.ejercicioContable_ejercicioCerradoModulos			AS cuentaContable_ejercicioContable_ejercicioCerradoModulos
+		, vCuentaContable.ejercicioContable_comentario						AS cuentaContable_ejercicioContable_comentario
 		
-		/*
-		,vEjercicioContable.ejercicioContable_id							AS cuentaContable_ejercicioContable_id			
-		,vEjercicioContable.ejercicioContable_ejercicio					    AS cuentaContable_ejercicioContable_ejercicio		
-		,vEjercicioContable.ejercicioContable_fechaApertura					AS cuentaContable_ejercicioContable_fechaApertura
-		,vEjercicioContable.ejercicioContable_fechaCierre					AS cuentaContable_ejercicioContable_fechaCierre
-		,vEjercicioContable.ejercicioContable_ejercicioCerrado				AS cuentaContable_ejercicioContable_ejercicioCerrado
-		,vEjercicioContable.ejercicioContable_ejercicioCerradoModulos		AS cuentaContable_ejercicioContable_ejercicioCerradoModulos
-		,vEjercicioContable.ejercicioContable_comentario					AS cuentaContable_ejercicioContable_comentario
-		*/
 
 		-----------------------------------------------------------------------------------------------------      
 		, [MovContabilidad].[DEBE]											AS debe			-- BigDecimal (11,2) NOT NULL [ 0 - 99999999999.99] default 0.00 

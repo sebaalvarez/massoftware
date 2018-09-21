@@ -4,7 +4,6 @@ import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.CuentaContableBO;
 import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.CuentaContable;
-import com.massoftware.model.CuentaContableFull;
 import com.massoftware.util.FormatCuentaContableCodigoCuenta;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
@@ -19,23 +18,25 @@ public class CuentaContableCodigoUniqueValidator extends
 
 	private BackendContext cx;
 
-	protected BeanItem<CuentaContableFull> cuentaContableBI;
+	protected BeanItem<CuentaContable> cuentaContableBI;
 	protected String codigoCuentaOriginal;
 
 	public CuentaContableCodigoUniqueValidator(BackendContext cx,
-			BeanItem<CuentaContableFull> cuentaContableBI) {
+			BeanItem<CuentaContable> cuentaContableBI) {
 		super("");
 		this.cx = cx;
 		this.cuentaContableBI = cuentaContableBI;
 	}
 
 	public CuentaContableCodigoUniqueValidator(BackendContext cx,
-			BeanItem<CuentaContableFull> cuentaContableBI,
+			BeanItem<CuentaContable> cuentaContableBI,
 			String codigoCuentaOriginal) {
 		super("");
 		this.cx = cx;
 		this.cuentaContableBI = cuentaContableBI;
-		this.codigoCuentaOriginal = codigoCuentaOriginal.trim().toLowerCase();
+		if(codigoCuentaOriginal != null){
+			this.codigoCuentaOriginal = codigoCuentaOriginal.trim().toLowerCase();	
+		}		
 	}
 
 	/**

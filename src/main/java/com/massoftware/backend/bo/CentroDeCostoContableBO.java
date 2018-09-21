@@ -40,6 +40,18 @@ public class CentroDeCostoContableBO extends GenericBO<CentroDeCostoContable> {
 		return new ArrayList<CentroDeCostoContable>();
 	}
 	
+	public List<CentroDeCostoContable> findAll(String orderBy, EjercicioContable dto)
+			throws Exception {
+
+		if (dto != null) {
+			return find(orderBy,
+					"ejercicioContable_ejercicio = ?", dto.getEjercicio());
+
+		}
+
+		return new ArrayList<CentroDeCostoContable>();
+	}
+	
 	protected Integer maxValueInteger(String attName, CentroDeCostoContable dto) throws Exception {
 
 		String viewName = getView();
