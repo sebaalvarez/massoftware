@@ -3,9 +3,9 @@ package com.massoftware.frontend.custom.windows;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.massoftware.SessionVar;
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
-import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Entity;
 import com.massoftware.model.PuntoDeEquilibrio;

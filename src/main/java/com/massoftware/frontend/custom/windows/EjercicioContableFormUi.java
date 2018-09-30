@@ -1,7 +1,7 @@
 package com.massoftware.frontend.custom.windows;
 
-import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.custom.menu.ContabilidadGeneralMenu;
+import com.massoftware.ContabilidadGeneralMenu;
+import com.massoftware.SessionVar;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.windows.LogAndNotification;
 

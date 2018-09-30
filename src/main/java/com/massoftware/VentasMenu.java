@@ -1,6 +1,5 @@
-package com.massoftware.frontend.custom.menu;
+package com.massoftware;
 
-import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.Ciudad;
 import com.massoftware.model.MotivoComentario;
 import com.massoftware.model.MotivoNotaDeCredito;

@@ -1,4 +1,4 @@
-package com.massoftware.frontend.util.converter;
+package com.massoftware.windows;
 
 import java.math.BigDecimal;
 import java.util.Locale;

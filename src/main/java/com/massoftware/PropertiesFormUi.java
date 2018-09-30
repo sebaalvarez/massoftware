@@ -1,4 +1,4 @@
-package com.massoftware.frontend;
+package com.massoftware;
 
 import java.util.Properties;
 

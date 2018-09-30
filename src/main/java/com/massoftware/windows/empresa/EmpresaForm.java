@@ -1,6 +1,6 @@
 package com.massoftware.windows.empresa;
 
-import com.massoftware.frontend.SessionVar;
+import com.massoftware.SessionVar;
 import com.massoftware.model.Empresa;
 import com.massoftware.windows.UtilUI;
 import com.vaadin.data.util.BeanItem;

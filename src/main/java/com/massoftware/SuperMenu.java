@@ -1,6 +1,5 @@
-package com.massoftware.frontend.custom.menu;
+package com.massoftware;
 
-import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.model.Banco;
 import com.massoftware.model.BancoFirmante;

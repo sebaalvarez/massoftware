@@ -3,8 +3,8 @@ package com.massoftware.frontend.custom.windows;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.massoftware.SessionVar;
 import com.massoftware.backend.bo.AsientoItemBO;
-import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.AsientoItem;
 import com.vaadin.ui.Window;

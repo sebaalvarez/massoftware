@@ -1,11 +1,10 @@
-package com.massoftware.frontend.custom.menu;
+package com.massoftware;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.massoftware.backend.bo.EjercicioContableBO;
-import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.custom.windows.AsientoFormUi;
 import com.massoftware.frontend.custom.windows.EjercicioContableTableUi;
 import com.massoftware.frontend.custom.windows.StandardFormUi;

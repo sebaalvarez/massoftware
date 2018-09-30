@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.cendra.jdbc.ex.crud.DeleteForeingObjectConflictException;
 
+import com.massoftware.SessionVar;
 import com.massoftware.backend.bo.CuentaDeFondoABO;
 import com.massoftware.backend.bo.CuentaDeFondoBO;
 import com.massoftware.backend.bo.CuentaDeFondoGrupoBO;
-import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.custom.windows.ControlFactory;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.custom.windows.StandardTableUi;

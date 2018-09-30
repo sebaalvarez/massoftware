@@ -2,8 +2,8 @@ package z.old.deprecated;
 
 import java.util.List;
 
+import com.massoftware.SessionVar;
 import com.massoftware.backend.bo.CuentaDeFondoABO;
-import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.custom.windows.StandardTableUi;
 import com.massoftware.model.CuentaDeFondoA;
 import com.massoftware.windows.LogAndNotification;

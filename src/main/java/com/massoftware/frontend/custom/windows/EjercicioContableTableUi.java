@@ -3,8 +3,8 @@ package com.massoftware.frontend.custom.windows;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.custom.menu.ContabilidadGeneralMenu;
+import com.massoftware.ContabilidadGeneralMenu;
+import com.massoftware.SessionVar;
 import com.massoftware.model.EjercicioContable;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;

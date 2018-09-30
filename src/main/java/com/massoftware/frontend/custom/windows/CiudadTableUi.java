@@ -3,10 +3,10 @@ package com.massoftware.frontend.custom.windows;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.massoftware.SessionVar;
 import com.massoftware.backend.bo.CiudadBO;
 import com.massoftware.backend.bo.PaisBO;
 import com.massoftware.backend.bo.ProvinciaBO;
-import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.custom.windows.builder.BuilderXMD;
 import com.massoftware.model.Ciudad;
 import com.massoftware.model.Entity;

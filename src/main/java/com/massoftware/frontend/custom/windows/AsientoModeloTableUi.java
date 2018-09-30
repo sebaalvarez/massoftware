@@ -1,6 +1,6 @@
 package com.massoftware.frontend.custom.windows;
 
-import com.massoftware.frontend.SessionVar;
+import com.massoftware.SessionVar;
 import com.massoftware.model.AsientoModelo;
 import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.windows.LogAndNotification;

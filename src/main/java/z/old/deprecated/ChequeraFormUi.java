@@ -1,6 +1,6 @@
 package z.old.deprecated;
 
-import com.massoftware.frontend.SessionVar;
+import com.massoftware.SessionVar;
 import com.massoftware.frontend.custom.windows.ControlFactory;
 import com.massoftware.frontend.custom.windows.StandarTableUiFilteringSet;
 import com.massoftware.frontend.custom.windows.StandardFormUi;

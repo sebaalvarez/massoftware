@@ -1,4 +1,4 @@
-package com.massoftware.frontend;
+package com.massoftware;
 
 import com.massoftware.backend.BackendContext;
 import com.massoftware.model.EjercicioContable;

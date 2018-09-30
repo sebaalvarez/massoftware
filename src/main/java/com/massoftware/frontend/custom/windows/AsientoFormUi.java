@@ -12,8 +12,7 @@ import org.cendra.jdbc.ex.crud.DeleteForeingObjectConflictException;
 import org.cendra.jdbc.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ex.crud.UniqueException;
 
-import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.util.converter.StringToBigDecimalConverterUnspecifiedLocale;
+import com.massoftware.SessionVar;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.AsientoItem;
 import com.massoftware.model.AsientoModeloItem;
@@ -21,6 +20,7 @@ import com.massoftware.model.CuentaContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.windows.EliminarDialog;
 import com.massoftware.windows.LogAndNotification;
+import com.massoftware.windows.StringToBigDecimalConverterUnspecifiedLocale;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;

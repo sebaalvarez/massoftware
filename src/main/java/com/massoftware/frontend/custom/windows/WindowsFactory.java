@@ -4,7 +4,7 @@ import z.old.deprecated.CentroDeCostoProyectoTableUi;
 import z.old.deprecated.ChequeraTableUi;
 import z.old.deprecated.CuentaDeFondoTableUi;
 
-import com.massoftware.frontend.SessionVar;
+import com.massoftware.SessionVar;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.model.Banco;

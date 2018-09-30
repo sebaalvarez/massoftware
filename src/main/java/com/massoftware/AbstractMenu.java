@@ -1,6 +1,5 @@
-package com.massoftware.frontend.custom.menu;
+package com.massoftware;
 
-import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.custom.windows.WindowsFactory;
 import com.massoftware.windows.LogAndNotification;
 import com.massoftware.windows.empresa.EmpresaForm;

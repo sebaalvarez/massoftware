@@ -5,9 +5,9 @@ import java.util.List;
 import org.cendra.jdbc.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ex.crud.UniqueException;
 
+import com.massoftware.SessionVar;
 import com.massoftware.backend.bo.CentroDeCostoContableBO;
 import com.massoftware.backend.bo.PuntoDeEquilibrioBO;
-import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.custom.validator.CuentaContableCodigoPadreUniqueValidator;
 import com.massoftware.frontend.custom.validator.CuentaContableCodigoUniqueValidator;
 import com.massoftware.frontend.custom.validator.CuentaContableCuentaContableUniqueValidator;

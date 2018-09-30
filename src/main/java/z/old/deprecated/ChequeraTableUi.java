@@ -2,8 +2,8 @@ package z.old.deprecated;
 
 import java.util.List;
 
+import com.massoftware.SessionVar;
 import com.massoftware.backend.bo.ChequeraBO;
-import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.custom.windows.ControlFactory;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.custom.windows.StandardTableUi;

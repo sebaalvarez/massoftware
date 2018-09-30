@@ -5,8 +5,7 @@ import java.util.List;
 
 import org.vaadin.inputmask.InputMask;
 
-import com.massoftware.frontend.custom.windows.ControlFactory;
-import com.massoftware.frontend.util.converter.StringToIntegerConverterUnspecifiedLocale;
+
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.IntegerRangeValidator;
@@ -476,7 +475,7 @@ public class UtilUI {
 			int columns, int rows, int minLength, int maxLength,
 			boolean required) {
 
-		TextArea txt = ControlFactory.buildTXA();
+		TextArea txt = buildTXA();
 
 		txt.setCaption(label);
 		txt.setReadOnly(readOnly);
@@ -664,7 +663,7 @@ public class UtilUI {
 			String label, boolean readOnly, boolean required, Class clazz,
 			List options) throws Exception {
 
-		ComboBox cb = ControlFactory.buildCB();
+		ComboBox cb = buildCB();
 
 		cb.setCaption(label);
 

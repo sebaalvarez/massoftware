@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.massoftware.SessionVar;
 import com.massoftware.backend.bo.MonedaBO;
 import com.massoftware.backend.bo.MonedaCotizacionBO;
-import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.custom.windows.builder.BuilderXMD;
 import com.massoftware.frontend.util.IntegerValue;
 import com.massoftware.model.Entity;

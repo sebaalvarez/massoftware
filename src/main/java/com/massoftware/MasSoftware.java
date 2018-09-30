@@ -1,4 +1,4 @@
-package com.massoftware.frontend;
+package com.massoftware;
 
 import java.io.File;
 import java.util.Iterator;
@@ -8,12 +8,6 @@ import java.util.Map.Entry;
 import javax.servlet.annotation.WebServlet;
 
 import com.massoftware.backend.BackendContext;
-import com.massoftware.frontend.custom.menu.ContabilidadGeneralMenu;
-import com.massoftware.frontend.custom.menu.FondosMenu;
-import com.massoftware.frontend.custom.menu.GeneralMenu;
-import com.massoftware.frontend.custom.menu.StockMenu;
-import com.massoftware.frontend.custom.menu.SuperMenu;
-import com.massoftware.frontend.custom.menu.VentasMenu;
 import com.massoftware.windows.LogAndNotification;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;

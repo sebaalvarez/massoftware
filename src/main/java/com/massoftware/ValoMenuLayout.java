@@ -1,4 +1,4 @@
-package com.massoftware.frontend;
+package com.massoftware;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;

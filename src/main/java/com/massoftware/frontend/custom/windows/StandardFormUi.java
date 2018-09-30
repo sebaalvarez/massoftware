@@ -9,7 +9,7 @@ import java.util.Map;
 import org.cendra.jdbc.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ex.crud.UniqueException;
 
-import com.massoftware.frontend.SessionVar;
+import com.massoftware.SessionVar;
 import com.massoftware.frontend.custom.windows.builder.BuilderXMD;
 import com.massoftware.frontend.custom.windows.builder.ComponentXMD;
 import com.massoftware.frontend.custom.windows.builder.annotation.ClassFormSourceAnont;

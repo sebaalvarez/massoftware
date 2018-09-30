@@ -1,6 +1,6 @@
 package z.old.deprecated;
 
-import com.massoftware.frontend.SessionVar;
+import com.massoftware.SessionVar;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.model.CentroDeCostoProyecto;
 import com.massoftware.model.CentroDeCostoProyectoTipo;

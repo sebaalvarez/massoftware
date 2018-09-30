@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.cendra.jdbc.ex.crud.DeleteForeingObjectConflictException;
 
-import com.massoftware.frontend.SessionVar;
+import com.massoftware.SessionVar;
 import com.massoftware.frontend.custom.windows.builder.annotation.ClassPluralLabelAnont;
 import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnMetaDataAnont;
 import com.massoftware.frontend.custom.windows.builder.annotation.FieldLabelAnont;

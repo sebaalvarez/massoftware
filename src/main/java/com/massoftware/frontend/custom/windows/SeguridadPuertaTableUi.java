@@ -2,8 +2,8 @@ package com.massoftware.frontend.custom.windows;
 
 import java.util.List;
 
+import com.massoftware.SessionVar;
 import com.massoftware.backend.bo.SeguridadPuertaBO;
-import com.massoftware.frontend.SessionVar;
 import com.massoftware.model.SeguridadModulo;
 import com.massoftware.model.SeguridadPuerta;
 import com.vaadin.ui.HorizontalSplitPanel;

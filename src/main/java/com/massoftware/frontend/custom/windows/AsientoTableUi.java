@@ -8,15 +8,15 @@ import java.util.List;
 import org.cendra.jdbc.ex.crud.InsertDuplicateException;
 import org.cendra.jdbc.ex.crud.UniqueException;
 
+import com.massoftware.SessionVar;
 import com.massoftware.backend.bo.AsientoBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
-import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.util.converter.StringToIntegerConverterUnspecifiedLocale;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.CostoDeVenta;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Entity;
 import com.massoftware.windows.LogAndNotification;
+import com.massoftware.windows.StringToIntegerConverterUnspecifiedLocale;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.IntegerRangeValidator;
