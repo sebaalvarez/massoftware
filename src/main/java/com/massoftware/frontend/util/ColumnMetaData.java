@@ -1,5 +1,6 @@
 package com.massoftware.frontend.util;
 
+
 public class ColumnMetaData {
 
 	private String attName;

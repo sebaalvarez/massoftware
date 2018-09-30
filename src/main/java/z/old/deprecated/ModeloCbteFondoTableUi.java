@@ -6,11 +6,11 @@ import java.util.List;
 import org.cendra.jdbc.ex.crud.DeleteForeingObjectConflictException;
 
 import com.massoftware.backend.BackendContext;
-import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.SimpleStringTraslateFilter;
-import com.massoftware.frontend.util.YesNoDialog;
 import com.massoftware.model.ModeloCbteFondo;
 import com.massoftware.model.Usuario;
+import com.massoftware.windows.EliminarDialog;
+import com.massoftware.windows.LogAndNotification;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
@@ -170,9 +170,9 @@ public class ModeloCbteFondoTableUi extends CustomComponent {
 		modeloCbteFondoGRD.setSelectionMode(SelectionMode.SINGLE);
 		modeloCbteFondoGRD.setImmediate(true);
 
-		String[] attNames = { "codigo", "nombre"};
+		String[] attNames = { "codigo", "nombre" };
 
-		String[] attLabels = { "Número", "Nombre"};
+		String[] attLabels = { "Número", "Nombre" };
 
 		modeloCbteFondoGRD.setColumns((Object[]) attNames);
 
@@ -468,9 +468,8 @@ public class ModeloCbteFondoTableUi extends CustomComponent {
 						.getSelectedRow();
 
 				getUI().addWindow(
-						new YesNoDialog("Eliminar",
-								"Esta seguro de eliminar el modelo de comprobande de fondo "
-										+ item, new YesNoDialog.Callback() {
+						new EliminarDialog(item.toString(),
+								new EliminarDialog.Callback() {
 									public void onDialogResult(boolean yes) {
 										if (yes) {
 											delete();

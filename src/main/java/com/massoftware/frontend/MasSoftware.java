@@ -14,7 +14,7 @@ import com.massoftware.frontend.custom.menu.GeneralMenu;
 import com.massoftware.frontend.custom.menu.StockMenu;
 import com.massoftware.frontend.custom.menu.SuperMenu;
 import com.massoftware.frontend.custom.menu.VentasMenu;
-import com.massoftware.frontend.util.LogAndNotification;
+import com.massoftware.windows.LogAndNotification;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;

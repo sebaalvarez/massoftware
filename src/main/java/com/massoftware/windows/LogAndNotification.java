@@ -1,4 +1,4 @@
-package com.massoftware.frontend.util;
+package com.massoftware.windows;
 
 import org.cendra.jdbc.ex.crud.DeleteForeingObjectConflictException;
 import org.cendra.jdbc.ex.crud.InsertDuplicateException;

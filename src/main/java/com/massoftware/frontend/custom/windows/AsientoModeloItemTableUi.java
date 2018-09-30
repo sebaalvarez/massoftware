@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.massoftware.backend.bo.AsientoModeloItemBO;
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.AsientoModelo;
 import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.model.EjercicioContable;
+import com.massoftware.windows.LogAndNotification;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;

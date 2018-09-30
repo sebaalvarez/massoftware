@@ -17,8 +17,8 @@ import com.massoftware.frontend.custom.windows.builder.annotation.ClassLabelInTh
 import com.massoftware.frontend.custom.windows.builder.annotation.FieldAutoMaxValueAnont;
 import com.massoftware.frontend.custom.windows.builder.annotation.FieldCBBox;
 import com.massoftware.frontend.custom.windows.builder.annotation.FieldLabelAnont;
-import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.Entity;
+import com.massoftware.windows.LogAndNotification;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -68,8 +68,8 @@ public class StandardFormUi<T> extends CustomComponent {
 	// CONTROLES
 
 	public VerticalLayout rootVL;
-	private HorizontalLayout barraDeHerramientasFila1;
-	private Button updateBTN;
+	protected HorizontalLayout barraDeHerramientasFila0;
+	protected Button updateBTN;
 
 	// ----------------------------------------------
 
@@ -296,11 +296,11 @@ public class StandardFormUi<T> extends CustomComponent {
 
 		// ----------------------------------------------
 
-		barraDeHerramientasFila1 = new HorizontalLayout();
-		barraDeHerramientasFila1.setSpacing(true);
+		barraDeHerramientasFila0 = new HorizontalLayout();
+		barraDeHerramientasFila0.setSpacing(true);
 
-		rootVL.addComponent(barraDeHerramientasFila1);
-		rootVL.setComponentAlignment(barraDeHerramientasFila1,
+		rootVL.addComponent(barraDeHerramientasFila0);
+		rootVL.setComponentAlignment(barraDeHerramientasFila0,
 				Alignment.MIDDLE_LEFT);
 
 		// ----------------------------------------------
@@ -311,7 +311,7 @@ public class StandardFormUi<T> extends CustomComponent {
 			updateBTNClick();
 		});
 
-		barraDeHerramientasFila1.addComponent(updateBTN);
+		barraDeHerramientasFila0.addComponent(updateBTN);
 
 		// --------------------------------------------------
 

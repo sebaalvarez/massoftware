@@ -83,41 +83,41 @@ public class FondosMenu extends AbstractMenu {
 		a7.setEnabled(false);
 		a8.setEnabled(false);
 
-		a1.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class))
+		a1.addItem("Cuentas de fondo ...", openWindowCmd(CuentaDeFondo.class))
 				.setEnabled(false);
 		// archivos.addItem("Rubros y grupos de cuentas ...",
 		// open(CuentaDeFondo.class));
 		a1.addItem("Cobranzas ...", null).setEnabled(false);
-		a1.addItem("Chequeras ...", open(Chequera.class)).setEnabled(false);
-		a1.addItem("Bancos ...", open(Banco.class));
-		a1.addItem("Firmantes (cheques propios) ...", open(BancoFirmante.class));
-		a1.addItem("Cajas", open(Caja.class));
-		a1.addItem("Monedas ...", open(Moneda.class));
-		a1.addItem("Cotizaciones de monedas ...", open(MonedaCotizacion.class));
+		a1.addItem("Chequeras ...", openWindowCmd(Chequera.class)).setEnabled(false);
+		a1.addItem("Bancos ...", openWindowCmd(Banco.class));
+		a1.addItem("Firmantes (cheques propios) ...", openWindowCmd(BancoFirmante.class));
+		a1.addItem("Cajas", openWindowCmd(Caja.class));
+		a1.addItem("Monedas ...", openWindowCmd(Moneda.class));
+		a1.addItem("Cotizaciones de monedas ...", openWindowCmd(MonedaCotizacion.class));
 		a1.addItem("Modelos de comprobantes", null).setEnabled(false);
-		a1.addItem("Sucursales ...", open(Sucursal.class));
+		a1.addItem("Sucursales ...", openWindowCmd(Sucursal.class));
 		a1.addItem("Juridicciones convenio multilateral",
-				open(JurisdiccionConvenioMultilateral.class)).setEnabled(false);
+				openWindowCmd(JurisdiccionConvenioMultilateral.class)).setEnabled(false);
 		a1.addSeparator();
-		a1.addItem("Marcas de ticket's ...", open(Ticket.class)).setEnabled(
+		a1.addItem("Marcas de ticket's ...", openWindowCmd(Ticket.class)).setEnabled(
 				false);
 		a1.addItem("Series de ticket's ...", null).setEnabled(false);
 		a1.addItem("Ticket's denunciados ...", null).setEnabled(false);
 		a1.addSeparator();
 		a1.addItem("Tipos de comprobante", null).setEnabled(false);
-		a1.addItem("Talonarios ...", open(Talonario.class)).setEnabled(false);
+		a1.addItem("Talonarios ...", openWindowCmd(Talonario.class)).setEnabled(false);
 		a1.addSeparator();
 		a1.addItem("Parámetros generales", null).setEnabled(false);
 		a1.addItem("Fechas de cierres por módulos", null).setEnabled(false);
 		a1.addSeparator();
-		a1.addItem("Prueba Deposito", open(Deposito.class)).setEnabled(false);
+		a1.addItem("Prueba Deposito", openWindowCmd(Deposito.class)).setEnabled(false);
 		a1.addItem("Prueba Tipos cbtes. control - Stock",
-				open(TipoCbteControl.class)).setEnabled(false);
-		a1.addItem("Prueba Tipo de comprobante AFIP", open(TipoCbteAFIP.class))
+				openWindowCmd(TipoCbteControl.class)).setEnabled(false);
+		a1.addItem("Prueba Tipo de comprobante AFIP", openWindowCmd(TipoCbteAFIP.class))
 				.setEnabled(false);
 		
 		a1.addItem("Prueba Mantenimiento de módulos y puertas",
-				open(SeguridadPuerta.class)).setEnabled(false);
+				openWindowCmd(SeguridadPuerta.class)).setEnabled(false);
 
 		return menubar;
 	}

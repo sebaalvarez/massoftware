@@ -21,7 +21,7 @@ public class AsientoItemBO extends GenericBO<AsientoItem> {
 
 	// private final String ATT_NAME_REGISTRO = "registro";
 
-	private final String ORDER_BY = "orden, cuentaContable_cuentaContable";
+	private final String ORDER_BY = "orden";
 
 	public AsientoItemBO(DataSourceWrapper dataSourceWrapper, BackendContext cx) {
 		super(AsientoItem.class, dataSourceWrapper, cx);

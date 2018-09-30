@@ -36,22 +36,22 @@ public class GeneralMenu extends AbstractMenu {
 		a3.setEnabled(false);
 		a4.setEnabled(false);
 
-		a1.addItem("Módulos", open(Zona.class)).setEnabled(false);
+		a1.addItem("Módulos", openWindowCmd(Zona.class)).setEnabled(false);
 		a1.addItem("Activa controlador fizcal ...           Ctrl F",
-				open(Pais.class)).setEnabled(false);
-		a1.addItem("Activa módulos", open(TipoCliente.class)).setEnabled(false);
-		a1.addItem("File manager", open(TipoDocumentoAFIP.class)).setEnabled(
+				openWindowCmd(Pais.class)).setEnabled(false);
+		a1.addItem("Activa módulos", openWindowCmd(TipoCliente.class)).setEnabled(false);
+		a1.addItem("File manager", openWindowCmd(TipoDocumentoAFIP.class)).setEnabled(
 				false);
 		a1.addSeparator();
-		a1.addItem("Logon", open(TipoCbteAFIP.class)).setEnabled(false);
+		a1.addItem("Logon", openWindowCmd(TipoCbteAFIP.class)).setEnabled(false);
 		a1.addSeparator();
-		a1.addItem("Puertas ...", open(SeguridadPuerta.class));
-		a1.addItem("Usuarios ...", open(TipoCbteAFIP.class)).setEnabled(false);
+		a1.addItem("Puertas ...", openWindowCmd(SeguridadPuerta.class));
+		a1.addItem("Usuarios ...", openWindowCmd(TipoCbteAFIP.class)).setEnabled(false);
 		a1.addSeparator();
-		a1.addItem("Configurar impresora ...", open(TipoCbteAFIP.class))
+		a1.addItem("Configurar impresora ...", openWindowCmd(TipoCbteAFIP.class))
 				.setEnabled(false);
 		a1.addSeparator();
-		a1.addItem("salir", open(TipoCbteAFIP.class)).setEnabled(false);
+		a1.addItem("salir", openWindowCmd(TipoCbteAFIP.class)).setEnabled(false);
 
 		return menubar;
 	}

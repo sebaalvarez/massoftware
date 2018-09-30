@@ -10,7 +10,12 @@ import com.massoftware.model.TipoCbteAFIP;
 import com.massoftware.model.TipoCliente;
 import com.massoftware.model.TipoDocumentoAFIP;
 import com.massoftware.model.Zona;
+import com.massoftware.windows.paises.WPaises;
+import com.massoftware.windows.provincias.WProvincias;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.Command;
+import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class VentasMenu extends AbstractMenu {
@@ -45,72 +50,109 @@ public class VentasMenu extends AbstractMenu {
 		a6.setEnabled(false);
 		a7.setEnabled(false);
 
-		a1.addItem("Clientes ...", open(Zona.class)).setEnabled(false);
+		a1.addItem("Clientes ...", openWindowCmd(Zona.class)).setEnabled(false);
 		a1.addSeparator();
-		a1.addItem("Productos ...", open(Pais.class)).setEnabled(false);
-		a1.addItem("Lista de precios ...", open(TipoCliente.class)).setEnabled(
+		a1.addItem("Productos ...", openWindowCmd(Pais.class)).setEnabled(false);
+		a1.addItem("Lista de precios ...", openWindowCmd(TipoCliente.class)).setEnabled(
 				false);
 		a1.addSeparator();
-		a1.addItem("Cobranzas ...", open(TipoDocumentoAFIP.class)).setEnabled(
+		a1.addItem("Cobranzas ...", openWindowCmd(TipoDocumentoAFIP.class)).setEnabled(
 				false);
-		a1.addItem("condiciones de ventas ...", open(TipoCbteAFIP.class))
+		a1.addItem("condiciones de ventas ...", openWindowCmd(TipoCbteAFIP.class))
 				.setEnabled(false);
-		a1.addItem("Bonificaciones ...", open(MotivoComentario.class))
+		a1.addItem("Bonificaciones ...", openWindowCmd(MotivoComentario.class))
 				.setEnabled(false);
 		a1.addItem("Vendedores y zonas de ventas ...",
-				open(MotivoNotaDeCredito.class)).setEnabled(false);
-		a1.addItem("Zonas ...", open(Zona.class));
+				openWindowCmd(MotivoNotaDeCredito.class)).setEnabled(false);
+		a1.addItem("Zonas ...", openWindowCmd(Zona.class));
 		a1.addItem("Canales de comercialización ...",
-				open(MotivoNotaDeCredito.class)).setEnabled(false);
-		a1.addItem("Transportes", open(MotivoNotaDeCredito.class)).setEnabled(
+				openWindowCmd(MotivoNotaDeCredito.class)).setEnabled(false);
+		a1.addItem("Transportes", openWindowCmd(MotivoNotaDeCredito.class)).setEnabled(
 				false);
 		a1.addItem("Convenios de elaboración ...",
-				open(MotivoNotaDeCredito.class)).setEnabled(false);
+				openWindowCmd(MotivoNotaDeCredito.class)).setEnabled(false);
 
 		MenuBar.MenuItem a11 = a1.addItem("Ciudades ...",
-				open(MotivoNotaDeCredito.class));
+				openWindowCmd(MotivoNotaDeCredito.class));
 
-		a11.addItem("Ciudades ...", open(Ciudad.class));
-		a11.addItem("Provincias ...", open(Provincia.class));
-		a11.addItem("Paises ...", open(Pais.class));
+//		a11.addItem("Ciudades ...", openWindowCmd(Ciudad.class));
+//		a11.addItem("Provincias ...", openWindowCmd(Provincia.class));
+//		a11.addItem("Paises ...", openWindowCmd(Pais.class));
+		a11.addItem("Ciudades ...", openWindowCmd(Ciudad.class));
+		a11.addItem("Provincias ...", openProvinciasCmd());
+		a11.addItem("Paises ...", openPaisesCmd());
 
-		a1.addItem("Tipos de clientes ...", open(TipoCliente.class));
-		a1.addItem("Sub ctas. ctes. ...", open(MotivoNotaDeCredito.class))
+		a1.addItem("Tipos de clientes ...", openWindowCmd(TipoCliente.class));
+		a1.addItem("Sub ctas. ctes. ...", openWindowCmd(MotivoNotaDeCredito.class))
 				.setEnabled(false);
 		a1.addItem("Clasificación de clientes (cta. cte.) ...",
-				open(MotivoNotaDeCredito.class)).setEnabled(false);
-		a1.addItem("Bloqueo de clientes ...", open(MotivoNotaDeCredito.class))
+				openWindowCmd(MotivoNotaDeCredito.class)).setEnabled(false);
+		a1.addItem("Bloqueo de clientes ...", openWindowCmd(MotivoNotaDeCredito.class))
 				.setEnabled(false);
-		a1.addItem("Alícuotas ...", open(MotivoNotaDeCredito.class))
+		a1.addItem("Alícuotas ...", openWindowCmd(MotivoNotaDeCredito.class))
 				.setEnabled(false);
-		a1.addItem("Cargas ...", open(MotivoNotaDeCredito.class)).setEnabled(
+		a1.addItem("Cargas ...", openWindowCmd(MotivoNotaDeCredito.class)).setEnabled(
 				false);
-		a1.addItem("Depósitos ...", open(MotivoNotaDeCredito.class))
+		a1.addItem("Depósitos ...", openWindowCmd(MotivoNotaDeCredito.class))
 				.setEnabled(false);
-		a1.addItem("Sucursales ...", open(MotivoNotaDeCredito.class))
+		a1.addItem("Sucursales ...", openWindowCmd(MotivoNotaDeCredito.class))
 				.setEnabled(false);
-		a1.addItem("Tipos de documentos AFIP ...", open(TipoDocumentoAFIP.class));
-		a11.addItem("Motivos notas de creditos", open(MotivoNotaDeCredito.class));
-		a1.addItem("Motivos comentarios", open(MotivoComentario.class));
-		a1.addItem("Motivos notas de crédito", open(MotivoNotaDeCredito.class));
-		a1.addItem("Perfil de facturación ...", open(MotivoNotaDeCredito.class))
+		a1.addItem("Tipos de documentos AFIP ...", openWindowCmd(TipoDocumentoAFIP.class));
+		a11.addItem("Motivos notas de creditos", openWindowCmd(MotivoNotaDeCredito.class));
+		a1.addItem("Motivos comentarios", openWindowCmd(MotivoComentario.class));
+		a1.addItem("Motivos notas de crédito", openWindowCmd(MotivoNotaDeCredito.class));
+		a1.addItem("Perfil de facturación ...", openWindowCmd(MotivoNotaDeCredito.class))
 				.setEnabled(false);
-		a1.addItem("Parámetros generales", open(MotivoNotaDeCredito.class))
+		a1.addItem("Parámetros generales", openWindowCmd(MotivoNotaDeCredito.class))
 				.setEnabled(false);
-		a1.addItem("AFIP ...", open(MotivoNotaDeCredito.class)).setEnabled(
-				false);
-		a1.addSeparator();
-		a1.addItem("Tipos de comprobante", open(MotivoNotaDeCredito.class))
-				.setEnabled(false);
-		a1.addItem("Talonarios", open(MotivoNotaDeCredito.class)).setEnabled(
+		a1.addItem("AFIP ...", openWindowCmd(MotivoNotaDeCredito.class)).setEnabled(
 				false);
 		a1.addSeparator();
-		a1.addItem("Configurar impresora ...", open(MotivoNotaDeCredito.class))
+		a1.addItem("Tipos de comprobante", openWindowCmd(MotivoNotaDeCredito.class))
+				.setEnabled(false);
+		a1.addItem("Talonarios", openWindowCmd(MotivoNotaDeCredito.class)).setEnabled(
+				false);
+		a1.addSeparator();
+		a1.addItem("Configurar impresora ...", openWindowCmd(MotivoNotaDeCredito.class))
 				.setEnabled(false);
 
 		
 
 		return menubar;
+	}
+	
+	protected Command openPaisesCmd() {
+
+		return new Command() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 4645387020070455569L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+
+				Window window = new WPaises();
+				getUI().addWindow(window);
+			}
+		};
+	}
+	
+	protected Command openProvinciasCmd() {
+
+		return new Command() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 4645387020070455569L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+
+				Window window = new WProvincias();
+				getUI().addWindow(window);
+			}
+		};
 	}
 
 }

@@ -2,9 +2,9 @@ package com.massoftware.frontend.custom.validator;
 
 import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.CuentaContableBO;
-import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.CuentaContable;
 import com.massoftware.util.FormatCuentaContableCodigoCuenta;
+import com.massoftware.windows.LogAndNotification;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractStringValidator;
 

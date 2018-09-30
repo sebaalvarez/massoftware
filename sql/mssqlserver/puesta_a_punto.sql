@@ -252,8 +252,8 @@ CREATE VIEW [dbo].[vPais] AS
 	-- SELECT * FROM dbo.vPais ORDER BY codigo, nombre;	
 	-- SELECT * FROM dbo.vPais ORDER BY codigo, nombre;
 
-	SELECT * FROM dbo.vPais WHERE LOWER(dbo.Translate(nombre, null, null)) = LOWER(dbo.Translate('argentina', null,null));
-args = []
+	-- SELECT * FROM dbo.vPais WHERE LOWER(dbo.Translate(nombre, null, null)) = LOWER(dbo.Translate('argentina', null,null));
+
 	
 -------------------------------------------------------------
 
@@ -413,7 +413,7 @@ CREATE VIEW [dbo].[vEjercicioContable] AS
 	-- SELECT * FROM dbo.[vEjercicioContable] WHERE CAST(ejercicio AS VARCHAR)  LIKE CONCAT('%', CAST(12 AS VARCHAR)) ORDER BY ejercicio DESC;
 	-- SELECT * FROM dbo.vEjercicioContable ORDER BY ejercicio DESC;
 
-	SELECT * FROM dbo.vEjercicioContable ORDER BY ejercicio DESC;
+	-- SELECT * FROM dbo.vEjercicioContable ORDER BY ejercicio DESC;
 
 
 -- DROP VIEW [dbo].[vCentroDeCostoContable]
@@ -1486,11 +1486,11 @@ SELECT	'com.massoftware.model.Asiento' AS ClassAsiento
 
 	 WHERE	ejercicio = 2015
 		
-			AND (
+			/*AND (
 					f.comprobante IS NULL
 					AND fp.comprobante IS NULL
 					AND fo.comprobante IS NULL			
-			)
+			)*/
 			
 			-- AND c.comprobante IS NULL
 
@@ -1587,8 +1587,299 @@ SELECT	'com.massoftware.model.AsientoItem' AS ClassAsientoItem
 	-- SELECT * FROM dbo.vAsientoItem WHERE asiento_ejercicioContable_ejercicio = 2015;	
 	-- SELECT * FROM dbo.vAsientoItem WHERE asiento_ejercicioContable_ejercicio = 2015 ORDER BY asiento_id, orden;	
 	-- SELECT * FROM dbo.vAsientoItem WHERE asiento_ejercicioContable_ejercicio = 2015 ORDER BY asiento_ejercicioContable_ejercicio, asiento_numero, orden;	
-	-- SELECT * FROM dbo.vAsientoItem WHERE cuentaContable_cuentaContable IS NULL ORDER BY asiento_ejercicioContable_ejercicio, asiento_numero, orden;	
+	-- SELECT * FROM dbo.vAsientoItem WHERE cuentaContable_cuentaContable IS NULL ORDER BY asiento_ejercicioContable_ejercicio, asiento_numero, orden;		
+	-- SELECT * FROM dbo.vAsientoItem WHERE asiento_ejercicioContable_ejercicio = 2016 AND asiento_numero = 77232 ORDER BY orden;
+
+-------------------------------------------------------------
+
+-- DROP VIEW [dbo].[vEmpresa]         
+
+CREATE VIEW [dbo].[vEmpresa] AS   
+
+SELECT		'com.massoftware.model.Empresa'											AS ClassEmpresaPG	
+			-----------------------------------------------------------------------------------------------------
+			, CAST([Empresa].[NROEMPRESA] AS VARCHAR)								AS id			
+			-----------------------------------------------------------------------------------------------------			
+
+			, CAST([Empresa].[NROEMPRESA] AS INT)									AS codigo				-- Integer NOT NULL UN [ 0 - 255]
+			, LTRIM(RTRIM(CAST([Empresa].[EMPRESA]  AS VARCHAR)))					AS nombre				-- String NOT NULL UN (50) 
+			, LTRIM(RTRIM(CAST([Empresa].[FIRMA]  AS VARCHAR)))						AS firma				-- String (50) 
+			, LTRIM(RTRIM(CAST([Empresa].[ACTIVIDAD]  AS VARCHAR)))					AS actividad			-- String (50) 			      
+			, LTRIM(RTRIM(CAST([Empresa].[ACTIVIDADESSECUNDARIAS]  AS VARCHAR)))	AS otrasActividades		-- String (750) 			      			 
+			, LTRIM(RTRIM(CAST([Empresa].[DOMICILIO]  AS VARCHAR)))					AS domicilio			-- String (20) 			      
+			, LTRIM(RTRIM(CAST([Empresa].[CODIGOPOSTAL]  AS VARCHAR)))				AS codigoPostal			-- String (4)
+			, LTRIM(RTRIM(CAST([Empresa].[CIUDAD]  AS VARCHAR)))					AS ciudad				-- String (20)
+			, LTRIM(RTRIM(CAST([Empresa].[DEPARTAMENTO]  AS VARCHAR)))				AS departamento			-- String (60)			
+			, LTRIM(RTRIM(CAST([Empresa].[PROVINCIA]  AS VARCHAR)))					AS provincia			-- String (20)
+			, LTRIM(RTRIM(CAST([Empresa].[TELEFONO]  AS VARCHAR)))					AS telefono				-- String (20)
+			, LTRIM(RTRIM(CAST([Empresa].[CUIT]  AS VARCHAR)))						AS cuit					-- String (13)
+			, LTRIM(RTRIM(CAST([Empresa].[INGBRUTOS]  AS VARCHAR)))					AS ingrBrutos			-- String (13)
+			-----------------------------------------------------------------------------------------------------
+			--, [PROVINCIACONVENIOMULTILATERAL]										AS provincia
+			
+			-- [PROVINCIA]															AS FK NOT NULL
+			, [vProvincia].id														AS provincia_id
+			
+			-- [PAIS]																AS FK NOT NULL
+			, [vProvincia].pais_id													AS provincia_pais_id
+			, [vProvincia].pais_codigo												AS provincia_pais_codigo
+			, [vProvincia].pais_nombre												AS provincia_pais_nombre	
+			, [vProvincia].pais_abreviatura											AS provincia_pais_abreviatura	
+
+			, [vProvincia].codigo													AS provincia_codigo
+			, [vProvincia].nombre													AS provincia_nombre
+			, [vProvincia].abreviatura												AS provincia_abreviatura
+			, [vProvincia].codigoAfip												AS provincia_codigoAfip
+			, [vProvincia].codigoIngBrutos											AS provincia_codigoIngBrutos
+			, [vProvincia].codigoRenatea											AS provincia_codigoRenatea	
+			
+			-----------------------------------------------------------------------------------------------------
+			, LTRIM(RTRIM(CAST([Empresa].[DETALLE1]  AS VARCHAR)))					AS detalle1	-- String (40)
+			, LTRIM(RTRIM(CAST([Empresa].[DETALLE2]  AS VARCHAR)))					AS detalle2	-- String (40)         
+			-----------------------------------------------------------------------------------------------------			 
+			 --, [Empresa].[SUCURSAL]												AS sucursal		
+			, [vSucursal].id														AS sucursal_id		
+			, [vSucursal].codigo													AS sucursal_codigo
+			, [vSucursal].nombre													AS sucursal_nombre
+			, [vSucursal].abreviatura												AS sucursal_abreviatura
+				, [vSucursal].sucursalTipo_id										AS sucursal_sucursalTipo_id
+				, [vSucursal].sucursalTipo_codigo									AS sucursal_sucursalTipo_codigo			
+				, [vSucursal].sucursalTipo_nombre									AS sucursal_sucursalTipo_nombre
+			, [vSucursal].cuentaClientesDesde										AS sucursal_cuentaClientesDesde
+			, [vSucursal].cuentaClientesHasta										AS sucursal_cuentaClientesHasta
+			, [vSucursal].cantidadCaracteresClientes								AS sucursal_cantidadCaracteresClientes
+			, [vSucursal].identificacionNumericaClientes							AS sucursal_identificacionNumericaClientes
+			, [vSucursal].permiteCambiarClientes									AS sucursal_permiteCambiarClientes
+			, [vSucursal].clientesOcasionalesDesde									AS sucursal_clientesOcasionalesDesde
+			, [vSucursal].clientesOcasionalesHasta									AS sucursal_clientesOcasionalesHasta
+			, [vSucursal].nroCobranzaDesde											AS sucursal_nroCobranzaDesde
+			, [vSucursal].nroCobranzaHasta											AS sucursal_nroCobranzaHasta
+			, [vSucursal].proveedoresDesde											AS sucursal_proveedoresDesde
+			, [vSucursal].proveedoresHasta											AS sucursal_proveedoresHasta	
+			, [vSucursal].cantidadCaracteresProveedor								AS sucursal_cantidadCaracteresProveedor
+			, [vSucursal].identificacionNumericaProveedores							AS sucursal_identificacionNumericaProveedores	
+			, [vSucursal].permiteCambiarProveedores									AS sucursal_permiteCambiarProveedores
+			-----------------------------------------------------------------------------------------------------
+			, CAST([Empresa].[COLOREMPRESA] AS INT)									AS colorEmpresa			-- Integer [ 0 - Integer.MAX_VALUE]			
+			--===================================================================================================
+			, [Empresa].[MODULOCONTABLE]											AS moduloContable		-- Boolean
+			-----------------------------------------------------------------------------------------------------
+			--, [Empresa].[EJERCICIO]												AS ejercicioContable			
+			, vEjercicioContable.id													AS ejercicioContable_id			
+			, vEjercicioContable.ejercicio											AS ejercicioContable_ejercicio		
+			, vEjercicioContable.fechaApertura										AS ejercicioContable_fechaApertura
+			, vEjercicioContable.fechaCierre										AS ejercicioContable_fechaCierre
+			, vEjercicioContable.ejercicioCerrado									AS ejercicioContable_ejercicioCerrado
+			, vEjercicioContable.ejercicioCerradoModulos							AS ejercicioContable_ejercicioCerradoModulos
+			, vEjercicioContable.comentario											AS ejercicioContable_comentario
+			-----------------------------------------------------------------------------------------------------
+			, [Empresa].[CTACONTABLE]												AS cuentaContable
+			, vCuentaContable.id													AS cuentaContable_id				
+					
+			, vCuentaContable.ejercicioContable_id									AS cuentaContable_ejercicioContable_id			
+			, vCuentaContable.ejercicioContable_ejercicio							AS cuentaContable_ejercicioContable_ejercicio		
+			, vCuentaContable.ejercicioContable_fechaApertura						AS cuentaContable_ejercicioContable_fechaApertura
+			, vCuentaContable.ejercicioContable_fechaCierre							AS cuentaContable_ejercicioContable_fechaCierre
+			, vCuentaContable.ejercicioContable_ejercicioCerrado					AS cuentaContable_ejercicioContable_ejercicioCerrado
+			, vCuentaContable.ejercicioContable_ejercicioCerradoModulos				AS cuentaContable_ejercicioContable_ejercicioCerradoModulos
+			, vCuentaContable.ejercicioContable_comentario							AS cuentaContable_ejercicioContable_comentario
+			
+			, vCuentaContable.codigoCuentaPadre										AS cuentaContable_codigoCuentaPadre
+			, vCuentaContable.codigoCuenta											AS cuentaContable_codigoCuenta
+			, vCuentaContable.cuentaContable										AS cuentaContable_cuentaContable
+			, vCuentaContable.nombre												AS cuentaContable_nombre			
+			/*
+			, vCuentaContable.imputable												AS cuentaContable_imputable
+			
+			, vCuentaContable.ajustaPorInflacion									AS cuentaContable_ajustaPorInflacion			
+			
+			, vCuentaContable.cuentaContableEstado_id								AS cuentaContable_cuentaContableEstado_id 			
+			, vCuentaContable.cuentaContableEstado_codigo							AS cuentaContable_cuentaContableEstado_codigo
+			, vCuentaContable.cuentaContableEstado_nombre							AS cuentaContable_cuentaContableEstado_nombre
+			
+			, vCuentaContable.cuentaConApropiacion									AS cuentaContable_cuentaConApropiacion
+			
+			, vCuentaContable.centroDeCostoContable_id								AS cuentaContable_centroDeCostoContable_id		
+			,  vCuentaContable.centroDeCostoContable_numero							AS cuentaContable_centroDeCostoContable_numero
+			,  vCuentaContable.centroDeCostoContable_nombre							AS cuentaContable_centroDeCostoContable_nombre
+			,  vCuentaContable.centroDeCostoContable_abreviatura					AS cuentaContable_centroDeCostoContable_abreviatura					
+			
+			, vCuentaContable.cuentaAgrupadora										AS cuentaContable_cuentaAgrupadora 
+			, vCuentaContable.porcentaje											AS cuentaContable_porcentaje
+			
+			, vCuentaContable.puntoDeEquilibrio_id									AS cuentaContable_puntoDeEquilibrio_id
+			, vCuentaContable.puntoDeEquilibrio_puntoDeEquilibrio					AS cuentaContable_puntoDeEquilibrio_puntoDeEquilibrio
+			, vCuentaContable.puntoDeEquilibrio_nombre								AS cuentaContable_puntoDeEquilibrio_nombre
+			
+			, vCuentaContable.puntoDeEquilibrio_puntoDeEquilibrioTipo_id			AS cuentaContable_puntoDeEquilibrio_puntoDeEquilibrioTipo_id
+			, vCuentaContable.puntoDeEquilibrio_puntoDeEquilibrioTipo_codigo		AS cuentaContable_puntoDeEquilibrio_puntoDeEquilibrioTipo_codigo
+			, vCuentaContable.puntoDeEquilibrio_puntoDeEquilibrioTipo_nombre		AS cuentaContable_puntoDeEquilibrio_puntoDeEquilibrioTipo_nombre 
+			*/
+			--===================================================================================================
+		/*	
+			
+			, LTRIM(RTRIM(CAST([Empresa].[CLIENTEOCA]  AS VARCHAR)))				AS clienteOcacional	-- String (6)
+			
+      
+      ,[VIGENCIASQL]
+     
+      ,[VENTAS]
+      
+      ,[RESUMENCDO]
+      ,[IMPUTACBTESCTECTEVTA]
+      ,[PENDIENTESCTACTEVTA]
+      ,[CONTROLALTALISTASDEPRECIOS]
+      ,[LISTADEPRECIOHABITUAL]
+      ,[APERTURADECAJA]
+      ,[REMITOSPENDIENTESDEFACTURAR]
+      ,[CONCEPTODIFERENCIACOTIZACIÓN]
+      ,[ALICUOTAINTERESESIVA]
+      ,[ALICUOTAINTERESSOBRESUB]
+      ,[ALICUOTARNI]
+      ,[ALICUOTANOCATEGORIZADO]
+      ,[ALICUOTAPERCEPCIONREDONDEO]
+      ,[REDONDEO]
+      ,[CONVENIOMULTILATERAL]
+      ,[ACTIVAVENTASFONDOSCONTABILIDAD]
+      ,[IVAVENTALIBRO]
+      ,[IVAVENTAPAGINA]
+      ,[IVAVENTAFOLIO]
+      ,[IVAVENTAFECHASQL]
+      ,[FECHACIERREPERIODICOVTASQL]
+      ,[FECHAINICIOACTIVIDADSQL]
+      ,[CLIENTESORDENDEREGISTROS]
+      ,[DOORNOAUTORIZACIONCREDITOVTA]
+      ,[STOCK]
+      ,[STOCKCOMPROMETIDO]
+      ,[DEPOSITO]
+      ,[DESCRUBRO]
+      ,[DESCGRUPO]
+      ,[DESCRUBRO1]
+      ,[DESCGRUPO1]
+      ,[RUBROGRUPOINDICE]
+      ,[APERTURADECAJASTOCK]
+      ,[DOORNROALTAPRODUTOSVENTA]
+      ,[DOORNROALTAPRODUTOSCOMPRA]
+      ,[FECHACIERREPERIODICOSTOSQL]
+      ,[COMPRA]
+      ,[IMPUTACBTESCTECTECPRA]
+      ,[ACTIVACOMPRASFONDOSCONTABILIDAD]
+      ,[IVACOMPRALIBRO]
+      ,[IVACOMPRAPAGINA]
+      ,[IVACOMPRAFECHASQL]
+      ,[FECHACIERREPERIODICOCPRASQL]
+      ,[AGENTERETENCIONINGBRUTOS]
+      ,[DOORNOAUTORIZACIONCREDITOCPRA]
+      ,[FONDOS]
+      ,[CAJAHABITUAL]
+      ,[CAPTURACHEQUES]
+      ,[TIPOCBTEANULACION]
+      ,[ACTUALIZADIFERIDO]
+      ,[ACTUALIZADIFERIDOCBTE]
+      ,[FECHACIERREPERIODICOFDOSQL]
+      ,[CONTABILIDAD]
+      
+      ,[FECHACIERREPERIODICOCONTSQL]
+      ,[SUELDO]
+      ,[PERSONALTEMPORARIO]
+      ,[GRANCONTRIBUYENTE]
+      ,[FECHACIERREPERIODICOSUESQL]
+      ,[AFIP]
+      ,[RESOLUCION1361]
+      ,[RESOLUCION1547]
+      ,[RESOLUCION1702]
+      ,[RESOLUCION1817]
+      ,[RESOLUCION1817MODO]
+      ,[RESOLUCION1817FECHASQL]
+      ,[RESOLUCION1817AVISO]
+      ,[MODULOS]
+      ,[VT]
+      ,[TAMBOS]
+      ,[ST]
+      ,[GTIA]
+      ,[FD]
+      ,[CT]
+      ,[PROV]
+      ,[CP]
+      ,[CG]
+      ,[RRHH]
+      ,[CEXT]
+      ,[PRODLACTEA]
+      ,[PRODIND]
+      
+      
+      ,[DOORNOIMPUTACIONCTACTEVTA]
+      ,[ACTIVAAUTORIZACIONCREDITOVTA]
+      ,[TIPOLIMITEDECREDITO]
+      ,[DOORCONSULTAPRECIOVENTA]
+      ,[DOORMANTENIMIENTOPRECIOVENTA]
+      ,[DOORNOIMPUTACIONCTACTECPRA]
+      ,[ACTIVAAUTORIZACIONCREDITOCPRA]
+      ,[PERMITIRDIFERIRFECHACBTECONTADO]
+      ,[DOORMANTENIMIENTOCOSTO]
+      ,[DOORCONSULTACOSTO]
+      ,[CUENTAFONDOCONVENIOMULTILATERAL]
+    
+      ,[TAMBO]
+      ,[FECHACIERREPERIODICOTAMBOSQL]
+      ,[DEVOLUCIONESGARANTIAS]
+      ,[FECHACIERREPERIODICOGTIASQL]
+      ,[PRODUCCION]
+      ,[CODIGO1CARACTERES]
+      ,[CODIGO1DESDE]
+      ,[CODIGO1HASTA]
+      ,[CODIGO2CARACTERES]
+      ,[CODIGO2DESDE]
+      ,[CODIGO2HASTA]
+      ,[CODIGO3CARACTERES]
+      ,[CODIGO3DESDE]
+      ,[CODIGO3HASTA]
+      ,[ITEMSCARACTERES]
+      ,[ML]
+      ,[ISO]
+      ,[PATHTRANSFERENCIA]
+      ,[DOORNOSEGUIMIENTODECOSTOS]
+      ,[PORTERIA]
+      ,[ARC]
+      ,[COMERCIOEXTERIOR]
+      ,[DOCUMENTODESPACHOIMPORTACION]
+      ,[DOCUMENTODESPACHOEXPORTACION]
+      ,[DOCUMENTOCOMPROBANTESCOMPRAS]
+      ,[CPRA]
+      ,[DEPOSITOENTRANSITO]
+      ,[CODIGOVALEPRESTAMO]
+      ,[IMPORTEMINIMOACOBRAR]
+      ,[NROINSCRIPCIONMINISTERIOTRABAJO]
+      ,[CODIGOLIQUIDACIONSAC]
+      ,[CODIGOANTIGUEDAD]
+      ,[PRODUCTOCTAORDEN]
+      ,[COMISIONCTAORDEN]
+      ,[DOCUMENTOCOMPROBANTESVENTAS]
+      ,[DOCUMENTOCOMPROBANTESFONDOS]
+      ,[DOCUMENTOCOMPROBANTESDEVOLUCIONES]
+      ,[DOCUMENTOCOMPROBANTESTAMBOS]
+      ,[CODPRODUCTOMOBRA3ROS]
+      ,[MOSTRARIMAGENPRODUCTO]
+      */
+     
+		FROM [dbo].[Empresa]
+
 	
+		LEFT JOIN	[dbo].[vProvincia]
+			ON	[dbo].[vProvincia].[pais_codigo]	=	1 --CAST([dbo].[Empresa].[PAIS] AS INT)
+			AND [dbo].[vProvincia].[codigo]			=	CAST([dbo].[Empresa].[PROVINCIACONVENIOMULTILATERAL] AS INT)
+	
+		LEFT JOIN	[dbo].[vSucursal]
+			ON		[dbo].[vSucursal].[codigo] = CAST([dbo].[Empresa].[SUCURSAL] AS INT)
+		LEFT JOIN	[dbo].[vEjercicioContable]
+			ON [dbo].[vEjercicioContable].[ejercicio] = CAST([dbo].[Empresa].[EJERCICIO] AS INT)	
+		LEFT JOIN	dbo.vCuentaContable
+			ON	vCuentaContable.cuentaContable = LTRIM(RTRIM(CAST([dbo].[Empresa].[CTACONTABLE] AS VARCHAR)))		
+			AND vCuentaContable.ejercicioContable_ejercicio = CAST([Empresa].[EJERCICIO] AS INT)
+		
+		;
+		
+	-- SELECT * FROM dbo.vEmpresa;
 
 --=============================================================================================================
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

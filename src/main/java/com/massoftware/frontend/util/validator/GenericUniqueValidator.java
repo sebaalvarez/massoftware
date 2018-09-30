@@ -4,8 +4,8 @@ import org.cendra.jdbc.ex.crud.UniqueException;
 
 import com.massoftware.backend.util.GenericBO;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
-import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.Traslate;
+import com.massoftware.windows.LogAndNotification;
 import com.vaadin.data.validator.AbstractValidator;
 
 @SuppressWarnings("rawtypes")

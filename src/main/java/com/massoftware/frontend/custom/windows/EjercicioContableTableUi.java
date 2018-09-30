@@ -4,12 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.massoftware.frontend.SessionVar;
+import com.massoftware.frontend.custom.menu.ContabilidadGeneralMenu;
 import com.massoftware.model.EjercicioContable;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-class EjercicioContableTableUi extends
+public class EjercicioContableTableUi extends
 		StandardTableUi<EjercicioContable> {
 
 	/**
@@ -17,13 +18,16 @@ class EjercicioContableTableUi extends
 	 */
 	private static final long serialVersionUID = 4960961261882226754L;
 
+	public ContabilidadGeneralMenu contabilidadGeneralMenu;
+
 	protected EjercicioContableTableUi(StandarTableUiPagedConf pagedConf,
 			StandarTableUiToolbarConf toolbarConf, Window window,
 			SessionVar sessionVar, Class<EjercicioContable> classModel,
 			StandarTableUiFilteringSet filteringSet) {
 
-		super(new StandarTableUiPagedConf(false, false, false), new StandarTableUiToolbarConf(true, true, false, true,
-				true), window, sessionVar, classModel, filteringSet);
+		super(new StandarTableUiPagedConf(false, false, false),
+				new StandarTableUiToolbarConf(true, true, false, true, true),
+				window, sessionVar, classModel, filteringSet);
 
 	}
 
@@ -51,8 +55,8 @@ class EjercicioContableTableUi extends
 
 		item.setFechaCierre(fecha);
 
-		StandardFormUi<EjercicioContable> form = new StandardFormUi<EjercicioContable>(
-				sessionVar, classModel, StandardFormUi.INSERT_MODE, this, item);
+		EjercicioContableFormUi form = new EjercicioContableFormUi(sessionVar,
+				StandardFormUi.INSERT_MODE, this, item);
 
 		Label seccionLBL = new Label("Se copiaran los datos del ejercicio "
 				+ (item.getEjercicio() - 1));
@@ -61,8 +65,30 @@ class EjercicioContableTableUi extends
 
 		form.rootVL.addComponent(seccionLBL, 0);
 
+		form.contabilidadGeneralMenu = contabilidadGeneralMenu;
+
 		return form;
 
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected StandardFormUi openFormModificar(EjercicioContable item)
+			throws Exception {
+
+		EjercicioContableFormUi form = new EjercicioContableFormUi(sessionVar,
+				StandardFormUi.UPDATE_MODE, this, item);
+
+		form.contabilidadGeneralMenu = contabilidadGeneralMenu;
+
+		return form;
+
+	}
+
+	protected void deleteItem(EjercicioContable item) throws Exception {
+
+		contabilidadGeneralMenu.loadEjercicioContable();
+
+		super.deleteItem(item);
 	}
 
 }

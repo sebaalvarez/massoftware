@@ -2,7 +2,8 @@ package com.massoftware.frontend.custom.menu;
 
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.custom.windows.WindowsFactory;
-import com.massoftware.frontend.util.LogAndNotification;
+import com.massoftware.windows.LogAndNotification;
+import com.massoftware.windows.empresa.EmpresaForm;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.HorizontalLayout;
@@ -11,6 +12,7 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 public abstract class AbstractMenu extends VerticalLayout implements View {
@@ -70,7 +72,7 @@ public abstract class AbstractMenu extends VerticalLayout implements View {
 	}
 
 	@SuppressWarnings("rawtypes")
-	protected Command open(Class classModel) {
+	protected Command openWindowCmd(Class classModel) {
 
 		return new Command() {
 			/**
@@ -81,10 +83,15 @@ public abstract class AbstractMenu extends VerticalLayout implements View {
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 
-				WindowsFactory.openWindow(getThis(), classModel, sessionVar);
-
+				openWindow(classModel);
 			}
 		};
+	}
+
+	@SuppressWarnings("rawtypes")
+	protected void openWindow(Class classModel) {
+
+		WindowsFactory.openWindow(getThis(), classModel, sessionVar);
 	}
 
 	@Override

@@ -7,8 +7,10 @@ import java.util.List;
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.custom.windows.AsientoFormUi;
+import com.massoftware.frontend.custom.windows.EjercicioContableTableUi;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
-import com.massoftware.frontend.util.LogAndNotification;
+import com.massoftware.frontend.custom.windows.StandardTableUi;
+import com.massoftware.frontend.custom.windows.WindowsFactory;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.model.CentroDeCostoContable;
@@ -17,7 +19,12 @@ import com.massoftware.model.CuentaContable;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.MotivoNotaDeCredito;
 import com.massoftware.model.PuntoDeEquilibrio;
+import com.massoftware.windows.LogAndNotification;
+import com.massoftware.windows.empresa.EmpresaForm;
+import com.massoftware.windows.paises.WPaises;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.FileResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -37,27 +44,46 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 	 */
 	private static final long serialVersionUID = 8506821800939861972L;
 
-	// private UsuarioBO usuarioBO;
-	// private EjercicioContableBO ejercicioContableBO;
-
 	private ComboBox filtroEjercicioCBX;
 	private BeanItemContainer<EjercicioContable> ejerciciosContablesBIC;
 
+	private MenuItem nuevoAsientoMI;
+	private Button nevoAsientoBTN;
+
 	public ContabilidadGeneralMenu(String iconosPath, SessionVar sessionVar) {
 		super("Contabilidad general", iconosPath, sessionVar);
-		// initObjectBO();
+
+		this.addShortcutListener(new ShortcutListener("F5", KeyCode.F5,
+				new int[] {}) {
+
+			private static final long serialVersionUID = -79140067012371655L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				try {
+					openWindow(CuentaContable.class);
+				} catch (Exception e) {
+					LogAndNotification.print(e);
+				}
+			}
+		});
+
+		this.addShortcutListener(new ShortcutListener("F6", KeyCode.F6,
+				new int[] {}) {
+
+			private static final long serialVersionUID = 6542661935089665066L;
+
+			@Override
+			public void handleAction(Object sender, Object target) {
+				try {
+					openNewAsiento();
+				} catch (Exception e) {
+					LogAndNotification.print(e);
+				}
+			}
+		});
 
 	}
-
-	protected void preinit() {
-		// initObjectBO();
-	}
-
-	// private void initObjectBO() {
-	// this.usuarioBO = (UsuarioBO) sessionVar.getCx().buildBO(Usuario.class);
-	// this.ejercicioContableBO = (EjercicioContableBO) sessionVar.getCx()
-	// .buildBO(EjercicioContable.class);
-	// }
 
 	protected MenuBar getMenuBar() {
 
@@ -82,20 +108,24 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 
 		// a1.addItem("Plan de cuentas (orden -> cta de jerarquía) ...", null)
 		// .setEnabled(false);
-		a1.addItem("Plan de cuentas ...", open(CuentaContable.class));
-		a1.addItem("Ejercicios contables ...", open(EjercicioContable.class));
-		a1.addItem("Modelos de asientos", open(AsientoModeloItem.class));
-		a1.addItem("Centros de costos ...", open(CentroDeCostoContable.class));
-		a1.addItem("Puntos de equilibrio ...", open(PuntoDeEquilibrio.class));
+		a1.addItem("Plan de cuentas ...", openWindowCmd(CuentaContable.class));
+		a1.addItem("Ejercicios contables ...",
+				openWindowCmd(EjercicioContable.class));
+		a1.addItem("Modelos de asientos",
+				openWindowCmd(AsientoModeloItem.class));
+		a1.addItem("Centros de costos ...",
+				openWindowCmd(CentroDeCostoContable.class));
+		a1.addItem("Puntos de equilibrio ...",
+				openWindowCmd(PuntoDeEquilibrio.class));
 		a1.addSeparator();
-		a1.addItem("Parámetros generales", null).setEnabled(false);
+		a1.addItem("Parámetros generales", openEmpresaFormCmd());		
 		a1.addItem("Fecha de cierre por módulos", null).setEnabled(false);
 		a1.addSeparator();
-		a1.addItem("Especificar impresora ...", open(MotivoNotaDeCredito.class))
-				.setEnabled(false);
+		a1.addItem("Especificar impresora ...",
+				openWindowCmd(MotivoNotaDeCredito.class)).setEnabled(false);
 
-		a3.addItem("Nuevo asiento ...", openNewAsiento());
-		a3.addItem("Asientos realizados ...", open(Asiento.class));
+		nuevoAsientoMI = a3.addItem("Nuevo asiento ...", openNewAsientoCmd());
+		a3.addItem("Asientos realizados ...", openWindowCmd(Asiento.class));
 		// asientos.addItem("Lotes de asientos importados ...", null);
 		// asientos.addItem("Anulación de asientos ...", null);
 
@@ -131,14 +161,17 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 		planDeCuentasBTN.setIcon(new FileResource(fileImg));
 		planDeCuentasBTN.addClickListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
-				Notification.show("Clicked "
-						+ event.getButton().getDescription());
+				try {
+					openWindow(CuentaContable.class);
+				} catch (Exception e) {
+					LogAndNotification.print(e);
+				}
 			}
 		});
 
 		row.addComponent(planDeCuentasBTN);
 
-		Button nevoAsientoBTN = new Button("");
+		nevoAsientoBTN = new Button("");
 		nevoAsientoBTN.addStyleName(ValoTheme.BUTTON_HUGE);
 		nevoAsientoBTN.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
 		nevoAsientoBTN.setDescription("Nuevo asiento (F6)");
@@ -146,8 +179,13 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 		nevoAsientoBTN.setIcon(new FileResource(fileImg2));
 		nevoAsientoBTN.addClickListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
-				Notification.show("Clicked "
-						+ event.getButton().getDescription());
+
+				try {
+					openNewAsiento();
+				} catch (Exception e) {
+					LogAndNotification.print(e);
+				}
+
 			}
 		});
 		row.addComponent(nevoAsientoBTN);
@@ -182,6 +220,19 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 		filtroEjercicioCBX.addStyleName(ValoTheme.COMBOBOX_ALIGN_CENTER);
 		filtroEjercicioCBX.setContainerDataSource(ejerciciosContablesBIC);
 
+		loadEjercicioContable();
+
+		row.addComponent(filtroEjercicioCBX);
+
+		filtroEjercicioCBX.addValueChangeListener(e -> {
+			filtroEjercicioCBXCBXValueChange();
+		});
+
+		return row;
+	}
+
+	public void loadEjercicioContable() throws Exception {
+
 		EjercicioContableBO ejercicioContableBO = (EjercicioContableBO) sessionVar
 				.getCx().buildBO(EjercicioContable.class);
 
@@ -194,9 +245,6 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 
 		if (ejerciciosContablesBIC.size() > 0) {
 
-			// EjercicioContable ejercicioContable = usuario
-			// .getEjercicioContable();
-
 			EjercicioContable ejercicioContable = ejercicioContableBO
 					.findDefaultEjercicioContable();
 
@@ -206,10 +254,7 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 				filtroEjercicioCBX.setValue(ejercicioContable);
 
 			} else {
-				// EjercicioContable maxEjercicioContable =
-				// ejercicioContableBO
-				// .findMaxEjercicio();
-				// ejercicioContableCB.setValue(maxEjercicioContable);
+
 				ejercicioContable = ejerciciosContablesBIC.getIdByIndex(0);
 				filtroEjercicioCBX.setValue(ejercicioContable);
 			}
@@ -218,13 +263,11 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 
 		}
 
-		row.addComponent(filtroEjercicioCBX);
+		boolean b = ((EjercicioContable) filtroEjercicioCBX.getValue())
+				.getEjercicioCerrado() == false;
 
-		filtroEjercicioCBX.addValueChangeListener(e -> {
-			filtroEjercicioCBXCBXValueChange();
-		});
-
-		return row;
+		nuevoAsientoMI.setVisible(b);
+		nevoAsientoBTN.setVisible(b);
 	}
 
 	private void filtroEjercicioCBXCBXValueChange() {
@@ -234,12 +277,18 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 					.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
 							.getValue());
 
+			boolean b = ((EjercicioContable) filtroEjercicioCBX.getValue())
+					.getEjercicioCerrado() == false;
+
+			nuevoAsientoMI.setVisible(b);
+			nevoAsientoBTN.setVisible(b);
+
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
 	}
 
-	protected Command openNewAsiento() {
+	protected Command openNewAsientoCmd() {
 
 		return new Command() {
 			/**
@@ -250,25 +299,7 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 
-				try {
-
-					Window window = new Window();
-
-					window.setImmediate(true);
-					window.setWidth("-1px");
-					window.setHeight("-1px");
-					window.setClosable(true);
-					window.setResizable(false);
-					window.setModal(true);
-					window.center();
-					window.setContent(openFormAgregar());
-					window.setCaption("Agregar asiento contable");
-					window.center();
-					getThis().getUI().addWindow(window);
-
-				} catch (Exception e) {
-					LogAndNotification.print(e);
-				}
+				openNewAsiento();
 
 			}
 		};
@@ -325,5 +356,60 @@ public class ContabilidadGeneralMenu extends AbstractMenu {
 		return form;
 
 	}
+
+	@SuppressWarnings("rawtypes")
+	protected void openWindow(Class classModel) {
+
+		StandardTableUi table = WindowsFactory.openWindow(getThis(),
+				classModel, sessionVar);
+
+		if (table instanceof EjercicioContableTableUi) {
+			((EjercicioContableTableUi) table).contabilidadGeneralMenu = (ContabilidadGeneralMenu) getThis();
+		}
+
+	}
+
+	protected void openNewAsiento() {
+		try {
+
+			Window window = new Window();
+
+			window.setImmediate(true);
+			window.setWidth("-1px");
+			window.setHeight("-1px");
+			window.setClosable(true);
+			window.setResizable(false);
+			window.setModal(true);
+			window.center();
+			window.setContent(openFormAgregar());
+			window.setCaption("Agregar asiento contable");
+			window.center();
+			getThis().getUI().addWindow(window);
+
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
+
+	// -------------------------------------------------------------
+
+	protected Command openEmpresaFormCmd() {
+
+		return new Command() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 4645387020070455569L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+
+				Window window = new EmpresaForm(sessionVar);
+				getUI().addWindow(window);
+			}
+		};
+	}
+	
+
 
 }

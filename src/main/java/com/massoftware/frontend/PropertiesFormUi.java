@@ -4,8 +4,8 @@ import java.util.Properties;
 
 import com.massoftware.backend.BackendContext;
 import com.massoftware.backend.bo.UsuarioBO;
-import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.Usuario;
+import com.massoftware.windows.LogAndNotification;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;

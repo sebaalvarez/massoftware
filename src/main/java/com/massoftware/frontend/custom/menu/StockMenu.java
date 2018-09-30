@@ -32,32 +32,32 @@ public class StockMenu extends AbstractMenu {
 		final MenuBar.MenuItem a6 = menubar.addItem("Ventana", null);
 		final MenuBar.MenuItem a7 = menubar.addItem("Ayuda", null);
 
-		a1.addItem("Productos ...", open(Zona.class)).setEnabled(false);
+		a1.addItem("Productos ...", openWindowCmd(Zona.class)).setEnabled(false);
 		a1.addSeparator();
-		a1.addItem("Capítulos - Items de productos ...", open(Zona.class))
+		a1.addItem("Capítulos - Items de productos ...", openWindowCmd(Zona.class))
 				.setEnabled(false);
-		a1.addItem("Marca - Gama de productos ...", open(Zona.class))
-				.setEnabled(false);
-		a1.addSeparator();
-		a1.addItem("Productos conjunto ...", open(Zona.class))
-				.setEnabled(false);
-		a1.addItem("Marcas ...", open(Zona.class)).setEnabled(false);
-		a1.addItem("Unidades de medida ...", open(Zona.class))
-				.setEnabled(false);
-		a1.addItem("Códigos convenio multilateral ...", open(CodigoConvenioMultilateral.class));
-		a1.addItem("Depósitos ...", open(Zona.class)).setEnabled(false);
-		a1.addItem("Sucursales ...", open(Zona.class)).setEnabled(false);
-		a1.addSeparator();
-		a1.addItem("Parámetros generales", open(MotivoNotaDeCredito.class))
-				.setEnabled(false);
-		a1.addItem("Fechas de cierre por módulos ...", open(Zona.class))
+		a1.addItem("Marca - Gama de productos ...", openWindowCmd(Zona.class))
 				.setEnabled(false);
 		a1.addSeparator();
-		a1.addItem("Tipos de comprobantes ...", open(Zona.class)).setEnabled(
+		a1.addItem("Productos conjunto ...", openWindowCmd(Zona.class))
+				.setEnabled(false);
+		a1.addItem("Marcas ...", openWindowCmd(Zona.class)).setEnabled(false);
+		a1.addItem("Unidades de medida ...", openWindowCmd(Zona.class))
+				.setEnabled(false);
+		a1.addItem("Códigos convenio multilateral ...", openWindowCmd(CodigoConvenioMultilateral.class));
+		a1.addItem("Depósitos ...", openWindowCmd(Zona.class)).setEnabled(false);
+		a1.addItem("Sucursales ...", openWindowCmd(Zona.class)).setEnabled(false);
+		a1.addSeparator();
+		a1.addItem("Parámetros generales", openWindowCmd(MotivoNotaDeCredito.class))
+				.setEnabled(false);
+		a1.addItem("Fechas de cierre por módulos ...", openWindowCmd(Zona.class))
+				.setEnabled(false);
+		a1.addSeparator();
+		a1.addItem("Tipos de comprobantes ...", openWindowCmd(Zona.class)).setEnabled(
 				false);
-		a1.addItem("Talonarios ...", open(Zona.class)).setEnabled(false);
+		a1.addItem("Talonarios ...", openWindowCmd(Zona.class)).setEnabled(false);
 		a1.addSeparator();
-		a1.addItem("Configurar impresora ...", open(MotivoNotaDeCredito.class))
+		a1.addItem("Configurar impresora ...", openWindowCmd(MotivoNotaDeCredito.class))
 				.setEnabled(false);
 
 		a2.setEnabled(false);

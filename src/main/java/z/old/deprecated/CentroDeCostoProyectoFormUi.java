@@ -2,9 +2,9 @@ package z.old.deprecated;
 
 import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
-import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.CentroDeCostoProyecto;
 import com.massoftware.model.CentroDeCostoProyectoTipo;
+import com.massoftware.windows.LogAndNotification;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextArea;

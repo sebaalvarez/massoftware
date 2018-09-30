@@ -11,13 +11,13 @@ import com.massoftware.frontend.SessionVar;
 import com.massoftware.frontend.custom.windows.ControlFactory;
 import com.massoftware.frontend.custom.windows.StandardFormUi;
 import com.massoftware.frontend.custom.windows.StandardTableUi;
-import com.massoftware.frontend.util.LogAndNotification;
-import com.massoftware.frontend.util.YesNoDialog;
 import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.CuentaDeFondoA;
 import com.massoftware.model.CuentaDeFondoGrupo;
 import com.massoftware.model.CuentaDeFondoRubro;
 import com.massoftware.model.EntityId;
+import com.massoftware.windows.EliminarDialog;
+import com.massoftware.windows.LogAndNotification;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.FontAwesome;
@@ -477,10 +477,8 @@ public class CuentaDeFondoTableUi extends StandardTableUi<CuentaDeFondoA> {
 			if (tree.getValue() != null) {
 
 				getUI().addWindow(
-						new YesNoDialog("Eliminar",
-								"Esta seguro de eliminar el ítem "
-										+ tree.getValue(),
-								new YesNoDialog.Callback() {
+						new EliminarDialog(tree.getValue().toString(),
+								new EliminarDialog.Callback() {
 									public void onDialogResult(boolean yes) {
 										if (yes) {
 											deleteTree();

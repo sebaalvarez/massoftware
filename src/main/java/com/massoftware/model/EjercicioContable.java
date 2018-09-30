@@ -226,20 +226,16 @@ public class EjercicioContable extends EntityId implements
 
 	}
 
-	private boolean _setfullToString = false;
+//	public boolean _setfullToString = false;
 
-	public void _setfullToStringx(boolean _setfullToString) {
-		this._setfullToString = _setfullToString;
-	}
+//	public void _setfullToStringx(boolean _setfullToString) {
+//		this._setfullToString = _setfullToString;
+//	}
 
 	@Override
 	public String toString() {
 
-		if (this._setfullToString) {
-			return toStringFull();
-		} else {
-			return this.getEjercicio().toString();
-		}
+		return this.getEjercicio().toString();
 
 	}
 

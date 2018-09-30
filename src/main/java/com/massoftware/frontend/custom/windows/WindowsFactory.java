@@ -5,7 +5,6 @@ import z.old.deprecated.ChequeraTableUi;
 import z.old.deprecated.CuentaDeFondoTableUi;
 
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.AsientoModeloItem;
 import com.massoftware.model.Banco;
@@ -39,6 +38,7 @@ import com.massoftware.model.TipoCbteControl;
 import com.massoftware.model.TipoCliente;
 import com.massoftware.model.TipoDocumentoAFIP;
 import com.massoftware.model.Zona;
+import com.massoftware.windows.LogAndNotification;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
 

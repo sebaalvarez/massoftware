@@ -1,8 +1,8 @@
 package com.massoftware.frontend.custom.windows;
 
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.model.SeguridadModulo;
+import com.massoftware.windows.LogAndNotification;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Window;

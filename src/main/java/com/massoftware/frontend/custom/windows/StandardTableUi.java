@@ -15,12 +15,12 @@ import com.massoftware.frontend.custom.windows.builder.annotation.FieldColumnMet
 import com.massoftware.frontend.custom.windows.builder.annotation.FieldLabelAnont;
 import com.massoftware.frontend.custom.windows.builder.annotation.FieldSubNameFKAnont;
 import com.massoftware.frontend.util.ColumnMetaData;
-import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.SimpleStringTraslateFilter;
-import com.massoftware.frontend.util.YesNoDialog;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.Entity;
 import com.massoftware.model.EntityId;
+import com.massoftware.windows.EliminarDialog;
+import com.massoftware.windows.LogAndNotification;
 import com.vaadin.data.Property;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItemContainer;
@@ -130,83 +130,6 @@ public class StandardTableUi<T> extends CustomComponent {
 
 	// ----------------------------------------------
 
-	// private StandardTableUi(Window window, SessionVar sessionVar,
-	// Class<T> classModel, StandarTableUiFilteringSet filteringSet) {
-	//
-	// StandarTableUiPagedConf pagedConf = new StandarTableUiPagedConf(false,
-	// false, false);
-	//
-	// StandarTableUiToolbarConf toolbarConf = new StandarTableUiToolbarConf(
-	// false, false, false, false, false);
-	//
-	// build(pagedConf, toolbarConf, window, sessionVar, classModel,
-	// filteringSet);
-	// }
-	//
-	// private StandardTableUi(Window window, SessionVar sessionVar,
-	// Class<T> classModel) {
-	//
-	// StandarTableUiPagedConf pagedConf = new StandarTableUiPagedConf(false,
-	// false, false);
-	//
-	// StandarTableUiToolbarConf toolbarConf = new StandarTableUiToolbarConf(
-	// false, false, false, false, false);
-	//
-	// StandarTableUiFilteringSet filteringSet = new
-	// StandarTableUiFilteringSet();
-	//
-	// build(pagedConf, toolbarConf, window, sessionVar, classModel,
-	// filteringSet);
-	// }
-	//
-	// private StandardTableUi(StandarTableUiToolbarConf toolbarConf,
-	// Window window, SessionVar sessionVar, Class<T> classModel,
-	// StandarTableUiFilteringSet filteringSet) {
-	//
-	// StandarTableUiPagedConf pagedConf = new StandarTableUiPagedConf(false,
-	// false, false);
-	//
-	// build(pagedConf, toolbarConf, window, sessionVar, classModel,
-	// filteringSet);
-	// }
-	//
-	// private StandardTableUi(StandarTableUiToolbarConf toolbarConf,
-	// Window window, SessionVar sessionVar, Class<T> classModel) {
-	//
-	// StandarTableUiPagedConf pagedConf = new StandarTableUiPagedConf(false,
-	// false, false);
-	//
-	// StandarTableUiFilteringSet filteringSet = new
-	// StandarTableUiFilteringSet();
-	//
-	// build(pagedConf, toolbarConf, window, sessionVar, classModel,
-	// filteringSet);
-	// }
-	//
-	// private StandardTableUi(StandarTableUiPagedConf pagedConf, Window window,
-	// SessionVar sessionVar, Class<T> classModel,
-	// StandarTableUiFilteringSet filteringSet) {
-	//
-	// StandarTableUiToolbarConf toolbarConf = new StandarTableUiToolbarConf(
-	// false, false, false, false, false);
-	//
-	// build(pagedConf, toolbarConf, window, sessionVar, classModel,
-	// filteringSet);
-	// }
-	//
-	// private StandardTableUi(StandarTableUiPagedConf pagedConf, Window window,
-	// SessionVar sessionVar, Class<T> classModel) {
-	//
-	// StandarTableUiToolbarConf toolbarConf = new StandarTableUiToolbarConf(
-	// false, false, false, false, false);
-	//
-	// StandarTableUiFilteringSet filteringSet = new
-	// StandarTableUiFilteringSet();
-	//
-	// build(pagedConf, toolbarConf, window, sessionVar, classModel,
-	// filteringSet);
-	// }
-
 	protected StandardTableUi() {
 	}
 
@@ -218,28 +141,6 @@ public class StandardTableUi<T> extends CustomComponent {
 		build(pagedConf, toolbarConf, window, sessionVar, classModel,
 				filteringSet);
 	}
-
-	// private StandardTableUi(StandarTableUiPagedConf pagedConf,
-	// StandarTableUiToolbarConf toolbarConf, Window window,
-	// SessionVar sessionVar, Class<T> classModel) {
-	//
-	// StandarTableUiFilteringSet filteringSet = new
-	// StandarTableUiFilteringSet();
-	//
-	// build(pagedConf, toolbarConf, window, sessionVar, classModel,
-	// filteringSet);
-	// }
-
-	// ---------------------------------------------------------------------
-
-	// private void build(StandarTableUiPagedConf pagedConf,
-	// StandarTableUiToolbarConf toolbarConf, Window window,
-	// SessionVar sessionVar, Class<T> classModel, String pidFiltering,
-	// Object valueFilter,
-	// @SuppressWarnings("rawtypes") Property searchProperty,
-	// List<Object> otrosFiltros) {
-	//
-	// }
 
 	protected void build(StandarTableUiPagedConf pagedConf,
 			StandarTableUiToolbarConf toolbarConf, Window window,
@@ -327,19 +228,22 @@ public class StandardTableUi<T> extends CustomComponent {
 			itemsGRD.addSortListener(e -> {
 				sort(e);
 			});
-			
-//			this.addShortcutListener(new ShortcutListener("DELETE", KeyCode.DELETE,
-//					new int[] {}) {
-//
-//				private static final long serialVersionUID = 1L;
-//
-//				@Override
-//				public void handleAction(Object sender, Object target) {
-//					if (target instanceof TextField && ((TextField)target).isEnabled() && ((TextField)target).isReadOnly() == false) {
-//						((TextField)target).setValue(null);						
-//					}
-//				}
-//			});
+
+			// this.addShortcutListener(new ShortcutListener("DELETE",
+			// KeyCode.DELETE,
+			// new int[] {}) {
+			//
+			// private static final long serialVersionUID = 1L;
+			//
+			// @Override
+			// public void handleAction(Object sender, Object target) {
+			// if (target instanceof TextField &&
+			// ((TextField)target).isEnabled() &&
+			// ((TextField)target).isReadOnly() == false) {
+			// ((TextField)target).setValue(null);
+			// }
+			// }
+			// });
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -942,10 +846,9 @@ public class StandardTableUi<T> extends CustomComponent {
 			if (toolbarConf.isEliminar() && itemsGRD.getSelectedRow() != null) {
 
 				getUI().addWindow(
-						new YesNoDialog("Eliminar",
-								"Esta seguro de eliminar el ítem "
-										+ itemsGRD.getSelectedRow(),
-								new YesNoDialog.Callback() {
+						new EliminarDialog(
+								itemsGRD.getSelectedRow().toString(),
+								new EliminarDialog.Callback() {
 									public void onDialogResult(boolean yes) {
 										if (yes) {
 											delete();
@@ -979,7 +882,7 @@ public class StandardTableUi<T> extends CustomComponent {
 
 				LogAndNotification.printSuccessOk(msg);
 
-//				loadData();
+				// loadData();
 				this.reloadData();
 			}
 
@@ -1130,60 +1033,58 @@ public class StandardTableUi<T> extends CustomComponent {
 	protected void sort(SortEvent sortEvent) {
 		try {
 
-//			if (pagedConf.isPaged() && pagedConf.isPagedOrder()) {
+			// if (pagedConf.isPaged() && pagedConf.isPagedOrder()) {
 
-				pidFiltering = itemsGRD.getSortOrder().get(0).getPropertyId()
-						.toString();
+			pidFiltering = itemsGRD.getSortOrder().get(0).getPropertyId()
+					.toString();
 
-				// pidFiltering = attName;
+			// pidFiltering = attName;
 
-				String caption = itemsGRD.getColumn(pidFiltering)
-						.getHeaderCaption();
+			String caption = itemsGRD.getColumn(pidFiltering)
+					.getHeaderCaption();
 
-				filtroGenericoTXT.setCaption(caption);
+			filtroGenericoTXT.setCaption(caption);
 
-				for (ColumnMetaData columnMetaData : columnsMetaData) {
+			for (ColumnMetaData columnMetaData : columnsMetaData) {
 
-					if (columnMetaData.getAttName().equals(pidFiltering)) {
+				if (columnMetaData.getAttName().equals(pidFiltering)) {
 
-						if (sortEvent != null
-								&& sortEvent.getSortOrder().get(0)
-										.getDirection()
-										.equals(SortDirection.ASCENDING)) {
+					if (sortEvent != null
+							&& sortEvent.getSortOrder().get(0).getDirection()
+									.equals(SortDirection.ASCENDING)) {
 
-							orderByAsc = true;
+						orderByAsc = true;
 
-						} else if (sortEvent != null
-								&& sortEvent.getSortOrder().get(0)
-										.getDirection()
-										.equals(SortDirection.DESCENDING)) {
+					} else if (sortEvent != null
+							&& sortEvent.getSortOrder().get(0).getDirection()
+									.equals(SortDirection.DESCENDING)) {
 
-							orderByAsc = false;
-						}
-
-						setInputPromptFiltroGenericoTXT(columnMetaData);
-
-						break;
-
+						orderByAsc = false;
 					}
+
+					setInputPromptFiltroGenericoTXT(columnMetaData);
+
+					break;
+
 				}
+			}
 
-				filtroGenericoTXT.setDescription(filtroGenericoTXT
-						.getInputPrompt());
+			filtroGenericoTXT
+					.setDescription(filtroGenericoTXT.getInputPrompt());
 
-				removerFiltroGenericoBTNClick();
+			removerFiltroGenericoBTNClick();
 
-				filtroGenericoTXT.focus();
+			filtroGenericoTXT.focus();
 
-				if (sortEvent != null && pagedConf.isPaged()
-						&& pagedConf.isPagedOrder()) {
+			if (sortEvent != null && pagedConf.isPaged()
+					&& pagedConf.isPagedOrder()) {
 
-					this.offset = 0;
+				this.offset = 0;
 
-					reloadData();
-				}
+				reloadData();
+			}
 
-//			}
+			// }
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -1247,7 +1148,7 @@ public class StandardTableUi<T> extends CustomComponent {
 
 			this.rootVL.setEnabled(false);
 
-//			 List<T> items = reloadDataList();
+			// List<T> items = reloadDataList();
 
 			itemsBIC.removeAllItems();
 
@@ -1285,12 +1186,12 @@ public class StandardTableUi<T> extends CustomComponent {
 				eliminarBTN.setEnabled(enabled);
 			}
 			if (pagedConf.isPaged()) {
-				
+
 				nextPageBTN.setEnabled(itemsBIC.size() > 0
 						&& itemsBIC.size() <= 15);
-				
+
 				prevPageBTN.setEnabled(offset >= 15);
-			}			
+			}
 
 			this.rootVL.setEnabled(true);
 
@@ -1414,7 +1315,7 @@ public class StandardTableUi<T> extends CustomComponent {
 			Object value, int limit, int offset) throws Exception {
 
 		if (pagedConf.isPaged()) {
-			
+
 			if (pidFilteringValue != null
 					&& pidFilteringValue.trim().length() > 0) {
 

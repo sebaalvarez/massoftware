@@ -67,50 +67,50 @@ public class SuperMenu extends AbstractMenu {
 		MenuBar.MenuItem a26 = a2.addItem("Extends StandardTableUi + DOBLE PK", null);
 		MenuBar.MenuItem a27 = a2.addItem("Extends StandardTableUi + TRIPLE PK", null);
 
-		a11.addItem("Zonas", open(Zona.class));
-		a11.addItem("Países", open(Pais.class));
-		a11.addItem("Tipos de cliente", open(TipoCliente.class));
-		a11.addItem("Tipos de documentos AFIP", open(TipoDocumentoAFIP.class));
-		a11.addItem("Tipos de cbtes. AFIP", open(TipoCbteAFIP.class))
+		a11.addItem("Zonas", openWindowCmd(Zona.class));
+		a11.addItem("Países", openWindowCmd(Pais.class));
+		a11.addItem("Tipos de cliente", openWindowCmd(TipoCliente.class));
+		a11.addItem("Tipos de documentos AFIP", openWindowCmd(TipoDocumentoAFIP.class));
+		a11.addItem("Tipos de cbtes. AFIP", openWindowCmd(TipoCbteAFIP.class))
 				.setEnabled(false);
-		a11.addItem("Motivos comentarios", open(MotivoComentario.class));
+		a11.addItem("Motivos comentarios", openWindowCmd(MotivoComentario.class));
 		a11.addItem("Motivos notas de creditos",
-				open(MotivoNotaDeCredito.class));
+				openWindowCmd(MotivoNotaDeCredito.class));
 		a11.addItem("Codigos convenio multilateral",
-				open(CodigoConvenioMultilateral.class));
+				openWindowCmd(CodigoConvenioMultilateral.class));
 		a11.addItem("Firmantes (cheques propios) ...",
-				open(BancoFirmante.class));		
-		a11.addItem("Moneda AFIP", open(MonedaAFIP.class));
+				openWindowCmd(BancoFirmante.class));		
+		a11.addItem("Moneda AFIP", openWindowCmd(MonedaAFIP.class));
 
-		a13.addItem("Ejercicios contables", open(EjercicioContable.class));
+		a13.addItem("Ejercicios contables", openWindowCmd(EjercicioContable.class));
 
 		a14.addItem("Centros de costo - Proyectos",
-				open(CentroDeCostoProyecto.class)).setEnabled(false);
+				openWindowCmd(CentroDeCostoProyecto.class)).setEnabled(false);
 
 		
-		a21.addItem("Cajas", open(Caja.class));
-		a21.addItem("Monedas ...", open(Moneda.class));
+		a21.addItem("Cajas", openWindowCmd(Caja.class));
+		a21.addItem("Monedas ...", openWindowCmd(Moneda.class));
 		
-		a24.addItem("Cuentas de fondo ...", open(CuentaDeFondo.class))
+		a24.addItem("Cuentas de fondo ...", openWindowCmd(CuentaDeFondo.class))
 				.setEnabled(false);
 		
 		
 
 		a25.addItem("Centros de costos contables",
-				open(CentroDeCostoContable.class));
-		a25.addItem("Puntos de equilibrio ...", open(PuntoDeEquilibrio.class));
-		a25.addItem("Provincias ...", open(Provincia.class));
-		a25.addItem("Ciudades ...", open(Ciudad.class));
+				openWindowCmd(CentroDeCostoContable.class));
+		a25.addItem("Puntos de equilibrio ...", openWindowCmd(PuntoDeEquilibrio.class));
+		a25.addItem("Provincias ...", openWindowCmd(Provincia.class));
+		a25.addItem("Ciudades ...", openWindowCmd(Ciudad.class));
 
-		a12.addItem("Bancos ...", open(Banco.class));
-		a12.addItem("Sucursales ...", open(Sucursal.class));
+		a12.addItem("Bancos ...", openWindowCmd(Banco.class));
+		a12.addItem("Sucursales ...", openWindowCmd(Sucursal.class));
 
-		a23.addItem("Puertas ...", open(SeguridadPuerta.class));
-		a26.addItem("Cotizaciones de monedas ...", open(MonedaCotizacion.class));
+		a23.addItem("Puertas ...", openWindowCmd(SeguridadPuerta.class));
+		a26.addItem("Cotizaciones de monedas ...", openWindowCmd(MonedaCotizacion.class));
 		
-		a27.addItem("Modelos de asientos", open(AsientoModeloItem.class));
+		a27.addItem("Modelos de asientos", openWindowCmd(AsientoModeloItem.class));
 		
-		a25.addItem("Plan de cuentas ...", open(CuentaContable.class));
+		a25.addItem("Plan de cuentas ...", openWindowCmd(CuentaContable.class));
 
 		return menubar;
 	}

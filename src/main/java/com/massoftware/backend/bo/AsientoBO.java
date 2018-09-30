@@ -232,12 +232,47 @@ public class AsientoBO extends GenericBO<Asiento> {
 			connectionWrapper.begin();
 
 			if (dto._fechaRevision != null) {
+
 				dto = insert(connectionWrapper, dto, usuario);
+				for (AsientoItem item : dto._items) {
+					insert(connectionWrapper, item, usuario);
+				}
+
+				// ------------------------------------
+
 				Asiento asientoRevision = (Asiento) dto.clone();
-				asientoRevision.setFecha(asientoRevision._fechaRevision);
+				asientoRevision.setNumero(asientoRevision.getNumero() + 1);
+				asientoRevision.setFecha(dto._fechaRevision);
+
+				List<AsientoItem> newItems = new ArrayList<AsientoItem>();
+
+				for (AsientoItem item : dto._items) {
+					AsientoItem newItem = (AsientoItem) item.clone();
+					newItem.setAsiento(asientoRevision);
+
+					BigDecimal debe = newItem.getDebe();
+					BigDecimal haber = newItem.getHaber();
+
+					newItem.setDebe(haber);
+					newItem.setHaber(debe);
+					newItems.add(newItem);
+				}
+
+				asientoRevision._items = newItems;
+
+				asientoRevision = insert(connectionWrapper, asientoRevision,
+						usuario);
+				for (AsientoItem item : asientoRevision._items) {
+					insert(connectionWrapper, item, usuario);
+				}
 
 			} else {
+
 				dto = insert(connectionWrapper, dto, usuario);
+				for (AsientoItem item : dto._items) {
+					insert(connectionWrapper, item, usuario);
+				}
+
 			}
 
 			connectionWrapper.commit();
@@ -253,7 +288,7 @@ public class AsientoBO extends GenericBO<Asiento> {
 
 	}
 
-	public Asiento insert(ConnectionWrapper connectionWrapper, Asiento dto,
+	private Asiento insert(ConnectionWrapper connectionWrapper, Asiento dto,
 			Usuario usuario) throws Exception {
 
 		String nameTableDB = getClassTableMSAnont(classModel);
@@ -331,6 +366,107 @@ public class AsientoBO extends GenericBO<Asiento> {
 		}
 
 		return dto;
+	}
+
+	private AsientoItem insert(ConnectionWrapper connectionWrapper,
+			AsientoItem dto, Usuario usuario) throws Exception {
+
+		String nameTableDB = null;
+
+		ClassTableMSAnont[] a = AsientoItem.class
+				.getAnnotationsByType(ClassTableMSAnont.class);
+		if (a != null && a.length > 0) {
+			nameTableDB = a[0].nameTableDB();
+		}
+
+		String[] nameAtts = { "[EJERCICIO]", "[NUMEROASIENTO]",
+				"[NROREGISTRO]", "[CUENTACONTABLE]", "[DEBE]", "[HABER]",
+				"[DETALLE]", "[FECHASQL]", "[ORDEN]" };
+
+		Object ejercicioContable = Integer.class;
+		Object asiento = Integer.class;
+		Object registro = Integer.class;
+		Object cuentaContable = String.class;
+		Object debe = BigDecimal.class;
+		Object haber = BigDecimal.class;
+		Object detalle = String.class;
+		Object fecha = Date.class;
+		Object orden = String.class;
+
+		if (dto.getCuentaContable() != null
+				&& dto.getCuentaContable().getId() != null
+				&& dto.getCuentaContable().getEjercicioContable() != null
+				&& dto.getCuentaContable().getEjercicioContable().getId() != null) {
+			ejercicioContable = dto.getCuentaContable().getEjercicioContable()
+					.getEjercicio();
+		}
+
+		if (dto.getAsiento() != null && dto.getAsiento().getNumero() != null) {
+			asiento = dto.getAsiento().getNumero();
+		}
+
+		if (dto.getAsiento() != null && dto.getAsiento().getFecha() != null) {
+			fecha = dto.getAsiento().getFecha();
+		}
+
+		if (dto.getRegistro() != null) {
+			registro = dto.getRegistro();
+		}
+
+		if (dto.getCuentaContable() != null
+				&& dto.getCuentaContable().getId() != null) {
+			cuentaContable = dto.getCuentaContable().getCuentaContable();
+		}
+
+		if (dto.getDebe() != null) {
+			debe = dto.getDebe();
+		}
+
+		if (dto.getHaber() != null) {
+			haber = dto.getHaber();
+		}
+
+		if (dto.getDetalle() != null) {
+			detalle = dto.getDetalle();
+		}
+
+		if (dto.getOrden() != null) {
+			orden = dto.getOrden();
+		}
+
+		Object[] args = { ejercicioContable, asiento, registro, cuentaContable,
+				debe, haber, detalle, fecha, orden };
+
+		String sql = "INSERT INTO " + nameTableDB + " (";
+
+		for (int i = 0; i < nameAtts.length; i++) {
+			sql += nameAtts[i];
+			if (i < nameAtts.length - 1) {
+				sql += ", ";
+			}
+		}
+
+		sql += ") VALUES (";
+
+		for (int i = 0; i < args.length; i++) {
+			sql += "?";
+			if (i < args.length - 1) {
+				sql += ", ";
+			}
+		}
+
+		sql += ")";
+
+		int rows = connectionWrapper.insert(sql, args);
+
+		if (rows != 1) {
+			throw new Exception(
+					"La sentencia debería afectar un registro, la sentencia afecto "
+							+ rows + " registros.");
+		}
+
+		return dto;
+
 	}
 
 	public Asiento update(Asiento dto, Asiento dtoOriginal, Usuario usuario)
@@ -435,12 +571,48 @@ public class AsientoBO extends GenericBO<Asiento> {
 								+ rows + " registros.");
 			}
 
+			List<AsientoItem> oldItems = findAllAsientoItem(connectionWrapper,
+					dto);
+
+			for (AsientoItem itemOld : oldItems) {
+
+				boolean exists = false;
+
+				for (AsientoItem asientoItem : dto._items) {
+					if (itemOld.equals(asientoItem)) {
+						exists = true;
+						break;
+					}
+				}
+
+				if (exists == false) {
+					delete(connectionWrapper, itemOld);
+				}
+
+			}
+
 			for (AsientoItem asientoItem : dto._items) {
+
 				AsientoItem asientoItemOriginal = (AsientoItem) asientoItem
 						.clone();
 				asientoItem.setAsiento(dto);
-				update(connectionWrapper, asientoItem, asientoItemOriginal,
-						usuario);
+
+				boolean exists = false;
+
+				for (AsientoItem itemOld : oldItems) {
+					if (itemOld.equals(asientoItem)) {
+						exists = true;
+						break;
+					}
+				}
+
+				if (exists) {
+					update(connectionWrapper, asientoItem, asientoItemOriginal,
+							usuario);
+				} else {
+					insert(connectionWrapper, asientoItem, usuario);
+				}
+
 			}
 
 			connectionWrapper.commit();
@@ -573,6 +745,60 @@ public class AsientoBO extends GenericBO<Asiento> {
 		return dto;
 	}
 
+	private boolean delete(ConnectionWrapper connectionWrapper, AsientoItem dto)
+			throws Exception {
+
+		Object ejercicioContable = Integer.class;
+		Object asiento = Integer.class;
+		Object orden = Integer.class;
+
+		if (dto.getAsiento() != null && dto.getAsiento().getId() != null
+				&& dto.getAsiento().getEjercicioContable() != null
+				&& dto.getAsiento().getEjercicioContable().getId() != null) {
+
+			ejercicioContable = dto.getAsiento().getEjercicioContable()
+					.getEjercicio();
+		}
+
+		if (dto.getAsiento() != null && dto.getAsiento().getId() != null) {
+			asiento = dto.getAsiento().getNumero();
+		}
+
+		if (dto.getOrden() != null) {
+			orden = dto.getOrden();
+		}
+
+		String nameTableDB = null;
+
+		ClassTableMSAnont[] a = AsientoItem.class
+				.getAnnotationsByType(ClassTableMSAnont.class);
+		if (a != null && a.length > 0) {
+			nameTableDB = a[0].nameTableDB();
+		}
+
+		String sql = "DELETE FROM " + nameTableDB;
+		String where = "[EJERCICIO] = ? AND [NUMEROASIENTO] = ? AND [ORDEN] = ?";
+
+		if (where != null && where.trim().length() > 0) {
+			sql += " WHERE " + where;
+		}
+
+		sql += ";";
+
+		int rows = -1;
+
+		rows = connectionWrapper.delete(sql, ejercicioContable, asiento, orden);
+
+		if (rows != 1) {
+			throw new Exception(
+					"La sentencia debería afectar un solo registro, la sentencia afecto "
+							+ rows + " registros.");
+		}
+
+		return false;
+
+	}
+
 	public boolean delete(Asiento dto) throws Exception {
 
 		Object ejercicioArg = Integer.class;
@@ -587,16 +813,116 @@ public class AsientoBO extends GenericBO<Asiento> {
 			numeroArg = dto.getNumero();
 		}
 
-		if (dataSourceWrapper.isDatabasePostgreSql()) {
-			// return delete(ATT_NAME_CODIGO + " = ?", codigoArg);
-			return false;
-		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+		String nameTableDB = null;
 
-			return delete("[EJERCICIO] = ? AND [NUMEROASIENTO] = ?",
-					ejercicioArg, numeroArg);
+		if (dataSourceWrapper.isDatabasePostgreSql()) {
+
+		} else if (dataSourceWrapper.isDatabaseMicrosoftSQLServer()) {
+			nameTableDB = getClassTableMSAnont(classModel);
 		}
 
-		return false;
+		String where = "[EJERCICIO] = ? AND [NUMEROASIENTO] = ?";
+
+		String sql = "DELETE FROM " + nameTableDB;
+
+		if (where != null && where.trim().length() > 0) {
+			sql += " WHERE " + where;
+		}
+
+		sql += ";";
+
+		ConnectionWrapper connectionWrapper = dataSourceWrapper
+				.getConnectionWrapper();
+
+		try {
+
+			connectionWrapper.begin();
+
+			// -------------------------------
+
+			List<AsientoItem> oldItems = findAllAsientoItem(connectionWrapper,
+					dto);
+
+			for (AsientoItem itemOld : oldItems) {
+
+				delete(connectionWrapper, itemOld);
+
+			}
+
+			// -------------------------------
+
+			int rows = -1;
+
+			rows = connectionWrapper.delete(sql, ejercicioArg, numeroArg);
+
+			if (rows != 1) {
+				throw new Exception(
+						"La sentencia debería afectar un solo registro, la sentencia afecto "
+								+ rows + " registros.");
+			}
+			
+			// -------------------------------
+
+			connectionWrapper.commit();
+
+			return true;
+
+		} catch (Exception e) {
+			connectionWrapper.rollBack();
+			throw e;
+		} finally {
+			connectionWrapper.close(connectionWrapper);
+		}
 
 	}
+
+	@SuppressWarnings({ "unchecked" })
+	private List<AsientoItem> findAllAsientoItem(
+			ConnectionWrapper connectionWrapper, Asiento asiento)
+			throws Exception {
+
+		if (asiento != null) {
+
+			String orderBy = "orden";
+
+			String where = "asiento_ejercicioContable_ejercicio = ? AND asiento_numero = ?";
+
+			String sql = "SELECT * FROM " + getView(AsientoItem.class);
+
+			if (where != null && where.trim().length() > 0) {
+				sql += " WHERE " + where;
+			}
+
+			if (orderBy != null && orderBy.trim().length() > 0) {
+				sql += " ORDER BY " + orderBy;
+			} else {
+				sql += " ORDER BY " + 1;
+			}
+
+			sql += ";";
+
+			List<AsientoItem> list = connectionWrapper
+					.findToListByCendraConvention(sql, asiento
+							.getEjercicioContable().getEjercicio(), asiento
+							.getNumero());
+
+			EjercicioContable ejercicioContable = null;
+			if (list.size() > 0 && list.get(0).getCuentaContable() != null) {
+
+				ejercicioContable = list.get(0).getCuentaContable()
+						.getEjercicioContable();
+
+				for (AsientoItem item : list) {
+					item._setEjercicioContable(ejercicioContable);
+				}
+			}
+
+			return list;
+
+		}
+
+		return new ArrayList<AsientoItem>();
+
+	}
+
 }

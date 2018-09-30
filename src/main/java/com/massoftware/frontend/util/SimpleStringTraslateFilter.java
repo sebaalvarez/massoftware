@@ -12,6 +12,7 @@ public class SimpleStringTraslateFilter implements Filter {
 	 */
 	private static final long serialVersionUID = 3915765281909681501L;
 
+	public static String S_N = "S/N";
 	public static String STARTS_WITCH = "STARTS_WITCH";
 	public static String ENDS_WITCH = "ENDS_WITCH";
 	public static String CONTAINS = "CONTAINS";

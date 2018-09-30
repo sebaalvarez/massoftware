@@ -11,12 +11,12 @@ import org.cendra.jdbc.ex.crud.UniqueException;
 import com.massoftware.backend.bo.AsientoBO;
 import com.massoftware.backend.bo.EjercicioContableBO;
 import com.massoftware.frontend.SessionVar;
-import com.massoftware.frontend.util.LogAndNotification;
 import com.massoftware.frontend.util.converter.StringToIntegerConverterUnspecifiedLocale;
 import com.massoftware.model.Asiento;
 import com.massoftware.model.CostoDeVenta;
 import com.massoftware.model.EjercicioContable;
 import com.massoftware.model.Entity;
+import com.massoftware.windows.LogAndNotification;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.IntegerRangeValidator;
@@ -120,6 +120,13 @@ class AsientoTableUi extends StandardTableUi<Asiento> {
 		if (this.itemsBIC.size() > 0) {
 			reloadDataAsientoItem(this.itemsBIC.getIdByIndex(0));
 		}
+		
+		this.agregarBTN.setVisible(((EjercicioContable)filtroEjercicioCBX.getValue()).getEjercicioCerrado() == false);
+		if(((EjercicioContable)filtroEjercicioCBX.getValue()).getEjercicioCerrado()){
+			this.modificarBTN.setCaption("Consultar");
+		}
+//		this.modificarBTN.setVisible(((EjercicioContable)filtroEjercicioCBX.getValue()).getEjercicioCerrado()== false);
+		this.eliminarBTN.setVisible(((EjercicioContable)filtroEjercicioCBX.getValue()).getEjercicioCerrado()== false);
 
 	}
 
@@ -542,8 +549,8 @@ class AsientoTableUi extends StandardTableUi<Asiento> {
 		try {
 			offset = 0;
 			loadMesAnio();
-			reloadData();
-
+			reloadData();					
+			
 		} catch (Exception e) {
 			LogAndNotification.print(e);
 		}
@@ -581,6 +588,12 @@ class AsientoTableUi extends StandardTableUi<Asiento> {
 		} else {
 			reloadDataAsientoItem(null);
 		}
+		this.agregarBTN.setVisible(((EjercicioContable)filtroEjercicioCBX.getValue()).getEjercicioCerrado() == false);
+		if(((EjercicioContable)filtroEjercicioCBX.getValue()).getEjercicioCerrado()){
+			this.modificarBTN.setCaption("Consultar");
+		}
+//		this.modificarBTN.setVisible(((EjercicioContable)filtroEjercicioCBX.getValue()).getEjercicioCerrado()== false);
+		this.eliminarBTN.setVisible(((EjercicioContable)filtroEjercicioCBX.getValue()).getEjercicioCerrado()== false);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -817,6 +830,13 @@ class AsientoTableUi extends StandardTableUi<Asiento> {
 		// form.setMaxValues();
 
 		return form;
+	}
+
+	protected void deleteItem(Asiento item) throws Exception {
+
+		item._items = asientoItemTableUi.itemsBIC.getItemIds();
+
+		super.deleteItem(item);
 	}
 
 }
