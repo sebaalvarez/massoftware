@@ -11,4 +11,12 @@ public class UtilModel {
 		}
 		return value;
 	}
+
+	public static Boolean format(Boolean value) {
+		if (value == null) {
+			value = false;
+		}
+		return value;
+	}
+
 }

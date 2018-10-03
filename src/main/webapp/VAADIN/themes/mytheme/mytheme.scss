@@ -199,6 +199,18 @@
 		width: 10px;
 		height: 10px;
 	}
+	
+	.v-radiobutton label {
+		-webkit-tap-highlight-color: transparent;
+		-webkit-touch-callout: none;
+		cursor: pointer;
+		display: inline-block;
+		
+		color: #464646;
+		font-weight: 400;
+		font-size: 10px;
+						
+	}
   
   
 }

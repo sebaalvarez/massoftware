@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.vaadin.inputmask.InputMask;
 
-
+import com.massoftware.frontend.custom.windows.ControlFactory;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.IntegerRangeValidator;
@@ -20,6 +20,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
@@ -65,7 +66,7 @@ public class UtilUI {
 		if (pixelWidth > -1) {
 			column.setWidth(pixelWidth);
 		} else {
-			// column.setWidth(pixelWidth);
+			
 		}
 
 		column.setSortable(sortable);
@@ -280,6 +281,7 @@ public class UtilUI {
 				autoUnmask);
 
 		txt.setInputPrompt(buildWinFilterTXTInputPromptList(inputPrompt));
+		txt.setDescription(txt.getInputPrompt());
 
 		txtHL.addComponent(txt);
 
@@ -319,6 +321,7 @@ public class UtilUI {
 				mask, autoUnmask, minValue, maxValue);
 
 		txt.setInputPrompt(buildWinFilterTXTInputPromptList(inputPrompt));
+		txt.setDescription(txt.getInputPrompt());
 
 		txtHL.addComponent(txt);
 
@@ -390,7 +393,9 @@ public class UtilUI {
 		txt.setRequiredError("El campo '" + label
 				+ "' es requerido. Es decir no debe estar vacio.");
 		txt.setColumns(columns);
-		txt.setMaxLength(maxLength);
+		if (maxLength > -1) {
+			txt.setMaxLength(maxLength);
+		}
 		txt.setRequired(required);
 
 		if (minLength > 0) {
@@ -702,6 +707,40 @@ public class UtilUI {
 		cb.setReadOnly(readOnly);
 
 		return cb;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static OptionGroup buildBooleanOG(BeanItem dtoBI, String attName,
+			String label, boolean readOnly, boolean required, String labelTrue,
+			String labelFalse, boolean horizontal, int value) throws Exception {
+
+		OptionGroup og = ControlFactory.buildOG();
+
+		og.setCaption(label);
+
+		og.setRequiredError("El campo '" + label
+				+ "' es requerido. Es decir no debe estar vacio.");
+		og.setRequired(required);
+
+		og.addItem(0);
+		og.addItem(1);
+		og.addItem(2);
+
+		og.setItemCaption(0, "Todos");
+		og.setItemCaption(1, labelTrue);
+		og.setItemCaption(2, labelFalse);
+
+		if (horizontal) {
+			og.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
+		}
+
+		og.setPropertyDataSource(dtoBI.getItemProperty(attName));
+
+		og.setValue(value);
+
+		og.setReadOnly(readOnly);
+
+		return og;
 	}
 
 }
