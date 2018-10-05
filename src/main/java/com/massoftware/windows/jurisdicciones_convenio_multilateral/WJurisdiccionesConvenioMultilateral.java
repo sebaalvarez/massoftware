@@ -146,7 +146,7 @@ public class WJurisdiccionesConvenioMultilateral extends Window {
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth("470px");
+			itemsGRD.setWidth(30f, Unit.EM);
 
 			itemsGRD.setColumns(new Object[] { "numero", "nombre",
 					"cuentaFondo" });
@@ -154,7 +154,7 @@ public class WJurisdiccionesConvenioMultilateral extends Window {
 			UtilUI.confColumn(itemsGRD.getColumn("numero"), "Nro.", true, 50);
 			UtilUI.confColumn(itemsGRD.getColumn("nombre"), "Nombre", true, 200);
 			UtilUI.confColumn(itemsGRD.getColumn("cuentaFondo"),
-					"Cuenta de fondo", true, 200);
+					"Cuenta de fondo", true, -1);
 
 			itemsGRD.setContainerDataSource(itemsBIC);
 
@@ -466,9 +466,9 @@ public class WJurisdiccionesConvenioMultilateral extends Window {
 			eliminarBTN.setEnabled(enabled);
 
 			nextPageBTN
-					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() <= 15);
+					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() >= limit);
 
-			prevPageBTN.setEnabled(offset >= 15);
+			prevPageBTN.setEnabled(offset >= limit);
 
 		} catch (InvalidValueException e) {
 			LogAndNotification.print(e);

@@ -149,7 +149,8 @@ public class WMarcasTickets extends Window {
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth("340px");
+			itemsGRD.setWidth(25f, Unit.EM);
+			itemsGRD.setWidth("100%");
 
 			itemsGRD.setColumns(new Object[] { "numero", "nombre", "fecha" });
 
@@ -464,9 +465,9 @@ public class WMarcasTickets extends Window {
 			eliminarBTN.setEnabled(enabled);
 
 			nextPageBTN
-					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() <= 15);
+					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() >= limit);
 
-			prevPageBTN.setEnabled(offset >= 15);
+			prevPageBTN.setEnabled(offset >= limit);
 
 		} catch (InvalidValueException e) {
 			LogAndNotification.print(e);

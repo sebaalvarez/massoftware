@@ -182,7 +182,7 @@ public class WFirmantes extends Window {
 			// -----------
 
 			activoOG = UtilUI.buildBooleanOG(filterBI, "activo",
-					"Situación", false, false, "Activo", "No activo", true, 0);
+					"Situación", false, false, "Todos", "Activo", "No activo", true, 0);
 
 			activoOG.addValueChangeListener(new ValueChangeListener() {
 
@@ -206,7 +206,7 @@ public class WFirmantes extends Window {
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth("400px");
+			itemsGRD.setWidth(25f, Unit.EM);
 			// itemsGRD.setWidth("100%");
 
 			itemsGRD.setColumns(new Object[] { "numero", "nombre",
@@ -296,6 +296,7 @@ public class WFirmantes extends Window {
 					filaBotoneraPagedHL, filaBotoneraHL, filaBotonera2HL);
 
 			content.setComponentAlignment(filaFiltroHL, Alignment.MIDDLE_CENTER);
+			content.setComponentAlignment(filaFiltro2HL, Alignment.MIDDLE_CENTER);
 			content.setComponentAlignment(filaBotoneraPagedHL,
 					Alignment.MIDDLE_RIGHT);
 			content.setComponentAlignment(filaBotoneraHL, Alignment.MIDDLE_LEFT);
@@ -524,9 +525,9 @@ public class WFirmantes extends Window {
 			eliminarBTN.setEnabled(enabled);
 
 			nextPageBTN
-					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() <= 15);
+					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() >= limit);
 
-			prevPageBTN.setEnabled(offset >= 15);
+			prevPageBTN.setEnabled(offset >= limit);
 
 		} catch (InvalidValueException e) {
 			LogAndNotification.print(e);

@@ -9,7 +9,8 @@ public class TiposComprobantes {
 	private String nombre;
 	private String abreviatura;
 	private String clase;
-	private String stk;
+	private String concepto;
+	private Boolean stk;
 	private Boolean iva;
 	private Boolean comision;
 	private Boolean comLey;
@@ -55,11 +56,19 @@ public class TiposComprobantes {
 		this.clase = clase;
 	}
 
-	public String getStk() {
+	public String getConcepto() {
+		return concepto;
+	}
+
+	public void setConcepto(String concepto) {
+		this.concepto = concepto;
+	}
+
+	public Boolean getStk() {
 		return stk;
 	}
 
-	public void setStk(String stk) {
+	public void setStk(Boolean stk) {
 		this.stk = stk;
 	}
 

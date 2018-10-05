@@ -15,6 +15,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
@@ -66,7 +67,7 @@ public class UtilUI {
 		if (pixelWidth > -1) {
 			column.setWidth(pixelWidth);
 		} else {
-			
+
 		}
 
 		column.setSortable(sortable);
@@ -142,6 +143,21 @@ public class UtilUI {
 		return agregarBTN;
 	}
 
+	public static Button buildButton(String label, String description) {
+
+		Button btn = new Button();
+		btn.addStyleName(ValoTheme.BUTTON_TINY);
+		btn.setCaption(label);
+		if (description != null) {
+			btn.setDescription(description);
+		}
+		// modificarBTN.addClickListener(e -> {
+		// // modificarBTNClick();
+		// });
+
+		return btn;
+	}
+
 	public static Button buildButtonModificar() {
 
 		Button modificarBTN = new Button();
@@ -172,12 +188,29 @@ public class UtilUI {
 		return eliminarBTN;
 	}
 
+	public static Button buildButtonSeleccionar() {
+
+		Button seleccionarBTN = new Button();
+		seleccionarBTN.addStyleName(ValoTheme.BUTTON_PRIMARY);
+		seleccionarBTN.addStyleName(ValoTheme.BUTTON_TINY);
+		seleccionarBTN.setIcon(FontAwesome.CHECK_SQUARE_O);
+		seleccionarBTN.setCaption("Seleccionar");
+
+		// eliminarBTN.addClickListener(e -> {
+		// // eliminarBTNClick();
+		// });
+
+		return seleccionarBTN;
+	}
+
 	public static Window confWinList(Window window, String label) {
 
 		window.setCaption(label);
 		window.setImmediate(true);
-		window.setWidth("-1px");
-		window.setHeight("-1px");
+		// window.setWidth("-1px");
+		// window.setHeight("-1px");
+		window.setWidthUndefined();
+		window.setHeightUndefined();
 		window.setClosable(true);
 		window.setResizable(false);
 		window.setModal(false);
@@ -189,8 +222,10 @@ public class UtilUI {
 	public static Window confWinForm(Window window) {
 
 		window.setImmediate(true);
-		window.setWidth("-1px");
-		window.setHeight("-1px");
+		// window.setWidth("-1px");
+		// window.setHeight("-1px");
+		window.setWidthUndefined();
+		window.setHeightUndefined();
 		window.setClosable(true);
 		window.setResizable(false);
 		window.setModal(true);
@@ -231,8 +266,10 @@ public class UtilUI {
 	public static HorizontalLayout buildHL() {
 		HorizontalLayout hl = new HorizontalLayout();
 
-		hl.setWidth("-1px");
-		hl.setHeight("-1px");
+		// hl.setWidth("-1px");
+		// hl.setHeight("-1px");
+		hl.setWidthUndefined();
+		hl.setHeightUndefined();
 		hl.setMargin(true);
 		hl.setSpacing(true);
 
@@ -241,8 +278,8 @@ public class UtilUI {
 
 	public static VerticalLayout buildVL() {
 		VerticalLayout vl = new VerticalLayout();
-		vl.setWidth("-1px");
-		vl.setHeight("-1px");
+		vl.setWidthUndefined();
+		vl.setHeightUndefined();
 		vl.setMargin(true);
 		vl.setSpacing(true);
 
@@ -254,8 +291,10 @@ public class UtilUI {
 		TextField txt = new TextField();
 
 		txt.addStyleName(ValoTheme.TEXTFIELD_TINY);
-		txt.setWidth("-1px");
-		txt.setHeight("-1px");
+		// txt.setWidth("-1px");
+		// txt.setHeight("-1px");
+		txt.setWidthUndefined();
+		txt.setHeightUndefined();
 		txt.setValidationVisible(true);
 		txt.setRequiredError("El campo es requerido. Es decir no debe estar vacio.");
 		txt.setNullRepresentation("");
@@ -460,20 +499,20 @@ public class UtilUI {
 
 	public static TextArea buildTXA() {
 
-		TextArea txt = new TextArea();
+		TextArea txa = new TextArea();
 
-		txt.addStyleName(ValoTheme.TEXTFIELD_TINY);
-		txt.setWidth("-1px");
-		txt.setHeight("-1px");
-		txt.setValidationVisible(true);
-		txt.setRequiredError("El campo es requerido. Es decir no debe estar vacio.");
-		txt.setNullRepresentation("");
-		txt.setVisible(true);
-		txt.setEnabled(true);
-		txt.setReadOnly(false);
-		txt.setImmediate(true);
+		txa.addStyleName(ValoTheme.TEXTFIELD_TINY);
+		txa.setWidthUndefined();
+		txa.setHeightUndefined();
+		txa.setValidationVisible(true);
+		txa.setRequiredError("El campo es requerido. Es decir no debe estar vacio.");
+		txa.setNullRepresentation("");
+		txa.setVisible(true);
+		txa.setEnabled(true);
+		txa.setReadOnly(false);
+		txa.setImmediate(true);
 
-		return txt;
+		return txa;
 	}
 
 	public static TextArea buildTXA(String label, boolean readOnly,
@@ -584,13 +623,80 @@ public class UtilUI {
 
 	}
 
+	@SuppressWarnings({ "rawtypes" })
+	public static HorizontalLayout buildSearchBox(BeanItem dtoBI,
+			String attNameCode, String attName, String label, String label2,
+			boolean required) {
+
+		// HorizontalLayout hl = buildHL();
+		HorizontalLayout hl = new HorizontalLayout();
+		hl.setMargin(false);
+		hl.setSpacing(false);
+		// hl.setCaption(label);
+
+		// TextField txtSearch = ControlFactory.buildTXT();
+		TextField txtSearch = new TextField();
+		txtSearch.addStyleName(ValoTheme.TEXTFIELD_TINY);
+		txtSearch.setNullRepresentation("");
+		txtSearch.setCaption(label);
+		txtSearch.setColumns(8);
+		String searchFor = label2;
+		if (searchFor != null) {
+			searchFor = searchFor.toLowerCase();
+			txtSearch.setDescription("Buscar por " + searchFor);
+		} else {
+			searchFor = "";
+			txtSearch.setDescription("Buscar por " + label.toLowerCase());
+		}
+		txtSearch.setInputPrompt(searchFor);
+
+		TextField txtValue = new TextField();
+		txtValue.setValidationVisible(true);
+		txtValue.setRequiredError("El campo es requerido. Es decir no debe estar vacio.");
+		txtValue.setNullRepresentation("");
+		txtValue.addStyleName(ValoTheme.TEXTFIELD_TINY);
+		txtValue.setCaption("");
+		txtValue.setEnabled(false);
+		txtValue.setRequired(required);
+
+		hl.addComponent(txtSearch);
+		hl.setComponentAlignment(txtSearch, Alignment.MIDDLE_LEFT);
+
+		hl.addComponent(txtValue);
+		hl.setComponentAlignment(txtValue, Alignment.MIDDLE_LEFT);
+
+		// ----------------------------------------------
+
+		Button removeFilterBTN = new Button();
+		removeFilterBTN.addStyleName(ValoTheme.BUTTON_BORDERLESS);
+		removeFilterBTN.addStyleName(ValoTheme.BUTTON_TINY);
+		removeFilterBTN.setIcon(FontAwesome.TIMES);
+		removeFilterBTN.setDescription("Borrar valor");
+
+		removeFilterBTN.addClickListener(e -> {
+			txtSearch.setValue(null);
+//			dtoBI.getItemProperty(attName).setValue(null);
+			txtValue.setValue(null);
+			txtValue.setValue(null);
+		});
+
+		hl.addComponent(removeFilterBTN);
+		hl.setComponentAlignment(removeFilterBTN, Alignment.BOTTOM_LEFT);
+
+		txtSearch.setPropertyDataSource(dtoBI.getItemProperty(attNameCode));
+		txtValue.setPropertyDataSource(dtoBI.getItemProperty(attName));
+
+		return hl;
+
+	}
+
 	public static ComboBox buildCB() {
 
 		ComboBox cb = new ComboBox();
 		cb.addStyleName(ValoTheme.COMBOBOX_TINY);
 
 		cb.setWidth("100%");
-		cb.setHeight("-1px");
+		cb.setHeightUndefined();
 		cb.setRequiredError("El campo es requerido. Es decir no debe estar vacio.");
 		cb.setValidationVisible(true);
 		cb.setVisible(true);
@@ -711,8 +817,9 @@ public class UtilUI {
 
 	@SuppressWarnings("rawtypes")
 	public static OptionGroup buildBooleanOG(BeanItem dtoBI, String attName,
-			String label, boolean readOnly, boolean required, String labelTrue,
-			String labelFalse, boolean horizontal, int value) throws Exception {
+			String label, boolean readOnly, boolean required, String labelAll,
+			String labelTrue, String labelFalse, boolean horizontal, int value)
+			throws Exception {
 
 		OptionGroup og = ControlFactory.buildOG();
 
@@ -726,7 +833,7 @@ public class UtilUI {
 		og.addItem(1);
 		og.addItem(2);
 
-		og.setItemCaption(0, "Todos");
+		og.setItemCaption(0, labelAll);
 		og.setItemCaption(1, labelTrue);
 		og.setItemCaption(2, labelFalse);
 
@@ -741,6 +848,36 @@ public class UtilUI {
 		og.setReadOnly(readOnly);
 
 		return og;
+	}
+
+	public static CheckBox buildCHK() {
+
+		CheckBox chk = new CheckBox();
+
+		chk.addStyleName(ValoTheme.CHECKBOX_SMALL);
+		chk.setWidthUndefined();
+		chk.setHeightUndefined();
+		chk.setVisible(true);
+		chk.setEnabled(true);
+		chk.setReadOnly(false);
+		chk.setImmediate(true);
+
+		return chk;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static CheckBox buildFieldCHK(BeanItem dtoBI, String attName,
+			String label, boolean readOnly) throws SecurityException,
+			ClassNotFoundException, NoSuchFieldException {
+
+		CheckBox chk = buildCHK();
+
+		chk.setCaption(label);
+		chk.setPropertyDataSource(dtoBI.getItemProperty(attName));
+
+		chk.setReadOnly(readOnly);
+
+		return chk;
 	}
 
 }

@@ -6,6 +6,7 @@
       "component": {
         "type": "VerticalLayout",       
         "caption": "General",
+		
         "width":"800px",
         "components": [
           {

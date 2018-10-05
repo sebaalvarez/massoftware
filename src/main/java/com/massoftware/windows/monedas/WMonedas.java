@@ -150,7 +150,7 @@ public class WMonedas extends Window {
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth("490px");
+			itemsGRD.setWidth(30.5f, Unit.EM);
 
 			itemsGRD.setColumns(new Object[] { "numero", "nombre",
 					"abreviatura", "cotizacion", "fecha" });
@@ -468,10 +468,9 @@ public class WMonedas extends Window {
 			modificarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
 
-			nextPageBTN
-					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() <= 15);
+			nextPageBTN.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() >= limit);
 
-			prevPageBTN.setEnabled(offset >= 15);
+			prevPageBTN.setEnabled(offset >= limit);
 
 		} catch (InvalidValueException e) {
 			LogAndNotification.print(e);

@@ -168,16 +168,16 @@ public class WModelosTickets extends Window {
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth("520px");
+			itemsGRD.setWidth("100%");
 
 			itemsGRD.setColumns(new Object[] { "numeroMarcaTicket", "nombreMarcaTicket", "numero",
 					"nombre" });
 
 			UtilUI.confColumn(itemsGRD.getColumn("numeroMarcaTicket"),
 					"Marca", true, 50);
-			UtilUI.confColumn(itemsGRD.getColumn("nombreMarcaTicket"), "descripción de marca", true, 200);
+			UtilUI.confColumn(itemsGRD.getColumn("nombreMarcaTicket"), "Descripción de marca", true, 200);
 			UtilUI.confColumn(itemsGRD.getColumn("numero"), "Modelo", true, 50);
-			UtilUI.confColumn(itemsGRD.getColumn("nombre"), "Descripción de modelo", true, 200);
+			UtilUI.confColumn(itemsGRD.getColumn("nombre"), "Descripción de modelo", true, -1);
 			
 
 			itemsGRD.setContainerDataSource(itemsBIC);
@@ -490,9 +490,9 @@ public class WModelosTickets extends Window {
 			eliminarBTN.setEnabled(enabled);
 
 			nextPageBTN
-					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() <= 15);
+					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() >= limit);
 
-			prevPageBTN.setEnabled(offset >= 15);
+			prevPageBTN.setEnabled(offset >= limit);
 
 		} catch (InvalidValueException e) {
 			LogAndNotification.print(e);

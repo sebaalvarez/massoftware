@@ -2,8 +2,10 @@ package com.massoftware.windows.monedas;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import com.massoftware.windows.UtilModel;
 
@@ -62,9 +64,11 @@ public class Monedas {
 		String f = "";
 
 		if (cotizacion != null) {
-			BigDecimal bd = cotizacion.setScale(2, BigDecimal.ROUND_DOWN);
+			BigDecimal bd = cotizacion.setScale(4, BigDecimal.ROUND_DOWN);
 
-			DecimalFormat df = new DecimalFormat();
+			NumberFormat nf = DecimalFormat.getNumberInstance(Locale.US);
+			DecimalFormat df = (DecimalFormat) nf;
+			// df.applyPattern("#,###,###");
 
 			df.setMaximumFractionDigits(5);
 
@@ -74,12 +78,12 @@ public class Monedas {
 
 			c = df.format(bd);
 		}
-		
+
 		if (fecha != null) {
 			f = new SimpleDateFormat("dd/MM/YYYY").format(fecha);
 		}
 
-		return "(" + numero + ") " + nombre + " [" + c + "  //  " + f + "]";
+		return "(" + numero + ") " + nombre + " [ " + c + "  //  " + f + " ]";
 	}
 
 }

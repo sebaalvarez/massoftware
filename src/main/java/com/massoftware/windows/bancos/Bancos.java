@@ -3,7 +3,7 @@ package com.massoftware.windows.bancos;
 import com.massoftware.windows.UtilModel;
 
 public class Bancos {
-
+	
 	private Integer numero;
 	private String nombre;
 	private String nombreOficial;

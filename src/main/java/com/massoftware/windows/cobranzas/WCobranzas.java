@@ -1,5 +1,7 @@
-package com.massoftware.windows.bancos;
+package com.massoftware.windows.cobranzas;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,13 +10,11 @@ import java.util.Map;
 import com.massoftware.windows.EliminarDialog;
 import com.massoftware.windows.LogAndNotification;
 import com.massoftware.windows.UtilUI;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Validatable;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -26,21 +26,22 @@ import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.HeaderCell;
+import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.renderers.HtmlRenderer;
+import com.vaadin.ui.renderers.DateRenderer;
 
-public class WBancos extends Window {
+public class WCobranzas extends Window {
 
 	private static final long serialVersionUID = -6410625501465383928L;
 
 	// -------------------------------------------------------------
 
-	private BeanItem<BancosFiltro> filterBI;
-	private BeanItemContainer<Bancos> itemsBIC;
+	private BeanItem<CobranzasFiltro> filterBI;
+	private BeanItemContainer<Cobranzas> itemsBIC;
 
 	// -------------------------------------------------------------
 
@@ -49,7 +50,7 @@ public class WBancos extends Window {
 
 	// -------------------------------------------------------------
 
-	public Grid itemsGRD;
+	private Grid itemsGRD;
 	private Button prevPageBTN;
 	private Button nextPageBTN;
 	private Button agregarBTN;
@@ -58,33 +59,20 @@ public class WBancos extends Window {
 
 	// -------------------------------------------------------------
 
-	private HorizontalLayout numeroTXTHL;
-	private HorizontalLayout nombreTXTHL;
-	private HorizontalLayout nombreOficialTXTHL;
-	private OptionGroup bloqueadoOG;
+	private HorizontalLayout numeroCobranzaTXTHL;
+	private HorizontalLayout detalleCobranzaTXTHL;
 
 	// -------------------------------------------------------------
 
-	public WBancos() {
+	@SuppressWarnings("serial")
+	public WCobranzas() {
 		super();
-		init(null);
-	}
 
-	public WBancos(Integer numero) {
-		super();
-		init(numero);
-	}
-
-	@SuppressWarnings({ "serial", "unchecked" })
-	public void init(Integer numero) {
-
-		try {					
+		try {
 
 			buildContainersItems();
 
-			filterBI.getItemProperty("numero").setValue(numero);
-
-			UtilUI.confWinList(this, "Bancos");
+			UtilUI.confWinList(this, "Cobranzas");
 
 			VerticalLayout content = UtilUI.buildWinContentList();
 
@@ -97,16 +85,17 @@ public class WBancos extends Window {
 
 			// -----------
 
-			numeroTXTHL = UtilUI.buildTXTHLInteger(filterBI, "numero",
-					"Numero", false, 10, 0, -1, false, false, null, false,
-					UtilUI.EQUALS, 0, Short.MAX_VALUE);
+			numeroCobranzaTXTHL = UtilUI.buildTXTHLInteger(filterBI,
+					"numeroCobranza", "Numero", false, 5, -1, 3, false, false,
+					null, false, UtilUI.EQUALS, 0, 255);
 
-			TextField numeroTXT = (TextField) numeroTXTHL.getComponent(0);
+			TextField numeroCobranzaTXT = (TextField) numeroCobranzaTXTHL
+					.getComponent(0);
 
-			numeroTXT.addTextChangeListener(new TextChangeListener() {
+			numeroCobranzaTXT.addTextChangeListener(new TextChangeListener() {
 				public void textChange(TextChangeEvent event) {
 					try {
-						numeroTXT.setValue(event.getText());
+						numeroCobranzaTXT.setValue(event.getText());
 						loadDataResetPaged();
 					} catch (Exception e) {
 						LogAndNotification.print(e);
@@ -115,24 +104,26 @@ public class WBancos extends Window {
 
 			});
 
-			Button numeroBTN = (Button) numeroTXTHL.getComponent(1);
+			Button numeroCobranzaBTN = (Button) numeroCobranzaTXTHL
+					.getComponent(1);
 
-			numeroBTN.addClickListener(e -> {
+			numeroCobranzaBTN.addClickListener(e -> {
 				this.loadDataResetPaged();
 			});
 
 			// -----------
 
-			nombreTXTHL = UtilUI.buildTXTHL(filterBI, "nombre", "Nombre",
-					false, 20, -1, 40, false, false, null, false,
-					UtilUI.CONTAINS_WORDS_AND);
+			detalleCobranzaTXTHL = UtilUI.buildTXTHL(filterBI,
+					"detalleCobranza", "Detalle", false, 20, -1, 25, false,
+					false, null, false, UtilUI.CONTAINS_WORDS_AND);
 
-			TextField nombreTXT = (TextField) nombreTXTHL.getComponent(0);
+			TextField detalleCobranzaTXT = (TextField) detalleCobranzaTXTHL
+					.getComponent(0);
 
-			nombreTXT.addTextChangeListener(new TextChangeListener() {
+			detalleCobranzaTXT.addTextChangeListener(new TextChangeListener() {
 				public void textChange(TextChangeEvent event) {
 					try {
-						nombreTXT.setValue(event.getText());
+						detalleCobranzaTXT.setValue(event.getText());
 						loadDataResetPaged();
 					} catch (Exception e) {
 						LogAndNotification.print(e);
@@ -141,9 +132,10 @@ public class WBancos extends Window {
 
 			});
 
-			Button nombreBTN = (Button) nombreTXTHL.getComponent(1);
+			Button detalleCobranzaBTN = (Button) detalleCobranzaTXTHL
+					.getComponent(1);
 
-			nombreBTN.addClickListener(e -> {
+			detalleCobranzaBTN.addClickListener(e -> {
 				this.loadDataResetPaged();
 			});
 
@@ -154,109 +146,87 @@ public class WBancos extends Window {
 				loadData();
 			});
 
-			filaFiltroHL.addComponents(numeroTXTHL, nombreTXTHL, buscarBTN);
+			filaFiltroHL.addComponents(numeroCobranzaTXTHL,
+					detalleCobranzaTXTHL, buscarBTN);
 
 			filaFiltroHL.setComponentAlignment(buscarBTN,
 					Alignment.MIDDLE_RIGHT);
-
-			// -----------
-
-			HorizontalLayout filaFiltro2HL = new HorizontalLayout();
-			filaFiltro2HL.setSpacing(true);
-
-			// -----------
-
-			nombreOficialTXTHL = UtilUI.buildTXTHL(filterBI, "nombreOficial",
-					"Nombre oficial", false, 20, -1, 40, false, false, null,
-					false, UtilUI.CONTAINS_WORDS_AND);
-
-			TextField nombreOficialTXT = (TextField) nombreOficialTXTHL
-					.getComponent(0);
-
-			nombreOficialTXT.addTextChangeListener(new TextChangeListener() {
-				public void textChange(TextChangeEvent event) {
-					try {
-						nombreOficialTXT.setValue(event.getText());
-						loadDataResetPaged();
-					} catch (Exception e) {
-						LogAndNotification.print(e);
-					}
-				}
-
-			});
-
-			Button nombreOficialBTN = (Button) nombreOficialTXTHL
-					.getComponent(1);
-
-			nombreOficialBTN.addClickListener(e -> {
-				this.loadDataResetPaged();
-			});
-
-			// -----------
-
-			bloqueadoOG = UtilUI.buildBooleanOG(filterBI, "bloqueado",
-					"Situación", false, false, "Todos", "Bloquado",
-					"No bloqueado", true, 0);
-
-			bloqueadoOG.addValueChangeListener(new ValueChangeListener() {
-
-				@Override
-				public void valueChange(
-						com.vaadin.data.Property.ValueChangeEvent event) {
-					try {
-						loadDataResetPaged();
-					} catch (Exception e) {
-						LogAndNotification.print(e);
-					}
-				}
-			});
-
-			// -----------
-
-			filaFiltro2HL.addComponents(nombreOficialTXTHL, bloqueadoOG);
 
 			// =======================================================
 			// -------------------------------------------------------
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth(33f, Unit.EM);
-			// itemsGRD.setWidth("100%");
+			itemsGRD.setWidth(49f, Unit.EM);
 
-			itemsGRD.setColumns(new Object[] { "numero", "nombre",
-					"nombreOficial", "bloqueado" });
+			itemsGRD.setColumns(new Object[] { "numeroCobranza",
+					"detalleCobranza", "numeroVendedor", "nombreVendedor",
+					"numeroZona", "nombreZona", "recepcion", "ticketInicio",
+					"estado" });
 
-			UtilUI.confColumn(itemsGRD.getColumn("numero"), "Nro.", true, 70);
-			UtilUI.confColumn(itemsGRD.getColumn("nombre"), "Nombre", true, 200);
-			UtilUI.confColumn(itemsGRD.getColumn("nombreOficial"),
-					"Nombre oficial", true, 200);
-			UtilUI.confColumn(itemsGRD.getColumn("bloqueado"), "Bloqueado",
-					true, -1);
+			UtilUI.confColumn(itemsGRD.getColumn("numeroCobranza"), "Nro.",
+					true, 50);
+			UtilUI.confColumn(itemsGRD.getColumn("detalleCobranza"), "Nombre",
+					true, 100);
+			UtilUI.confColumn(itemsGRD.getColumn("numeroVendedor"), "Nro.",
+					true, 50);
+			UtilUI.confColumn(itemsGRD.getColumn("nombreVendedor"), "Nombre",
+					true, 100);
+			UtilUI.confColumn(itemsGRD.getColumn("numeroZona"), "Nro.", true,
+					50);
+			UtilUI.confColumn(itemsGRD.getColumn("nombreZona"), "Nombre", true,
+					100);
+			UtilUI.confColumn(itemsGRD.getColumn("recepcion"), "Recepción",
+					true, 120);
+			UtilUI.confColumn(itemsGRD.getColumn("ticketInicio"),
+					"Ticket inicio", true, 120);
+			UtilUI.confColumn(itemsGRD.getColumn("estado"), "Estado", true, -1);
+
+			// Group headers by joining the cells
+			HeaderRow groupingHeader = itemsGRD.prependHeaderRow();
+			
+			HeaderCell namesCellCobranza = groupingHeader.join(
+					groupingHeader.getCell("numeroCobranza"),
+					groupingHeader.getCell("detalleCobranza"));
+			namesCellCobranza.setText("Cobranza");			
+			
+			HeaderCell namesCellVendedor = groupingHeader.join(
+					groupingHeader.getCell("numeroVendedor"),
+					groupingHeader.getCell("nombreVendedor"));
+			namesCellVendedor.setText("Vendedor");
+			
+			HeaderCell namesCellZona = groupingHeader.join(
+					groupingHeader.getCell("numeroZona"),
+					groupingHeader.getCell("nombreZona"));
+			namesCellZona.setText("Zona");
 
 			itemsGRD.setContainerDataSource(itemsBIC);
 
 			// .......
 
 			// SI UNA COLUMNA ES DE TIPO BOOLEAN HACER LO QUE SIGUE
-			itemsGRD.getColumn("bloqueado").setRenderer(
-					new HtmlRenderer(),
-					new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
-							.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+			// itemsGRD.getColumn("attName").setRenderer(
+			// new HtmlRenderer(),
+			// new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+			// .getHtml(), FontAwesome.SQUARE_O.getHtml()));
 
 			// SI UNA COLUMNA ES DE TIPO DATE HACER LO QUE SIGUE
 			// itemsGRD.getColumn("attName").setRenderer(
 			// new DateRenderer(new SimpleDateFormat("dd/MM/yyyy")));
 
 			// SI UNA COLUMNA ES DE TIPO TIMESTAMP HACER LO QUE SIGUE
-			// itemsGRD.getColumn("attName").setRenderer(
-			// new DateRenderer(
-			// new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")));
+			itemsGRD.getColumn("recepcion").setRenderer(
+					new DateRenderer(
+							new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")));
+			itemsGRD.getColumn("ticketInicio").setRenderer(
+					new DateRenderer(
+							new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")));
 
 			// .......
 
 			List<SortOrder> order = new ArrayList<SortOrder>();
 
-			order.add(new SortOrder("numero", SortDirection.ASCENDING));
+			order.add(new SortOrder("numeroCobranza", SortDirection.ASCENDING));
 
 			itemsGRD.setSortOrder(order);
 
@@ -290,8 +260,22 @@ public class WBancos extends Window {
 			modificarBTN.addClickListener(e -> {
 				modificarBTNClick();
 			});
+			
+			Button informeBTN = UtilUI.buildButton("Informe de cobranza", "Informe de cobranza");
+			informeBTN.setIcon(FontAwesome.PRINT);
+			informeBTN.addClickListener(e -> {
+//				modificarBTNClick();
+			});
 
-			filaBotoneraHL.addComponents(agregarBTN, modificarBTN);
+			
+			Button consultarBTN = UtilUI.buildButton("Consultar", "Consultar");
+			consultarBTN.setIcon(FontAwesome.BOOK);
+			consultarBTN.addClickListener(e -> {
+//				modificarBTNClick();
+			});
+
+
+			filaBotoneraHL.addComponents(agregarBTN, modificarBTN, informeBTN, consultarBTN);
 
 			// -------------------------------------------------------
 			// BOTONERA 2
@@ -308,8 +292,8 @@ public class WBancos extends Window {
 
 			// -------------------------------------------------------
 
-			content.addComponents(filaFiltroHL, filaFiltro2HL, itemsGRD,
-					filaBotoneraPagedHL, filaBotoneraHL, filaBotonera2HL);
+			content.addComponents(filaFiltroHL, itemsGRD, filaBotoneraPagedHL,
+					filaBotoneraHL, filaBotonera2HL);
 
 			content.setComponentAlignment(filaFiltroHL, Alignment.MIDDLE_CENTER);
 			content.setComponentAlignment(filaBotoneraPagedHL,
@@ -397,9 +381,9 @@ public class WBancos extends Window {
 
 	private void buildContainersItems() throws Exception {
 
-		filterBI = new BeanItem<BancosFiltro>(new BancosFiltro());
-		itemsBIC = new BeanItemContainer<Bancos>(Bancos.class,
-				new ArrayList<Bancos>());
+		filterBI = new BeanItem<CobranzasFiltro>(new CobranzasFiltro());
+		itemsBIC = new BeanItemContainer<Cobranzas>(Cobranzas.class,
+				new ArrayList<Cobranzas>());
 	}
 
 	// =================================================================================
@@ -450,7 +434,7 @@ public class WBancos extends Window {
 											if (yes) {
 												if (itemsGRD.getSelectedRow() != null) {
 
-													Bancos item = (Bancos) itemsGRD
+													Cobranzas item = (Cobranzas) itemsGRD
 															.getSelectedRow();
 
 													deleteItem(item);
@@ -496,8 +480,7 @@ public class WBancos extends Window {
 
 			if (itemsGRD.getSelectedRow() != null) {
 
-				Bancos item = (Bancos) itemsGRD.getSelectedRow();
-				item.getNumero();
+				Cobranzas item = (Cobranzas) itemsGRD.getSelectedRow();
 
 				Window window = new Window("Modificar ítem " + item);
 				window.setModal(true);
@@ -522,14 +505,14 @@ public class WBancos extends Window {
 	private void loadData() {
 		try {
 
-			((Validatable) numeroTXTHL.getComponent(0)).validate();
-			((Validatable) nombreTXTHL.getComponent(0)).validate();
+			((Validatable) numeroCobranzaTXTHL.getComponent(0)).validate();
+			((Validatable) detalleCobranzaTXTHL.getComponent(0)).validate();
 
-			List<Bancos> items = queryData();
+			List<Cobranzas> items = queryData();
 
 			itemsBIC.removeAllItems();
 
-			for (Bancos item : items) {
+			for (Cobranzas item : items) {
 				itemsBIC.addBean(item);
 			}
 
@@ -555,7 +538,7 @@ public class WBancos extends Window {
 	// SECCION PARA CONSULTAS A LA BASE DE DATOS
 
 	// metodo que realiza la consulta a la base de datos
-	private List<Bancos> queryData() {
+	private List<Cobranzas> queryData() {
 		try {
 
 			System.out.println("Los filtros son "
@@ -573,7 +556,7 @@ public class WBancos extends Window {
 						+ sortOrder.getDirection());
 			}
 
-			List<Bancos> items = mockData(limit, offset,
+			List<Cobranzas> items = mockData(limit, offset,
 					this.filterBI.getBean());
 
 			return items;
@@ -582,15 +565,16 @@ public class WBancos extends Window {
 			LogAndNotification.print(e);
 		}
 
-		return new ArrayList<Bancos>();
+		return new ArrayList<Cobranzas>();
 	}
 
 	// metodo que realiza el delete en la base de datos
-	private void deleteItem(Bancos item) {
+	private void deleteItem(Cobranzas item) {
 		try {
 
 			for (int i = 0; i < itemsMock.size(); i++) {
-				if (itemsMock.get(i).getNumero().equals(item.getNumero())) {
+				if (itemsMock.get(i).getNumeroCobranza()
+						.equals(item.getNumeroCobranza())) {
 					itemsMock.remove(i);
 					return;
 				}
@@ -604,48 +588,43 @@ public class WBancos extends Window {
 	// =================================================================================
 	// SECCION SOLO PARA FINES DE MOCKUP
 
-	List<Bancos> itemsMock = new ArrayList<Bancos>();
+	List<Cobranzas> itemsMock = new ArrayList<Cobranzas>();
 
-	private List<Bancos> mockData(int limit, int offset, BancosFiltro filtro) {
+	private List<Cobranzas> mockData(int limit, int offset,
+			CobranzasFiltro filtro) {
 
 		if (itemsMock.size() == 0) {
 
 			for (int i = 0; i < 500; i++) {
 
-				Bancos item = new Bancos();
+				Cobranzas item = new Cobranzas();
 
-				item.setNumero(i);
-				item.setNombre("Nombre " + i);
-				item.setNombreOficial("Nombre Oficial " + i);
-				item.setBloqueado(i % 2 == 0);
+				item.setNumeroCobranza(i);
+				item.setDetalleCobranza("Detalle " + i);
+				item.setNumeroVendedor(i);
+				item.setNombreVendedor("Vendedro " + i);
+				item.setNumeroZona(i);
+				item.setNombreZona("Zona " + i);
+				item.setRecepcion(new Timestamp(System.currentTimeMillis()));
+				item.setTicketInicio(new Timestamp(System.currentTimeMillis()));
+				item.setEstado("Estado " + i);
 
 				itemsMock.add(item);
 			}
 		}
 
-		ArrayList<Bancos> arrayList = new ArrayList<Bancos>();
+		ArrayList<Cobranzas> arrayList = new ArrayList<Cobranzas>();
 
-		for (Bancos item : itemsMock) {
+		for (Cobranzas item : itemsMock) {
 
-			boolean passesFilterNumero = (filtro.getNumero() == null || item
-					.getNumero().equals(filtro.getNumero()));
+			boolean passesFilterNumero = (filtro.getNumeroCobranza() == null || item
+					.getNumeroCobranza().equals(filtro.getNumeroCobranza()));
 
-			boolean passesFilterNombre = (filtro.getNombre() == null || item
-					.getNombre().toLowerCase()
-					.contains(filtro.getNombre().toLowerCase()));
+			boolean passesFilterDetalle = (filtro.getDetalleCobranza() == null || item
+					.getDetalleCobranza().toLowerCase()
+					.contains(filtro.getDetalleCobranza().toLowerCase()));
 
-			boolean passesFilterNombreOficial = (filtro.getNombreOficial() == null || item
-					.getNombreOficial().toLowerCase()
-					.contains(filtro.getNombreOficial().toLowerCase()));
-
-			boolean passesFilterBloqueado = (filtro.getBloqueado() == null
-					|| filtro.getBloqueado() == 0
-					|| (item.getBloqueado().equals(true) && filtro
-							.getBloqueado().equals(1)) || (item.getBloqueado()
-					.equals(false) && filtro.getBloqueado().equals(2)));
-
-			if (passesFilterNumero && passesFilterNombre
-					&& passesFilterNombreOficial && passesFilterBloqueado) {
+			if (passesFilterNumero && passesFilterDetalle) {
 				arrayList.add(item);
 			}
 		}

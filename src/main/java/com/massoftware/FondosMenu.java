@@ -1,13 +1,14 @@
 package com.massoftware;
 
-import com.massoftware.model.Chequera;
-import com.massoftware.model.CuentaDeFondo;
 import com.massoftware.model.Deposito;
 import com.massoftware.model.SeguridadPuerta;
 import com.massoftware.model.TipoCbteAFIP;
 import com.massoftware.model.TipoCbteControl;
 import com.massoftware.windows.bancos.WBancos;
 import com.massoftware.windows.cajas.WCajas;
+import com.massoftware.windows.chequeras.WChequeras;
+import com.massoftware.windows.cobranzas.WCobranzas;
+import com.massoftware.windows.cuentas_fondo.WCuentasFondo;
 import com.massoftware.windows.firmantes.WFirmantes;
 import com.massoftware.windows.jurisdicciones_convenio_multilateral.WJurisdiccionesConvenioMultilateral;
 import com.massoftware.windows.marcas_tickets.WMarcasTickets;
@@ -88,13 +89,11 @@ public class FondosMenu extends AbstractMenu {
 		a7.setEnabled(false);
 		a8.setEnabled(false);
 
-		a1.addItem("Cuentas de fondo ...", openWindowCmd(CuentaDeFondo.class))
-				.setEnabled(false);
+		a1.addItem("Cuentas de fondo ...", openCuentasFondoCmd());
 		// archivos.addItem("Rubros y grupos de cuentas ...",
 		// open(CuentaDeFondo.class));
-		a1.addItem("Cobranzas ...", null).setEnabled(false);
-		a1.addItem("Chequeras ...", openWindowCmd(Chequera.class)).setEnabled(
-				false);
+		a1.addItem("Cobranzas ...", openTiposCobranzasCmd());
+		a1.addItem("Chequeras ...", openChequerasCmd());
 		a1.addItem("Bancos ...", openBancosCmd());
 		a1.addItem("Firmantes (cheques propios) ...", openFirmantesCmd());
 		a1.addItem("Cajas", openCajasCmd());
@@ -114,19 +113,11 @@ public class FondosMenu extends AbstractMenu {
 		a1.addSeparator();
 		a1.addItem("Parámetros generales", null).setEnabled(false);
 		a1.addItem("Fechas de cierres por módulos", null).setEnabled(false);
-		a1.addSeparator();
-		a1.addItem("Prueba Deposito", openWindowCmd(Deposito.class))
-				.setEnabled(false);
-		a1.addItem("Prueba Tipos cbtes. control - Stock",
-				openWindowCmd(TipoCbteControl.class)).setEnabled(false);
-		a1.addItem("Prueba Tipo de comprobante AFIP",
-				openWindowCmd(TipoCbteAFIP.class)).setEnabled(false);
-
-		a1.addItem("Prueba Mantenimiento de módulos y puertas",
-				openWindowCmd(SeguridadPuerta.class)).setEnabled(false);
+		
 
 		return menubar;
 	}
+	
 
 	protected HorizontalLayout getControlBar() throws Exception {
 
@@ -375,6 +366,57 @@ public class FondosMenu extends AbstractMenu {
 			public void menuSelected(MenuItem selectedItem) {
 
 				Window window = new WTiposComprobantes();
+				getUI().addWindow(window);
+			}
+		};
+	}
+
+	protected Command openTiposCobranzasCmd() {
+
+		return new Command() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 4645387020070455569L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+
+				Window window = new WCobranzas();
+				getUI().addWindow(window);
+			}
+		};
+	}
+
+	protected Command openChequerasCmd() {
+
+		return new Command() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 4645387020070455569L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+
+				Window window = new WChequeras();
+				getUI().addWindow(window);
+			}
+		};
+	}
+
+	protected Command openCuentasFondoCmd() {
+
+		return new Command() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 4645387020070455569L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+
+				Window window = new WCuentasFondo();
 				getUI().addWindow(window);
 			}
 		};

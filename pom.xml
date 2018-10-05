@@ -6,6 +6,7 @@
 	<groupId>com.massoftware</groupId>
 	<artifactId>massoftware</artifactId>
 	<packaging>war</packaging>
+	
 	<version>1.0</version>
 	<name>massoftware</name>
 

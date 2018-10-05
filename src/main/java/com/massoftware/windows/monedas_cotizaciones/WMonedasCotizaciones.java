@@ -66,7 +66,7 @@ public class WMonedasCotizaciones extends Window {
 
 			buildContainersItems();
 
-			UtilUI.confWinList(this, "Monedas");
+			UtilUI.confWinList(this, "Cotizaciones de monedas");
 
 			VerticalLayout content = UtilUI.buildWinContentList();
 
@@ -81,10 +81,10 @@ public class WMonedasCotizaciones extends Window {
 
 			HorizontalLayout paisesCBXHL = UtilUI.buildCBHL(filterBI, "moneda",
 					"Moneda", false, true, Monedas.class, queryDataMonedas());
-			paisesCBXHL.setWidth("400px");
+			paisesCBXHL.setWidth("100%");
 			
 			ComboBox paisesCBX = (ComboBox) paisesCBXHL.getComponent(0);
-			paisesCBX.setWidth("400px");
+			paisesCBX.setWidth(32f, Unit.EM);
 
 			paisesCBX.addValueChangeListener(e -> {
 				this.loadDataResetPaged();
@@ -113,7 +113,7 @@ public class WMonedasCotizaciones extends Window {
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth("460px");
+			itemsGRD.setWidth(29f, Unit.EM);
 
 			itemsGRD.setColumns(new Object[] { "numeroMoneda", "fecha",
 					"compra", "venta", "ingreso", "usuario" });
@@ -433,9 +433,9 @@ public class WMonedasCotizaciones extends Window {
 			eliminarBTN.setEnabled(enabled);
 
 			nextPageBTN
-					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() <= 15);
+					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() >= limit);
 
-			prevPageBTN.setEnabled(offset >= 15);
+			prevPageBTN.setEnabled(offset >= limit);
 
 		} catch (InvalidValueException e) {
 			LogAndNotification.print(e);

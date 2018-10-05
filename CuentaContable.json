@@ -6,6 +6,7 @@
         "type": "TabSheet",
         "id":"pestaniasTBS",
         "components": [
+		
           {
             "component": {
               "type": "VerticalLayout",              

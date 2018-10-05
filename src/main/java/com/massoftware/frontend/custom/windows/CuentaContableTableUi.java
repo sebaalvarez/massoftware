@@ -55,7 +55,7 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 			StandarTableUiToolbarConf toolbarConf, Window window,
 			SessionVar sessionVar, Class<CuentaContable> classModel,
 			StandarTableUiFilteringSet filteringSet) {
-		
+
 		super(new StandarTableUiPagedConf(true, false, true), toolbarConf,
 				window, sessionVar, classModel, filteringSet);
 
@@ -99,7 +99,7 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 		vl.setMargin(false);
 		vl.setSpacing(false);
 		// vl.setWidth("100%");
-		vl.setHeight("650px");
+		vl.setHeight(30f, Unit.EM);
 
 		panel = new Panel("Estructura");
 		panel.setHeight("100%");
@@ -137,7 +137,7 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 	private void treeValueChangeListener(Object item) {
 		try {
 			offset = 0;
-			if (item instanceof CuentaContable) {				
+			if (item instanceof CuentaContable) {
 				addCuentasContablesTree((CuentaContable) item);
 			}
 			reloadData(); // super.reloadData();
@@ -228,10 +228,11 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 		if (ejerciciosContablesBIC.size() > 0) {
 
-//			EjercicioContable ejercicioContable = ejercicioContableBO
-//					.findDefaultEjercicioContable();
-			
-			EjercicioContable ejercicioContable = this.sessionVar.getEjercicioContable();
+			// EjercicioContable ejercicioContable = ejercicioContableBO
+			// .findDefaultEjercicioContable();
+
+			EjercicioContable ejercicioContable = this.sessionVar
+					.getEjercicioContable();
 
 			if (ejercicioContable != null
 					&& ejercicioContable.getEjercicio() != null) {
@@ -316,7 +317,7 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 		try {
 
 			if (ejerciciosContablesBIC.size() > 0) {
-				
+
 				offset = 0;
 
 				EjercicioContable ejercicioContable = (EjercicioContable) filtroEjercicioCBX
@@ -413,7 +414,9 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 
 			return ((CuentaContableBO) sessionVar.getCx().buildBO(classModel))
 					.findAll(ejercicioContable, centroDeCostoContable,
-							puntoDeEquilibrio, cuentaContable.getCodigoCuenta(), limit, offset, buildOrderBy());
+							puntoDeEquilibrio,
+							cuentaContable.getCodigoCuenta(), limit, offset,
+							buildOrderBy());
 
 		} else {
 
@@ -440,11 +443,11 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 		// StandardFormUi<CuentaContable>(
 		// usuario, classModel, StandardFormUi.INSERT_MODE, cx, this, item);
 
-		CuentaContableFormUi form = new CuentaContableFormUi(
-				sessionVar, StandardFormUi.INSERT_MODE, this, item);
+		CuentaContableFormUi form = new CuentaContableFormUi(sessionVar,
+				StandardFormUi.INSERT_MODE, this, item);
 
 		// form.setMaxValues();
-		
+
 		form.getComponentById("ejercicioContable").setEnabled(false);
 
 		return form;
@@ -455,17 +458,17 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 	protected StandardFormUi openFormCopiar(CuentaContable itemArg)
 			throws Exception {
 
-//		CuentaContable item = cuentaContableBO.findById(itemArg.getId());
+		// CuentaContable item = cuentaContableBO.findById(itemArg.getId());
 		CuentaContable o = (CuentaContable) itemArg.copy();
 
 		o.setEjercicioContable((EjercicioContable) filtroEjercicioCBX
 				.getValue());
 
-		CuentaContableFormUi form = new CuentaContableFormUi(
-				sessionVar, StandardFormUi.COPY_MODE, this, o, itemArg);
+		CuentaContableFormUi form = new CuentaContableFormUi(sessionVar,
+				StandardFormUi.COPY_MODE, this, o, itemArg);
 
 		// form.setMaxValues();
-		
+
 		form.getComponentById("ejercicioContable").setEnabled(false);
 
 		return form;
@@ -476,13 +479,13 @@ class CuentaContableTableUi extends StandardTableUi<CuentaContable> {
 	protected StandardFormUi openFormModificar(CuentaContable itemArg)
 			throws Exception {
 
-//		CuentaContable item = cuentaContableBO.findById(itemArg.getId());		
+		// CuentaContable item = cuentaContableBO.findById(itemArg.getId());
 
-		CuentaContableFormUi form = new CuentaContableFormUi(
-				sessionVar, StandardFormUi.UPDATE_MODE, this, itemArg);
+		CuentaContableFormUi form = new CuentaContableFormUi(sessionVar,
+				StandardFormUi.UPDATE_MODE, this, itemArg);
 
 		// form.setMaxValues();
-		
+
 		form.getComponentById("ejercicioContable").setEnabled(false);
 
 		return form;

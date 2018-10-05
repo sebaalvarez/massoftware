@@ -8,19 +8,20 @@ import java.util.Map;
 import com.massoftware.windows.EliminarDialog;
 import com.massoftware.windows.LogAndNotification;
 import com.massoftware.windows.UtilUI;
-import com.massoftware.windows.paises.Paises;
 import com.massoftware.windows.sucursales.Sucursales;
 import com.vaadin.data.Validatable;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.SortEvent;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -30,6 +31,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.renderers.HtmlRenderer;
 
 public class WTiposComprobantes extends Window {
 
@@ -82,8 +84,9 @@ public class WTiposComprobantes extends Window {
 
 			// -----------
 
-			HorizontalLayout paisesCBXHL = UtilUI.buildCBHL(filterBI, "pais",
-					"País", false, true, Paises.class, queryDataSucursales());
+			HorizontalLayout paisesCBXHL = UtilUI.buildCBHL(filterBI,
+					"sucursal", "Sucursal", false, true, Sucursales.class,
+					queryDataSucursales());
 
 			ComboBox paisesCBX = (ComboBox) paisesCBXHL.getComponent(0);
 
@@ -167,28 +170,54 @@ public class WTiposComprobantes extends Window {
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth("390px");
-			itemsGRD.setWidth("100%");
+			// itemsGRD.setWidth("390px");
+			itemsGRD.setWidth(55.0f, Unit.EM);
 
-			itemsGRD.setColumns(new Object[] { "numeroPais", "numero",
-					"nombre", "abreviatura" });
+			itemsGRD.setColumns(new Object[] { "numeroSucursal", "numero",
+					"nombre", "abreviatura", "clase", "concepto", "stk", "iva",
+					"comision", "comLey", "esta" });
 
-			UtilUI.confColumn(itemsGRD.getColumn("numeroPais"), "País", true,
-					50);
+			UtilUI.confColumn(itemsGRD.getColumn("numeroSucursal"), "Sucursal",
+					true, 50);
 			UtilUI.confColumn(itemsGRD.getColumn("numero"), "Prov.", true, 50);
 			UtilUI.confColumn(itemsGRD.getColumn("nombre"), "Nombre", true, 200);
 			UtilUI.confColumn(itemsGRD.getColumn("abreviatura"), "Abreviatura",
-					true, -1);666
+					true, 50);
+			UtilUI.confColumn(itemsGRD.getColumn("clase"), "Clase", true, 150);
+			UtilUI.confColumn(itemsGRD.getColumn("concepto"), "Concepto", true,
+					150);
+			UtilUI.confColumn(itemsGRD.getColumn("stk"), "stk", true, 30);
+			UtilUI.confColumn(itemsGRD.getColumn("iva"), "iva", true, 30);
+			UtilUI.confColumn(itemsGRD.getColumn("comision"), "comision", true,
+					50);
+			UtilUI.confColumn(itemsGRD.getColumn("comLey"), "comLey", true, 50);
+			UtilUI.confColumn(itemsGRD.getColumn("esta"), "esta", true, -1);
 
 			itemsGRD.setContainerDataSource(itemsBIC);
 
 			// .......
 
 			// SI UNA COLUMNA ES DE TIPO BOOLEAN HACER LO QUE SIGUE
-			// itemsGRD.getColumn("attName").setRenderer(
-			// new HtmlRenderer(),
-			// new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
-			// .getHtml(), FontAwesome.SQUARE_O.getHtml()));
+			itemsGRD.getColumn("stk").setRenderer(
+					new HtmlRenderer(),
+					new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+							.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+			itemsGRD.getColumn("iva").setRenderer(
+					new HtmlRenderer(),
+					new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+							.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+			itemsGRD.getColumn("comision").setRenderer(
+					new HtmlRenderer(),
+					new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+							.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+			itemsGRD.getColumn("comLey").setRenderer(
+					new HtmlRenderer(),
+					new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+							.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+			itemsGRD.getColumn("esta").setRenderer(
+					new HtmlRenderer(),
+					new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+							.getHtml(), FontAwesome.SQUARE_O.getHtml()));
 
 			// SI UNA COLUMNA ES DE TIPO DATE HACER LO QUE SIGUE
 			// itemsGRD.getColumn("attName").setRenderer(
@@ -203,7 +232,7 @@ public class WTiposComprobantes extends Window {
 
 			List<SortOrder> order = new ArrayList<SortOrder>();
 
-			order.add(new SortOrder("numeroPais", SortDirection.ASCENDING));
+			order.add(new SortOrder("numeroSucursal", SortDirection.ASCENDING));
 			order.add(new SortOrder("numero", SortDirection.ASCENDING));
 
 			itemsGRD.setSortOrder(order);
@@ -345,9 +374,10 @@ public class WTiposComprobantes extends Window {
 
 	private void buildContainersItems() throws Exception {
 
-		filterBI = new BeanItem<TiposComprobantesFiltro>(new TiposComprobantesFiltro());
-		itemsBIC = new BeanItemContainer<TiposComprobantes>(TiposComprobantes.class,
-				new ArrayList<TiposComprobantes>());
+		filterBI = new BeanItem<TiposComprobantesFiltro>(
+				new TiposComprobantesFiltro());
+		itemsBIC = new BeanItemContainer<TiposComprobantes>(
+				TiposComprobantes.class, new ArrayList<TiposComprobantes>());
 	}
 
 	// =================================================================================
@@ -444,7 +474,8 @@ public class WTiposComprobantes extends Window {
 
 			if (itemsGRD.getSelectedRow() != null) {
 
-				TiposComprobantes item = (TiposComprobantes) itemsGRD.getSelectedRow();
+				TiposComprobantes item = (TiposComprobantes) itemsGRD
+						.getSelectedRow();
 				item.getNumero();
 
 				Window window = new Window("Modificar ítem " + item);
@@ -488,9 +519,9 @@ public class WTiposComprobantes extends Window {
 			eliminarBTN.setEnabled(enabled);
 
 			nextPageBTN
-					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() <= 15);
+					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() >= limit);
 
-			prevPageBTN.setEnabled(offset >= 15);
+			prevPageBTN.setEnabled(offset >= limit);
 
 		} catch (InvalidValueException e) {
 			LogAndNotification.print(e);
@@ -579,6 +610,13 @@ public class WTiposComprobantes extends Window {
 				item.setNumero(i);
 				item.setNombre("Nombre " + i);
 				item.setAbreviatura("Abreviatura " + i);
+				item.setClase("Clase " + 1);
+				item.setConcepto("Concepto " + i);
+				item.setStk(i % 2 == 0);
+				item.setIva(i % 2 == 0);
+				item.setComision(i % 2 == 0);
+				item.setComLey(i % 2 != 0);
+				item.setEsta(i % 2 != 0);
 
 				itemsMock.add(item);
 			}
@@ -589,7 +627,8 @@ public class WTiposComprobantes extends Window {
 		for (TiposComprobantes item : itemsMock) {
 
 			boolean passesFilterNumeroPais = (filtro.getSucursal() == null || item
-					.getNumeroSucursal().equals(filtro.getSucursal().getNumero()));
+					.getNumeroSucursal().equals(
+							filtro.getSucursal().getNumero()));
 
 			boolean passesFilterNumero = (filtro.getNumero() == null || item
 					.getNumero().equals(filtro.getNumero()));
@@ -624,7 +663,7 @@ public class WTiposComprobantes extends Window {
 
 				item.setNumero(i);
 				item.setNombre("Nombre " + i);
-				item.setTipoSucursal("Tipo sucursal " + i);
+				item.setTipoSucursal("Tipo sucursal " + i);				
 
 				itemsMock.add(item);
 			}

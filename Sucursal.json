@@ -3,6 +3,7 @@
   "width": "100%",
   "margin": false,
   "spacing": true,
+  
   "components": [
     {
       "component": {
