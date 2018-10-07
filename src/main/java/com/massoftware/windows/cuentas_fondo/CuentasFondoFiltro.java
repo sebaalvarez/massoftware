@@ -10,6 +10,7 @@ public class CuentasFondoFiltro {
 	private String nombre;
 	private Integer numeroBanco;
 	private String nombreBanco;
+	private Integer bloqueado;
 
 	public Integer getNumeroRubro() {
 		return numeroRubro;
@@ -59,12 +60,21 @@ public class CuentasFondoFiltro {
 		this.nombreBanco = nombreBanco;
 	}
 
+	public Integer getBloqueado() {
+		return bloqueado;
+	}
+
+	public void setBloqueado(Integer bloqueado) {
+		this.bloqueado = bloqueado;
+	}
+
 	@Override
 	public String toString() {
-		return "CuentasFondoFiltro [rubro=" + numeroRubro + ", grupo=" + numeroGrupo
-				+ ", numero=" + numero + ", nombre=" + nombre
-				+ ", numeroBanco=" + numeroBanco + ", nombreBanco="
-				+ nombreBanco + "]";
+		return "CuentasFondoFiltro [numeroRubro=" + numeroRubro
+				+ ", numeroGrupo=" + numeroGrupo + ", numero=" + numero
+				+ ", nombre=" + nombre + ", numeroBanco=" + numeroBanco
+				+ ", nombreBanco=" + nombreBanco + ", bloqueado=" + bloqueado
+				+ "]";
 	}
 
 }

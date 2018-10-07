@@ -10,10 +10,13 @@ import com.massoftware.windows.LogAndNotification;
 import com.massoftware.windows.UtilUI;
 import com.massoftware.windows.bancos.Bancos;
 import com.massoftware.windows.bancos.WBancos;
+import com.vaadin.data.Validatable;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
@@ -22,17 +25,19 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.SortEvent;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Notification;
+import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.renderers.HtmlRenderer;
 
 public class WCuentasFondo extends Window {
 
@@ -59,8 +64,10 @@ public class WCuentasFondo extends Window {
 
 	// -------------------------------------------------------------
 
+	private OptionGroup activoOG;
 	private HorizontalLayout numeroTXTHL;
 	private HorizontalLayout nombreTXTHL;
+	private HorizontalLayout numeroBancoCBXHL;
 
 	private TextField numeroBancoTXT;
 
@@ -92,7 +99,7 @@ public class WCuentasFondo extends Window {
 
 			// -----------
 
-			HorizontalLayout numeroBancoCBXHL = UtilUI.buildSearchBox(filterBI,
+			numeroBancoCBXHL = UtilUI.buildSearchBox(filterBI,
 					"numeroBanco", "nombreBanco", "Banco", "numero", false);
 
 			numeroBancoTXT = (TextField) numeroBancoCBXHL.getComponent(0);
@@ -169,13 +176,31 @@ public class WCuentasFondo extends Window {
 
 			// -----------
 
+			activoOG = UtilUI.buildBooleanOG(filterBI, "bloqueado", null,
+					false, false, "Todas", "Activas", "No activas", false, 0);
+
+			activoOG.addValueChangeListener(new ValueChangeListener() {
+
+				@Override
+				public void valueChange(
+						com.vaadin.data.Property.ValueChangeEvent event) {
+					try {
+						loadDataResetPaged();
+					} catch (Exception e) {
+						LogAndNotification.print(e);
+					}
+				}
+			});
+
+			// -----------
+
 			Button buscarBTN = UtilUI.buildButtonBuscar();
 			buscarBTN.addClickListener(e -> {
 				loadData();
 			});
 
 			filaFiltroHL.addComponents(numeroBancoCBXHL, numeroTXTHL,
-					nombreTXTHL, buscarBTN);
+					nombreTXTHL, activoOG, buscarBTN);
 
 			filaFiltroHL.setComponentAlignment(buscarBTN,
 					Alignment.MIDDLE_RIGHT);
@@ -205,11 +230,11 @@ public class WCuentasFondo extends Window {
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth(22f, Unit.EM);
-			// itemsGRD.setWidth("100%");
+			// itemsGRD.setWidth(22f, Unit.EM);
+			itemsGRD.setWidth("100%");
 
 			itemsGRD.setColumns(new Object[] { "numeroRubro", "numeroGrupo",
-					"numeroBanco", "numero", "nombre", "tipo" });
+					"numeroBanco", "numero", "nombre", "tipo", "bloqueado" });
 
 			UtilUI.confColumn(itemsGRD.getColumn("numeroRubro"), "Rubro", true,
 					true, false, true, 50);
@@ -220,16 +245,18 @@ public class WCuentasFondo extends Window {
 			UtilUI.confColumn(itemsGRD.getColumn("numero"), "Cuenta", true, 50);
 			UtilUI.confColumn(itemsGRD.getColumn("nombre"), "Nombre", true, 200);
 			UtilUI.confColumn(itemsGRD.getColumn("tipo"), "Tipo", true, -1);
+			UtilUI.confColumn(itemsGRD.getColumn("bloqueado"), "Bloqueado",
+					true, true, false, true, 30);
 
 			itemsGRD.setContainerDataSource(itemsBIC);
 
 			// .......
 
 			// SI UNA COLUMNA ES DE TIPO BOOLEAN HACER LO QUE SIGUE
-			// itemsGRD.getColumn("attName").setRenderer(
-			// new HtmlRenderer(),
-			// new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
-			// .getHtml(), FontAwesome.SQUARE_O.getHtml()));
+			itemsGRD.getColumn("bloqueado").setRenderer(
+					new HtmlRenderer(),
+					new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+							.getHtml(), FontAwesome.SQUARE_O.getHtml()));
 
 			// SI UNA COLUMNA ES DE TIPO DATE HACER LO QUE SIGUE
 			// itemsGRD.getColumn("attName").setRenderer(
@@ -412,7 +439,7 @@ public class WCuentasFondo extends Window {
 					} else if (action.getCaption().equals("Modificar")) {
 						modificarBTNClick();
 					} else if (action.getCaption().equals("Eliminar")) {
-						eliminarBTNClick();
+						eliminarItemTreeClick(target);
 					}
 
 				}
@@ -425,7 +452,7 @@ public class WCuentasFondo extends Window {
 
 			tree = new Tree("Estructura");
 
-			reloadDataTree();
+			loadDataTree();
 
 			tree.addValueChangeListener(event -> {
 				if (event.getProperty() != null
@@ -450,8 +477,9 @@ public class WCuentasFondo extends Window {
 	private void treeValueChangeListener(Object item) {
 		try {
 			if (item instanceof RubrosFiltro) {
-				// filterBI.getItemProperty("numeroRubro").setValue(
-				// ((RubrosFiltro) item).getNumero());
+				filterBI.getItemProperty("numeroRubro").setValue(
+						((RubrosFiltro) item).getNumero());
+				this.loadDataResetPaged();
 			} else if (item instanceof GruposFiltro) {
 				filterBI.getItemProperty("numeroRubro").setValue(
 						((GruposFiltro) item).getNumeroRubro());
@@ -470,7 +498,7 @@ public class WCuentasFondo extends Window {
 		}
 	}
 
-	private void reloadDataTree() throws Exception {
+	private void loadDataTree() throws Exception {
 
 		tree.removeAllItems();
 		tree.addItem(itemTodas);
@@ -504,6 +532,44 @@ public class WCuentasFondo extends Window {
 
 			// tree.expandItem(rubro);
 
+		}
+	}
+
+	private void eliminarItemTreeClick(Object item) {
+		try {
+
+			getUI().addWindow(
+					new EliminarDialog(item.toString(),
+							new EliminarDialog.Callback() {
+								public void onDialogResult(boolean yes) {
+
+									try {
+										if (yes) {
+											
+											if (item instanceof RubrosFiltro) {																								
+												deleteItem((RubrosFiltro) item);
+											} else if (item instanceof GruposFiltro) {
+												deleteItem((GruposFiltro) item);												
+											} else {												
+											}
+											
+											LogAndNotification
+													.printSuccessOk("Se eliminó con éxito el ítem "
+															+ item);
+											
+											loadDataTree();
+											loadDataResetPaged();
+
+										}
+									} catch (Exception e) {
+										LogAndNotification.print(e);
+									}
+
+								}
+							}));
+
+		} catch (Exception e) {
+			LogAndNotification.print(e);
 		}
 	}
 
@@ -642,7 +708,7 @@ public class WCuentasFondo extends Window {
 
 					@Override
 					public void windowClose(CloseEvent event) {
-						setNumeroBancoOnFileter(window);
+						setNumeroBancoOnFilter(window);
 					}
 				});
 
@@ -658,7 +724,7 @@ public class WCuentasFondo extends Window {
 				});
 
 				seleccionarBTN.addClickListener(e -> {
-					setNumeroBancoOnFileter(window);
+					setNumeroBancoOnFilter(window);
 				});
 
 				filaBotoneraHL.addComponents(seleccionarBTN);
@@ -681,7 +747,7 @@ public class WCuentasFondo extends Window {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void setNumeroBancoOnFileter(WBancos window) {
+	private void setNumeroBancoOnFilter(WBancos window) {
 		try {
 			if (window.itemsGRD.getSelectedRow() != null) {
 
@@ -713,6 +779,10 @@ public class WCuentasFondo extends Window {
 
 	private void loadData() {
 		try {
+			
+			((Validatable) numeroTXTHL.getComponent(0)).validate();
+			((Validatable) nombreTXTHL.getComponent(0)).validate();
+			((Validatable) numeroBancoCBXHL.getComponent(0)).validate();
 
 			List<CuentasFondo> items = queryData();
 
@@ -814,6 +884,28 @@ public class WCuentasFondo extends Window {
 			LogAndNotification.print(e);
 		}
 	}
+	
+	// metodo que realiza el delete en la base de datos
+	private void deleteItem(RubrosFiltro item) {
+		try {
+
+			tree.removeItem(item);						
+
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
+	
+	// metodo que realiza el delete en la base de datos
+	private void deleteItem(GruposFiltro item) {
+		try {
+
+			tree.removeItem(item);
+
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
 
 	// =================================================================================
 	// SECCION SOLO PARA FINES DE MOCKUP
@@ -835,6 +927,7 @@ public class WCuentasFondo extends Window {
 				item.setNombre("Nombre " + i);
 				item.setTipo("Tipo " + i);
 				item.setNumeroBanco(i);
+				item.setBloqueado(i % 2 == 0);
 
 				itemsMock.add(item);
 			}
@@ -860,9 +953,15 @@ public class WCuentasFondo extends Window {
 					.getNombre().toLowerCase()
 					.contains(filtro.getNombre().toLowerCase()));
 
+			boolean passesFilterBloqueado = (filtro.getBloqueado() == null
+					|| filtro.getBloqueado() == 0
+					|| (item.getBloqueado().equals(true) && filtro
+							.getBloqueado().equals(1)) || (item.getBloqueado()
+					.equals(false) && filtro.getBloqueado().equals(2)));
+
 			if (passesFilterNumeroRubro && passesFilterNumeroGrupo
 					&& passesFilterNumeroBanco && passesFilterNumero
-					&& passesFilterNombre) {
+					&& passesFilterNombre && passesFilterBloqueado) {
 				arrayList.add(item);
 			}
 		}

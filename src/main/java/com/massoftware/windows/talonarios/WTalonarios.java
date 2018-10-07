@@ -44,7 +44,7 @@ public class WTalonarios extends Window {
 
 	// -------------------------------------------------------------
 
-	private Grid itemsGRD;
+	public Grid itemsGRD;
 	private Button prevPageBTN;
 	private Button nextPageBTN;
 	private Button agregarBTN;
@@ -57,14 +57,27 @@ public class WTalonarios extends Window {
 	private HorizontalLayout nombreTXTHL;
 
 	// -------------------------------------------------------------
-
-	@SuppressWarnings("serial")
+	
 	public WTalonarios() {
 		super();
+		init(null);
+	}
+	
+	public WTalonarios(Integer numero) {
+		super();
+		init(numero);
+	}
+	
+
+	@SuppressWarnings({ "serial", "unchecked" })
+	public void init(Integer numero) {
+		
 
 		try {
 
 			buildContainersItems();
+			
+			filterBI.getItemProperty("numero").setValue(numero);
 
 			UtilUI.confWinList(this, "Talonarios");
 

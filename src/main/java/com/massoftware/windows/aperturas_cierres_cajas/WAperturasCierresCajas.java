@@ -1,5 +1,7 @@
-package com.massoftware.windows.bancos;
+package com.massoftware.windows.aperturas_cierres_cajas;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,39 +10,38 @@ import java.util.Map;
 import com.massoftware.windows.EliminarDialog;
 import com.massoftware.windows.LogAndNotification;
 import com.massoftware.windows.UtilUI;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.massoftware.windows.cajas.Cajas;
+import com.massoftware.windows.cajas.WCajas;
 import com.vaadin.data.Validatable;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.converter.StringToBooleanConverter;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.SortEvent;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.renderers.HtmlRenderer;
+import com.vaadin.ui.renderers.DateRenderer;
 
-public class WBancos extends Window {
+public class WAperturasCierresCajas extends Window {
 
 	private static final long serialVersionUID = -6410625501465383928L;
 
 	// -------------------------------------------------------------
 
-	private BeanItem<BancosFiltro> filterBI;
-	private BeanItemContainer<Bancos> itemsBIC;
+	private BeanItem<AperturasCierresCajasFiltro> filterBI;
+	private BeanItemContainer<AperturasCierresCajas> itemsBIC;
 
 	// -------------------------------------------------------------
 
@@ -58,33 +59,24 @@ public class WBancos extends Window {
 
 	// -------------------------------------------------------------
 
-	private HorizontalLayout numeroTXTHL;
-	private HorizontalLayout nombreTXTHL;
-	private HorizontalLayout nombreOficialTXTHL;
-	private OptionGroup bloqueadoOG;
+	private HorizontalLayout numeroCajaCBXHL;
+	private HorizontalLayout usuarioCBXHL;
 
 	// -------------------------------------------------------------
 
-	public WBancos() {
+	public WAperturasCierresCajas() {
 		super();
-		init(null);
+		init();
 	}
 
-	public WBancos(Integer numero) {
-		super();
-		init(numero);
-	}
+	@SuppressWarnings("serial")
+	public void init() {
 
-	@SuppressWarnings({ "serial", "unchecked" })
-	public void init(Integer numero) {
-
-		try {					
+		try {
 
 			buildContainersItems();
 
-			filterBI.getItemProperty("numero").setValue(numero);
-
-			UtilUI.confWinList(this, "Bancos");
+			UtilUI.confWinList(this, "Aperturas y cierres de cajas");
 
 			VerticalLayout content = UtilUI.buildWinContentList();
 
@@ -97,17 +89,17 @@ public class WBancos extends Window {
 
 			// -----------
 
-			numeroTXTHL = UtilUI.buildTXTHLInteger(filterBI, "numero",
-					"Numero", false, 10, 0, -1, false, false, null, false,
-					UtilUI.EQUALS, 0, Short.MAX_VALUE);
+			numeroCajaCBXHL = UtilUI.buildSearchBox(filterBI, "numeroCaja",
+					"nombreCaja", "Caja", "numero", false);
 
-			TextField numeroTXT = (TextField) numeroTXTHL.getComponent(0);
+			TextField numeroCajaTXT = (TextField) numeroCajaCBXHL
+					.getComponent(0);
 
-			numeroTXT.addTextChangeListener(new TextChangeListener() {
+			numeroCajaTXT.addTextChangeListener(new TextChangeListener() {
 				public void textChange(TextChangeEvent event) {
 					try {
-						numeroTXT.setValue(event.getText());
-						loadDataResetPaged();
+						numeroCajaTXT.setValue(event.getText());
+						selectCajaTXTShortcutEnter();
 					} catch (Exception e) {
 						LogAndNotification.print(e);
 					}
@@ -115,35 +107,26 @@ public class WBancos extends Window {
 
 			});
 
-			Button numeroBTN = (Button) numeroTXTHL.getComponent(1);
+			Button numeroCajaBTN = (Button) numeroCajaCBXHL.getComponent(2);
 
-			numeroBTN.addClickListener(e -> {
+			numeroCajaBTN.addClickListener(e -> {
 				this.loadDataResetPaged();
 			});
 
 			// -----------
 
-			nombreTXTHL = UtilUI.buildTXTHL(filterBI, "nombre", "Nombre",
-					false, 20, -1, 40, false, false, null, false,
-					UtilUI.CONTAINS_WORDS_AND);
+			usuarioCBXHL = UtilUI.buildCBHL(filterBI, "usuario", "Cajero",
+					false, true, Usuarios.class, queryDataUsuarios());
 
-			TextField nombreTXT = (TextField) nombreTXTHL.getComponent(0);
+			ComboBox usuarioCBX = (ComboBox) usuarioCBXHL.getComponent(0);
 
-			nombreTXT.addTextChangeListener(new TextChangeListener() {
-				public void textChange(TextChangeEvent event) {
-					try {
-						nombreTXT.setValue(event.getText());
-						loadDataResetPaged();
-					} catch (Exception e) {
-						LogAndNotification.print(e);
-					}
-				}
-
+			usuarioCBX.addValueChangeListener(e -> {
+				this.loadDataResetPaged();
 			});
 
-			Button nombreBTN = (Button) nombreTXTHL.getComponent(1);
+			Button usuarioBTN = (Button) usuarioCBXHL.getComponent(1);
 
-			nombreBTN.addClickListener(e -> {
+			usuarioBTN.addClickListener(e -> {
 				this.loadDataResetPaged();
 			});
 
@@ -154,108 +137,64 @@ public class WBancos extends Window {
 				loadData();
 			});
 
-			filaFiltroHL.addComponents(numeroTXTHL, nombreTXTHL, buscarBTN);
+			filaFiltroHL
+					.addComponents(numeroCajaCBXHL, usuarioCBXHL, buscarBTN);
 
 			filaFiltroHL.setComponentAlignment(buscarBTN,
 					Alignment.MIDDLE_RIGHT);
-
-			// -----------
-
-			HorizontalLayout filaFiltro2HL = new HorizontalLayout();
-			filaFiltro2HL.setSpacing(true);
-
-			// -----------
-
-			nombreOficialTXTHL = UtilUI.buildTXTHL(filterBI, "nombreOficial",
-					"Nombre oficial", false, 20, -1, 40, false, false, null,
-					false, UtilUI.CONTAINS_WORDS_AND);
-
-			TextField nombreOficialTXT = (TextField) nombreOficialTXTHL
-					.getComponent(0);
-
-			nombreOficialTXT.addTextChangeListener(new TextChangeListener() {
-				public void textChange(TextChangeEvent event) {
-					try {
-						nombreOficialTXT.setValue(event.getText());
-						loadDataResetPaged();
-					} catch (Exception e) {
-						LogAndNotification.print(e);
-					}
-				}
-
-			});
-
-			Button nombreOficialBTN = (Button) nombreOficialTXTHL
-					.getComponent(1);
-
-			nombreOficialBTN.addClickListener(e -> {
-				this.loadDataResetPaged();
-			});
-
-			// -----------
-
-			bloqueadoOG = UtilUI.buildBooleanOG(filterBI, "bloqueado",
-					"Situación", false, false, "Todos", "Bloquado",
-					"No bloqueado", true, 0);
-
-			bloqueadoOG.addValueChangeListener(new ValueChangeListener() {
-
-				@Override
-				public void valueChange(
-						com.vaadin.data.Property.ValueChangeEvent event) {
-					try {
-						loadDataResetPaged();
-					} catch (Exception e) {
-						LogAndNotification.print(e);
-					}
-				}
-			});
-
-			// -----------
-
-			filaFiltro2HL.addComponents(nombreOficialTXTHL, bloqueadoOG);
 
 			// =======================================================
 			// -------------------------------------------------------
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth(33f, Unit.EM);
-			// itemsGRD.setWidth("100%");
+			itemsGRD.setWidth(38.5f, Unit.EM);
 
-			itemsGRD.setColumns(new Object[] { "numero", "nombre",
-					"nombreOficial", "bloqueado" });
+			itemsGRD.setColumns(new Object[] { "numeroCaja", "nombreCaja",
+					"numero", "numeroUsuario", "nombreUsuario", "apertura",
+					"cierre" });
 
-			UtilUI.confColumn(itemsGRD.getColumn("numero"), "Nro.", true, 70);
-			UtilUI.confColumn(itemsGRD.getColumn("nombre"), "Nombre", true, 200);
-			UtilUI.confColumn(itemsGRD.getColumn("nombreOficial"),
-					"Nombre oficial", true, 200);
-			UtilUI.confColumn(itemsGRD.getColumn("bloqueado"), "Bloqueado",
-					true, -1);
+			UtilUI.confColumn(itemsGRD.getColumn("numeroCaja"), "Nro. caja",
+					true, true, false, true, 50);
+			UtilUI.confColumn(itemsGRD.getColumn("nombreCaja"), "Caja", true,
+					150);
+			UtilUI.confColumn(itemsGRD.getColumn("numero"), "Caja", true, 50);
+			UtilUI.confColumn(itemsGRD.getColumn("numeroUsuario"), "Usuario",
+					true, true, false, true, 50);
+			UtilUI.confColumn(itemsGRD.getColumn("nombreUsuario"), "Usuario",
+					true, 150);
+			UtilUI.confColumn(itemsGRD.getColumn("apertura"), "Apertura", true,
+					120);
+			UtilUI.confColumn(itemsGRD.getColumn("cierre"), "Cierre", true, 120);
 
 			itemsGRD.setContainerDataSource(itemsBIC);
 
 			// .......
 
 			// SI UNA COLUMNA ES DE TIPO BOOLEAN HACER LO QUE SIGUE
-			itemsGRD.getColumn("bloqueado").setRenderer(
-					new HtmlRenderer(),
-					new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
-							.getHtml(), FontAwesome.SQUARE_O.getHtml()));
+			// itemsGRD.getColumn("attName").setRenderer(
+			// new HtmlRenderer(),
+			// new StringToBooleanConverter(FontAwesome.CHECK_SQUARE_O
+			// .getHtml(), FontAwesome.SQUARE_O.getHtml()));
 
 			// SI UNA COLUMNA ES DE TIPO DATE HACER LO QUE SIGUE
 			// itemsGRD.getColumn("attName").setRenderer(
 			// new DateRenderer(new SimpleDateFormat("dd/MM/yyyy")));
 
 			// SI UNA COLUMNA ES DE TIPO TIMESTAMP HACER LO QUE SIGUE
-			// itemsGRD.getColumn("attName").setRenderer(
-			// new DateRenderer(
-			// new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")));
+			itemsGRD.getColumn("apertura").setRenderer(
+					new DateRenderer(
+							new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")));
+
+			itemsGRD.getColumn("cierre").setRenderer(
+					new DateRenderer(
+							new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")));
 
 			// .......
 
 			List<SortOrder> order = new ArrayList<SortOrder>();
 
+			order.add(new SortOrder("numeroCaja", SortDirection.ASCENDING));
 			order.add(new SortOrder("numero", SortDirection.ASCENDING));
 
 			itemsGRD.setSortOrder(order);
@@ -308,8 +247,8 @@ public class WBancos extends Window {
 
 			// -------------------------------------------------------
 
-			content.addComponents(filaFiltroHL, filaFiltro2HL, itemsGRD,
-					filaBotoneraPagedHL, filaBotoneraHL, filaBotonera2HL);
+			content.addComponents(filaFiltroHL, itemsGRD, filaBotoneraPagedHL,
+					filaBotoneraHL, filaBotonera2HL);
 
 			content.setComponentAlignment(filaFiltroHL, Alignment.MIDDLE_CENTER);
 			content.setComponentAlignment(filaBotoneraPagedHL,
@@ -397,9 +336,11 @@ public class WBancos extends Window {
 
 	private void buildContainersItems() throws Exception {
 
-		filterBI = new BeanItem<BancosFiltro>(new BancosFiltro());
-		itemsBIC = new BeanItemContainer<Bancos>(Bancos.class,
-				new ArrayList<Bancos>());
+		filterBI = new BeanItem<AperturasCierresCajasFiltro>(
+				new AperturasCierresCajasFiltro());
+		itemsBIC = new BeanItemContainer<AperturasCierresCajas>(
+				AperturasCierresCajas.class,
+				new ArrayList<AperturasCierresCajas>());
 	}
 
 	// =================================================================================
@@ -450,7 +391,7 @@ public class WBancos extends Window {
 											if (yes) {
 												if (itemsGRD.getSelectedRow() != null) {
 
-													Bancos item = (Bancos) itemsGRD
+													AperturasCierresCajas item = (AperturasCierresCajas) itemsGRD
 															.getSelectedRow();
 
 													deleteItem(item);
@@ -479,7 +420,7 @@ public class WBancos extends Window {
 		try {
 
 			itemsGRD.select(null);
-			Window window = new Window("Agregar ítem ");
+			Window window = new Window("Agregar ítem");
 			window.setModal(true);
 			window.center();
 			window.setWidth("400px");
@@ -496,7 +437,8 @@ public class WBancos extends Window {
 
 			if (itemsGRD.getSelectedRow() != null) {
 
-				Bancos item = (Bancos) itemsGRD.getSelectedRow();
+				AperturasCierresCajas item = (AperturasCierresCajas) itemsGRD
+						.getSelectedRow();
 				item.getNumero();
 
 				Window window = new Window("Modificar ítem " + item);
@@ -512,6 +454,80 @@ public class WBancos extends Window {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	protected void selectCajaTXTShortcutEnter() {
+		try {
+
+			if (this.filterBI.getBean().getNumeroCaja() != null) {
+
+				WCajas window = new WCajas(this.filterBI.getBean()
+						.getNumeroCaja());
+				window.setModal(true);
+				window.center();
+
+				window.addCloseListener(new CloseListener() {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void windowClose(CloseEvent event) {
+						setNumeroCajaOnFilter(window);
+					}
+				});
+
+				// -------------------------------------------------------
+				// BOTONERA SELECCION
+
+				HorizontalLayout filaBotoneraHL = new HorizontalLayout();
+				filaBotoneraHL.setSpacing(true);
+
+				Button seleccionarBTN = UtilUI.buildButtonSeleccionar();
+				seleccionarBTN.addClickListener(e -> {
+					setNumeroCajaOnFilter(window);
+				});
+
+				filaBotoneraHL.addComponents(seleccionarBTN);
+
+				((VerticalLayout) window.getContent())
+						.addComponent(filaBotoneraHL);
+
+				((VerticalLayout) window.getContent()).setComponentAlignment(
+						filaBotoneraHL, Alignment.MIDDLE_CENTER);
+
+				getUI().addWindow(window);
+
+			} else {
+				this.filterBI.getItemProperty("nombreCaja").setValue(null);
+			}
+
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void setNumeroCajaOnFilter(WCajas window) {
+		try {
+			if (window.itemsGRD.getSelectedRow() != null) {
+
+				Cajas item = (Cajas) window.itemsGRD.getSelectedRow();
+
+				this.filterBI.getItemProperty("numeroCaja").setValue(
+						item.getNumero());
+				this.filterBI.getItemProperty("nombreCaja").setValue(
+						item.getNombre());
+
+				window.close();
+
+				loadDataResetPaged();
+			} else {
+				this.filterBI.getItemProperty("numeroCaja").setValue(null);
+				this.filterBI.getItemProperty("nombreCaja").setValue(null);
+			}
+		} catch (Exception ex) {
+			LogAndNotification.print(ex);
+		}
+	}
+
 	// =================================================================================
 
 	private void loadDataResetPaged() {
@@ -522,15 +538,14 @@ public class WBancos extends Window {
 	private void loadData() {
 		try {
 
-			((Validatable) numeroTXTHL.getComponent(0)).validate();
-			((Validatable) nombreTXTHL.getComponent(0)).validate();
-			((Validatable) nombreOficialTXTHL.getComponent(0)).validate();
+			((Validatable) usuarioCBXHL.getComponent(0)).validate();
+			((Validatable) numeroCajaCBXHL.getComponent(0)).validate();
 
-			List<Bancos> items = queryData();
+			List<AperturasCierresCajas> items = queryData();
 
 			itemsBIC.removeAllItems();
 
-			for (Bancos item : items) {
+			for (AperturasCierresCajas item : items) {
 				itemsBIC.addBean(item);
 			}
 
@@ -555,8 +570,20 @@ public class WBancos extends Window {
 	// =================================================================================
 	// SECCION PARA CONSULTAS A LA BASE DE DATOS
 
+	private List<Usuarios> queryDataUsuarios() {
+		try {
+
+			return mockDataUsuarios();
+
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+
+		return new ArrayList<Usuarios>();
+	}
+
 	// metodo que realiza la consulta a la base de datos
-	private List<Bancos> queryData() {
+	private List<AperturasCierresCajas> queryData() {
 		try {
 
 			System.out.println("Los filtros son "
@@ -574,7 +601,7 @@ public class WBancos extends Window {
 						+ sortOrder.getDirection());
 			}
 
-			List<Bancos> items = mockData(limit, offset,
+			List<AperturasCierresCajas> items = mockData(limit, offset,
 					this.filterBI.getBean());
 
 			return items;
@@ -583,11 +610,11 @@ public class WBancos extends Window {
 			LogAndNotification.print(e);
 		}
 
-		return new ArrayList<Bancos>();
+		return new ArrayList<AperturasCierresCajas>();
 	}
 
 	// metodo que realiza el delete en la base de datos
-	private void deleteItem(Bancos item) {
+	private void deleteItem(AperturasCierresCajas item) {
 		try {
 
 			for (int i = 0; i < itemsMock.size(); i++) {
@@ -605,48 +632,40 @@ public class WBancos extends Window {
 	// =================================================================================
 	// SECCION SOLO PARA FINES DE MOCKUP
 
-	List<Bancos> itemsMock = new ArrayList<Bancos>();
+	List<AperturasCierresCajas> itemsMock = new ArrayList<AperturasCierresCajas>();
 
-	private List<Bancos> mockData(int limit, int offset, BancosFiltro filtro) {
+	private List<AperturasCierresCajas> mockData(int limit, int offset,
+			AperturasCierresCajasFiltro filtro) {
 
 		if (itemsMock.size() == 0) {
 
 			for (int i = 0; i < 500; i++) {
 
-				Bancos item = new Bancos();
+				AperturasCierresCajas item = new AperturasCierresCajas();
 
 				item.setNumero(i);
-				item.setNombre("Nombre " + i);
-				item.setNombreOficial("Nombre Oficial " + i);
-				item.setBloqueado(i % 2 == 0);
+				item.setNumeroCaja(i);
+				item.setNombreCaja("Caja " + i);
+				item.setNumeroUsuario(i);
+				item.setNombreUsuario("Usuario " + 1);
+				item.setApertura(new Timestamp(System.currentTimeMillis()));
+				item.setCierre(new Timestamp(System.currentTimeMillis()));
 
 				itemsMock.add(item);
 			}
 		}
 
-		ArrayList<Bancos> arrayList = new ArrayList<Bancos>();
+		ArrayList<AperturasCierresCajas> arrayList = new ArrayList<AperturasCierresCajas>();
 
-		for (Bancos item : itemsMock) {
+		for (AperturasCierresCajas item : itemsMock) {
 
-			boolean passesFilterNumero = (filtro.getNumero() == null || item
-					.getNumero().equals(filtro.getNumero()));
+			boolean passesFilterNumeroUsuario = (filtro.getUsuario() == null || item
+					.getNumeroUsuario().equals(filtro.getUsuario().getNumero()));
 
-			boolean passesFilterNombre = (filtro.getNombre() == null || item
-					.getNombre().toLowerCase()
-					.contains(filtro.getNombre().toLowerCase()));
+			boolean passesFilterNumeroCaja = (filtro.getNumeroCaja() == null || item
+					.getNumeroCaja().equals(filtro.getNumeroCaja()));
 
-			boolean passesFilterNombreOficial = (filtro.getNombreOficial() == null || item
-					.getNombreOficial().toLowerCase()
-					.contains(filtro.getNombreOficial().toLowerCase()));
-
-			boolean passesFilterBloqueado = (filtro.getBloqueado() == null
-					|| filtro.getBloqueado() == 0
-					|| (item.getBloqueado().equals(true) && filtro
-							.getBloqueado().equals(1)) || (item.getBloqueado()
-					.equals(false) && filtro.getBloqueado().equals(2)));
-
-			if (passesFilterNumero && passesFilterNombre
-					&& passesFilterNombreOficial && passesFilterBloqueado) {
+			if (passesFilterNumeroCaja && passesFilterNumeroUsuario) {
 				arrayList.add(item);
 			}
 		}
@@ -657,6 +676,26 @@ public class WBancos extends Window {
 		}
 
 		return arrayList.subList(offset, end);
+	}
+
+	private List<Usuarios> mockDataUsuarios() {
+
+		List<Usuarios> itemsMock = new ArrayList<Usuarios>();
+
+		if (itemsMock.size() == 0) {
+
+			for (int i = 0; i < 500; i++) {
+
+				Usuarios item = new Usuarios();
+
+				item.setNumero(i);
+				item.setNombre("Nombre " + i);
+
+				itemsMock.add(item);
+			}
+		}
+
+		return itemsMock;
 	}
 
 	// =================================================================================

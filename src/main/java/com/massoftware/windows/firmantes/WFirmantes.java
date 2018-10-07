@@ -509,6 +509,7 @@ public class WFirmantes extends Window {
 
 			((Validatable) numeroTXTHL.getComponent(0)).validate();
 			((Validatable) nombreTXTHL.getComponent(0)).validate();
+			((Validatable) cargoTXTHL.getComponent(0)).validate();
 
 			List<Firmantes> items = queryData();
 

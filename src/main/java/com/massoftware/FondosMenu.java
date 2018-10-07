@@ -1,13 +1,10 @@
 package com.massoftware;
 
-import com.massoftware.model.Deposito;
-import com.massoftware.model.SeguridadPuerta;
-import com.massoftware.model.TipoCbteAFIP;
-import com.massoftware.model.TipoCbteControl;
 import com.massoftware.windows.bancos.WBancos;
 import com.massoftware.windows.cajas.WCajas;
 import com.massoftware.windows.chequeras.WChequeras;
 import com.massoftware.windows.cobranzas.WCobranzas;
+import com.massoftware.windows.comprobantes_emitidos.WComprobantesEmitidos;
 import com.massoftware.windows.cuentas_fondo.WCuentasFondo;
 import com.massoftware.windows.firmantes.WFirmantes;
 import com.massoftware.windows.jurisdicciones_convenio_multilateral.WJurisdiccionesConvenioMultilateral;
@@ -81,8 +78,7 @@ public class FondosMenu extends AbstractMenu {
 		final MenuBar.MenuItem a7 = menubar.addItem("Ventana", null);
 		final MenuBar.MenuItem a8 = menubar.addItem("Ayuda", null);
 
-		a2.setEnabled(false);
-		a3.setEnabled(false);
+		a2.setEnabled(false);		
 		a4.setEnabled(false);
 		a5.setEnabled(false);
 		a6.setEnabled(false);
@@ -113,6 +109,8 @@ public class FondosMenu extends AbstractMenu {
 		a1.addSeparator();
 		a1.addItem("Parámetros generales", null).setEnabled(false);
 		a1.addItem("Fechas de cierres por módulos", null).setEnabled(false);
+		
+		a3.addItem("Comprobantes emitidos", openComprobantesEmitidosCmd());
 		
 
 		return menubar;
@@ -417,6 +415,23 @@ public class FondosMenu extends AbstractMenu {
 			public void menuSelected(MenuItem selectedItem) {
 
 				Window window = new WCuentasFondo();
+				getUI().addWindow(window);
+			}
+		};
+	}
+	
+	protected Command openComprobantesEmitidosCmd() {
+
+		return new Command() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 4645387020070455569L;
+
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+
+				Window window = new WComprobantesEmitidos();
 				getUI().addWindow(window);
 			}
 		};

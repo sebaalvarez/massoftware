@@ -1,6 +1,5 @@
 package com.massoftware.windows.cuentas_fondo;
 
-
 import com.massoftware.windows.UtilModel;
 
 public class CuentasFondo {
@@ -11,6 +10,7 @@ public class CuentasFondo {
 	private String nombre;
 	private String tipo;
 	private Integer numeroBanco;
+	private Boolean bloqueado;
 
 	public Integer getNumeroRubro() {
 		return numeroRubro;
@@ -41,7 +41,7 @@ public class CuentasFondo {
 	}
 
 	public void setNombre(String nombre) {
-		this.nombre = UtilModel.format(nombre);		
+		this.nombre = UtilModel.format(nombre);
 	}
 
 	public String getTipo() {
@@ -49,7 +49,7 @@ public class CuentasFondo {
 	}
 
 	public void setTipo(String tipo) {
-		this.tipo = UtilModel.format(tipo);		
+		this.tipo = UtilModel.format(tipo);
 	}
 
 	public Integer getNumeroBanco() {
@@ -60,9 +60,18 @@ public class CuentasFondo {
 		this.numeroBanco = numeroBanco;
 	}
 
+	public Boolean getBloqueado() {
+		return bloqueado;
+	}
+
+	public void setBloqueado(Boolean bloqueado) {
+		this.bloqueado = UtilModel.format(bloqueado);
+	}
+
 	@Override
 	public String toString() {
-		return "(" + numeroRubro + "-" + numeroGrupo + "-" + numero + ") " + numero;
+		return "(" + numeroRubro + "-" + numeroGrupo + "-" + numero + ") "
+				+ numero;
 	}
 
 }

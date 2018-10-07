@@ -44,7 +44,7 @@ public class WCajas extends Window {
 
 	// -------------------------------------------------------------
 
-	private Grid itemsGRD;
+	public Grid itemsGRD;
 	private Button prevPageBTN;
 	private Button nextPageBTN;
 	private Button agregarBTN;
@@ -58,13 +58,24 @@ public class WCajas extends Window {
 
 	// -------------------------------------------------------------
 
-	@SuppressWarnings("serial")
 	public WCajas() {
 		super();
+		init(null);
+	}
+
+	public WCajas(Integer numero) {
+		super();
+		init(numero);
+	}
+
+	@SuppressWarnings({ "serial", "unchecked" })
+	public void init(Integer numero) {
 
 		try {
 
 			buildContainersItems();
+
+			filterBI.getItemProperty("numero").setValue(numero);
 
 			UtilUI.confWinList(this, "Cajas");
 
@@ -145,7 +156,7 @@ public class WCajas extends Window {
 			// -------------------------------------------------------
 			// GRILLA
 
-			itemsGRD = UtilUI.buildGrid();			
+			itemsGRD = UtilUI.buildGrid();
 			itemsGRD.setWidth("100%");
 
 			itemsGRD.setColumns(new Object[] { "numero", "nombre" });
@@ -459,8 +470,8 @@ public class WCajas extends Window {
 			modificarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
 
-			nextPageBTN
-					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() >= limit);
+			nextPageBTN.setEnabled(itemsBIC.size() > 0
+					&& itemsBIC.size() >= limit);
 
 			prevPageBTN.setEnabled(offset >= limit);
 
