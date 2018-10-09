@@ -1,4 +1,4 @@
-package com.massoftware.windows.comprobantes_emitidos;
+package com.massoftware.windows.captura_lotes_tickets;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -8,15 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.massoftware.windows.EliminarDialog;
 import com.massoftware.windows.LogAndNotification;
 import com.massoftware.windows.UtilModel;
 import com.massoftware.windows.UtilUI;
-import com.massoftware.windows.aperturas_cierres_cajas.AperturasCierresCajas;
-import com.massoftware.windows.aperturas_cierres_cajas.WAperturasCierresCajas;
-import com.massoftware.windows.talonarios.Talonarios;
-import com.massoftware.windows.talonarios.WTalonarios;
-import com.massoftware.windows.tipos_comprobantes.TiposComprobantes;
-import com.massoftware.windows.tipos_comprobantes.WTiposComprobantes;
+import com.massoftware.windows.cobranzas.Cobranzas;
+import com.massoftware.windows.cobranzas.WCobranzas;
+import com.massoftware.windows.vendedores.Vendedores;
+import com.massoftware.windows.vendedores.WVendedores;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Validatable;
@@ -32,26 +31,26 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.SortEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.HeaderCell;
+import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.renderers.DateRenderer;
 
-public class WComprobantesEmitidos extends Window {
+public class WCapturaLotesTickets extends Window {
 
 	private static final long serialVersionUID = -6410625501465383928L;
 
 	// -------------------------------------------------------------
 
-	private BeanItem<ComprobantesEmitidosFiltro> filterBI;
-	private BeanItemContainer<ComprobantesEmitidos> itemsBIC;
+	private BeanItem<CapturaLotesTicketsFiltro> filterBI;
+	private BeanItemContainer<CapturaLotesTickets> itemsBIC;
 
 	// -------------------------------------------------------------
 
@@ -63,31 +62,31 @@ public class WComprobantesEmitidos extends Window {
 	private Grid itemsGRD;
 	private Button prevPageBTN;
 	private Button nextPageBTN;
-	private Button consultarBTN;
+	private Button agregarBTN;
 	private Button modificarBTN;
+	private Button eliminarBTN;
 
 	// -------------------------------------------------------------
 
-	private HorizontalLayout nroIdTXTHL;
-	private HorizontalLayout detalleTXTHL;
+	private HorizontalLayout numeroLoteTXTHL;
+	private HorizontalLayout nombreClienteTXTHL;
 	private HorizontalLayout fechaDedeDFHL;
 	private HorizontalLayout fechaHastaDFHL;
-	private HorizontalLayout comprobanteTXTHL;
-	private HorizontalLayout numeroTipoComprobanteCBXHL;
-	private HorizontalLayout numeroTalonarioCBXHL;
-	private HorizontalLayout numeroCajaCBXHL;
+
+	private HorizontalLayout numeroCobranzaCBXHL;
+	private HorizontalLayout numeroVendedorCBXHL;
 
 	// -------------------------------------------------------------
 
 	@SuppressWarnings("serial")
-	public WComprobantesEmitidos() {
+	public WCapturaLotesTickets() {
 		super();
 
 		try {
 
 			buildContainersItems();
 
-			UtilUI.confWinList(this, "Comprobantes emitidos");
+			UtilUI.confWinList(this, "Captura de tickets");
 
 			VerticalLayout content = UtilUI.buildWinContentList();
 
@@ -101,6 +100,58 @@ public class WComprobantesEmitidos extends Window {
 			HorizontalLayout filaFiltro2HL = new HorizontalLayout();
 			filaFiltro2HL.setSpacing(true);
 
+			// -----------
+
+			numeroLoteTXTHL = UtilUI.buildTXTHLInteger(filterBI, "numeroLote",
+					"Lote", false, 5, -1, 3, false, false, null, false,
+					UtilUI.EQUALS, 0, 255);
+
+			TextField numeroTXT = (TextField) numeroLoteTXTHL.getComponent(0);
+
+			numeroTXT.addTextChangeListener(new TextChangeListener() {
+				public void textChange(TextChangeEvent event) {
+					try {
+						numeroTXT.setValue(event.getText());
+						loadDataResetPaged();
+					} catch (Exception e) {
+						LogAndNotification.print(e);
+					}
+				}
+
+			});
+
+			Button numeroBTN = (Button) numeroLoteTXTHL.getComponent(1);
+
+			numeroBTN.addClickListener(e -> {
+				this.loadDataResetPaged();
+			});
+
+			// -----------
+
+			nombreClienteTXTHL = UtilUI.buildTXTHL(filterBI, "nombreCliente",
+					"Cliente", false, 20, -1, 25, false, false, null, false,
+					UtilUI.CONTAINS_WORDS_AND);
+
+			TextField nombreTXT = (TextField) nombreClienteTXTHL
+					.getComponent(0);
+
+			nombreTXT.addTextChangeListener(new TextChangeListener() {
+				public void textChange(TextChangeEvent event) {
+					try {
+						nombreTXT.setValue(event.getText());
+						loadDataResetPaged();
+					} catch (Exception e) {
+						LogAndNotification.print(e);
+					}
+				}
+
+			});
+
+			Button nombreBTN = (Button) nombreClienteTXTHL.getComponent(1);
+
+			nombreBTN.addClickListener(e -> {
+				this.loadDataResetPaged();
+			});
 			// -----------
 
 			fechaDedeDFHL = UtilUI.buildDFHL(filterBI, "fechaDesde", "Desde",
@@ -133,18 +184,18 @@ public class WComprobantesEmitidos extends Window {
 
 			// -----------
 
-			comprobanteTXTHL = UtilUI.buildTXTHL(filterBI, "comprobante",
-					"Comprobante", false, 10, -1, 25, false, false, null,
-					false, UtilUI.ENDS_WITCH);
+			numeroCobranzaCBXHL = UtilUI.buildSearchBox(filterBI,
+					"numeroCobranza", "nombreCobranza", "Cobranza", "numero",
+					false, "Cobranza", false);
 
-			TextField comprobanteTXT = (TextField) comprobanteTXTHL
+			TextField numeroCobranzaTXT = (TextField) numeroCobranzaCBXHL
 					.getComponent(0);
 
-			comprobanteTXT.addTextChangeListener(new TextChangeListener() {
+			numeroCobranzaTXT.addTextChangeListener(new TextChangeListener() {
 				public void textChange(TextChangeEvent event) {
 					try {
-						comprobanteTXT.setValue(event.getText());
-						loadDataResetPaged();
+						numeroCobranzaTXT.setValue(event.getText());
+						selectNumeroCobranzaTXTShortcutEnter();
 					} catch (Exception e) {
 						LogAndNotification.print(e);
 					}
@@ -152,108 +203,27 @@ public class WComprobantesEmitidos extends Window {
 
 			});
 
-			Button comprobanteBTN = (Button) comprobanteTXTHL.getComponent(1);
-
-			comprobanteBTN.addClickListener(e -> {
-				this.loadDataResetPaged();
-			});
-
-			// -----------
-
-			nroIdTXTHL = UtilUI.buildTXTHLInteger(filterBI, "nroId", "Nro. Id",
-					false, 5, -1, 3, false, false, null, false, UtilUI.EQUALS,
-					0, 255);
-
-			TextField nroIdTXT = (TextField) nroIdTXTHL.getComponent(0);
-
-			nroIdTXT.addTextChangeListener(new TextChangeListener() {
-				public void textChange(TextChangeEvent event) {
-					try {
-						nroIdTXT.setValue(event.getText());
-						loadDataResetPaged();
-					} catch (Exception e) {
-						LogAndNotification.print(e);
-					}
-				}
-
-			});
-
-			Button nroIdBTN = (Button) nroIdTXTHL.getComponent(1);
-
-			nroIdBTN.addClickListener(e -> {
-				this.loadDataResetPaged();
-			});
-
-			// -----------
-
-			detalleTXTHL = UtilUI.buildTXTHL(filterBI, "detalle", "Detalle",
-					false, 15, -1, 25, false, false, null, false,
-					UtilUI.CONTAINS_WORDS_AND);
-
-			TextField detalleTXT = (TextField) detalleTXTHL.getComponent(0);
-
-			detalleTXT.addTextChangeListener(new TextChangeListener() {
-				public void textChange(TextChangeEvent event) {
-					try {
-						detalleTXT.setValue(event.getText());
-						loadDataResetPaged();
-					} catch (Exception e) {
-						LogAndNotification.print(e);
-					}
-				}
-
-			});
-
-			Button detalleBTN = (Button) detalleTXTHL.getComponent(1);
-
-			detalleBTN.addClickListener(e -> {
-				this.loadDataResetPaged();
-			});
-
-			// -----------
-
-			numeroTipoComprobanteCBXHL = UtilUI.buildSearchBox(filterBI,
-					"numeroTipoComprobante", "nombreTipoComprobante", "Tipo",
-					"numero", false, "Tipo comprobante", false);
-
-			TextField numeroTipoComprobanteTXT = (TextField) numeroTipoComprobanteCBXHL
-					.getComponent(0);
-
-			numeroTipoComprobanteTXT
-					.addTextChangeListener(new TextChangeListener() {
-						public void textChange(TextChangeEvent event) {
-							try {
-								numeroTipoComprobanteTXT.setValue(event
-										.getText());
-								selectTipoComprobanteTXTShortcutEnter();
-							} catch (Exception e) {
-								LogAndNotification.print(e);
-							}
-						}
-
-					});
-
-			Button numeroTipoComprobanteBTN = (Button) numeroTipoComprobanteCBXHL
+			Button numeroCobranzaBTN = (Button) numeroCobranzaCBXHL
 					.getComponent(2);
 
-			numeroTipoComprobanteBTN.addClickListener(e -> {
+			numeroCobranzaBTN.addClickListener(e -> {
 				this.loadDataResetPaged();
 			});
 
 			// -----------
 
-			numeroTalonarioCBXHL = UtilUI.buildSearchBox(filterBI,
-					"numeroTalonario", "nombreTalonario", "Talonario",
-					"numero", false);
+			numeroVendedorCBXHL = UtilUI.buildSearchBox(filterBI,
+					"numeroVendedor", "nombreVendedor", "Vendedor", "numero",
+					false, "Vendedor", false);
 
-			TextField numeroTalonarioTXT = (TextField) numeroTalonarioCBXHL
+			TextField numeroVendedorTXT = (TextField) numeroVendedorCBXHL
 					.getComponent(0);
 
-			numeroTalonarioTXT.addTextChangeListener(new TextChangeListener() {
+			numeroVendedorTXT.addTextChangeListener(new TextChangeListener() {
 				public void textChange(TextChangeEvent event) {
 					try {
-						numeroTalonarioTXT.setValue(event.getText());
-						selectTalonarioTXTShortcutEnter();
+						numeroVendedorTXT.setValue(event.getText());
+						selectNumeroVendedorTXTShortcutEnter();
 					} catch (Exception e) {
 						LogAndNotification.print(e);
 					}
@@ -261,32 +231,10 @@ public class WComprobantesEmitidos extends Window {
 
 			});
 
-			Button numeroTalonarioBTN = (Button) numeroTalonarioCBXHL
+			Button numeroVendedorBTN = (Button) numeroVendedorCBXHL
 					.getComponent(2);
 
-			numeroTalonarioBTN.addClickListener(e -> {
-				this.loadDataResetPaged();
-			});
-
-			// -----------
-
-			numeroCajaCBXHL = UtilUI.buildSearchBox(filterBI, "numeroCaja",
-					"nombreCaja", "Caja", "numero", false,
-					"Apertura cierre caja", true);
-
-			Button numeroCajaBTNOpen = (Button) numeroCajaCBXHL.getComponent(0);
-
-			numeroCajaBTNOpen.addClickListener(e -> {
-				try {
-					selectAperturasCierresCajasTXTShortcutEnter();
-				} catch (Exception ex) {
-					LogAndNotification.print(ex);
-				}
-			});
-
-			Button numeroCajaBTN = (Button) numeroCajaCBXHL.getComponent(3);
-
-			numeroCajaBTN.addClickListener(e -> {
+			numeroVendedorBTN.addClickListener(e -> {
 				this.loadDataResetPaged();
 			});
 
@@ -298,38 +246,59 @@ public class WComprobantesEmitidos extends Window {
 			});
 
 			filaFiltroHL.addComponents(fechaDedeDFHL, fechaHastaDFHL,
-					comprobanteTXTHL, nroIdTXTHL, detalleTXTHL, buscarBTN);
+					numeroLoteTXTHL, nombreClienteTXTHL, buscarBTN);
 
 			filaFiltroHL.setComponentAlignment(buscarBTN,
 					Alignment.MIDDLE_RIGHT);
 
-			filaFiltro2HL.addComponents(numeroTipoComprobanteCBXHL,
-					numeroTalonarioCBXHL, numeroCajaCBXHL);
+			filaFiltro2HL.addComponents(numeroCobranzaCBXHL,
+					numeroVendedorCBXHL);
 
 			// =======================================================
 			// -------------------------------------------------------
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth("100%");
+			itemsGRD.setWidth(43f, Unit.EM);
+			// itemsGRD.setWidth("100%");
 
-			itemsGRD.setColumns(new Object[] { "cbte", "comprobante", "fecha",
-					"detalle", "numeroTipoComprobante", "nroId", "numeroCaja",
-					"importe" });
+			itemsGRD.setColumns(new Object[] { "numeroLote", "fecha",
+					"numeroCobranza", "nombreCobranza", "numeroVendedor",
+					"nombreVendedor", "cuentaCliente", "nombreCliente",
+					"importeTotal", "ecl" });
 
-			UtilUI.confColumn(itemsGRD.getColumn("cbte"), "Cbte", true, 50);
-			UtilUI.confColumn(itemsGRD.getColumn("comprobante"), "Comprobante",
+			UtilUI.confColumn(itemsGRD.getColumn("numeroLote"), "Lote", true,
+					50);
+			UtilUI.confColumn(itemsGRD.getColumn("fecha"), "Fecha", true, 90);
+			UtilUI.confColumn(itemsGRD.getColumn("numeroCobranza"), "Cobranza",
+					true, true, false, true, 50);
+
+			UtilUI.confColumn(itemsGRD.getColumn("nombreCobranza"), "Cobranza",
 					true, 100);
-			UtilUI.confColumn(itemsGRD.getColumn("fecha"), "Fecha", true, 80);
-			UtilUI.confColumn(itemsGRD.getColumn("detalle"), "Detalle", true,
-					-1);
-			UtilUI.confColumn(itemsGRD.getColumn("numeroTipoComprobante"),
-					"Tipo", true, 50);
-			UtilUI.confColumn(itemsGRD.getColumn("nroId"), "Nro. Id", true, 50);
-			UtilUI.confColumn(itemsGRD.getColumn("numeroCaja"), "Nro. caja",
+			UtilUI.confColumn(itemsGRD.getColumn("numeroVendedor"), "Nro",
 					true, 50);
-			UtilUI.confColumn(itemsGRD.getColumn("importe"), "Importe", true,
-					90);
+			UtilUI.confColumn(itemsGRD.getColumn("nombreVendedor"), "Nombre",
+					true, 100);
+			UtilUI.confColumn(itemsGRD.getColumn("cuentaCliente"), "Nro.",
+					true, 50);
+			UtilUI.confColumn(itemsGRD.getColumn("nombreCliente"), "Nombre",
+					true, 100);
+			UtilUI.confColumn(itemsGRD.getColumn("importeTotal"),
+					"Importe total", true, 80);
+			UtilUI.confColumn(itemsGRD.getColumn("ecl"), "Ecl", true, -1);
+
+			// Group headers by joining the cells
+			HeaderRow groupingHeader = itemsGRD.prependHeaderRow();
+
+			HeaderCell namesCellCobranza = groupingHeader.join(
+					groupingHeader.getCell("numeroVendedor"),
+					groupingHeader.getCell("nombreVendedor"));
+			namesCellCobranza.setText("Vendedor");
+
+			HeaderCell namesCellVendedor = groupingHeader.join(
+					groupingHeader.getCell("cuentaCliente"),
+					groupingHeader.getCell("nombreCliente"));
+			namesCellVendedor.setText("Cliente");
 
 			itemsGRD.setContainerDataSource(itemsBIC);
 
@@ -380,17 +349,22 @@ public class WComprobantesEmitidos extends Window {
 			HorizontalLayout filaBotoneraHL = new HorizontalLayout();
 			filaBotoneraHL.setSpacing(true);
 
-			consultarBTN = UtilUI.buildButton("Consultar", "Consultar");
-			consultarBTN.setIcon(FontAwesome.BOOK);
-			consultarBTN.addClickListener(e -> {
-				consultarBTNClick();
+			agregarBTN = UtilUI.buildButtonAgregar();
+			agregarBTN.addClickListener(e -> {
+				agregarBTNClick();
 			});
 			modificarBTN = UtilUI.buildButtonModificar();
 			modificarBTN.addClickListener(e -> {
 				modificarBTNClick();
 			});
+			Button consultarBTN = UtilUI.buildButton("Consultar", "Consultar");
+			consultarBTN.setIcon(FontAwesome.BOOK);
+			consultarBTN.addClickListener(e -> {
+				// consultarBTNClick();
+				});
 
-			filaBotoneraHL.addComponents(consultarBTN, modificarBTN);
+			filaBotoneraHL
+					.addComponents(agregarBTN, modificarBTN, consultarBTN);
 
 			// -------------------------------------------------------
 			// BOTONERA 2
@@ -398,16 +372,17 @@ public class WComprobantesEmitidos extends Window {
 			HorizontalLayout filaBotonera2HL = new HorizontalLayout();
 			filaBotonera2HL.setSpacing(true);
 
-			Label lbl = new Label(
-					"<b>Cierre (Contable - Centralizado): </b><b>Sucursal: 00	Lote: 00</b>",
-					ContentMode.HTML);
+			eliminarBTN = UtilUI.buildButtonEliminar();
+			eliminarBTN.addClickListener(e -> {
+				eliminarBTNClick();
+			});
 
-			filaBotonera2HL.addComponents(lbl);
+			filaBotonera2HL.addComponents(eliminarBTN);
 
 			// -------------------------------------------------------
 
 			content.addComponents(filaFiltroHL, filaFiltro2HL, itemsGRD,
-					filaBotoneraPagedHL, filaBotonera2HL, filaBotoneraHL);
+					filaBotoneraPagedHL, filaBotoneraHL, filaBotonera2HL);
 
 			content.setComponentAlignment(filaFiltroHL, Alignment.MIDDLE_CENTER);
 			content.setComponentAlignment(filaBotoneraPagedHL,
@@ -430,9 +405,22 @@ public class WComprobantesEmitidos extends Window {
 				@Override
 				public void handleAction(Object sender, Object target) {
 					if (target.equals(itemsGRD)) {
-						consultarBTNClick();
+						modificarBTNClick();
 					}
 
+				}
+			});
+
+			// --------------------------------------------------
+
+			this.addShortcutListener(new ShortcutListener("CTRL+A", KeyCode.A,
+					new int[] { ModifierKey.CTRL }) {
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void handleAction(Object sender, Object target) {
+					agregarBTNClick();
 				}
 			});
 			// --------------------------------------------------
@@ -482,11 +470,10 @@ public class WComprobantesEmitidos extends Window {
 
 	private void buildContainersItems() throws Exception {
 
-		filterBI = new BeanItem<ComprobantesEmitidosFiltro>(
-				new ComprobantesEmitidosFiltro());
-		itemsBIC = new BeanItemContainer<ComprobantesEmitidos>(
-				ComprobantesEmitidos.class,
-				new ArrayList<ComprobantesEmitidos>());
+		filterBI = new BeanItem<CapturaLotesTicketsFiltro>(
+				new CapturaLotesTicketsFiltro());
+		itemsBIC = new BeanItemContainer<CapturaLotesTickets>(
+				CapturaLotesTickets.class, new ArrayList<CapturaLotesTickets>());
 	}
 
 	// =================================================================================
@@ -522,21 +509,56 @@ public class WComprobantesEmitidos extends Window {
 
 	}
 
-	protected void consultarBTNClick() {
+	private void eliminarBTNClick() {
 		try {
 
 			if (itemsGRD.getSelectedRow() != null) {
 
-				ComprobantesEmitidos item = (ComprobantesEmitidos) itemsGRD
-						.getSelectedRow();
+				getUI().addWindow(
+						new EliminarDialog(
+								itemsGRD.getSelectedRow().toString(),
+								new EliminarDialog.Callback() {
+									public void onDialogResult(boolean yes) {
 
-				Window window = new Window("Consultar ítem " + item);
-				window.setModal(true);
-				window.center();
-				window.setWidth("400px");
-				window.setHeight("300px");
-				getUI().addWindow(window);
+										try {
+											if (yes) {
+												if (itemsGRD.getSelectedRow() != null) {
+
+													CapturaLotesTickets item = (CapturaLotesTickets) itemsGRD
+															.getSelectedRow();
+
+													deleteItem(item);
+
+													LogAndNotification
+															.printSuccessOk("Se eliminó con éxito el ítem "
+																	+ item);
+
+													loadData();
+												}
+											}
+										} catch (Exception e) {
+											LogAndNotification.print(e);
+										}
+
+									}
+								}));
 			}
+
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
+	}
+
+	protected void agregarBTNClick() {
+		try {
+
+			itemsGRD.select(null);
+			Window window = new Window("Agregar ítem ");
+			window.setModal(true);
+			window.center();
+			window.setWidth("400px");
+			window.setHeight("300px");
+			getUI().addWindow(window);
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -548,7 +570,7 @@ public class WComprobantesEmitidos extends Window {
 
 			if (itemsGRD.getSelectedRow() != null) {
 
-				ComprobantesEmitidos item = (ComprobantesEmitidos) itemsGRD
+				CapturaLotesTickets item = (CapturaLotesTickets) itemsGRD
 						.getSelectedRow();
 
 				Window window = new Window("Modificar ítem " + item);
@@ -565,13 +587,13 @@ public class WComprobantesEmitidos extends Window {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void selectTipoComprobanteTXTShortcutEnter() {
+	protected void selectNumeroCobranzaTXTShortcutEnter() {
 		try {
 
-			if (this.filterBI.getBean().getNumeroTipoComprobante() != null) {
+			if (this.filterBI.getBean().getNumeroCobranza() != null) {
 
-				WTiposComprobantes window = new WTiposComprobantes(
-						this.filterBI.getBean().getNumeroTipoComprobante());
+				WCobranzas window = new WCobranzas(this.filterBI.getBean()
+						.getNumeroCobranza());
 				window.setModal(true);
 				window.center();
 
@@ -580,7 +602,7 @@ public class WComprobantesEmitidos extends Window {
 
 					@Override
 					public void windowClose(CloseEvent event) {
-						setNumeroTipoComprobanteOnFilter(window);
+						setNumeroCobranzaOnFilter(window);
 					}
 				});
 
@@ -592,7 +614,7 @@ public class WComprobantesEmitidos extends Window {
 
 				Button seleccionarBTN = UtilUI.buildButtonSeleccionar();
 				seleccionarBTN.addClickListener(e -> {
-					setNumeroTipoComprobanteOnFilter(window);
+					setNumeroCobranzaOnFilter(window);
 				});
 
 				filaBotoneraHL.addComponents(seleccionarBTN);
@@ -606,8 +628,7 @@ public class WComprobantesEmitidos extends Window {
 				getUI().addWindow(window);
 
 			} else {
-				this.filterBI.getItemProperty("nombreTipoComprobante")
-						.setValue(null);
+				this.filterBI.getItemProperty("nombreCobranza").setValue(null);
 			}
 
 		} catch (Exception e) {
@@ -616,98 +637,23 @@ public class WComprobantesEmitidos extends Window {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void setNumeroTipoComprobanteOnFilter(WTiposComprobantes window) {
+	private void setNumeroCobranzaOnFilter(WCobranzas window) {
 		try {
 			if (window.itemsGRD.getSelectedRow() != null) {
 
-				TiposComprobantes item = (TiposComprobantes) window.itemsGRD
-						.getSelectedRow();
+				Cobranzas item = (Cobranzas) window.itemsGRD.getSelectedRow();
 
-				this.filterBI.getItemProperty("numeroTipoComprobante")
-						.setValue(item.getNumero());
-				this.filterBI.getItemProperty("nombreTipoComprobante")
-						.setValue(item.getNombre());
+				this.filterBI.getItemProperty("numeroCobranza").setValue(
+						item.getNumeroCobranza());
+				this.filterBI.getItemProperty("nombreCobranza").setValue(
+						item.getDetalleCobranza());
 
 				window.close();
 
 				loadDataResetPaged();
 			} else {
-				this.filterBI.getItemProperty("numeroTipoComprobante")
-						.setValue(null);
-				this.filterBI.getItemProperty("nombreTipoComprobante")
-						.setValue(null);
-			}
-		} catch (Exception ex) {
-			LogAndNotification.print(ex);
-		}
-	}
-
-	protected void selectAperturasCierresCajasTXTShortcutEnter() {
-		try {
-
-			// if (this.filterBI.getBean().getNumeroCaja() != null) {
-
-			WAperturasCierresCajas window = new WAperturasCierresCajas();
-			window.setModal(true);
-			window.center();
-
-			window.addCloseListener(new CloseListener() {
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void windowClose(CloseEvent event) {
-					setNumeroCajaOnFilter(window);
-				}
-			});
-
-			// -------------------------------------------------------
-			// BOTONERA SELECCION
-
-			HorizontalLayout filaBotoneraHL = new HorizontalLayout();
-			filaBotoneraHL.setSpacing(true);
-
-			Button seleccionarBTN = UtilUI.buildButtonSeleccionar();
-			seleccionarBTN.addClickListener(e -> {
-				setNumeroCajaOnFilter(window);
-			});
-
-			filaBotoneraHL.addComponents(seleccionarBTN);
-
-			((VerticalLayout) window.getContent()).addComponent(filaBotoneraHL);
-
-			((VerticalLayout) window.getContent()).setComponentAlignment(
-					filaBotoneraHL, Alignment.MIDDLE_CENTER);
-
-			getUI().addWindow(window);
-
-			// } else {
-			// this.filterBI.getItemProperty("nombreCaja").setValue(null);
-			// }
-
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private void setNumeroCajaOnFilter(WAperturasCierresCajas window) {
-		try {
-			if (window.itemsGRD.getSelectedRow() != null) {
-
-				AperturasCierresCajas item = (AperturasCierresCajas) window.itemsGRD
-						.getSelectedRow();
-
-				this.filterBI.getItemProperty("numeroCaja").setValue(
-						item.getNumero());
-				this.filterBI.getItemProperty("nombreCaja").setValue(
-						item.toString());
-
-				window.close();
-
-				loadDataResetPaged();
-			} else {
-				this.filterBI.getItemProperty("numeroCaja").setValue(null);
-				this.filterBI.getItemProperty("nombreCaja").setValue(null);
+				this.filterBI.getItemProperty("numeroCobranza").setValue(null);
+				this.filterBI.getItemProperty("nombreCobranza").setValue(null);
 			}
 		} catch (Exception ex) {
 			LogAndNotification.print(ex);
@@ -715,13 +661,13 @@ public class WComprobantesEmitidos extends Window {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void selectTalonarioTXTShortcutEnter() {
+	protected void selectNumeroVendedorTXTShortcutEnter() {
 		try {
 
-			if (this.filterBI.getBean().getNumeroTalonario() != null) {
+			if (this.filterBI.getBean().getNumeroVendedor() != null) {
 
-				WTalonarios window = new WTalonarios(this.filterBI.getBean()
-						.getNumeroTalonario());
+				WVendedores window = new WVendedores(this.filterBI.getBean()
+						.getNumeroCobranza());
 				window.setModal(true);
 				window.center();
 
@@ -730,7 +676,7 @@ public class WComprobantesEmitidos extends Window {
 
 					@Override
 					public void windowClose(CloseEvent event) {
-						setNumeroTalonarioOnFilter(window);
+						setNumeroVendedorOnFilter(window);
 					}
 				});
 
@@ -742,7 +688,7 @@ public class WComprobantesEmitidos extends Window {
 
 				Button seleccionarBTN = UtilUI.buildButtonSeleccionar();
 				seleccionarBTN.addClickListener(e -> {
-					setNumeroTalonarioOnFilter(window);
+					setNumeroVendedorOnFilter(window);
 				});
 
 				filaBotoneraHL.addComponents(seleccionarBTN);
@@ -756,7 +702,7 @@ public class WComprobantesEmitidos extends Window {
 				getUI().addWindow(window);
 
 			} else {
-				this.filterBI.getItemProperty("nombreTalonario").setValue(null);
+				this.filterBI.getItemProperty("nombreVendedor").setValue(null);
 			}
 
 		} catch (Exception e) {
@@ -765,23 +711,23 @@ public class WComprobantesEmitidos extends Window {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void setNumeroTalonarioOnFilter(WTalonarios window) {
+	private void setNumeroVendedorOnFilter(WVendedores window) {
 		try {
 			if (window.itemsGRD.getSelectedRow() != null) {
 
-				Talonarios item = (Talonarios) window.itemsGRD.getSelectedRow();
+				Vendedores item = (Vendedores) window.itemsGRD.getSelectedRow();
 
-				this.filterBI.getItemProperty("numeroTalonario").setValue(
+				this.filterBI.getItemProperty("numeroVendedor").setValue(
 						item.getNumero());
-				this.filterBI.getItemProperty("nombreTalonario").setValue(
+				this.filterBI.getItemProperty("nombreVendedor").setValue(
 						item.getNombre());
 
 				window.close();
 
 				loadDataResetPaged();
 			} else {
-				this.filterBI.getItemProperty("numeroTalonario").setValue(null);
-				this.filterBI.getItemProperty("nombreTalonario").setValue(null);
+				this.filterBI.getItemProperty("numeroVendedor").setValue(null);
+				this.filterBI.getItemProperty("nombreVendedor").setValue(null);
 			}
 		} catch (Exception ex) {
 			LogAndNotification.print(ex);
@@ -798,21 +744,14 @@ public class WComprobantesEmitidos extends Window {
 	private void loadData() {
 		try {
 
-			((Validatable) nroIdTXTHL.getComponent(0)).validate();
-			((Validatable) detalleTXTHL.getComponent(0)).validate();
-			((Validatable) fechaDedeDFHL.getComponent(0)).validate();
-			((Validatable) fechaHastaDFHL.getComponent(0)).validate();
-			((Validatable) comprobanteTXTHL.getComponent(0)).validate();
-			((Validatable) numeroTipoComprobanteCBXHL.getComponent(0))
-					.validate();
-			((Validatable) numeroTalonarioCBXHL.getComponent(0)).validate();
-			((Validatable) numeroCajaCBXHL.getComponent(1)).validate();
+			((Validatable) numeroLoteTXTHL.getComponent(0)).validate();
+			((Validatable) nombreClienteTXTHL.getComponent(0)).validate();
 
-			List<ComprobantesEmitidos> items = queryData();
+			List<CapturaLotesTickets> items = queryData();
 
 			itemsBIC.removeAllItems();
 
-			for (ComprobantesEmitidos item : items) {
+			for (CapturaLotesTickets item : items) {
 				itemsBIC.addBean(item);
 			}
 
@@ -820,6 +759,7 @@ public class WComprobantesEmitidos extends Window {
 
 			itemsGRD.setEnabled(enabled);
 			modificarBTN.setEnabled(enabled);
+			eliminarBTN.setEnabled(enabled);
 
 			nextPageBTN.setEnabled(itemsBIC.size() > 0
 					&& itemsBIC.size() >= limit);
@@ -837,7 +777,7 @@ public class WComprobantesEmitidos extends Window {
 	// SECCION PARA CONSULTAS A LA BASE DE DATOS
 
 	// metodo que realiza la consulta a la base de datos
-	private List<ComprobantesEmitidos> queryData() {
+	private List<CapturaLotesTickets> queryData() {
 		try {
 
 			System.out.println("Los filtros son "
@@ -855,7 +795,7 @@ public class WComprobantesEmitidos extends Window {
 						+ sortOrder.getDirection());
 			}
 
-			List<ComprobantesEmitidos> items = mockData(limit, offset,
+			List<CapturaLotesTickets> items = mockData(limit, offset,
 					this.filterBI.getBean());
 
 			return items;
@@ -864,40 +804,65 @@ public class WComprobantesEmitidos extends Window {
 			LogAndNotification.print(e);
 		}
 
-		return new ArrayList<ComprobantesEmitidos>();
+		return new ArrayList<CapturaLotesTickets>();
+	}
+
+	// metodo que realiza el delete en la base de datos
+	private void deleteItem(CapturaLotesTickets item) {
+		try {
+
+			for (int i = 0; i < itemsMock.size(); i++) {
+				if (itemsMock.get(i).getNumeroLote()
+						.equals(item.getNumeroLote())) {
+					itemsMock.remove(i);
+					return;
+				}
+			}
+
+		} catch (Exception e) {
+			LogAndNotification.print(e);
+		}
 	}
 
 	// =================================================================================
 	// SECCION SOLO PARA FINES DE MOCKUP
 
-	List<ComprobantesEmitidos> itemsMock = new ArrayList<ComprobantesEmitidos>();
+	List<CapturaLotesTickets> itemsMock = new ArrayList<CapturaLotesTickets>();
 
-	private List<ComprobantesEmitidos> mockData(int limit, int offset,
-			ComprobantesEmitidosFiltro filtro) {
+	private List<CapturaLotesTickets> mockData(int limit, int offset,
+			CapturaLotesTicketsFiltro filtro) {
 
 		if (itemsMock.size() == 0) {
 
 			for (int i = 0; i < 500; i++) {
 
-				ComprobantesEmitidos item = new ComprobantesEmitidos();
+				CapturaLotesTickets item = new CapturaLotesTickets();
 
-				item.setCbte("CBTE " + i);
-				item.setComprobante("X00000000000" + i);
+				item.setNumeroLote(i);
 				item.setFecha(new Date(System.currentTimeMillis()));
-				item.setDetalle("Detalle " + i);
-				item.setNumeroTipoComprobante(i);
-				item.setNroId(i);
-				item.setNumeroCaja(i);
-				item.setImporte(new BigDecimal(i * 668 / 3.3));
-				item.setNumeroTalonario(i);
+				item.setNumeroCobranza(i);
+				item.setNombreCobranza("Cobranza " + i);
+				item.setNumeroVendedor(i);
+				item.setNombreVendedor("Vendedor " + i);
+				item.setCuentaCliente(i);
+				item.setNombreCliente("Cliente " + i);
+				item.setImporteTotal(new BigDecimal("569897.36985"));
+				item.setEcl("ecl " + i);
 
 				itemsMock.add(item);
 			}
 		}
 
-		ArrayList<ComprobantesEmitidos> arrayList = new ArrayList<ComprobantesEmitidos>();
+		ArrayList<CapturaLotesTickets> arrayList = new ArrayList<CapturaLotesTickets>();
 
-		for (ComprobantesEmitidos item : itemsMock) {
+		for (CapturaLotesTickets item : itemsMock) {
+
+			boolean passesFilterNumeroLote = (filtro.getNumeroLote() == null || item
+					.getNumeroLote().equals(filtro.getNumeroLote()));
+
+			boolean passesFilterNombreCliente = (filtro.getNombreCliente() == null || item
+					.getNombreCliente().toLowerCase()
+					.contains(filtro.getNombreCliente().toLowerCase()));
 
 			boolean passesFilterFechaDesde = (filtro.getFechaDesde() == null || item
 					.getFecha().after(filtro.getFechaDesde()));
@@ -906,32 +871,15 @@ public class WComprobantesEmitidos extends Window {
 					.getFecha()
 					.before(UtilModel.sumarDiasAFecha(filtro.getFechaHasta(), 1)));
 
-			boolean passesFilterComprobante = (filtro.getComprobante() == null || item
-					.getComprobante().toLowerCase()
-					.endsWith(filtro.getComprobante().toLowerCase()));
+			boolean passesFilterNumeroCobranza = (filtro.getNumeroCobranza() == null || item
+					.getNumeroCobranza().equals(filtro.getNumeroCobranza()));
 
-			boolean passesFilterNroId = (filtro.getNroId() == null || item
-					.getNroId().equals(filtro.getNroId()));
+			boolean passesFilterNumeroVendedor = (filtro.getNumeroVendedor() == null || item
+					.getNumeroVendedor().equals(filtro.getNumeroVendedor()));
 
-			boolean passesFilterDetalle = (filtro.getDetalle() == null || item
-					.getDetalle().toLowerCase()
-					.contains(filtro.getDetalle().toLowerCase()));
-
-			boolean passesFilterNumeroTipoComprobante = (filtro
-					.getNumeroTipoComprobante() == null || item
-					.getNumeroTipoComprobante().equals(
-							filtro.getNumeroTipoComprobante()));
-
-			boolean passesFilterNumeroTalonario = (filtro.getNumeroTalonario() == null || item
-					.getNumeroTalonario().equals(filtro.getNumeroTalonario()));
-
-			boolean passesFilterNumeroCaja = (filtro.getNumeroCaja() == null || item
-					.getNumeroCaja().equals(filtro.getNumeroCaja()));
-
-			if (passesFilterFechaDesde && passesFilterFechaHasta
-					&& passesFilterComprobante && passesFilterNroId
-					&& passesFilterDetalle && passesFilterNumeroTipoComprobante
-					&& passesFilterNumeroTalonario && passesFilterNumeroCaja) {
+			if (passesFilterNumeroLote && passesFilterNombreCliente
+					&& passesFilterFechaDesde && passesFilterFechaHasta
+					&& passesFilterNumeroCobranza && passesFilterNumeroVendedor) {
 				arrayList.add(item);
 			}
 		}

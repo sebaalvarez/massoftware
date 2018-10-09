@@ -146,7 +146,8 @@ public class WPaises extends Window {
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth("340px");
+//			itemsGRD.setWidth(20f, Unit.EM);
+			itemsGRD.setWidth("100%");
 
 			itemsGRD.setColumns(new Object[] { "numero", "nombre",
 					"abreviatura" });
@@ -154,7 +155,7 @@ public class WPaises extends Window {
 			UtilUI.confColumn(itemsGRD.getColumn("numero"), "Nro.", true, 50);
 			UtilUI.confColumn(itemsGRD.getColumn("nombre"), "Nombre", true, 200);
 			UtilUI.confColumn(itemsGRD.getColumn("abreviatura"), "Abreviatura",
-					true, 70);
+					true, -1);
 
 			itemsGRD.setContainerDataSource(itemsBIC);
 

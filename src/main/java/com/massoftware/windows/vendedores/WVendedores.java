@@ -1,7 +1,5 @@
-package com.massoftware.windows.cobranzas;
+package com.massoftware.windows.vendedores;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,27 +19,23 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.SortEvent;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.HeaderCell;
-import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.renderers.DateRenderer;
 
-public class WCobranzas extends Window {
+public class WVendedores extends Window {
 
 	private static final long serialVersionUID = -6410625501465383928L;
 
 	// -------------------------------------------------------------
 
-	private BeanItem<CobranzasFiltro> filterBI;
-	private BeanItemContainer<Cobranzas> itemsBIC;
+	private BeanItem<VendedoresFiltro> filterBI;
+	private BeanItemContainer<Vendedores> itemsBIC;
 
 	// -------------------------------------------------------------
 
@@ -59,31 +53,30 @@ public class WCobranzas extends Window {
 
 	// -------------------------------------------------------------
 
-	private HorizontalLayout numeroCobranzaTXTHL;
-	private HorizontalLayout detalleCobranzaTXTHL;
+	private HorizontalLayout numeroTXTHL;
+	private HorizontalLayout nombreTXTHL;
 
 	// -------------------------------------------------------------
 
-	public WCobranzas() {
+	public WVendedores() {
 		super();
 		init(null);
 	}
-	
-	public WCobranzas(Integer numero) {
+
+	public WVendedores(Integer numero) {
 		super();
 		init(numero);
 	}
-	
-	
+
 	@SuppressWarnings({ "serial", "unchecked" })
-	public void init(Integer numero) {	
+	public void init(Integer numero) {
 		try {
 
 			buildContainersItems();
-			
-			filterBI.getItemProperty("numeroCobranza").setValue(numero);
 
-			UtilUI.confWinList(this, "Cobranzas");
+			filterBI.getItemProperty("numero").setValue(numero);
+
+			UtilUI.confWinList(this, "Vendedores");
 
 			VerticalLayout content = UtilUI.buildWinContentList();
 
@@ -96,17 +89,16 @@ public class WCobranzas extends Window {
 
 			// -----------
 
-			numeroCobranzaTXTHL = UtilUI.buildTXTHLInteger(filterBI,
-					"numeroCobranza", "Numero", false, 5, -1, 3, false, false,
-					null, false, UtilUI.EQUALS, 0, 255);
+			numeroTXTHL = UtilUI.buildTXTHLInteger(filterBI, "numero",
+					"Numero", false, 5, -1, 3, false, false, null, false,
+					UtilUI.EQUALS, 0, 255);
 
-			TextField numeroCobranzaTXT = (TextField) numeroCobranzaTXTHL
-					.getComponent(0);
+			TextField numeroTXT = (TextField) numeroTXTHL.getComponent(0);
 
-			numeroCobranzaTXT.addTextChangeListener(new TextChangeListener() {
+			numeroTXT.addTextChangeListener(new TextChangeListener() {
 				public void textChange(TextChangeEvent event) {
 					try {
-						numeroCobranzaTXT.setValue(event.getText());
+						numeroTXT.setValue(event.getText());
 						loadDataResetPaged();
 					} catch (Exception e) {
 						LogAndNotification.print(e);
@@ -115,26 +107,24 @@ public class WCobranzas extends Window {
 
 			});
 
-			Button numeroCobranzaBTN = (Button) numeroCobranzaTXTHL
-					.getComponent(1);
+			Button numeroBTN = (Button) numeroTXTHL.getComponent(1);
 
-			numeroCobranzaBTN.addClickListener(e -> {
+			numeroBTN.addClickListener(e -> {
 				this.loadDataResetPaged();
 			});
 
 			// -----------
 
-			detalleCobranzaTXTHL = UtilUI.buildTXTHL(filterBI,
-					"detalleCobranza", "Detalle", false, 20, -1, 25, false,
-					false, null, false, UtilUI.CONTAINS_WORDS_AND);
+			nombreTXTHL = UtilUI.buildTXTHL(filterBI, "nombre", "Nombre",
+					false, 20, -1, 25, false, false, null, false,
+					UtilUI.CONTAINS_WORDS_AND);
 
-			TextField detalleCobranzaTXT = (TextField) detalleCobranzaTXTHL
-					.getComponent(0);
+			TextField nombreTXT = (TextField) nombreTXTHL.getComponent(0);
 
-			detalleCobranzaTXT.addTextChangeListener(new TextChangeListener() {
+			nombreTXT.addTextChangeListener(new TextChangeListener() {
 				public void textChange(TextChangeEvent event) {
 					try {
-						detalleCobranzaTXT.setValue(event.getText());
+						nombreTXT.setValue(event.getText());
 						loadDataResetPaged();
 					} catch (Exception e) {
 						LogAndNotification.print(e);
@@ -143,10 +133,9 @@ public class WCobranzas extends Window {
 
 			});
 
-			Button detalleCobranzaBTN = (Button) detalleCobranzaTXTHL
-					.getComponent(1);
+			Button nombreBTN = (Button) nombreTXTHL.getComponent(1);
 
-			detalleCobranzaBTN.addClickListener(e -> {
+			nombreBTN.addClickListener(e -> {
 				this.loadDataResetPaged();
 			});
 
@@ -157,8 +146,7 @@ public class WCobranzas extends Window {
 				loadData();
 			});
 
-			filaFiltroHL.addComponents(numeroCobranzaTXTHL,
-					detalleCobranzaTXTHL, buscarBTN);
+			filaFiltroHL.addComponents(numeroTXTHL, nombreTXTHL, buscarBTN);
 
 			filaFiltroHL.setComponentAlignment(buscarBTN,
 					Alignment.MIDDLE_RIGHT);
@@ -168,48 +156,18 @@ public class WCobranzas extends Window {
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth(49f, Unit.EM);
+			itemsGRD.setWidth(32f, Unit.EM);
+			// itemsGRD.setWidth("100%");
 
-			itemsGRD.setColumns(new Object[] { "numeroCobranza",
-					"detalleCobranza", "numeroVendedor", "nombreVendedor",
-					"numeroZona", "nombreZona", "recepcion", "ticketInicio",
-					"estado" });
+			itemsGRD.setColumns(new Object[] { "numero", "nombre", "domicilio",
+					"cp", "ciudad" });
 
-			UtilUI.confColumn(itemsGRD.getColumn("numeroCobranza"), "Nro.",
-					true, 50);
-			UtilUI.confColumn(itemsGRD.getColumn("detalleCobranza"), "Nombre",
+			UtilUI.confColumn(itemsGRD.getColumn("numero"), "Nro.", true, 50);
+			UtilUI.confColumn(itemsGRD.getColumn("nombre"), "Nombre", true, 200);
+			UtilUI.confColumn(itemsGRD.getColumn("domicilio"), "Domicilio",
 					true, 100);
-			UtilUI.confColumn(itemsGRD.getColumn("numeroVendedor"), "Nro.",
-					true, 50);
-			UtilUI.confColumn(itemsGRD.getColumn("nombreVendedor"), "Nombre",
-					true, 100);
-			UtilUI.confColumn(itemsGRD.getColumn("numeroZona"), "Nro.", true,
-					50);
-			UtilUI.confColumn(itemsGRD.getColumn("nombreZona"), "Nombre", true,
-					100);
-			UtilUI.confColumn(itemsGRD.getColumn("recepcion"), "Recepción",
-					true, 120);
-			UtilUI.confColumn(itemsGRD.getColumn("ticketInicio"),
-					"Ticket inicio", true, 120);
-			UtilUI.confColumn(itemsGRD.getColumn("estado"), "Estado", true, -1);
-
-			// Group headers by joining the cells
-			HeaderRow groupingHeader = itemsGRD.prependHeaderRow();
-			
-			HeaderCell namesCellCobranza = groupingHeader.join(
-					groupingHeader.getCell("numeroCobranza"),
-					groupingHeader.getCell("detalleCobranza"));
-			namesCellCobranza.setText("Cobranza");			
-			
-			HeaderCell namesCellVendedor = groupingHeader.join(
-					groupingHeader.getCell("numeroVendedor"),
-					groupingHeader.getCell("nombreVendedor"));
-			namesCellVendedor.setText("Vendedor");
-			
-			HeaderCell namesCellZona = groupingHeader.join(
-					groupingHeader.getCell("numeroZona"),
-					groupingHeader.getCell("nombreZona"));
-			namesCellZona.setText("Zona");
+			UtilUI.confColumn(itemsGRD.getColumn("cp"), "CP", true, 50);
+			UtilUI.confColumn(itemsGRD.getColumn("ciudad"), "Ciudad", true, -1);
 
 			itemsGRD.setContainerDataSource(itemsBIC);
 
@@ -226,18 +184,15 @@ public class WCobranzas extends Window {
 			// new DateRenderer(new SimpleDateFormat("dd/MM/yyyy")));
 
 			// SI UNA COLUMNA ES DE TIPO TIMESTAMP HACER LO QUE SIGUE
-			itemsGRD.getColumn("recepcion").setRenderer(
-					new DateRenderer(
-							new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")));
-			itemsGRD.getColumn("ticketInicio").setRenderer(
-					new DateRenderer(
-							new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")));
+			// itemsGRD.getColumn("attName").setRenderer(
+			// new DateRenderer(
+			// new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")));
 
 			// .......
 
 			List<SortOrder> order = new ArrayList<SortOrder>();
 
-			order.add(new SortOrder("numeroCobranza", SortDirection.ASCENDING));
+			order.add(new SortOrder("numero", SortDirection.ASCENDING));
 
 			itemsGRD.setSortOrder(order);
 
@@ -271,22 +226,8 @@ public class WCobranzas extends Window {
 			modificarBTN.addClickListener(e -> {
 				modificarBTNClick();
 			});
-			
-			Button informeBTN = UtilUI.buildButton("Informe de cobranza", "Informe de cobranza");
-			informeBTN.setIcon(FontAwesome.PRINT);
-			informeBTN.addClickListener(e -> {
-//				modificarBTNClick();
-			});
 
-			
-			Button consultarBTN = UtilUI.buildButton("Consultar", "Consultar");
-			consultarBTN.setIcon(FontAwesome.BOOK);
-			consultarBTN.addClickListener(e -> {
-//				modificarBTNClick();
-			});
-
-
-			filaBotoneraHL.addComponents(agregarBTN, modificarBTN, informeBTN, consultarBTN);
+			filaBotoneraHL.addComponents(agregarBTN, modificarBTN);
 
 			// -------------------------------------------------------
 			// BOTONERA 2
@@ -392,9 +333,9 @@ public class WCobranzas extends Window {
 
 	private void buildContainersItems() throws Exception {
 
-		filterBI = new BeanItem<CobranzasFiltro>(new CobranzasFiltro());
-		itemsBIC = new BeanItemContainer<Cobranzas>(Cobranzas.class,
-				new ArrayList<Cobranzas>());
+		filterBI = new BeanItem<VendedoresFiltro>(new VendedoresFiltro());
+		itemsBIC = new BeanItemContainer<Vendedores>(Vendedores.class,
+				new ArrayList<Vendedores>());
 	}
 
 	// =================================================================================
@@ -445,7 +386,7 @@ public class WCobranzas extends Window {
 											if (yes) {
 												if (itemsGRD.getSelectedRow() != null) {
 
-													Cobranzas item = (Cobranzas) itemsGRD
+													Vendedores item = (Vendedores) itemsGRD
 															.getSelectedRow();
 
 													deleteItem(item);
@@ -491,7 +432,8 @@ public class WCobranzas extends Window {
 
 			if (itemsGRD.getSelectedRow() != null) {
 
-				Cobranzas item = (Cobranzas) itemsGRD.getSelectedRow();
+				Vendedores item = (Vendedores) itemsGRD.getSelectedRow();
+				item.getNumero();
 
 				Window window = new Window("Modificar ítem " + item);
 				window.setModal(true);
@@ -516,14 +458,14 @@ public class WCobranzas extends Window {
 	private void loadData() {
 		try {
 
-			((Validatable) numeroCobranzaTXTHL.getComponent(0)).validate();
-			((Validatable) detalleCobranzaTXTHL.getComponent(0)).validate();
+			((Validatable) numeroTXTHL.getComponent(0)).validate();
+			((Validatable) nombreTXTHL.getComponent(0)).validate();
 
-			List<Cobranzas> items = queryData();
+			List<Vendedores> items = queryData();
 
 			itemsBIC.removeAllItems();
 
-			for (Cobranzas item : items) {
+			for (Vendedores item : items) {
 				itemsBIC.addBean(item);
 			}
 
@@ -549,7 +491,7 @@ public class WCobranzas extends Window {
 	// SECCION PARA CONSULTAS A LA BASE DE DATOS
 
 	// metodo que realiza la consulta a la base de datos
-	private List<Cobranzas> queryData() {
+	private List<Vendedores> queryData() {
 		try {
 
 			System.out.println("Los filtros son "
@@ -567,7 +509,7 @@ public class WCobranzas extends Window {
 						+ sortOrder.getDirection());
 			}
 
-			List<Cobranzas> items = mockData(limit, offset,
+			List<Vendedores> items = mockData(limit, offset,
 					this.filterBI.getBean());
 
 			return items;
@@ -576,16 +518,15 @@ public class WCobranzas extends Window {
 			LogAndNotification.print(e);
 		}
 
-		return new ArrayList<Cobranzas>();
+		return new ArrayList<Vendedores>();
 	}
 
 	// metodo que realiza el delete en la base de datos
-	private void deleteItem(Cobranzas item) {
+	private void deleteItem(Vendedores item) {
 		try {
 
 			for (int i = 0; i < itemsMock.size(); i++) {
-				if (itemsMock.get(i).getNumeroCobranza()
-						.equals(item.getNumeroCobranza())) {
+				if (itemsMock.get(i).getNumero().equals(item.getNumero())) {
 					itemsMock.remove(i);
 					return;
 				}
@@ -599,43 +540,39 @@ public class WCobranzas extends Window {
 	// =================================================================================
 	// SECCION SOLO PARA FINES DE MOCKUP
 
-	List<Cobranzas> itemsMock = new ArrayList<Cobranzas>();
+	List<Vendedores> itemsMock = new ArrayList<Vendedores>();
 
-	private List<Cobranzas> mockData(int limit, int offset,
-			CobranzasFiltro filtro) {
+	private List<Vendedores> mockData(int limit, int offset,
+			VendedoresFiltro filtro) {
 
 		if (itemsMock.size() == 0) {
 
 			for (int i = 0; i < 500; i++) {
 
-				Cobranzas item = new Cobranzas();
+				Vendedores item = new Vendedores();
 
-				item.setNumeroCobranza(i);
-				item.setDetalleCobranza("Detalle " + i);
-				item.setNumeroVendedor(i);
-				item.setNombreVendedor("Vendedro " + i);
-				item.setNumeroZona(i);
-				item.setNombreZona("Zona " + i);
-				item.setRecepcion(new Timestamp(System.currentTimeMillis()));
-				item.setTicketInicio(new Timestamp(System.currentTimeMillis()));
-				item.setEstado("Estado " + i);
+				item.setNumero(i);
+				item.setNombre("Nombre " + i);
+				item.setDomicilio("Domicilio " + i);
+				item.setDomicilio("CP " + i);
+				item.setDomicilio("Ciudad " + i);
 
 				itemsMock.add(item);
 			}
 		}
 
-		ArrayList<Cobranzas> arrayList = new ArrayList<Cobranzas>();
+		ArrayList<Vendedores> arrayList = new ArrayList<Vendedores>();
 
-		for (Cobranzas item : itemsMock) {
+		for (Vendedores item : itemsMock) {
 
-			boolean passesFilterNumero = (filtro.getNumeroCobranza() == null || item
-					.getNumeroCobranza().equals(filtro.getNumeroCobranza()));
+			boolean passesFilterNumero = (filtro.getNumero() == null || item
+					.getNumero().equals(filtro.getNumero()));
 
-			boolean passesFilterDetalle = (filtro.getDetalleCobranza() == null || item
-					.getDetalleCobranza().toLowerCase()
-					.contains(filtro.getDetalleCobranza().toLowerCase()));
+			boolean passesFilterNombre = (filtro.getNombre() == null || item
+					.getNombre().toLowerCase()
+					.contains(filtro.getNombre().toLowerCase()));
 
-			if (passesFilterNumero && passesFilterDetalle) {
+			if (passesFilterNumero && passesFilterNombre) {
 				arrayList.add(item);
 			}
 		}

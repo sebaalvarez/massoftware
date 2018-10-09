@@ -23,6 +23,7 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.SortEvent;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -229,8 +230,14 @@ public class WAperturasCierresCajas extends Window {
 			modificarBTN.addClickListener(e -> {
 				modificarBTNClick();
 			});
+			
+			Button cierreBTN = UtilUI.buildButton("Cierre", "Cierre");
+			cierreBTN.setIcon(FontAwesome.CLOSE);
+			cierreBTN.addClickListener(e -> {
+//				modificarBTNClick();
+			});
 
-			filaBotoneraHL.addComponents(agregarBTN, modificarBTN);
+			filaBotoneraHL.addComponents(agregarBTN, modificarBTN, cierreBTN);
 
 			// -------------------------------------------------------
 			// BOTONERA 2

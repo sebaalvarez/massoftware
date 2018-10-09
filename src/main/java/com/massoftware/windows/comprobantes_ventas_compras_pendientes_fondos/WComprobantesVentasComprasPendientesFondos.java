@@ -1,13 +1,13 @@
-package com.massoftware.windows.cobranzas;
+package com.massoftware.windows.comprobantes_ventas_compras_pendientes_fondos;
 
-import java.sql.Timestamp;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.massoftware.windows.EliminarDialog;
 import com.massoftware.windows.LogAndNotification;
 import com.massoftware.windows.UtilUI;
 import com.vaadin.data.Validatable;
@@ -21,27 +21,26 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.SortEvent;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.HeaderCell;
-import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.renderers.DateRenderer;
 
-public class WCobranzas extends Window {
+public class WComprobantesVentasComprasPendientesFondos extends Window {
 
 	private static final long serialVersionUID = -6410625501465383928L;
 
 	// -------------------------------------------------------------
 
-	private BeanItem<CobranzasFiltro> filterBI;
-	private BeanItemContainer<Cobranzas> itemsBIC;
+	private BeanItem<ComprobantesVentasComprasPendientesFondosFiltro> filterBI;
+	private BeanItemContainer<ComprobantesVentasComprasPendientesFondos> itemsBIC;
 
 	// -------------------------------------------------------------
 
@@ -50,40 +49,27 @@ public class WCobranzas extends Window {
 
 	// -------------------------------------------------------------
 
-	public Grid itemsGRD;
+	private Grid itemsGRD;
 	private Button prevPageBTN;
 	private Button nextPageBTN;
-	private Button agregarBTN;
-	private Button modificarBTN;
-	private Button eliminarBTN;
+	private Button capturaFondoBTN;
 
 	// -------------------------------------------------------------
 
-	private HorizontalLayout numeroCobranzaTXTHL;
-	private HorizontalLayout detalleCobranzaTXTHL;
+	private HorizontalLayout numeroTXTHL;
 
 	// -------------------------------------------------------------
 
-	public WCobranzas() {
+	@SuppressWarnings("serial")
+	public WComprobantesVentasComprasPendientesFondos() {
 		super();
-		init(null);
-	}
-	
-	public WCobranzas(Integer numero) {
-		super();
-		init(numero);
-	}
-	
-	
-	@SuppressWarnings({ "serial", "unchecked" })
-	public void init(Integer numero) {	
+
 		try {
 
 			buildContainersItems();
-			
-			filterBI.getItemProperty("numeroCobranza").setValue(numero);
 
-			UtilUI.confWinList(this, "Cobranzas");
+			UtilUI.confWinList(this,
+					"Comprobantes de ventas y compras pendientes de fondos");
 
 			VerticalLayout content = UtilUI.buildWinContentList();
 
@@ -96,17 +82,16 @@ public class WCobranzas extends Window {
 
 			// -----------
 
-			numeroCobranzaTXTHL = UtilUI.buildTXTHLInteger(filterBI,
-					"numeroCobranza", "Numero", false, 5, -1, 3, false, false,
-					null, false, UtilUI.EQUALS, 0, 255);
+			numeroTXTHL = UtilUI.buildTXTHLInteger(filterBI, "numeroDias",
+					"Días", false, 5, -1, 3, false, false, null, false,
+					UtilUI.EQUALS, 0, 255);
 
-			TextField numeroCobranzaTXT = (TextField) numeroCobranzaTXTHL
-					.getComponent(0);
+			TextField numeroTXT = (TextField) numeroTXTHL.getComponent(0);
 
-			numeroCobranzaTXT.addTextChangeListener(new TextChangeListener() {
+			numeroTXT.addTextChangeListener(new TextChangeListener() {
 				public void textChange(TextChangeEvent event) {
 					try {
-						numeroCobranzaTXT.setValue(event.getText());
+						numeroTXT.setValue(event.getText());
 						loadDataResetPaged();
 					} catch (Exception e) {
 						LogAndNotification.print(e);
@@ -115,38 +100,9 @@ public class WCobranzas extends Window {
 
 			});
 
-			Button numeroCobranzaBTN = (Button) numeroCobranzaTXTHL
-					.getComponent(1);
+			Button numeroBTN = (Button) numeroTXTHL.getComponent(1);
 
-			numeroCobranzaBTN.addClickListener(e -> {
-				this.loadDataResetPaged();
-			});
-
-			// -----------
-
-			detalleCobranzaTXTHL = UtilUI.buildTXTHL(filterBI,
-					"detalleCobranza", "Detalle", false, 20, -1, 25, false,
-					false, null, false, UtilUI.CONTAINS_WORDS_AND);
-
-			TextField detalleCobranzaTXT = (TextField) detalleCobranzaTXTHL
-					.getComponent(0);
-
-			detalleCobranzaTXT.addTextChangeListener(new TextChangeListener() {
-				public void textChange(TextChangeEvent event) {
-					try {
-						detalleCobranzaTXT.setValue(event.getText());
-						loadDataResetPaged();
-					} catch (Exception e) {
-						LogAndNotification.print(e);
-					}
-				}
-
-			});
-
-			Button detalleCobranzaBTN = (Button) detalleCobranzaTXTHL
-					.getComponent(1);
-
-			detalleCobranzaBTN.addClickListener(e -> {
+			numeroBTN.addClickListener(e -> {
 				this.loadDataResetPaged();
 			});
 
@@ -157,8 +113,7 @@ public class WCobranzas extends Window {
 				loadData();
 			});
 
-			filaFiltroHL.addComponents(numeroCobranzaTXTHL,
-					detalleCobranzaTXTHL, buscarBTN);
+			filaFiltroHL.addComponents(numeroTXTHL, buscarBTN);
 
 			filaFiltroHL.setComponentAlignment(buscarBTN,
 					Alignment.MIDDLE_RIGHT);
@@ -168,48 +123,19 @@ public class WCobranzas extends Window {
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-			itemsGRD.setWidth(49f, Unit.EM);
+			itemsGRD.setWidth(35f, Unit.EM);
 
-			itemsGRD.setColumns(new Object[] { "numeroCobranza",
-					"detalleCobranza", "numeroVendedor", "nombreVendedor",
-					"numeroZona", "nombreZona", "recepcion", "ticketInicio",
-					"estado" });
+			itemsGRD.setColumns(new Object[] { "modulo", "comprobante",
+					"fecha", "clienteProveedor", "totalCbte" });
 
-			UtilUI.confColumn(itemsGRD.getColumn("numeroCobranza"), "Nro.",
-					true, 50);
-			UtilUI.confColumn(itemsGRD.getColumn("detalleCobranza"), "Nombre",
+			UtilUI.confColumn(itemsGRD.getColumn("modulo"), "Módulo", true, 70);
+			UtilUI.confColumn(itemsGRD.getColumn("comprobante"), "Comprobante",
 					true, 100);
-			UtilUI.confColumn(itemsGRD.getColumn("numeroVendedor"), "Nro.",
-					true, 50);
-			UtilUI.confColumn(itemsGRD.getColumn("nombreVendedor"), "Nombre",
-					true, 100);
-			UtilUI.confColumn(itemsGRD.getColumn("numeroZona"), "Nro.", true,
-					50);
-			UtilUI.confColumn(itemsGRD.getColumn("nombreZona"), "Nombre", true,
-					100);
-			UtilUI.confColumn(itemsGRD.getColumn("recepcion"), "Recepción",
-					true, 120);
-			UtilUI.confColumn(itemsGRD.getColumn("ticketInicio"),
-					"Ticket inicio", true, 120);
-			UtilUI.confColumn(itemsGRD.getColumn("estado"), "Estado", true, -1);
-
-			// Group headers by joining the cells
-			HeaderRow groupingHeader = itemsGRD.prependHeaderRow();
-			
-			HeaderCell namesCellCobranza = groupingHeader.join(
-					groupingHeader.getCell("numeroCobranza"),
-					groupingHeader.getCell("detalleCobranza"));
-			namesCellCobranza.setText("Cobranza");			
-			
-			HeaderCell namesCellVendedor = groupingHeader.join(
-					groupingHeader.getCell("numeroVendedor"),
-					groupingHeader.getCell("nombreVendedor"));
-			namesCellVendedor.setText("Vendedor");
-			
-			HeaderCell namesCellZona = groupingHeader.join(
-					groupingHeader.getCell("numeroZona"),
-					groupingHeader.getCell("nombreZona"));
-			namesCellZona.setText("Zona");
+			UtilUI.confColumn(itemsGRD.getColumn("fecha"), "Fecha", true, 90);
+			UtilUI.confColumn(itemsGRD.getColumn("clienteProveedor"),
+					"Cliente/Proveedor", true, 200);
+			UtilUI.confColumn(itemsGRD.getColumn("totalCbte"), "Total cbte.",
+					true, -1);
 
 			itemsGRD.setContainerDataSource(itemsBIC);
 
@@ -222,22 +148,19 @@ public class WCobranzas extends Window {
 			// .getHtml(), FontAwesome.SQUARE_O.getHtml()));
 
 			// SI UNA COLUMNA ES DE TIPO DATE HACER LO QUE SIGUE
-			// itemsGRD.getColumn("attName").setRenderer(
-			// new DateRenderer(new SimpleDateFormat("dd/MM/yyyy")));
+			itemsGRD.getColumn("fecha").setRenderer(
+					new DateRenderer(new SimpleDateFormat("dd/MM/yyyy")));
 
 			// SI UNA COLUMNA ES DE TIPO TIMESTAMP HACER LO QUE SIGUE
-			itemsGRD.getColumn("recepcion").setRenderer(
-					new DateRenderer(
-							new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")));
-			itemsGRD.getColumn("ticketInicio").setRenderer(
-					new DateRenderer(
-							new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")));
+			// itemsGRD.getColumn("attName").setRenderer(
+			// new DateRenderer(
+			// new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")));
 
 			// .......
 
 			List<SortOrder> order = new ArrayList<SortOrder>();
 
-			order.add(new SortOrder("numeroCobranza", SortDirection.ASCENDING));
+			order.add(new SortOrder("fecha", SortDirection.DESCENDING));
 
 			itemsGRD.setSortOrder(order);
 
@@ -263,30 +186,13 @@ public class WCobranzas extends Window {
 			HorizontalLayout filaBotoneraHL = new HorizontalLayout();
 			filaBotoneraHL.setSpacing(true);
 
-			agregarBTN = UtilUI.buildButtonAgregar();
-			agregarBTN.addClickListener(e -> {
-				agregarBTNClick();
-			});
-			modificarBTN = UtilUI.buildButtonModificar();
-			modificarBTN.addClickListener(e -> {
-				modificarBTNClick();
-			});
-			
-			Button informeBTN = UtilUI.buildButton("Informe de cobranza", "Informe de cobranza");
-			informeBTN.setIcon(FontAwesome.PRINT);
-			informeBTN.addClickListener(e -> {
-//				modificarBTNClick();
+			capturaFondoBTN = UtilUI.buildButtonAgregar();
+			capturaFondoBTN.setCaption("Captura fondo");
+			capturaFondoBTN.addClickListener(e -> {
+				capturaFondoBTNClick();
 			});
 
-			
-			Button consultarBTN = UtilUI.buildButton("Consultar", "Consultar");
-			consultarBTN.setIcon(FontAwesome.BOOK);
-			consultarBTN.addClickListener(e -> {
-//				modificarBTNClick();
-			});
-
-
-			filaBotoneraHL.addComponents(agregarBTN, modificarBTN, informeBTN, consultarBTN);
+			filaBotoneraHL.addComponents(capturaFondoBTN);
 
 			// -------------------------------------------------------
 			// BOTONERA 2
@@ -294,12 +200,11 @@ public class WCobranzas extends Window {
 			HorizontalLayout filaBotonera2HL = new HorizontalLayout();
 			filaBotonera2HL.setSpacing(true);
 
-			eliminarBTN = UtilUI.buildButtonEliminar();
-			eliminarBTN.addClickListener(e -> {
-				eliminarBTNClick();
-			});
+			Label lbl = new Label(
+					"<b>Usuario:________________tIngreso: __/__ /____ </b>",
+					ContentMode.HTML);
 
-			filaBotonera2HL.addComponents(eliminarBTN);
+			filaBotonera2HL.addComponents(lbl);
 
 			// -------------------------------------------------------
 
@@ -342,7 +247,7 @@ public class WCobranzas extends Window {
 
 				@Override
 				public void handleAction(Object sender, Object target) {
-					agregarBTNClick();
+					capturaFondoBTNClick();
 				}
 			});
 			// --------------------------------------------------
@@ -392,9 +297,11 @@ public class WCobranzas extends Window {
 
 	private void buildContainersItems() throws Exception {
 
-		filterBI = new BeanItem<CobranzasFiltro>(new CobranzasFiltro());
-		itemsBIC = new BeanItemContainer<Cobranzas>(Cobranzas.class,
-				new ArrayList<Cobranzas>());
+		filterBI = new BeanItem<ComprobantesVentasComprasPendientesFondosFiltro>(
+				new ComprobantesVentasComprasPendientesFondosFiltro());
+		itemsBIC = new BeanItemContainer<ComprobantesVentasComprasPendientesFondos>(
+				ComprobantesVentasComprasPendientesFondos.class,
+				new ArrayList<ComprobantesVentasComprasPendientesFondos>());
 	}
 
 	// =================================================================================
@@ -430,51 +337,11 @@ public class WCobranzas extends Window {
 
 	}
 
-	private void eliminarBTNClick() {
-		try {
-
-			if (itemsGRD.getSelectedRow() != null) {
-
-				getUI().addWindow(
-						new EliminarDialog(
-								itemsGRD.getSelectedRow().toString(),
-								new EliminarDialog.Callback() {
-									public void onDialogResult(boolean yes) {
-
-										try {
-											if (yes) {
-												if (itemsGRD.getSelectedRow() != null) {
-
-													Cobranzas item = (Cobranzas) itemsGRD
-															.getSelectedRow();
-
-													deleteItem(item);
-
-													LogAndNotification
-															.printSuccessOk("Se eliminó con éxito el ítem "
-																	+ item);
-
-													loadData();
-												}
-											}
-										} catch (Exception e) {
-											LogAndNotification.print(e);
-										}
-
-									}
-								}));
-			}
-
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
-	}
-
-	protected void agregarBTNClick() {
+	protected void capturaFondoBTNClick() {
 		try {
 
 			itemsGRD.select(null);
-			Window window = new Window("Agregar ítem ");
+			Window window = new Window("Captura fondo ítem ");
 			window.setModal(true);
 			window.center();
 			window.setWidth("400px");
@@ -491,7 +358,8 @@ public class WCobranzas extends Window {
 
 			if (itemsGRD.getSelectedRow() != null) {
 
-				Cobranzas item = (Cobranzas) itemsGRD.getSelectedRow();
+				ComprobantesVentasComprasPendientesFondos item = (ComprobantesVentasComprasPendientesFondos) itemsGRD
+						.getSelectedRow();
 
 				Window window = new Window("Modificar ítem " + item);
 				window.setModal(true);
@@ -516,22 +384,19 @@ public class WCobranzas extends Window {
 	private void loadData() {
 		try {
 
-			((Validatable) numeroCobranzaTXTHL.getComponent(0)).validate();
-			((Validatable) detalleCobranzaTXTHL.getComponent(0)).validate();
+			((Validatable) numeroTXTHL.getComponent(0)).validate();
 
-			List<Cobranzas> items = queryData();
+			List<ComprobantesVentasComprasPendientesFondos> items = queryData();
 
 			itemsBIC.removeAllItems();
 
-			for (Cobranzas item : items) {
+			for (ComprobantesVentasComprasPendientesFondos item : items) {
 				itemsBIC.addBean(item);
 			}
 
 			boolean enabled = itemsBIC.size() > 0;
 
 			itemsGRD.setEnabled(enabled);
-			modificarBTN.setEnabled(enabled);
-			eliminarBTN.setEnabled(enabled);
 
 			nextPageBTN.setEnabled(itemsBIC.size() > 0
 					&& itemsBIC.size() >= limit);
@@ -549,7 +414,7 @@ public class WCobranzas extends Window {
 	// SECCION PARA CONSULTAS A LA BASE DE DATOS
 
 	// metodo que realiza la consulta a la base de datos
-	private List<Cobranzas> queryData() {
+	private List<ComprobantesVentasComprasPendientesFondos> queryData() {
 		try {
 
 			System.out.println("Los filtros son "
@@ -567,8 +432,8 @@ public class WCobranzas extends Window {
 						+ sortOrder.getDirection());
 			}
 
-			List<Cobranzas> items = mockData(limit, offset,
-					this.filterBI.getBean());
+			List<ComprobantesVentasComprasPendientesFondos> items = mockData(
+					limit, offset, this.filterBI.getBean());
 
 			return items;
 
@@ -576,68 +441,45 @@ public class WCobranzas extends Window {
 			LogAndNotification.print(e);
 		}
 
-		return new ArrayList<Cobranzas>();
-	}
-
-	// metodo que realiza el delete en la base de datos
-	private void deleteItem(Cobranzas item) {
-		try {
-
-			for (int i = 0; i < itemsMock.size(); i++) {
-				if (itemsMock.get(i).getNumeroCobranza()
-						.equals(item.getNumeroCobranza())) {
-					itemsMock.remove(i);
-					return;
-				}
-			}
-
-		} catch (Exception e) {
-			LogAndNotification.print(e);
-		}
+		return new ArrayList<ComprobantesVentasComprasPendientesFondos>();
 	}
 
 	// =================================================================================
 	// SECCION SOLO PARA FINES DE MOCKUP
 
-	List<Cobranzas> itemsMock = new ArrayList<Cobranzas>();
+	List<ComprobantesVentasComprasPendientesFondos> itemsMock = new ArrayList<ComprobantesVentasComprasPendientesFondos>();
 
-	private List<Cobranzas> mockData(int limit, int offset,
-			CobranzasFiltro filtro) {
+	private List<ComprobantesVentasComprasPendientesFondos> mockData(int limit,
+			int offset, ComprobantesVentasComprasPendientesFondosFiltro filtro) {
 
 		if (itemsMock.size() == 0) {
 
 			for (int i = 0; i < 500; i++) {
 
-				Cobranzas item = new Cobranzas();
+				ComprobantesVentasComprasPendientesFondos item = new ComprobantesVentasComprasPendientesFondos();
 
-				item.setNumeroCobranza(i);
-				item.setDetalleCobranza("Detalle " + i);
-				item.setNumeroVendedor(i);
-				item.setNombreVendedor("Vendedro " + i);
-				item.setNumeroZona(i);
-				item.setNombreZona("Zona " + i);
-				item.setRecepcion(new Timestamp(System.currentTimeMillis()));
-				item.setTicketInicio(new Timestamp(System.currentTimeMillis()));
-				item.setEstado("Estado " + i);
+				item.setModulo("Modulo " + i);
+				item.setComprobante("X00000000000" + i);
+				item.setFecha(new Date(System.currentTimeMillis()));
+				item.setClienteProveedor((i % 2 == 0) ? "Cliente " + i
+						: "Proveedor " + i);
+				item.setTotalCbte(new BigDecimal("58963.3698"));
 
 				itemsMock.add(item);
 			}
 		}
 
-		ArrayList<Cobranzas> arrayList = new ArrayList<Cobranzas>();
+		ArrayList<ComprobantesVentasComprasPendientesFondos> arrayList = new ArrayList<ComprobantesVentasComprasPendientesFondos>();
 
-		for (Cobranzas item : itemsMock) {
+		for (ComprobantesVentasComprasPendientesFondos item : itemsMock) {
 
-			boolean passesFilterNumero = (filtro.getNumeroCobranza() == null || item
-					.getNumeroCobranza().equals(filtro.getNumeroCobranza()));
+			// boolean passesFilterNumeroDias = (filtro.getNumeroDias() == null
+			// || item
+			// .getNumeroDias().equals(filtro.getNumeroDias()));
 
-			boolean passesFilterDetalle = (filtro.getDetalleCobranza() == null || item
-					.getDetalleCobranza().toLowerCase()
-					.contains(filtro.getDetalleCobranza().toLowerCase()));
-
-			if (passesFilterNumero && passesFilterDetalle) {
-				arrayList.add(item);
-			}
+			// if (passesFilterNumeroDias) {
+			arrayList.add(item);
+			// }
 		}
 
 		int end = offset + limit;
