@@ -48,6 +48,18 @@ public class LogAndNotification {
 		// e.printStackTrace();
 	}
 
+	public static void print(IllegalArgumentException e) {
+		Notification notification = new Notification("Argumento inválido",
+				e.getMessage(), Type.WARNING_MESSAGE);
+		// notification.setStyleName("warning failure");
+		notification.setStyleName("tray failure");
+		notification.setPosition(Position.BOTTOM_LEFT);
+		// notification.setDelayMsec(10000);
+		notification.show(Page.getCurrent());
+
+		// e.printStackTrace();
+	}
+
 	public static void print(InvalidValueException e) {
 		Notification notification = new Notification("Campo inválido",
 				e.getMessage(), Type.WARNING_MESSAGE);
@@ -71,7 +83,7 @@ public class LogAndNotification {
 
 		// e.printStackTrace();
 	}
-	
+
 	public static void print(UniqueException e) {
 		Notification notification = new Notification("Duplicación de datos",
 				e.getMessage(), Type.WARNING_MESSAGE);

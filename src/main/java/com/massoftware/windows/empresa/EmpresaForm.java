@@ -35,7 +35,7 @@ public class EmpresaForm extends Window {
 
 	private void render() {
 
-		UtilUI.confWinForm(this);
+		UtilUI.confWinForm(this, "Parámetros generales");
 
 		UtilUI.confWinDeleteTextfieldsValue(this);
 

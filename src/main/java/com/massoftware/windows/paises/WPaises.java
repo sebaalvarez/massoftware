@@ -8,6 +8,7 @@ import java.util.Map;
 import com.massoftware.windows.EliminarDialog;
 import com.massoftware.windows.LogAndNotification;
 import com.massoftware.windows.UtilUI;
+import com.massoftware.windows.pais.WPais;
 import com.vaadin.data.Validatable;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.sort.SortOrder;
@@ -146,7 +147,7 @@ public class WPaises extends Window {
 			// GRILLA
 
 			itemsGRD = UtilUI.buildGrid();
-//			itemsGRD.setWidth(20f, Unit.EM);
+			// itemsGRD.setWidth(20f, Unit.EM);
 			itemsGRD.setWidth("100%");
 
 			itemsGRD.setColumns(new Object[] { "numero", "nombre",
@@ -403,12 +404,7 @@ public class WPaises extends Window {
 		try {
 
 			itemsGRD.select(null);
-			Window window = new Window("Agregar ítem ");
-			window.setModal(true);
-			window.center();
-			window.setWidth("400px");
-			window.setHeight("300px");
-			getUI().addWindow(window);
+			getUI().addWindow(new WPais(this, WPais.INSERT_MODE));
 
 		} catch (Exception e) {
 			LogAndNotification.print(e);
@@ -443,7 +439,7 @@ public class WPaises extends Window {
 		loadData();
 	}
 
-	private void loadData() {
+	public void loadData() {
 		try {
 
 			((Validatable) numeroTXTHL.getComponent(0)).validate();
@@ -463,8 +459,8 @@ public class WPaises extends Window {
 			modificarBTN.setEnabled(enabled);
 			eliminarBTN.setEnabled(enabled);
 
-			nextPageBTN
-					.setEnabled(itemsBIC.size() > 0 && itemsBIC.size() >= limit);
+			nextPageBTN.setEnabled(itemsBIC.size() > 0
+					&& itemsBIC.size() >= limit);
 
 			prevPageBTN.setEnabled(offset >= limit);
 

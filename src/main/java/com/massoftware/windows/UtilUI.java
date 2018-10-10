@@ -227,8 +227,9 @@ public class UtilUI {
 		return window;
 	}
 
-	public static Window confWinForm(Window window) {
+	public static Window confWinForm(Window window, String label) {
 
+		window.setCaption(label);
 		window.setImmediate(true);
 		// window.setWidth("-1px");
 		// window.setHeight("-1px");
